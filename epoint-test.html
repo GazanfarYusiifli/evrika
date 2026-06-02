@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Epoint Test Səhifəsi</title>
+  <style>
+    body { font-family: sans-serif; padding: 50px; text-align: center; background: #f4f6f8; }
+    .box { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 400px; margin: 0 auto; }
+    button { background: #1e3a8a; color: white; border: none; padding: 15px 30px; font-size: 1.1rem; border-radius: 10px; cursor: pointer; transition: 0.3s; width: 100%; }
+    button:hover { background: #172554; }
+    #result { margin-top: 20px; text-align: left; background: #eee; padding: 10px; border-radius: 10px; font-size: 0.9rem; overflow-wrap: anywhere; }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <h2>Epoint API Test</h2>
+    <p>Bu düymə vasitəsilə yazılan <strong>/api/epoint</strong> backend kodunu test edə bilərsiniz.</p>
+    
+    <button id="testBtn">1 AZN Ödəniş Testi Et</button>
+    <div id="result" style="display: none;"></div>
+  </div>
+
+  <script>
+    document.getElementById('testBtn').addEventListener('click', async function() {
+      const btn = this;
+      const resBox = document.getElementById('result');
+      btn.innerText = "Yüklənir...";
+      btn.disabled = true;
+      resBox.style.display = 'none';
+
+      try {
+        const response = await fetch('/api/epoint', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount: 1, 
+            order_id: 'test_order_' + Date.now(), 
+            description: "Test Ödəniş"
+          })
+        });
+
+        const data = await response.json();
+        
+        resBox.style.display = 'block';
+        if (data.redirect_url) {
+            resBox.innerHTML = `<strong>UĞURLU SORĞU!</strong><br>Sizi Epoint səhifəsinə yönləndiririk...`;
+            setTimeout(() => {
+               window.location.href = data.redirect_url;
+            }, 2000);
+        } else {
+            resBox.innerHTML = `<strong>CAVAB BƏLLİ DEYİL VƏ YA XƏTA:</strong><br><pre>${JSON.stringify(data, null, 2)}</pre> 
+            <br><em>Qeyd: Əgər 'Signature validation failed' yazırsa, bu o deməkdir ki, məxfi açar (private_key) hələ həbsiq hesab edilməyib. Əsl açarı yazanda düzələcək!</em>`;
+        }
+
+      } catch (error) {
+        resBox.style.display = 'block';
+        resBox.innerHTML = `<strong>SİSTEM XƏTASI:</strong> ${error.message}. <br>Vercel API lokalda (npm run dev) işləmir, epoint-i yoxlamaq üçün saytı Vercel-ə yükləyin (Deploy) və oradan yoxlayın.`;
+      } finally {
+        btn.innerText = "Yenidən Yoxla";
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

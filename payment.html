@@ -70,28 +70,14 @@
     <div id="student-name" style="margin-top: 10px; font-size: 0.85rem; color: #94a3b8; font-weight: 600;"></div>
   </div>
 
-  <div class="pay-input-group">
-    <label>Kart Sahibinin Adı</label>
-    <input type="text" class="pay-input" id="pay_cardName" placeholder="Məs: HƏSƏN HƏSƏNOV">
-  </div>
-
-  <div class="pay-input-group">
-    <label>Kart Nömrəsi</label>
-    <input type="text" class="pay-input" id="pay_cardNum" maxlength="19" placeholder="4422 0026 1998 2026">
-  </div>
-  
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-    <div class="pay-input-group">
-      <label>Tarix</label>
-      <input type="text" class="pay-input" placeholder="12/28" maxlength="5">
-    </div>
+  <div style="text-align:center; margin-bottom: 20px;"><p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Ödənişiniz tam təhlükəsiz şəkildə Epoint gateway vasitəsilə həyata keçiriləcək. Davam etmək üçün aşağıdakı düyməni sıxın.</p></div>
     <div class="pay-input-group">
       <label>CVV</label>
       <input type="password" class="pay-input" maxlength="3" placeholder="***">
     </div>
   </div>
 
-  <button type="button" class="pay-btn" id="paySubmitBtn" onclick="processPayment()">ÖDƏNİŞİ TƏSDİQLƏ</button>
+  <button type="button" class="pay-btn" id="paySubmitBtn" onclick="processPayment()">EPOINT İLƏ ÖDƏ</button>
   <p style="text-align:center; font-size: 0.75rem; color: rgba(255,255,255,0.4); margin-top: 25px;"><i class="fas fa-lock"></i> AES-256 Şifrələnmə ilə qorunur</p>
 </div>
 
@@ -125,81 +111,45 @@
       return;
     }
 
-    const cardName = document.getElementById('pay_cardName').value.trim();
-    const cardNum = document.getElementById('pay_cardNum').value.replace(/\s+/g, '').trim();
-    
-    if(!cardName || cardNum.length < 16) {
-        alert("Zəhmət olmasa kart məlumatlarını doğru daxil edin.");
-        return;
-    }
-    
-    const last4 = cardNum.slice(-4);
-    
     const btn = document.getElementById('paySubmitBtn');
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> TƏSDİQLƏNİR...';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> BAĞLANTI QURULUR...';
     btn.disabled = true;
 
     try {
-        // Fetch existing record to get payload
-        const getRes = await fetch('https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1/registrations?id=eq.' + regId, {
-            headers: {
-                'apikey': 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
-                'Authorization': 'Bearer sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV'
-            }
+        const response = await fetch('/api/epoint', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount: parseInt(amountParam),
+            order_id: regId, 
+            description: "Evrika İmtahan / Qeydiyyat",
+            regId: regId,
+            email: emailParam,
+            name: regName
+          })
         });
-        const records = await getRes.json();
+
+        const data = await response.json();
         
-        if (records && records.length > 0) {
-            const currentPayload = records[0].payload;
-            currentPayload.note += ' | Ödəniş: ' + cardName.toUpperCase() + ' tərəfindən **** **** **** ' + last4 + ' kartı ilə ' + amountParam + ' AZN ödənildi.';
-            currentPayload.status = "Ödənilib";
+        if (data.redirect_url) {
+            btn.innerHTML = 'EPOINT-Ə YÖNLƏNDIRILIR...';
+            setTimeout(() => {
+               window.location.href = data.redirect_url;
+            }, 1000);
+        } else {
+            alert('Xəta baş verdi: ' + (data.message || data.error || 'Server Xətası') + '
 
-            // Update record
-            await fetch('https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1/registrations?id=eq.' + regId, {
-              method: 'PATCH',
-              headers: {
-                'apikey': 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
-                'Authorization': 'Bearer sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ payload: currentPayload })
-            });
-            
-            // Trigger API to send email
-            if (emailParam) {
-                try {
-                    await fetch('/api/send-email', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            email: emailParam,
-                            name: regName || 'Namizəd',
-                            dbId: regId
-                        })
-                    });
-                } catch(err) { console.error("Failed to send email API:", err); }
-            }
+Qeyd: Private key quraşdırılmayıbsa bu xəta normaldır.');
+            btn.innerHTML = 'YENİDƏN CƏHD ET';
+            btn.disabled = false;
         }
-    } catch(e) { console.error('Update failed:', e); }
 
-    setTimeout(() => {
-      const payCard = document.querySelector('.pay-card');
-      payCard.innerHTML = `
-          <div style="text-align:center;">
-              <div style="width:80px; height:80px; background:rgba(16,185,129,0.1); color:#10B981; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2.5rem; margin:0 auto 20px;">
-                  <i class="fas fa-check"></i>
-              </div>
-              <h3 style="font-weight: 900; font-size: 1.6rem; margin-bottom: 10px; color: #fff;">Ödəniş Uğurlu!</h3>
-              <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin-bottom: 30px; line-height:1.6;">
-                  İmtahana giriş kuponunuz və QR kod <b>${emailParam}</b> ünvanına uğurla göndərildi.
-              </p>
-
-              <button onclick="window.location.href='index.html'" style="width:100%; padding:18px; border:none; border-radius:12px; background:rgba(255,255,255,0.1); color:white; font-weight:800; font-size:1rem; cursor:pointer; transition:0.3s;">
-                  Ana Səhifəyə Qayıt
-              </button>
-          </div>
-      `;
-    }, 1500);
+    } catch(e) { 
+        console.error('Fetch failed:', e);
+        alert('Serverlə əlaqə qurulmadı. Zəhmət olmasa Vercel-ə deploy etdiyinizə əmin olun!');
+        btn.innerHTML = 'EPOINT İLƏ ÖDƏ';
+        btn.disabled = false;
+    }
   }
 </script>
 
