@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="az">
+  <head>
+    <meta charset="UTF-8" />
+  <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eduhome Center | Evrika Qeydiyyat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+<style>
+  :root {
+    --burgundy: #eab308;
+    --burgundy-bright: #fef08a;
+    --navy: #070d1f;
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --text-primary: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.6);
+  }
+
+  body {
+    background: #0a0a05;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-primary);
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* Dynamic Colorful Mesh Background - Unified Theme */
+  .vibrant-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(circle at 20% 30%, rgba(234, 179, 8, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(7, 13, 31, 0.8) 0%, transparent 50%),
+                #0a0a05;
+  }
+
+  .vibrant-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 30px 30px;
+    opacity: 0.3;
+  }
+  
+  .aura-blob {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: var(--burgundy);
+    filter: blur(150px);
+    opacity: 0.15;
+    border-radius: 50%;
+    z-index: -1;
+    animation: auraFloat 20s infinite alternate;
+  }
+  
+  @keyframes auraFloat {
+    from { transform: translate(-10%, -10%) scale(1); }
+    to { transform: translate(10%, 10%) scale(1.2); }
+  }
+
+  .centered-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 240px 20px 80px; /* Increased top padding for readability */
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Premium Glass Card */
+  .form-container {
+    width: 100%;
+    max-width: 680px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 45px;
+    padding: 60px;
+    box-shadow: 0 50px 100px rgba(0,0,0,0.4), inset 0 0 80px rgba(255,255,255,0.02);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .form-container::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 4px;
+    background: linear-gradient(90deg, transparent, var(--burgundy), transparent);
+  }
+
+  .form-header { text-align: center; margin-bottom: 50px; }
+  .form-header h2 { 
+    font-size: 2.2rem; 
+    font-weight: 900; 
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.4) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .form-header p { color: var(--text-muted); font-size: 1rem; font-weight: 500; }
+
+  /* Modern Inputs */
+  .dyn-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+  @media (max-width: 640px) { .dyn-form-grid { grid-template-columns: 1fr; } }
+  .full-width { grid-column: 1 / -1; }
+  
+  .dyn-input-group label { 
+    display: block; 
+    font-size: 0.75rem; 
+    font-weight: 800; 
+    color: var(--burgundy-bright);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 10px;
+  }
+  
+  .dyn-input-group input, .dyn-input-group select { 
+    width: 100%; 
+    padding: 18px 22px; 
+    background: rgba(255, 255, 255, 0.05); 
+    border: 1px solid rgba(255, 255, 255, 0.08); 
+    border-radius: 18px; 
+    font-family: inherit; 
+    font-size: 1rem; 
+    color: white; 
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-sizing: border-box;
+  }
+  
+  .dyn-input-group input:focus, .dyn-input-group select:focus { 
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--burgundy); 
+    box-shadow: 0 0 25px rgba(234, 179, 8, 0.2);
+    outline: none;
+    transform: translateY(-2px);
+  }
+
+  /* Vibrant Submit Button */
+  .submit-btn { 
+    width: 100%; 
+    margin-top: 40px; 
+    padding: 22px; 
+    background: linear-gradient(135deg, var(--burgundy) 0%, #a17902 100%); 
+    color: white; 
+    border: none; 
+    border-radius: 20px; 
+    font-size: 1.1rem; 
+    font-weight: 900; 
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer; 
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 15px; 
+    box-shadow: 0 20px 40px rgba(234, 179, 8, 0.3);
+  }
+  
+  .submit-btn:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 30px 60px rgba(255,255,255,0.2); background: linear-gradient(135deg, var(--burgundy) 0%, var(--burgundy-bright) 100%); }
+
+  .payment-info-alert {
+    background: rgba(234, 179, 8, 0.05); 
+    border: 1px solid rgba(234, 179, 8, 0.2); 
+    border-radius: 20px; 
+    padding: 20px 25px; 
+    margin-top: 40px; 
+    display: flex; 
+    gap: 15px; 
+    align-items: center;
+  }
+  .alert-icon { color: var(--burgundy-bright); font-size: 1.5rem; }
+  .alert-text { font-size: 0.9rem; color: rgba(255,255,255,0.8); line-height: 1.6; }
+  .alert-text strong { color: white; font-weight: 800; }
+</style>
+
+    <script type="module" crossorigin src="./assets/main-CAvis0qM.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/style-BoASLbo9.css">
+  </head>
+  <body>
+  
+  <header class="navbar modern-floating-nav">
+    <div class="nav-glass-container">
+      <a href="index.html" class="logo" style="display:flex;align-items:center;padding:0;background:none;"><img src="./assets/loqoYeni-BW1Euzrg.PNG" alt="Evrika" style="height:125px;width:125px;object-fit:contain;display:block;"></a>
+      <nav class="nav-links">
+        <a href="index.html">Ana Səhifə</a>
+        <div class="nav-item-has-dropdown">
+          <a href="about.html">Haqqımızda</a>
+          <div class="nav-dropdown">
+            <a href="about.html" class="dropdown-item">
+              <div class="item-icon"><i class="fas fa-info-circle"></i></div>
+              <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Haqqımızda</span>
+                <span class="dropdown-item-desc">Bizim hekayəmiz</span>
+              </div>
+            </a>
+            <a href="alumni.html" class="dropdown-item">
+              <div class="item-icon"><i class="fas fa-user-graduate"></i></div>
+              <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Məzunlar</span>
+                <span class="dropdown-item-desc">Fəxrlərimiz</span>
+              </div>
+            </a>
+            <a href="achievements.html" class="dropdown-item">
+              <div class="item-icon"><i class="fas fa-trophy"></i></div>
+              <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Uğurlar</span>
+                <span class="dropdown-item-desc">Nailiyyətlərimiz</span>
+              </div>
+            </a>
+            <a href="news.html" class="dropdown-item">
+              <div class="item-icon"><i class="fas fa-newspaper"></i></div>
+              <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Xəbərlər</span>
+                <span class="dropdown-item-desc">Ən son yeniliklər</span>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="nav-item-has-dropdown">
+          <a href="schools.html">Akademik İstiqamətlər</a>
+          <div class="nav-dropdown">
+            <a href="lisey.html" class="dropdown-item">
+              <div class="item-icon"><i class="fas fa-microscope"></i></div>
+              <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Evrika BETL Nərimanov</span>
+                <span class="dropdown-item-desc">Elm və Texnologiya Mərkəzi</span>
+              </div>
+            </a>
+            <a href="lisey2.html" class="dropdown-item">
+              <div class="item-icon"><i class="fas fa-atom"></i></div>
+              <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Evrika BETL Gənclik</span>
+                <span class="dropdown-item-desc">Beynəlxalq Təhsil Müəssisəsi</span>
+              </div>
+            </a>
+            <a href="montessori.html" class="dropdown-item">
+              <div class="item-icon"><i class="fas fa-child"></i></div>
+              <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Montessori Kids Academy</span>
+                <span class="dropdown-item-desc">Bağça və Erkən İnkişaf</span>
+              </div>
+            </a>
+            <a href="eduhome.html" class="dropdown-item">
+              <div class="item-icon"><i class="fas fa-graduation-cap"></i></div>
+              <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Eduhome Hazırlıq</span>
+                <span class="dropdown-item-desc">Xaricdə Təhsil və Hazırlıq</span>
+              </div>
+            </a>
+            <a href="zumrud.html" class="dropdown-item">
+              <div class="item-icon"><i class="fas fa-swimmer"></i></div>
+              <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Zümrüd İdman Mərkəzi</span>
+                <span class="dropdown-item-desc">Sağlam Həyat və Fəaliyyət</span>
+              </div>
+            </a>
+          </div>
+        </div>
+        
+              
+      
+        <div class="nav-item-has-dropdown">
+          <a href="vacancy.html">Vakansiya &amp; Təcrübə</a>
+          <div class="nav-dropdown">
+            <a href="vacancy.html" class="dropdown-item">
+              <div class="item-icon"><i class="fas fa-briefcase"></i></div>
+              <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Karyera və Vakansiyalar</span>
+                <span class="dropdown-item-desc">Açıq iş elanları</span>
+              </div>
+            </a>
+            <a href="ptim.html" class="dropdown-item">
+              <div class="item-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+              <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Pedaqoji Təcrübə və İnkişaf Mərkəzi</span>
+                <span class="dropdown-item-desc">PTİM</span>
+              </div>
+            </a>
+
+            
+          </div>
+        </div>
+        <a href="jurnal.html">Evrika Jurnalı</a>
+        <a href="contact.html">Əlaqə</a>
+      </nav>
+      <div class="nav-actions">
+        
+      </div>
+      <div class="mobile-menu-btn" id="mobile-toggle"><i class="fas fa-bars"></i></div>
+    </div>
+  </header>
+
+  <!-- Mobile Navigation Overlay (Neo-Glass) -->
+  <div class="mobile-nav-overlay" id="mobile-nav">
+        <div class="close-mobile" id="mobile-close"><i class="fas fa-times"></i></div>
+    <div class="mobile-lang-wrapper" style="position: absolute; top: 25px; left: 25px; z-index: 10001;">
+        <div class="lang-dropdown-wrapper desktop-lang-wrapper" style="position: relative; display: inline-block;">
+            <button class="lang-toggle-btn" onclick="let menu = this.nextElementSibling; menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';" onblur="let menu = this.nextElementSibling; setTimeout(() => menu.style.display = 'none', 200);" style="background: #1e3a8a; border: none; color: white; padding: 12px 20px; border-radius: 100px; font-weight: 800; font-size: 0.95rem; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; min-width: 70px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);" onmouseover="this.style.background='#284baf'" onmouseout="this.style.background='#1e3a8a'">
+               <span class="lang-text">AZ</span> <i class="fas fa-chevron-down" style="margin-left: 8px; font-size: 0.75rem; opacity: 0.9;"></i>
+            </button>
+            <div class="lang-menu" style="position: absolute; top: 115%; left: 0; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: none; flex-direction: column; overflow: hidden; min-width: 90px; z-index: 100;">
+                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='AZ'); this.parentElement.style.display='none';" style="padding: 12px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #eee;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">AZ</a>
+                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='EN'); this.parentElement.style.display='none';" style="padding: 12px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #eee;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">EN</a>
+                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='RU'); this.parentElement.style.display='none';" style="padding: 12px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">RU</a>
+            </div>
+        </div>
+    </div>
+    <div class="mobile-nav-links">
+      <a href="index.html" data-i18n="nav-home">Ana Səhifə</a>
+            <div class="mobile-accordion" id="mob-acc-about">
+        <div class="mobile-accordion-trigger" onclick="toggleMobileAcc('mob-acc-about')">
+          Haqqımızda
+          <i class="fas fa-chevron-right acc-arrow"></i>
+        </div>
+        <div class="mobile-accordion-body">
+          <a href="about.html">
+            <div class="acc-icon"><i class="fas fa-info-circle"></i></div>
+            <div class="acc-text"><span class="acc-title">Haqqımızda</span><span class="acc-desc">Bizim hekayəmiz</span></div>
+          </a>
+          <a href="alumni.html">
+            <div class="acc-icon"><i class="fas fa-user-graduate"></i></div>
+            <div class="acc-text"><span class="acc-title">Məzunlar</span><span class="acc-desc">Fəxrlərimiz</span></div>
+          </a>
+          <a href="achievements.html">
+            <div class="acc-icon"><i class="fas fa-trophy"></i></div>
+            <div class="acc-text"><span class="acc-title">Uğurlar</span><span class="acc-desc">Nailiyyətlərimiz</span></div>
+          </a>
+          <a href="news.html">
+            <div class="acc-icon"><i class="fas fa-newspaper"></i></div>
+            <div class="acc-text"><span class="acc-title">Xəbərlər</span><span class="acc-desc">Ən son yeniliklər</span></div>
+          </a>
+        </div>
+      </div>
+      <div class="mobile-accordion" id="mob-acc-academic">
+        <div class="mobile-accordion-trigger" onclick="toggleMobileAcc('mob-acc-academic')">
+          Akademik İstiqamətlər
+          <i class="fas fa-chevron-right acc-arrow"></i>
+        </div>
+        <div class="mobile-accordion-body">
+          <a href="lisey.html">
+            <div class="acc-icon"><i class="fas fa-microscope"></i></div>
+            <div class="acc-text"><span class="acc-title">Evrika BETL Nərimanov</span><span class="acc-desc">Elm və Texnologiya Mərkəzi</span></div>
+          </a>
+          <a href="lisey2.html">
+            <div class="acc-icon"><i class="fas fa-atom"></i></div>
+            <div class="acc-text"><span class="acc-title">Evrika BETL Gənclik</span><span class="acc-desc">Beynəlxalq Təhsil Kampusu</span></div>
+          </a>
+          <a href="montessori.html">
+            <div class="acc-icon"><i class="fas fa-child"></i></div>
+            <div class="acc-text"><span class="acc-title">Montessori Kids Academy</span><span class="acc-desc">Bağça və Erkən İnkişaf</span></div>
+          </a>
+          <a href="eduhome.html">
+            <div class="acc-icon"><i class="fas fa-graduation-cap"></i></div>
+            <div class="acc-text"><span class="acc-title">Eduhome Hazırlıq</span><span class="acc-desc">Xaricdə Təhsil və Hazırlıq</span></div>
+          </a>
+          <a href="zumrud.html">
+            <div class="acc-icon"><i class="fas fa-swimmer"></i></div>
+            <div class="acc-text"><span class="acc-title">Zümrüd İdman Mərkəzi</span><span class="acc-desc">Sağlam Həyat və Fəaliyyət</span></div>
+          </a>
+        </div>
+      </div>
+      
+            
+      
+      <div class="mobile-accordion" id="mob-acc-vacancy">
+        <div class="mobile-accordion-trigger" onclick="toggleMobileAcc('mob-acc-vacancy')">
+          Vakansiya &amp; Təcrübə
+          <i class="fas fa-chevron-right acc-arrow"></i>
+        </div>
+        <div class="mobile-accordion-body">
+          <a href="vacancy.html">
+            <div class="acc-icon"><i class="fas fa-briefcase"></i></div>
+            <div class="acc-text"><span class="acc-title">Karyera və Vakansiyalar</span><span class="acc-desc">Açıq iş elanları</span></div>
+          </a>
+          <a href="ptim.html">
+            <div class="acc-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+            <div class="acc-text"><span class="acc-title">Pedaqoji Təcrübə və İnkişaf Mərkəzi</span><span class="acc-desc">PTİM</span></div>
+          </a>
+          
+        </div>
+      </div>
+      <a href="jurnal.html">Evrika Jurnalı</a>
+      <a href="contact.html" data-i18n="nav-contact">Əlaqə</a>
+      <a href="schools.html" style="color: var(--burgundy);" data-i18n="nav-register">Qeydiyyat</a>
+    </div>
+  </div>
+
+  <div class="vibrant-bg"></div>
+  <div class="aura-blob" style="top: 10%; left: -10%;"></div>
+  <div class="aura-blob" style="bottom: 10%; right: -10%; background: #4c60ab;"></div>
+
+
+  <div class="centered-layout">
+    <div style="text-align: center; margin-bottom: 50px; padding: 0 20px; position: relative; z-index: 10;">
+      <div class="brand-eyebrow modern-glow" style="margin-bottom: 24px; color: rgba(255,255,255,0.7); opacity: 1; letter-spacing: 0.6em; text-transform: uppercase; font-weight: 800; font-size: 0.8rem;">
+        EVRİKA TƏHSİL EKOSİSTEMİ
+      </div>
+      <h1 class="titan-header" style="font-size: clamp(3rem, 6vw, 5.5rem); color: #fff; margin-bottom: 30px; line-height: 1.1; font-weight: 900; letter-spacing: -0.02em;">
+        Qeydiyyat
+      </h1>
+      <div style="width: 100px; height: 2px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); margin: 0 auto 30px;"></div>
+      <p class="subtitle-pro" style="max-width: 850px; margin: 0 auto; font-size: 1.6rem; color: #fff; line-height: 1.6; font-weight: 700; opacity: 1;">
+        Eduhome Hazırlıq Mərkəzi
+      </p>
+      <p style="max-width: 700px; margin: 15px auto 0; font-size: 1.1rem; color: rgba(255,255,255,0.7); line-height: 1.6;">
+        Məlumatlarınızı daxil edərək onlayn müraciətinizi tamamlayın.
+      </p>
+    </div>
+
+    <div class="form-container">
+      <div class="form-header">
+        <h2>Müraciət Forması</h2>
+      </div>
+      <form id="branchContactForm">
+          <div class="dyn-form-grid">
+            <div class="dyn-input-group">
+              <label>Adınız</label>
+              <input type="text" id="mf_firstName" placeholder="Məs: Əli" required>
+            </div>
+            <div class="dyn-input-group">
+              <label>Soyadınız</label>
+              <input type="text" id="mf_lastName" placeholder="Məs: Əliyev" required>
+            </div>
+            <div class="dyn-input-group">
+              <label>Müraciət etdiyiniz proqram</label>
+              <div style="position: relative;">
+                <select id="mf_sector" required>
+                  <option value="" disabled selected>Proqram seçin</option>
+                  <option value="SAT">SAT</option>
+                  <option value="IELTS">IELTS</option>
+                  <option value="TOEFL">TOEFL</option>
+                  <option value="DİM">DİM (Abituriyent)</option>
+                  <option value="Xarici Dil">Xarici Dil Hazırlıqları</option>
+                </select>
+                <i class="fas fa-chevron-down select-arrow"></i>
+              </div>
+            </div>
+            <div class="dyn-input-group">
+              <label>Hal-hazırda oxuduğunuz sinif (və ya məzun)</label>
+              <input type="text" id="mf_class" placeholder="Məs: 10-cu sinif / Məzun" required>
+            </div>
+            <div class="dyn-input-group">
+              <label>Əlaqə nömrəsi</label>
+              <input type="tel" id="mf_phoneNum" placeholder="Məs: 551234567" required>
+            </div>
+            <div class="dyn-input-group full-width">
+              <label>Mail ünvanı</label>
+              <input type="email" id="mf_email" placeholder="Məs: info@evrika.az" required>
+            </div>
+          </div>
+          
+          <button type="submit" class="submit-btn" style="">
+            MÜRACİƏTİ TAMAMLA <i class="fas fa-arrow-right"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  
+      <script>
+        window.currentRegistrationId = null;
+        window.currentPayloadData = null;
+
+        (function() {
+          var mainForm = document.getElementById('branchContactForm');
+          if (mainForm) {
+            mainForm.addEventListener('submit', async function(event) {
+              event.preventDefault();
+              var btn = event.target.querySelector('button[type="submit"]');
+              var originalBtnContent = btn.innerHTML;
+              btn.disabled = true;
+              btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> GÖNDƏRİLİR...';
+
+              var firstName = document.getElementById('mf_firstName').value;
+              var lastName = document.getElementById('mf_lastName').value;
+              var sectorText = document.getElementById('mf_sector').value;
+              var grade = document.getElementById('mf_class').value;
+              var phoneNum = document.getElementById('mf_phoneNum').value;
+              var email = document.getElementById('mf_email').value;
+
+              var note = "Filial: Eduhome Center | Proqram: " + sectorText + " | Sinif/Məzun: " + grade + " | E-mail: " + email;
+
+              var payloadData = {
+                name: firstName + " " + lastName,
+                phone: "+994" + phoneNum,
+                source: "Qeydiyyat - Eduhome",
+                status: "Yeni",
+                note: note,
+                date: new Date().toISOString()
+              };
+
+              try {
+                const res = await fetch('https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1/registrations', {
+                  method: 'POST',
+                  headers: {
+                    'apikey': 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
+                    'Authorization': 'Bearer sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=representation'
+                  },
+                  body: JSON.stringify({ payload: payloadData })
+                });
+                
+                const data = await res.json();
+                if(data && data.length > 0) {
+                    window.currentRegistrationId = data[0].id;
+                    window.currentPayloadData = payloadData;
+                }
+                
+                
+                   alert('Təbrik edirik! Müraciətiniz uğurla qeydə alındı.');
+                   event.target.reset();
+                   window.location.href = 'index.html';
+                
+              } catch(e) {
+                alert('Sistem xətası baş verdi. Yenidən cəhd edin.');
+              } finally {
+                btn.disabled = false; btn.innerHTML = originalBtnContent;
+              }
+            });
+          }
+        })();
+      </script>
+    
+  
+  <script>
+    function toggleMobileAcc(id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.classList.toggle('open');
+    }
+  </script>
+</body>
+</html>

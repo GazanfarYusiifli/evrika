@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="az">
+  <head>
+    <meta charset="UTF-8" />
+  <meta name="format-detection" content="telephone=no">
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Haqqımızda | Evrika Təhsil Ekosistemi</title>
+    <meta name="description" content="Evrika Təhsil Ekosistemi haqqında — missiya, vizyon, təsisçinin mesajı və idarə heyəti.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+      /* ── About page: force dark headings on light sections ── */
+      #mission-section .titan-header,
+      .section-light-heading .titan-header {
+        color: var(--navy) !important;
+        -webkit-text-fill-color: var(--navy) !important;
+      }
+      /* Məqsədimiz section — dark bg, force white headings */
+      #goals-section .titan-header {
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+      }
+      #goals-section .eyebrow-label {
+        background: rgba(255,255,255,0.1) !important;
+        color: rgba(255,255,255,0.8) !important;
+      }
+      #goals-section .section-subtitle {
+        color: rgba(255,255,255,0.7) !important;
+      }
+      /* Management section headings */
+      #management-section .titan-header {
+        color: var(--navy) !important;
+        -webkit-text-fill-color: var(--navy) !important;
+      }
+      /* Vizyon active/hover — force burgundy over any h2 override */
+      .agency-menu-item.vizyon-item:hover .agency-title,
+      .agency-menu-item.vizyon-item.active .agency-title {
+        color: var(--burgundy) !important;
+        -webkit-text-fill-color: var(--burgundy) !important;
+      }
+    </style>
+    <script type="module" crossorigin src="./assets/main-CAvis0qM.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/style-BoASLbo9.css">
+  </head>
+  <body class="bg-light">
+
+  <header class="navbar modern-floating-nav">
+    <div class="nav-glass-container">
+      <a href="index.html" class="logo" style="display:flex;align-items:center;padding:0;background:none;"><img src="./assets/loqoYeni-BW1Euzrg.PNG" alt="Evrika" style="height:125px;width:125px;object-fit:contain;display:block;"></a>
+      <nav class="nav-links">
+        <a href="index.html">Ana Səhifə</a>
+        <div class="nav-item-has-dropdown">
+          <a href="about.html">Haqqımızda</a>
+          <div class="nav-dropdown">
+            <a href="about.html" class="dropdown-item">
+              <div class="item-icon"><i class="fas fa-info-circle"></i></div>
+              <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Haqqımızda</span>
+                <span class="dropdown-item-desc">Bizim hekayəmiz</span>
+              </div>
+            </a>
+            <a href="alumni.html" class="dropdown-item">
+              <div class="item-icon"><i class="fas fa-user-graduate"></i></div>
+              <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Məzunlar</span>
+                <span class="dropdown-item-desc">Fəxrlərimiz</span>
+              </div>
+            </a>
+            <a href="achievements.html" class="dropdown-item">
+              <div class="item-icon"><i class="fas fa-trophy"></i></div>
+              <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Uğurlar</span>
+                <span class="dropdown-item-desc">Nailiyyətlərimiz</span>
+              </div>
+            </a>
+            <a href="news.html" class="dropdown-item">
+              <div class="item-icon"><i class="fas fa-newspaper"></i></div>
+              <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Xəbərlər</span>
+                <span class="dropdown-item-desc">Ən son yeniliklər</span>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="nav-item-has-dropdown">
+          <a href="schools.html">Akademik İstiqamətlər</a>
+          <div class="nav-dropdown">
+            <a href="lisey.html" class="dropdown-item">
+              <div class="item-icon"><i class="fas fa-microscope"></i></div>
+              <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Evrika BETL Nərimanov</span>
+                <span class="dropdown-item-desc">Elm və Texnologiya Mərkəzi</span>
+              </div>
+            </a>
+            <a href="lisey2.html" class="dropdown-item">
+              <div class="item-icon"><i class="fas fa-atom"></i></div>
+              <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Evrika BETL Gənclik</span>
+                <span class="dropdown-item-desc">Beynəlxalq Təhsil Kampusu</span>
+              </div>
+            </a>
+            <a href="montessori.html" class="dropdown-item">
+              <div class="item-icon"><i class="fas fa-child"></i></div>
+              <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Montessori Kids Academy</span>
+                <span class="dropdown-item-desc">Bağça və Erkən İnkişaf</span>
+              </div>
+            </a>
+            <a href="eduhome.html" class="dropdown-item">
+              <div class="item-icon"><i class="fas fa-graduation-cap"></i></div>
+              <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Eduhome Hazırlıq</span>
+                <span class="dropdown-item-desc">Xaricdə Təhsil və Hazırlıq</span>
+              </div>
+            </a>
+            <a href="zumrud.html" class="dropdown-item">
+              <div class="item-icon"><i class="fas fa-swimmer"></i></div>
+              <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Zümrüd İdman Mərkəzi</span>
+                <span class="dropdown-item-desc">Sağlam Həyat və Fəaliyyət</span>
+              </div>
+            </a>
+          </div>
+        </div>
+        
+              
+      
+        <div class="nav-item-has-dropdown">
+          <a href="vacancy.html">Vakansiya &amp; Təcrübə</a>
+          <div class="nav-dropdown">
+            <a href="vacancy.html" class="dropdown-item">
+              <div class="item-icon"><i class="fas fa-briefcase"></i></div>
+              <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Karyera və Vakansiyalar</span>
+                <span class="dropdown-item-desc">Açıq iş elanları</span>
+              </div>
+            </a>
+            <a href="ptim.html" class="dropdown-item">
+              <div class="item-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+              <div class="dropdown-item-text">
+                <span class="dropdown-item-title">Pedaqoji Təcrübə və İnkişaf Mərkəzi</span>
+                <span class="dropdown-item-desc">PTİM</span>
+              </div>
+            </a>
+
+            
+          </div>
+        </div>
+        <a href="jurnal.html">Evrika Jurnalı</a>
+        <a href="contact.html">Əlaqə</a>
+      </nav>
+      <div class="nav-actions">
+        
+                <div class="lang-dropdown-wrapper desktop-lang-wrapper" style="position: relative; display: inline-flex; margin-right: 12px; height: 100%;">
+            <button class="lang-toggle-btn" onclick="let menu = this.nextElementSibling; menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';" onblur="let menu = this.nextElementSibling; setTimeout(() => menu.style.display = 'none', 200);" style="background: #1e3a8a; border: none; color: white; padding: 12px 22px; border-radius: 100px; font-weight: 800; font-size: 0.95rem; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; min-width: 80px;" onmouseover="this.style.background='#284baf'" onmouseout="this.style.background='#1e3a8a'">
+               <span class="lang-text">AZ</span> <i class="fas fa-chevron-down" style="margin-left: 10px; font-size: 0.8rem; opacity: 0.9;"></i>
+            </button>
+            <div class="lang-menu" style="position: absolute; top: 115%; left: 50%; transform: translateX(-50%); background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: none; flex-direction: column; overflow: hidden; min-width: 80px; z-index: 100;">
+                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='AZ'); this.parentElement.style.display='none';" style="padding: 10px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #eee;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">AZ</a>
+                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='EN'); this.parentElement.style.display='none';" style="padding: 10px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #eee;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">EN</a>
+                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='RU'); this.parentElement.style.display='none';" style="padding: 10px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">RU</a>
+            </div>
+        </div>
+        <a href="schools.html" class="btn btn-primary nav-btn">Qeydiyyat</a>
+      </div>
+      <div class="mobile-menu-btn" id="mobile-toggle"><i class="fas fa-bars"></i></div>
+    </div>
+  </header>
+
+    <!-- Mobile Navigation Overlay (Neo-Glass) -->
+  <div class="mobile-nav-overlay" id="mobile-nav">
+        <div class="close-mobile" id="mobile-close"><i class="fas fa-times"></i></div>
+    <div class="mobile-lang-wrapper" style="position: absolute; top: 25px; left: 25px; z-index: 10001;">
+        <div class="lang-dropdown-wrapper" style="position: relative; display: inline-block;">
+            <button class="lang-toggle-btn" onclick="let menu = this.nextElementSibling; menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';" onblur="let menu = this.nextElementSibling; setTimeout(() => menu.style.display = 'none', 200);" style="background: #1e3a8a; border: none; color: white; padding: 12px 20px; border-radius: 100px; font-weight: 800; font-size: 0.95rem; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; min-width: 70px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);" onmouseover="this.style.background='#284baf'" onmouseout="this.style.background='#1e3a8a'">
+               <span class="lang-text">AZ</span> <i class="fas fa-chevron-down" style="margin-left: 8px; font-size: 0.75rem; opacity: 0.9;"></i>
+            </button>
+            <div class="lang-menu" style="position: absolute; top: 115%; left: 0; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: none; flex-direction: column; overflow: hidden; min-width: 90px; z-index: 100;">
+                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='AZ'); this.parentElement.style.display='none';" style="padding: 12px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #eee;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">AZ</a>
+                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='EN'); this.parentElement.style.display='none';" style="padding: 12px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #eee;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">EN</a>
+                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='RU'); this.parentElement.style.display='none';" style="padding: 12px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">RU</a>
+            </div>
+        </div>
+    </div>
+    <div class="mobile-nav-links">
+      <a href="index.html" data-i18n="nav-home">Ana Səhifə</a>
+            <div class="mobile-accordion" id="mob-acc-about">
+        <div class="mobile-accordion-trigger" onclick="toggleMobileAcc('mob-acc-about')">
+          Haqqımızda
+          <i class="fas fa-chevron-right acc-arrow"></i>
+        </div>
+        <div class="mobile-accordion-body">
+          <a href="about.html">
+            <div class="acc-icon"><i class="fas fa-info-circle"></i></div>
+            <div class="acc-text"><span class="acc-title">Haqqımızda</span><span class="acc-desc">Bizim hekayəmiz</span></div>
+          </a>
+          <a href="alumni.html">
+            <div class="acc-icon"><i class="fas fa-user-graduate"></i></div>
+            <div class="acc-text"><span class="acc-title">Məzunlar</span><span class="acc-desc">Fəxrlərimiz</span></div>
+          </a>
+          <a href="achievements.html">
+            <div class="acc-icon"><i class="fas fa-trophy"></i></div>
+            <div class="acc-text"><span class="acc-title">Uğurlar</span><span class="acc-desc">Nailiyyətlərimiz</span></div>
+          </a>
+          <a href="news.html">
+            <div class="acc-icon"><i class="fas fa-newspaper"></i></div>
+            <div class="acc-text"><span class="acc-title">Xəbərlər</span><span class="acc-desc">Ən son yeniliklər</span></div>
+          </a>
+        </div>
+      </div>
+      <div class="mobile-accordion" id="mob-acc-academic">
+        <div class="mobile-accordion-trigger" onclick="toggleMobileAcc('mob-acc-academic')">
+          Akademik İstiqamətlər
+          <i class="fas fa-chevron-right acc-arrow"></i>
+        </div>
+        <div class="mobile-accordion-body">
+          <a href="lisey.html">
+            <div class="acc-icon"><i class="fas fa-microscope"></i></div>
+            <div class="acc-text"><span class="acc-title">Evrika BETL Nərimanov</span><span class="acc-desc">Elm və Texnologiya Mərkəzi</span></div>
+          </a>
+          <a href="lisey2.html">
+            <div class="acc-icon"><i class="fas fa-atom"></i></div>
+            <div class="acc-text"><span class="acc-title">Evrika BETL Gənclik</span><span class="acc-desc">Beynəlxalq Təhsil Kampusu</span></div>
+          </a>
+          <a href="montessori.html">
+            <div class="acc-icon"><i class="fas fa-child"></i></div>
+            <div class="acc-text"><span class="acc-title">Montessori Kids Academy</span><span class="acc-desc">Bağça və Erkən İnkişaf</span></div>
+          </a>
+          <a href="eduhome.html">
+            <div class="acc-icon"><i class="fas fa-graduation-cap"></i></div>
+            <div class="acc-text"><span class="acc-title">Eduhome Hazırlıq</span><span class="acc-desc">Xaricdə Təhsil və Hazırlıq</span></div>
+          </a>
+          <a href="zumrud.html">
+            <div class="acc-icon"><i class="fas fa-swimmer"></i></div>
+            <div class="acc-text"><span class="acc-title">Zümrüd İdman Mərkəzi</span><span class="acc-desc">Sağlam Həyat və Fəaliyyət</span></div>
+          </a>
+        </div>
+      </div>
+      
+            
+      
+      <div class="mobile-accordion" id="mob-acc-vacancy">
+        <div class="mobile-accordion-trigger" onclick="toggleMobileAcc('mob-acc-vacancy')">
+          Vakansiya &amp; Təcrübə
+          <i class="fas fa-chevron-right acc-arrow"></i>
+        </div>
+        <div class="mobile-accordion-body">
+          <a href="vacancy.html">
+            <div class="acc-icon"><i class="fas fa-briefcase"></i></div>
+            <div class="acc-text"><span class="acc-title">Karyera və Vakansiyalar</span><span class="acc-desc">Açıq iş elanları</span></div>
+          </a>
+          <a href="ptim.html">
+            <div class="acc-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+            <div class="acc-text"><span class="acc-title">Pedaqoji Təcrübə və İnkişaf Mərkəzi</span><span class="acc-desc">PTİM</span></div>
+          </a>
+          
+        </div>
+      </div>
+      <a href="jurnal.html">Evrika Jurnalı</a>
+      <a href="contact.html" data-i18n="nav-contact">Əlaqə</a>
+      <a href="schools.html" style="color: var(--burgundy);" data-i18n="nav-register">Qeydiyyat</a>
+    </div>
+  </div>
+
+    <main>
+
+      <!-- ══════════════════════════════════════════════
+           HERO SECTION
+      ══════════════════════════════════════════════ -->
+      <style>
+        @keyframes ambientFlow {
+          0%   { transform: scale(1) translate(0, 0); }
+          33%  { transform: scale(1.1) translate(20px, -20px); }
+          66%  { transform: scale(0.9) translate(-20px, 20px); }
+          100% { transform: scale(1) translate(0, 0); }
+        }
+        @keyframes shimmerMesh {
+          0%   { background-position: 0 0; }
+          100% { background-position: 60px 60px; }
+        }
+      </style>
+      <section class="section" style="padding: 240px 0 140px; text-align: center; position: relative; overflow: hidden; background: #2A0910;">
+        <div style="position: absolute; inset: 0; background: radial-gradient(circle at 20% 0%, rgba(139,26,43,0.8) 0%, transparent 50%), radial-gradient(circle at 80% 100%, rgba(76,96,171,0.95) 0%, transparent 60%); pointer-events: none;"></div>
+        <div style="position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 30px 30px; animation: shimmerMesh 30s linear infinite; pointer-events: none; opacity: 0.8;"></div>
+        <div style="position: absolute; top: -15%; left: 10%; width: 550px; height: 550px; background: radial-gradient(circle, rgba(175,25,50,0.3) 0%, transparent 70%); filter: blur(70px); animation: ambientFlow 12s infinite ease-in-out; pointer-events: none;"></div>
+        <div style="position: absolute; bottom: -20%; right: 5%; width: 650px; height: 650px; background: radial-gradient(circle, rgba(76,96,171,0.8) 0%, transparent 70%); filter: blur(90px); animation: ambientFlow 18s infinite ease-in-out reverse; pointer-events: none;"></div>
+
+        <div class="container" style="position: relative; z-index: 10;">
+          <div class="brand-eyebrow modern-glow" style="margin-bottom: 24px; color: rgba(255,255,255,0.7); opacity: 1; letter-spacing: 0.6em; text-transform: uppercase; font-weight: 800; font-size: 0.8rem;" data-i18n="about-eyebrow">BİZİM HEKAYƏMIZ</div>
+          <h1 class="titan-header visible" style="font-size: 6rem; color: var(--white); margin: 0 auto 30px; line-height: 1.1; font-weight: 900; letter-spacing: -0.02em; text-align: center; width: 100%;" data-i18n="about-title">
+            Haqqımızda
+          </h1>
+          <p class="subtitle-pro" style="max-width: 800px; margin: 0 auto 50px; font-size: 1.4rem; color: rgba(255,255,255,0.8); line-height: 1.6; font-weight: 400; opacity: 1;" data-i18n="about-desc">
+            “Evrika Təhsil Ekosistemi — hər bir şagirdin potensialını gələcəyə çevirən inkişaf mühitidir! Evrika Təhsil Ekosistemi — hər bir şagirdin potensialını üzə çıxarmaq üçün qurulmuş ilham mənbəyidir.”
+          </p>
+
+
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════════
+           SECTION 1 — MİSSİYA & VİZYON
+      ══════════════════════════════════════════════ -->
+      <section id="mission-section" class="section section-light-heading" style="padding: 100px 0; background: #ffffff; scroll-margin-top: 80px;">
+        <div class="container">
+
+          <!-- Agency Hover Showcase -->
+          <div class="agency-showcase reveal">
+            <div class="agency-menu">
+              <div class="agency-menu-item active" onmouseover="activateAgency(0)" onclick="activateAgency(0)">
+                <span class="agency-num">01</span>
+                <h2 class="agency-title">MİSSİYAMIZ</h2>
+              </div>
+              <div class="agency-menu-item vizyon-item" onmouseover="activateAgency(1)" onclick="activateAgency(1)">
+                <span class="agency-num">02</span>
+                <h2 class="agency-title">VİZYONUMUZ</h2>
+              </div>
+            </div>
+
+            <div class="agency-visuals">
+              <!-- Visual 1: Missiya -->
+              <div class="agency-visual active">
+                <div class="cn-image" style="background-image: url('./assets/mission-hiAtitCX.jpeg');">
+                  <div class="cn-overlay cn-overlay-navy"></div>
+                  <div class="cn-content">
+                    <p class="cn-text">“Milli dəyərlərə sadiq, <span>qlobal düşüncəyə</span> malik, yenilikçi şəxsiyyətlər yetişdirməkdir!”</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Visual 2: Vizyon -->
+              <div class="agency-visual">
+                <div class="cn-image" style="background-image: url('./assets/vision-B0qvuYus.jpeg');">
+                  <div class="cn-overlay cn-overlay-burgundy"></div>
+                  <div class="cn-content">
+                    <p class="cn-text">“Gələcəyin yalnız liderlərini deyil, <span>dünyanı dəyişdirə bilən</span>, cəmiyyətə fayda verən şəxsiyyətlər formalaşdırmaqdır!”</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <style>
+            .agency-showcase {
+              display: flex; align-items: center; justify-content: space-between;
+              gap: 80px; margin-bottom: 50px; padding: 60px 0;
+            }
+            .agency-menu { flex: 1; display: flex; flex-direction: column; gap: 15px; }
+            .agency-menu-item {
+              display: flex; align-items: center; gap: 40px; cursor: pointer;
+              transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+              padding: 30px 0; border-bottom: 1px solid rgba(0,0,0,0.05);
+            }
+            .agency-num { font-size: 1.5rem; font-weight: 800; color: rgba(76,96,171,0.15); transition: all 0.5s ease; }
+            .agency-title {
+              font-size: 6rem; font-weight: 900; color: transparent;
+              -webkit-text-stroke: 2px rgba(76,96,171,0.15);
+              text-transform: uppercase; transition: all 0.5s cubic-bezier(0.25,1,0.5,1);
+              margin: 0; line-height: 1;
+            }
+            .agency-menu-item:hover .agency-title,
+            .agency-menu-item.active .agency-title {
+              color: var(--navy); -webkit-text-stroke: 0px transparent; transform: translateX(30px);
+            }
+            .agency-menu-item.vizyon-item:hover .agency-title,
+            .agency-menu-item.vizyon-item.active .agency-title {
+              color: var(--burgundy);
+            }
+            .agency-menu-item:hover .agency-num,
+            .agency-menu-item.active .agency-num { color: var(--burgundy); transform: rotate(-90deg); }
+            .agency-visuals { flex: 1.2; position: relative; height: 450px; }
+            .agency-visual {
+              position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+              opacity: 0; visibility: hidden;
+              transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+              transform: translateY(40px) scale(0.95);
+            }
+            .agency-visual.active { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+            .cn-image {
+              position: absolute; top: 0; right: 0; left: 0; bottom: 0;
+              background-size: cover; background-position: center;
+              border-radius: 40px; box-shadow: 0 40px 100px rgba(76,96,171,0.2);
+              overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 40px;
+            }
+            .cn-overlay { position: absolute; inset: 0; }
+            .cn-overlay-burgundy { background: linear-gradient(to top, rgba(139,26,43,0.95) 0%, rgba(139,26,43,0.1) 100%); }
+            .cn-overlay-navy    { background: linear-gradient(to top, rgba(76,96,171,0.95) 0%, rgba(76,96,171,0.1) 100%); }
+            .cn-content { position: relative; z-index: 2; max-width: 95%; text-align: center; }
+            .cn-text { font-size: 1.9rem; line-height: 1.6; color: rgba(255,255,255,0.95); font-weight: 400; margin: 0; letter-spacing: -0.5px; }
+            .cn-text span { color: white; font-weight: 700; background: linear-gradient(120deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.2) 100%); background-repeat: no-repeat; background-size: 100% 30%; background-position: 0 90%; }
+            @media (max-width: 992px) {
+              .agency-showcase { flex-direction: column; gap: 40px; }
+              .agency-title { font-size: 3.5rem; -webkit-text-stroke: 1px rgba(76,96,171,0.2); }
+              .agency-menu-item:hover .agency-title,
+              .agency-menu-item.active .agency-title { transform: translateX(15px); }
+              .agency-visuals { width: 100%; height: 450px; min-height: 450px; }
+              .cn-image { padding: 30px 20px; border-radius: 30px; align-items: center; justify-content: center; }
+              .cn-overlay-burgundy { background: linear-gradient(to top, rgba(139,26,43,0.95) 0%, rgba(139,26,43,0.6) 100%); }
+              .cn-overlay-navy    { background: linear-gradient(to top, rgba(76,96,171,0.95) 0%, rgba(76,96,171,0.6) 100%); }
+              .cn-content { text-align: center; }
+              .cn-text { font-size: 1.3rem; line-height: 1.6; }
+            }
+          </style>
+
+          <script>
+            function activateAgency(index) {
+              const items = document.querySelectorAll('.agency-menu-item');
+              const visuals = document.querySelectorAll('.agency-visual');
+              if (!items[index] || !visuals[index]) return;
+              items.forEach(el => el.classList.remove('active'));
+              visuals.forEach(el => el.classList.remove('active'));
+              items[index].classList.add('active');
+              visuals[index].classList.add('active');
+            }
+          </script>
+
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════════
+           SECTION 2 — MƏQSƏDİMİZ  (modernized)
+      ══════════════════════════════════════════════ -->
+      <section id="goals-section" class="section" style="padding: 100px 0; background: #8B1A2B; position:relative; overflow:hidden;">
+        <!-- Decorative blobs -->
+        <div style="position:absolute;top:-80px;left:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(255,255,255,0.06)0%,transparent 70%);border-radius:50%;pointer-events:none;"></div>
+        <div style="position:absolute;bottom:-60px;right:-60px;width:350px;height:350px;background:radial-gradient(circle,rgba(76,96,171,0.2)0%,transparent 70%);border-radius:50%;pointer-events:none;"></div>
+        <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,0.04) 1px,transparent 1px);background-size:30px 30px;pointer-events:none;"></div>
+        
+        <div class="container" style="position:relative;z-index:2;">
+          <div class="reveal" style="text-align:center;margin-bottom:70px;">
+            <div class="eyebrow-label" style="display:inline-block;padding:8px 20px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:8px;margin-bottom:16px;font-weight:800;color:rgba(255,255,255,0.85);text-transform:uppercase;letter-spacing:0.12em;font-size:0.85rem;">Nə Edirik?</div>
+            <h2 class="titan-header" style="font-size:3.5rem;color:#ffffff!important;-webkit-text-fill-color:#ffffff!important;">Məqsədimiz</h2>
+            <p class="section-subtitle" style="max-width:700px;margin:24px auto 0;font-size:1.2rem;color:rgba(255,255,255,0.75);line-height:1.8;">Evrika Təhsil Ekosistemi olaraq məqsədimiz yalnız akademik bilik deyil, həm də etik dəyərlərə malik liderlər yetişdirməkdir.</p>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:30px;">
+            
+            <div class="reveal about-goal-card" style="--gc:#3b82f6;--gcbg:rgba(59,130,246,0.08);">
+              <div class="agc-num">01</div>
+              <div class="agc-icon"><i class="fas fa-star"></i></div>
+              <h3 class="agc-title">Keyfiyyətli Təhsil</h3>
+              <p class="agc-text">Hər şagirdin fərdi inkişafını dəstəkləyən, beynəlxalq standartlara uyğun, müasir metodlarla zənginləşdirilmiş tədris mühiti yaradırıq.</p>
+            </div>
+
+            <div class="reveal about-goal-card" style="--gc:#10b981;--gcbg:rgba(16,185,129,0.08);transition-delay:0.1s;">
+              <div class="agc-num">02</div>
+              <div class="agc-icon"><i class="fas fa-globe-americas"></i></div>
+              <h3 class="agc-title">Qlobal Görüş</h3>
+              <p class="agc-text">Şagirdlərimizi 21-ci əsrin çağırışlarına hazırlayır, onları çoxdilli, mültikultural düşüncəyə malik fərdlər kimi yetişdiririk.</p>
+            </div>
+
+            <div class="reveal about-goal-card" style="--gc:#8b5cf6;--gcbg:rgba(139,92,246,0.08);transition-delay:0.2s;">
+              <div class="agc-num">03</div>
+              <div class="agc-icon"><i class="fas fa-heart"></i></div>
+              <h3 class="agc-title">Etik Dəyərlər</h3>
+              <p class="agc-text">Akademik biliklə yanaşı dürüstlük, məsuliyyət və vətənpərvərlik kimi mənəvi dəyərlərin formalaşmasına xüsusi əhəmiyyət veririk.</p>
+            </div>
+
+            <div class="reveal about-goal-card" style="--gc:#f59e0b;--gcbg:rgba(245,158,11,0.08);transition-delay:0.3s;">
+              <div class="agc-num">04</div>
+              <div class="agc-icon"><i class="fas fa-rocket"></i></div>
+              <h3 class="agc-title">Liderlik & İnkişaf</h3>
+              <p class="agc-text">Şagirdlərə liderlik, yaradıcılıq və innovasiya bacarıqları aşılayaraq onları gələcəyin arxitektorlarına çeviririk.</p>
+            </div>
+
+            <div class="reveal about-goal-card" style="--gc:#ef4444;--gcbg:rgba(239,68,68,0.08);transition-delay:0.4s;">
+              <div class="agc-num">05</div>
+              <div class="agc-icon"><i class="fas fa-users"></i></div>
+              <h3 class="agc-title">Ailə & Cəmiyyət</h3>
+              <p class="agc-text">Müəllim, şagird və valideyn əməkdaşlığını əsas götürərək güclü bir məktəb icması qururuq.</p>
+            </div>
+
+            <div class="reveal about-goal-card" style="--gc:#06b6d4;--gcbg:rgba(6,182,212,0.08);transition-delay:0.5s;">
+              <div class="agc-num">06</div>
+              <div class="agc-icon"><i class="fas fa-microscope"></i></div>
+              <h3 class="agc-title">Elm & Texnologiya</h3>
+              <p class="agc-text">STEAM yanaşması, laboratoriya, kodlaşdırma və robotexnika ilə şagirdlərə gələcəyin texnologiyalarını bu gün öyrədirik.</p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <style>
+        .about-goal-card {
+          background: rgba(255,255,255,0.05);
+          border-radius: 24px;
+          padding: 40px;
+          position: relative;
+          overflow: hidden;
+          border: 1px solid rgba(255,255,255,0.1);
+          box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+          backdrop-filter: blur(10px);
+          transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .about-goal-card:hover {
+          transform: translateY(-10px);
+          background: rgba(255,255,255,0.1);
+          box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+          border-color: var(--gc);
+        }
+        .about-goal-card::before {
+          content: '';
+          position: absolute;
+          top: 0; left: 0; right: 0;
+          height: 3px;
+          background: var(--gc);
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform 0.4s ease;
+        }
+        .about-goal-card:hover::before { transform: scaleX(1); }
+        .agc-num {
+          position: absolute; top: -10px; right: 15px;
+          font-size: 8rem; font-weight: 900;
+          color: rgba(255,255,255,0.04);
+          line-height: 1; pointer-events: none;
+          transition: color 0.3s ease;
+        }
+        .about-goal-card:hover .agc-num { color: var(--gc); opacity: 0.25; }
+        .agc-icon {
+          width: 55px; height: 55px;
+          border-radius: 14px;
+          background: rgba(255,255,255,0.08);
+          color: var(--gc);
+          font-size: 1.4rem;
+          display: flex; align-items: center; justify-content: center;
+          margin-bottom: 24px;
+          border: 1px solid rgba(255,255,255,0.1);
+          transition: all 0.4s ease;
+        }
+        .about-goal-card:hover .agc-icon {
+          background: var(--gc); color: white;
+          transform: scale(1.1);
+          box-shadow: 0 10px 20px var(--gc-glow, rgba(255,255,255,0.2));
+        }
+        .agc-title { font-size: 1.5rem; font-weight: 800; color: #ffffff; margin-bottom: 14px; position: relative; z-index: 1; }
+        .agc-text  { font-size: 1rem; color: rgba(255,255,255,0.65); line-height: 1.7; position: relative; z-index: 1; margin: 0; }
+      </style>
+
+      <!-- ══════════════════════════════════════════════
+           SECTION 3 — TƏSİSÇİNİN MESAJI
+      ══════════════════════════════════════════════ -->
+    <!-- Founder/Message Section (Cinematic Deep Vision Aesthetic) -->
+    <section id="founder" class="section reveal"
+      style="background: radial-gradient(circle at 70% 30%, #1a2a5a 0%, #050a18 100%); color: var(--white); position: relative; overflow: hidden; padding: 160px 0;">
+      <!-- Cinematic Background Text -->
+      <div class="background-text-founder" style="position: absolute; top: 10%; left: 5%; font-size: 15rem; font-weight: 900; color: rgba(255,255,255,0.02); line-height: 1; pointer-events: none; text-transform: uppercase; user-select: none;">
+        FOUNDER
+      </div>
+
+      <!-- Decorative ambient glow -->
+      <div style="position: absolute; bottom: -10%; left: -5%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(139,26,43,0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; z-index: 1;"></div>
+
+      <div class="container" style="position: relative; z-index: 5;">
+        <div class="grid-founder-cinematic">
+          
+          <!-- Modern Portrait with Glass Frame -->
+          <div class="founder-portrait-area">
+             <div class="portrait-glass-frame">
+                <div class="portrait-glow-ring-premium"></div>
+                <div class="portrait-main-img-box">
+                  <img src="ffounder.jpeg" alt="Təsisçi Xudaqulu Rzayev">
+                  <div class="portrait-reflection-overlay"></div>
+                </div>
+                <!-- Floating geometric accents -->
+                <div class="founder-accent-box" style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: rgba(139,26,43,0.8); border-radius: 12px; z-index: 3; display: flex; align-items: center; justify-content: center; transform: rotate(15deg); box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);">
+                    <i class="fas fa-quote-right" style="color: white; font-size: 1.5rem;"></i>
+                </div>
+             </div>
+          </div>
+
+          <div class="founder-message-content">
+            <div class="brand-eyebrow modern-glow" style="margin-bottom: 24px; color: var(--burgundy); letter-spacing: 0.4em; text-transform: uppercase; font-weight: 800; font-size: 0.9rem;">
+            <h2 class="titan-header" style="font-size: clamp(3rem, 5vw, 4.5rem); color: var(--white); line-height: 1.05; margin-bottom: 40px; letter-spacing: -0.01em; text-transform: none;">
+              TƏSİSÇİNİN <br>
+              <span class="gradient-text-burgundy" style="position: relative; z-index: 1;">
+                MESAJI
+                <span style="position: absolute; bottom: 8px; left: 0; width: 100%; height: 12px; background: var(--burgundy); z-index: -1; opacity: 0.2; border-radius: 4px;"></span>
+              </span>
+            </h2>
+
+            <div class="cinematic-quote-wrap">
+               <div class="huge-quote-mark" style="font-size: 8rem; font-family: serif; line-height: 1; color: var(--burgundy); opacity: 0.4; margin-bottom: -50px; margin-left: -20px;">&ldquo;</div>
+               <blockquote class="premium-quote" style="font-size: 1.3rem; line-height: 1.7; color: rgba(255,255,255,0.88); font-weight: 300; font-style: italic; margin-bottom: 36px; position: relative; z-index: 2; letter-spacing: 0; text-transform: none;">
+                 "Evrika Təhsil Ekosistemi” mənim üçün yalnız bir təhsil müəssisəsi deyil — vətənimə, millətimə və onun gələcək tərəqqisinə olan sevgimin təzahürüdür
+               </blockquote>
+            </div>
+
+
+            <div class="founder-official-meta">
+              <div class="f-info-box">
+                <div class="f-name" style="font-size: 1.2rem; font-weight: 800; color: white;">Xudaqulu Rzayev</div>
+                <div class="f-title" style="font-size: 0.72rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 4px;">EVRİKA TƏHSİL EKOSİSTEMİNİN TƏSİSÇİSİ</div>
+              </div>
+              <div class="f-seal-box">
+                <div class="institutional-seal">
+                  <div class="seal-inner">
+                    <img src="./assets/loqoYeni-BW1Euzrg.PNG" alt="Evrika" style="width: 70%; height: auto; filter: brightness(0) invert(1);">
+                  </div>
+                  <svg viewBox="0 0 100 100" class="seal-text-svg">
+                    <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" />
+                    <text font-size="10" fill="rgba(255,255,255,0.4)" font-weight="700">
+                      <textPath xlink:href="#circlePath" startOffset="0%">• EVRİKA • EKOSİSTEMİ •</textPath>
+                    </text>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <style>
+        .grid-founder-cinematic {
+          display: grid;
+          grid-template-columns: 1fr 1.2fr;
+          gap: 100px;
+          align-items: center;
+        }
+
+        .portrait-glass-frame {
+          position: relative;
+          width: 100%;
+          max-width: 440px;
+          height: auto;
+          animation: floating-portrait 6s ease-in-out infinite;
+        }
+
+        .portrait-main-img-box {
+          position: relative;
+          width: 100%;
+          height: auto;
+          border-radius: 30px;
+          overflow: hidden;
+          z-index: 2;
+          box-shadow: 0 50px 100px rgba(0,0,0,0.6);
+          border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .portrait-main-img-box img {
+          width: 100%;
+          height: auto;
+          display: block;
+          object-fit: contain;
+          transition: transform 1s ease;
+        }
+
+        .portrait-glass-frame:hover .portrait-main-img-box img {
+          transform: scale(1.05);
+        }
+
+        .portrait-glow-ring-premium {
+          position: absolute;
+          inset: -15px;
+          border-radius: 40px;
+          background: linear-gradient(135deg, rgba(139,26,43,0.3) 0%, transparent 40%, rgba(255,255,255,0.1) 100%);
+          z-index: 1;
+          backdrop-filter: blur(5px);
+        }
+
+        .portrait-reflection-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(0,0,0,0.2) 100%);
+          pointer-events: none;
+        }
+
+        .founder-official-meta {
+          display: flex;
+          align-items: center;
+          gap: 40px;
+          border-top: 1px solid rgba(255,255,255,0.1);
+          padding-top: 40px;
+          margin-top: 20px;
+        }
+
+        .institutional-seal {
+          position: relative;
+          width: 100px;
+          height: 100px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .seal-inner {
+          width: 60px;
+          height: 60px;
+          background: var(--burgundy);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-weight: 900;
+          font-size: 1.2rem;
+          box-shadow: 0 0 30px rgba(139, 26, 43, 0.5);
+          z-index: 2;
+          border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .seal-text-svg {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          animation: rotate-seal 15s linear infinite;
+          z-index: 1;
+          pointer-events: none;
+        }
+
+        @keyframes rotate-seal {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+
+        @keyframes floating-portrait {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(1deg); }
+        }
+
+        @media (max-width: 992px) {
+          .grid-founder-cinematic {
+            grid-template-columns: 1fr;
+            gap: 60px;
+            text-align: center;
+          }
+          .founder-portrait-area {
+            display: flex;
+            justify-content: center;
+          }
+          .founder-official-meta {
+            flex-direction: column;
+            gap: 30px;
+          }
+          .huge-quote-mark {
+            margin-left: 0;
+            text-align: center;
+          }
+        }
+      </style>
+      </section>
+      
+      <!-- ══════════════════════════════════════════════
+           SECTION 3.5 — VALİDEYN QAYDALARI VƏ ÖHDƏLİKLƏRİ (Scroll-Driven Morphing UI)
+      ══════════════════════════════════════════════ -->
+      <section id="parent-rules" class="section morph-section" style="padding: 100px 0 200px; background: #0b1120; position: relative; color: white; transition: background 0.8s ease;">
+        
+        <div class="container" style="max-width: 1200px; position: relative; z-index: 5;">
+          
+          <div style="text-align: center; margin-bottom: 60px;" class="reveal">
+            <h2 class="titan-header" style="font-size: clamp(2.5rem, 5vw, 3.5rem); color: white !important; -webkit-text-fill-color: white !important; line-height: 1.1; margin-bottom: 20px; font-weight: 900; letter-spacing: -0.02em;">
+              Evrika Konsepsiyası
+            </h2>
+            <p style="font-size: 0.9rem; line-height: 1.6; color: var(--burgundy); font-weight: 800; max-width: 800px; margin: 0 auto; text-transform: uppercase; letter-spacing: 0.4em;">
+              VALİDEYN QAYDALARI VƏ ÖHDƏLİKLƏRİ
+            </p>
+          </div>
+
+
+
+          <div class="modern-rules-timeline">
+            <!-- The vertical progress line -->
+            <div class="timeline-line">
+              <div class="timeline-progress"></div>
+            </div>
+
+            <div class="morph-scroll-list">
+              
+              <div class="morph-item timeline-item item-right" data-index="1" data-color="#0b1120">
+                <div class="item-number">01</div>
+                <div class="item-content">
+                  <div class="mi-header">
+                    <h3>Ümumi prinsiplər</h3>
+                  </div>
+                  <div class="mi-body">
+                    <div class="glass-pill"><i class="fas fa-check-circle"></i> Valideyn Liseyin daxili qaydalarına və tədris yanaşmasına riayət edir</div>
+                    <div class="glass-pill"><i class="fas fa-handshake"></i> Münasibətlər qarşılıqlı hörmət və əməkdaşlıq üzərində qurulur</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="morph-item timeline-item item-left" data-index="2" data-color="#1c0f13">
+                <div class="item-number">02</div>
+                <div class="item-content">
+                  <div class="mi-header">
+                    <h3>Ünsiyyət və məlumatlandırma</h3>
+                  </div>
+                  <div class="mi-body">
+                    <div class="glass-pill"><i class="fas fa-broadcast-tower"></i> Rəsmi məlumat kanalları mütəmadi izlənilməlidir</div>
+                    <div class="glass-pill"><i class="fas fa-user-tie"></i> Suallar birbaşa Lisey rəhbərliyinə yönləndirilməlidir</div>
+                    <div class="glass-pill"><i class="fas fa-exclamation-triangle"></i> Qeyri-rəsmi məlumatlara əsaslanaraq nəticə çıxarmaq yolverilməzdir</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="morph-item timeline-item item-right" data-index="3" data-color="#0c1816">
+                <div class="item-number">03</div>
+                <div class="item-content">
+                  <div class="mi-header">
+                    <h3>Tədris və davamiyyət</h3>
+                  </div>
+                  <div class="mi-body">
+                    <div class="glass-pill"><i class="fas fa-calendar-check"></i> Şagirdin dərslərdə davamiyyəti təmin edilməlidir</div>
+                    <div class="glass-pill"><i class="fas fa-bell"></i> Gecikmə və ya iştirak etməmə halları əvvəlcədən bildirilməlidir</div>
+                    <div class="glass-pill"><i class="fas fa-book-reader"></i> Valideyn şagirdin dərs məsuliyyətini dəstəkləməlidir</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="morph-item timeline-item item-left" data-index="4" data-color="#0d1b2a">
+                <div class="item-number">04</div>
+                <div class="item-content">
+                  <div class="mi-header">
+                    <h3>Psixoloji yanaşma</h3>
+                  </div>
+                  <div class="mi-body">
+                    <div class="glass-pill"><i class="fas fa-brain"></i> Liseyin pedaqoji metodlarına hörmətlə yanaşılmalıdır</div>
+                    <div class="glass-pill"><i class="fas fa-users-cog"></i> Şagird qarşısında müəllim haqqında mənfi fikir formalaşdırılmamalıdır</div>
+                    <div class="glass-pill"><i class="fas fa-heartbeat"></i> Şagirdin emosional vəziyyəti ilə bağlı məlumatlar paylaşılmalıdır</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="morph-item timeline-item item-right" data-index="5" data-color="#140d1a">
+                <div class="item-number">05</div>
+                <div class="item-content">
+                  <div class="mi-header">
+                    <h3>Təhlükəsizlik</h3>
+                  </div>
+                  <div class="mi-body">
+                    <div class="glass-pill"><i class="fas fa-shield-alt"></i> Təhlükəsizlik qaydalarına riayət edilməlidir</div>
+                    <div class="glass-pill"><i class="fas fa-video"></i> Kamera sistemi Lisey qaydalarına uyğun tətbiq olunur</div>
+                    <div class="glass-pill"><i class="fas fa-user-secret"></i> Digər ailələrin məxfiliyinə hörmət olunmalıdır</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="morph-item timeline-item item-left" data-index="6" data-color="#1f0f0f">
+                <div class="item-number">06</div>
+                <div class="item-content">
+                  <div class="mi-header">
+                    <h3>Qidalanma</h3>
+                  </div>
+                  <div class="mi-body">
+                    <div class="glass-pill"><i class="fas fa-utensils"></i> Qidalanma sistemi balanslı və yaşa uyğun təşkil olunur</div>
+                    <div class="glass-pill"><i class="fas fa-notes-medical"></i> Sağlamlıq və allergiya məlumatları əvvəlcədən bildirilməlidir</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="morph-item timeline-item item-right" data-index="7" data-color="#1a120c">
+                <div class="item-number">07</div>
+                <div class="item-content">
+                  <div class="mi-header">
+                    <h3>Etik davranış</h3>
+                  </div>
+                  <div class="mi-body">
+                    <div class="glass-pill"><i class="fas fa-star"></i> Hörmətli ünsiyyət qorunmalıdır</div>
+                    <div class="glass-pill"><i class="fas fa-balance-scale"></i> Mübahisələr rəsmi qaydada həll edilməlidir</div>
+                    <div class="glass-pill"><i class="fas fa-building"></i> Liseyin nüfuzuna xələl gətirə biləcək davranışlardan çəkinilməlidir</div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+            </div>
+          </div>
+
+            </div>
+          </div>
+
+
+        </div>
+
+        <style>
+          .modern-rules-timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 0;
+          }
+
+          .morph-scroll-list {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            width: 100%;
+          }
+
+          .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(255,255,255,0.05);
+            transform: translateX(-50%);
+            z-index: 1;
+          }
+
+          .timeline-progress {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 0%; 
+            background: linear-gradient(to bottom, transparent, var(--burgundy), #ff4d4d);
+            box-shadow: 0 0 20px var(--burgundy);
+            transition: height 0.1s linear;
+          }
+
+          .morph-item.timeline-item {
+            position: relative;
+            z-index: 2;
+            padding: 100px 0;
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            opacity: 0.05;
+            filter: blur(10px);
+            transition: all 1s cubic-bezier(0.2, 1, 0.3, 1);
+          }
+
+          .timeline-item.item-right {
+            align-self: flex-end;
+            padding-left: 60px;
+            align-items: flex-start;
+          }
+
+          .timeline-item.item-left {
+            align-self: flex-start;
+            padding-right: 60px;
+            align-items: flex-end;
+          }
+
+          .morph-item.active {
+            opacity: 1;
+            filter: blur(0);
+            transform: scale(1.05);
+          }
+
+          .item-number {
+            position: absolute;
+            top: 50%;
+            font-size: clamp(8rem, 15vw, 14rem);
+            font-weight: 900;
+            color: rgba(255,255,255,0.02);
+            line-height: 1;
+            z-index: -1;
+            pointer-events: none;
+            transition: all 0.8s ease;
+            white-space: nowrap;
+          }
+
+          /* Centering numbers in their respective halves (Mirror Centering) */
+          .item-right .item-number { 
+            left: -50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+          }
+          
+          .item-left .item-number { 
+            right: -50%;
+            transform: translate(50%, -50%);
+            text-align: center;
+          }
+
+          .morph-item.active .item-number {
+            color: rgba(255,255,255,0.04);
+          }
+
+          .item-content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+          }
+
+          .item-left .item-content { align-items: flex-end; text-align: right; }
+          .item-right .item-content { align-items: flex-start; text-align: left; }
+
+          .morph-item h3 {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 900;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin: 0;
+            transition: all 0.6s ease;
+          }
+
+          .morph-item.active h3 {
+            text-shadow: 0 0 40px rgba(255,255,255,0.3);
+          }
+
+          .mi-body {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 500px;
+          }
+
+          .glass-pill {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 18px 30px;
+            border-radius: 50px;
+            color: rgba(255,255,255,0.5);
+            font-size: 1.1rem;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.5s ease;
+          }
+
+          .item-left .glass-pill { flex-direction: row-reverse; }
+
+          .morph-item.active .glass-pill {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.15);
+            color: white;
+          }
+
+          .glass-pill i {
+            color: var(--burgundy);
+            font-size: 1.2rem;
+            opacity: 0.2;
+            transition: all 0.6s ease;
+          }
+
+          .morph-item.active .glass-pill i {
+            opacity: 1;
+            filter: drop-shadow(0 0 10px var(--burgundy));
+          }
+
+          @media (max-width: 1024px) {
+            .timeline-item { width: 100% !important; align-items: flex-start !important; padding: 60px 0 60px 40px !important; }
+            .item-content { align-items: flex-start !important; text-align: left !important; }
+            .glass-pill { flex-direction: row !important; }
+            .timeline-line { left: 0; }
+            .item-number { font-size: 6rem; left: 0 !important; right: auto !important; }
+          }
+        </style>
+
+        <!-- Intersection Observer Logic for Scroll Events -->
+        <script>
+          document.addEventListener('DOMContentLoaded', () => {
+            const morphItems = document.querySelectorAll('.morph-item');
+            const morphSection = document.getElementById('parent-rules');
+            const progressLine = document.querySelector('.timeline-progress');
+            
+            const observerOptions = {
+              root: null,
+              rootMargin: '-40% 0px -40% 0px',
+              threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  morphItems.forEach(item => item.classList.remove('active'));
+                  entry.target.classList.add('active');
+                  
+                  const newColor = entry.target.getAttribute('data-color');
+                  if (morphSection) morphSection.style.backgroundColor = newColor;
+                }
+              });
+            }, observerOptions);
+
+            morphItems.forEach(item => observer.observe(item));
+
+            // Timeline Progress Logic
+            window.addEventListener('scroll', () => {
+              const sectionRect = morphSection.getBoundingClientRect();
+              const sectionHeight = sectionRect.height;
+              const sectionTop = sectionRect.top;
+              
+              // Calculate progress within section
+              const viewportHeight = window.innerHeight;
+              const progress = Math.max(0, Math.min(100, ((viewportHeight/2 - sectionTop) / sectionHeight) * 100));
+              
+              if (progressLine) progressLine.style.height = `${progress}%`;
+            });
+          });
+        </script>
+      </section>
+
+      <!-- ══════════════════════════════════════════════
+           SECTION 4 — İDARƏ HEYƏTİ
+      ══════════════════════════════════════════════ -->
+      <section id="management-section" class="section" style="padding-top:80px;background:linear-gradient(135deg,#fdfdfd 0%,#f4f5f8 100%);position:relative;overflow:hidden;scroll-margin-top:80px;">
+        <div style="position:absolute;top:-100px;left:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(160,26,50,0.05)0%,rgba(255,255,255,0)70%);border-radius:50%;pointer-events:none;"></div>
+        <div style="position:absolute;bottom:10%;right:-50px;width:300px;height:300px;background:radial-gradient(circle,rgba(17,34,85,0.05)0%,rgba(255,255,255,0)70%);border-radius:50%;pointer-events:none;"></div>
+
+        <div class="container" style="position:relative;z-index:2;">
+
+          <!-- Rəhbərlik -->
+          <div style="margin-bottom:100px;">
+            <div style="text-align:center;margin-bottom:60px;" class="reveal">
+              <p style="color:var(--burgundy);font-weight:700;letter-spacing:0.15em;font-size:0.9rem;text-transform:uppercase;">EVRİKA TƏHSİL EKOSİSTEMİ</p>
+              <h2 class="titan-header" style="font-size:3rem;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-top:10px;">Rəhbərlik</h2>
+              <div style="width:80px;height:4px;background:linear-gradient(90deg,var(--burgundy),transparent);margin:20px auto 0;"></div>
+            </div>
+
+            <style>
+              .team-card {
+                position: relative; border-radius: 20px; overflow: hidden;
+                aspect-ratio: 3/4; background: #f1f3f5;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.07);
+                transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+                cursor: pointer; display: block;
+              }
+              .team-card-img { position: absolute; inset: 0; padding: 12px; box-sizing: border-box; }
+              .team-card-img img {
+                width: 100%; height: 100%; min-width: 100%; min-height: 100%;
+                object-fit: cover; object-position: center 15%;
+                transition: all 0.6s ease; display: block;
+                border-radius: 12px;
+              }
+              .team-card:hover { transform: translateY(-12px) scale(1.02); box-shadow: 0 30px 60px rgba(139,26,43,0.2); }
+              
+              .team-overlay {
+                position: absolute; bottom: 0; left: 0; width: 100%;
+                padding: 50px 20px 24px;
+                background: linear-gradient(to top, rgba(7, 19, 51, 0.97) 0%, rgba(7, 19, 51, 0.5) 60%, transparent 100%);
+                color: white; text-align: center; z-index: 2;
+                transition: background 0.4s ease;
+              }
+              .team-card:hover .team-overlay { background: linear-gradient(to top, rgba(139, 26, 43, 0.95) 0%, rgba(139, 26, 43, 0.5) 60%, transparent 100%); }
+              
+              .team-name { font-size: 1.2rem; font-weight: 800; margin-bottom: 5px; color: #fff; }
+              .team-role { font-size: 0.85rem; color: #ffcccb; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+              .team-quote { font-size: 0.8rem; color: rgba(255,255,255,0.8); font-style: italic; margin-top: 10px; font-weight: 400; line-height: 1.4; display: none; }
+            </style>
+
+            <!-- Dynamic Containers -->
+            <div id="leadership-container" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:30px;justify-content:center;">
+              <!-- Dynamic Leadership Members -->
+            </div>
+          </div>
+
+          <!-- İdarə Heyəti -->
+          <div style="padding-bottom:80px;">
+            <div style="text-align:center;margin-bottom:60px;" class="reveal">
+              <p style="color:var(--burgundy);font-weight:700;letter-spacing:0.15em;font-size:0.9rem;text-transform:uppercase;">PEŞƏKAR KOMANDA</p>
+              <h2 class="titan-header" data-i18n="team-board" style="font-size:3rem;color:var(--navy)!important;-webkit-text-fill-color:var(--navy)!important;margin-top:10px;">İdarə Heyəti</h2>
+              <div style="width:80px;height:4px;background:linear-gradient(90deg,var(--burgundy),transparent);margin:20px auto 0;"></div>
+            </div>
+
+            <div id="board-container" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:30px;">
+              <!-- Dynamic Board Members -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <script>
+        const API_URL = 'https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1';
+        const API_KEY = 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV';
+        const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY };
+
+        async function fetchManagement() {
+          try {
+            const res = await fetch(`${API_URL}/management?select=*&order=id.asc`, { headers: HEADERS, cache: 'no-store' });
+            if (!res.ok) return;
+            const data = await res.json();
+            renderMembers(data.map(r => r.payload));
+          } catch (e) { console.error(e); }
+        }
+
+        function renderMembers(members) {
+          const leadCont = document.getElementById('leadership-container');
+          const boardCont = document.getElementById('board-container');
+          if (!leadCont || !boardCont) return;
+          leadCont.innerHTML = ''; boardCont.innerHTML = '';
+          members.forEach(m => {
+            const html = `
+              <div class="team-card" style="${m.category === 'leadership' ? 'aspect-ratio: 1/1.2;' : ''}">
+                <div class="team-card-img"><img src="${m.img}" alt="${m.name}"></div>
+                <div class="team-overlay" style="${m.category === 'leadership' ? 'padding: 15px 8px 12px;' : ''}">
+                  <div class="team-name" style="${m.category === 'leadership' ? 'font-size: 0.9rem; margin-bottom: 2px;' : ''}">${m.name}</div>
+                  <div class="team-role" style="${m.category === 'leadership' ? 'font-size: 0.65rem;' : ''}">${m.role}</div>
+                  ${m.category === 'leadership' && m.quote ? `<div class="team-quote" style="font-size: 0.6rem; margin-top: 5px;">${m.quote}</div>` : ''}
+                </div>
+              </div>`;
+            if (m.category === 'leadership') leadCont.innerHTML += html;
+            else boardCont.innerHTML += html;
+          });
+        }
+        document.addEventListener('DOMContentLoaded', fetchManagement);
+      </script>
+
+
+
+    </main>
+
+                                                    <!-- Footer -->
+<footer class="site-footer" style="background: #070d1f; color: white; padding: 80px 0 40px; border-top: 1px solid rgba(255,255,255,0.05);">
+    <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 60px;">
+        <div class="footer-brand">
+            <a href="index.html" class="logo" style="color: var(--accent, #8B1A2B); font-size: 1.8rem; font-weight: 900; text-decoration: none; display: block; margin-bottom: 25px;">EVRİKA</a>
+            <p style="color: rgba(255,255,255,0.6); line-height: 1.7; margin-bottom: 30px; font-size: 0.95rem; max-width: 320px;">Evrika Təhsil Ekosistemi — Qlobal təhsil standartları, innovativ yanaşma və parlaq gələcəkdir.</p>
+            <div class="social-icons" style="display: flex; gap: 15px;">
+                <a href="#" style="width: 45px; height: 45px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; transition: 0.3s;"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" style="width: 45px; height: 45px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; transition: 0.3s;"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+
+        <div class="footer-links">
+            <h4 style="text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 30px; font-size: 0.9rem; font-weight: 800; color: var(--accent, #8B1A2B);">NAVİQASİYA</h4>
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <a href="index.html" style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.95rem; transition: 0.3s;">Ana Səhifə</a>
+                <a href="about.html" style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.95rem; transition: 0.3s;">Haqqımızda</a>
+                <a href="schools.html" style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.95rem; transition: 0.3s;">Akademik İstiqamətlər</a>
+                <a href="contact.html" style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.95rem; transition: 0.3s;">Əlaqə</a>
+            </div>
+        </div>
+
+        <div class="footer-contact">
+            <h4 style="text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 30px; font-size: 0.9rem; font-weight: 800; color: var(--accent, #8B1A2B);">Əlaqə</h4>
+                        <div style="display: flex; flex-direction: column; gap: 20px;">
+                <div style="display: flex; gap: 15px; align-items: center;"><i class="fas fa-phone-alt" style="color: var(--accent, #8B1A2B);"></i><span style="color: rgba(255,255,255,0.7); font-weight: 800; font-size: 1.2rem; letter-spacing: 0.1em;">(+994) 12 525 10 10</span></div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom" style="margin-top: 80px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.05);">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+            <p style="color: rgba(255,255,255,0.4); font-size: 0.85rem;">&copy; 2026 Evrika Təhsil Ekosistemi. Bütün hüquqlar qorunur.</p>
+            <div style="display: flex; gap: 30px;">
+                <a href="privacy.html" style="color: rgba(255,255,255,0.3); text-decoration: none; font-size: 0.85rem; transition: 0.3s;">Məxfilik Siyasəti</a>
+                <a href="terms.html" style="color: rgba(255,255,255,0.3); text-decoration: none; font-size: 0.85rem; transition: 0.3s;">İstifadə Şərtləri</a>
+            </div>
+        </div>
+    </div>
+</footer>
+    
+    
+    
+
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const reveals = document.querySelectorAll('.reveal');
+        setTimeout(() => { reveals.forEach(r => r.classList.add('visible')); }, 100);
+      });
+    </script>
+  
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof updateContent === 'function') {
+                updateContent(localStorage.getItem('evrika-lang') || 'az');
+            }
+        });
+    </script>
+
+    
+
+
+    
+
+
+    
+
+
+    
+    
+
+
+
+    
+
+  <script>
+    function toggleMobileAcc(id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.classList.toggle('open');
+    }
+  </script>
+</body>
+</html>

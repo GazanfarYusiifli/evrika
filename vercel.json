@@ -1,0 +1,25 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": null,
+  "rewrites": [
+    { "source": "/about", "destination": "/about.html" },
+    { "source": "/schools", "destination": "/schools.html" },
+    { "source": "/contact", "destination": "/contact.html" },
+    { "source": "/lisey", "destination": "/lisey.html" },
+    { "source": "/lisey2", "destination": "/lisey2.html" },
+    { "source": "/montessori", "destination": "/montessori.html" },
+    { "source": "/eduhome", "destination": "/eduhome.html" },
+    { "source": "/zumrud", "destination": "/zumrud.html" },
+    { "source": "/alumni", "destination": "/alumni.html" },
+    { "source": "/achievements", "destination": "/achievements.html" },
+    { "source": "/vacancy", "destination": "/vacancy.html" },
+    { "source": "/mission", "destination": "/mission.html" },
+    { "source": "/branches", "destination": "/branches.html" },
+    { "source": "/register-lisey1", "destination": "/register-lisey1.html" },
+    { "source": "/register-lisey2", "destination": "/register-lisey2.html" },
+    { "source": "/register-montessori", "destination": "/register-montessori.html" },
+    { "source": "/register-eduhome", "destination": "/register-eduhome.html" },
+    { "source": "/register-zumrud", "destination": "/register-zumrud.html" }
+  ]
+}

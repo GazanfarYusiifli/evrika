@@ -1,0 +1,4131 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="telephone=no" name="format-detection"/>
+<link href="./favicon.svg" rel="icon" type="image/svg+xml"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Evrika Təhsil Ekosistemi | Gələcəyin Liderləri Üçün Premium Platforma</title>
+<meta content="Evrika - Modern, minimalist və innovativ təhsil ekosistemi. Gələcəyin liderlərini yetişdiririk." name="description"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" rel="stylesheet">
+<style>
+    .welcome-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.2); /* Lighter tint */
+        backdrop-filter: blur(4px); /* Reduced blur */
+        -webkit-backdrop-filter: blur(4px);
+        display: none;
+        align-items: flex-start;
+        justify-content: flex-end;
+        padding-top: 20px;
+        z-index: 10000;
+        opacity: 0;
+        transition: all 0.5s ease;
+        pointer-events: auto; /* Re-enable pointer events for blur focus */
+    }
+    .welcome-modal-overlay.active {
+        display: flex;
+        opacity: 1;
+    }
+    .welcome-modal-content {
+        background: white;
+        width: 90%;
+        max-width: 380px; 
+        border-radius: 24px; /* Increased from 12px */
+        margin: 30px; 
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+        transform: translateX(100px);
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        pointer-events: auto;
+        display: flex;
+        flex-direction: column;
+    }
+    .welcome-modal-overlay.active .welcome-modal-content {
+        transform: translateX(0);
+    }
+    .welcome-modal-image {
+        width: calc(100% - 20px); 
+        height: 130px; 
+        object-fit: cover;
+        margin: 10px;
+        border-radius: 18px; /* Increased from 8px */
+    }
+    .welcome-modal-body {
+        padding: 0 20px 20px; 
+        text-align: left;
+    }
+    .welcome-modal-title {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: #000;
+        margin-bottom: 6px;
+        line-height: 1.2;
+    }
+    .welcome-modal-desc {
+        font-size: 0.82rem;
+        color: #444;
+        line-height: 1.45;
+        margin-bottom: 18px;
+    }
+    .welcome-modal-btn {
+        display: inline-block;
+        background: var(--burgundy);
+        color: white;
+        padding: 10px 30px; 
+        border-radius: 100px; /* Pill style */
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+    }
+    .welcome-modal-btn:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
+    .welcome-modal-close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        width: 24px;
+        height: 24px;
+        background: rgba(255,255,255,0.95);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.05);
+        z-index: 10;
+        font-size: 0.7rem;
+        color: #333;
+    }
+    @media (max-width: 768px) {
+        .welcome-modal-overlay {
+            align-items: center;
+            justify-content: center;
+            padding-top: 0;
+            background: rgba(0, 0, 0, 0.4);
+        }
+        .welcome-modal-content {
+            margin: 20px;
+            transform: translateY(40px);
+        }
+        .welcome-modal-overlay.active .welcome-modal-content {
+            transform: translateY(0);
+        }
+    }
+  </style>
+</link></link></meta>  <script type="module" crossorigin src="./assets/main-CAvis0qM.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/style-BoASLbo9.css">
+</head>
+<body>
+<!-- Navbar visibility rule removed to stay visible on all slides -->
+<!-- Admission Welcome Modal -->
+<div class="welcome-modal-overlay" id="welcomeModal">
+<div class="welcome-modal-content">
+<div class="welcome-modal-close" onclick="closeWelcomeModal()">
+<i class="fas fa-times"></i>
+</div>
+<img alt="Admission" class="welcome-modal-image" src="./assets/admission_popup-BGAAGbA6.jpg"/>
+<div class="welcome-modal-body">
+<h2 class="welcome-modal-title" data-i18n="modal-title">Evrika Təhsil Ekosisteminə qəbul başlandı!</h2>
+<p class="welcome-modal-desc" data-i18n="modal-desc">
+          2026/2027 tədris ili üzrə qeydiyyat açıqdır! Onlayn müraciət edərək övladınızın gələcəyini bizimlə qurun. Daha sonra əməkdaşlarımız Sizinlə əlaqə saxlayaraq suallarınızı cavablandıracaqlar.
+        </p>
+<a class="welcome-modal-btn" data-i18n="modal-btn" href="schools.html">Qeydiyyatdan keç</a>
+</div>
+</div>
+</div>
+<!-- Ultra-Modern Floating Navbar -->
+<header class="navbar modern-floating-nav">
+<div class="nav-glass-container">
+<a class="logo" href="index.html" style="display:flex;align-items:center;padding:0;background:none;"><img alt="Evrika" src="./assets/loqoYeni-BW1Euzrg.PNG" style="height:125px;width:125px;object-fit:contain;display:block;"/></a>
+<nav class="nav-links">
+<a data-i18n="nav-home" href="index.html">Ana Səhifə</a>
+<div class="nav-item-has-dropdown">
+<a data-i18n="nav-about" href="about.html">Haqqımızda</a>
+<div class="nav-dropdown">
+<a class="dropdown-item" href="about.html">
+<div class="item-icon"><i class="fas fa-info-circle"></i></div>
+<div class="dropdown-item-text">
+<span class="dropdown-item-title" data-i18n="nav-about">Haqqımızda</span>
+<span class="dropdown-item-desc" data-i18n="nav-about-desc">Bizim hekayəmiz</span>
+</div>
+</a>
+<a class="dropdown-item" href="alumni.html">
+<div class="item-icon"><i class="fas fa-user-graduate"></i></div>
+<div class="dropdown-item-text">
+<span class="dropdown-item-title" data-i18n="nav-alumni">Məzunlar</span>
+<span class="dropdown-item-desc" data-i18n="nav-alumni-desc">Fəxrlərimiz</span>
+</div>
+</a>
+<a class="dropdown-item" href="achievements.html">
+<div class="item-icon"><i class="fas fa-trophy"></i></div>
+<div class="dropdown-item-text">
+<span class="dropdown-item-title" data-i18n="nav-achievements">Uğurlar</span>
+<span class="dropdown-item-desc" data-i18n="nav-achievements-desc">Nailiyyətlərimiz</span>
+</div>
+</a>
+<a class="dropdown-item" href="news.html">
+<div class="item-icon"><i class="fas fa-newspaper"></i></div>
+<div class="dropdown-item-text">
+<span class="dropdown-item-title" data-i18n="nav-news">Xəbərlər</span>
+<span class="dropdown-item-desc" data-i18n="nav-news-desc">Ən son yeniliklər</span>
+</div>
+</a>
+</div>
+</div>
+<div class="nav-item-has-dropdown">
+<a data-i18n="nav-academic" href="schools.html">Akademik İstiqamətlər</a>
+<div class="nav-dropdown">
+<a class="dropdown-item" href="lisey.html">
+<div class="item-icon"><i class="fas fa-microscope"></i></div>
+<div class="dropdown-item-text">
+<span class="dropdown-item-title" data-i18n="nav-lisey1">Evrika BETL Nərimanov</span>
+<span class="dropdown-item-desc" data-i18n="nav-lisey1-desc">Elm və Texnologiya Mərkəzi</span>
+</div>
+</a>
+<a class="dropdown-item" href="lisey2.html">
+<div class="item-icon"><i class="fas fa-atom"></i></div>
+<div class="dropdown-item-text">
+<span class="dropdown-item-title" data-i18n="nav-lisey2">Evrika BETL Gənclik</span>
+<span class="dropdown-item-desc" data-i18n="nav-lisey2-desc">Beynəlxalq Təhsil Müəssisəsi</span>
+</div>
+</a>
+<a class="dropdown-item" href="montessori.html">
+<div class="item-icon"><i class="fas fa-child"></i></div>
+<div class="dropdown-item-text">
+<span class="dropdown-item-title" data-i18n="nav-montessori">Montessori Kids Academy</span>
+<span class="dropdown-item-desc" data-i18n="nav-montessori-desc">Bağça və Erkən İnkişaf</span>
+</div>
+</a>
+<a class="dropdown-item" href="eduhome.html">
+<div class="item-icon"><i class="fas fa-graduation-cap"></i></div>
+<div class="dropdown-item-text">
+<span class="dropdown-item-title" data-i18n="nav-eduhome">Eduhome Hazırlıq</span>
+<span class="dropdown-item-desc" data-i18n="nav-eduhome-desc">Xaricdə Təhsil və Hazırlıq</span>
+</div>
+</a>
+<a class="dropdown-item" href="zumrud.html">
+<div class="item-icon"><i class="fas fa-swimmer"></i></div>
+<div class="dropdown-item-text">
+<span class="dropdown-item-title" data-i18n="nav-zumrud">Zümrüd İdman Mərkəzi</span>
+<span class="dropdown-item-desc" data-i18n="nav-zumrud-desc">Sağlam Həyat və Fəaliyyət</span>
+</div>
+</a>
+</div>
+</div>
+<div class="nav-item-has-dropdown">
+<a data-i18n="nav-vacancy" href="vacancy.html">Vakansiya &amp; Təcrübə</a>
+<div class="nav-dropdown">
+<a class="dropdown-item" href="vacancy.html">
+<div class="item-icon"><i class="fas fa-briefcase"></i></div>
+<div class="dropdown-item-text">
+<span class="dropdown-item-title" data-i18n="nav-vac-title">Karyera və Vakansiyalar</span>
+<span class="dropdown-item-desc" data-i18n="nav-vac-desc">Açıq iş elanları</span>
+</div>
+</a>
+<a class="dropdown-item" href="ptim.html">
+<div class="item-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+<div class="dropdown-item-text">
+<span class="dropdown-item-title" data-i18n="nav-ptim-title">Pedaqoji Təcrübə və İnkişaf Mərkəzi</span>
+<span class="dropdown-item-desc" data-i18n="nav-ptim-desc">PTİM</span>
+</div>
+</a>
+</div>
+</div>
+<a data-i18n="nav-journal" href="jurnal.html">Evrika Jurnalı</a>
+<a data-i18n="nav-contact" href="contact.html">Əlaqə</a>
+</nav>
+<div class="nav-actions">
+<div class="lang-dropdown-wrapper desktop-lang-wrapper" style="position: relative; display: inline-flex; margin-right: 12px; height: 100%;">
+<button class="lang-toggle-btn" onblur="let menu = this.nextElementSibling; setTimeout(() =&gt; menu.style.display = 'none', 200);" onclick="let menu = this.nextElementSibling; menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';" onmouseout="this.style.background='#1e3a8a'" onmouseover="this.style.background='#284baf'" style="background: #1e3a8a; border: none; color: white; padding: 12px 22px; border-radius: 100px; font-weight: 800; font-size: 0.95rem; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; min-width: 80px;">
+<span class="lang-text">AZ</span> <i class="fas fa-chevron-down" style="margin-left: 10px; font-size: 0.8rem; opacity: 0.9;"></i>
+</button>
+<div class="lang-menu" style="position: absolute; top: 115%; left: 50%; transform: translateX(-50%); background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: none; flex-direction: column; overflow: hidden; min-width: 80px; z-index: 100;">
+<a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='AZ'); window.updateContent('az'); this.parentElement.style.display='none';" onmouseout="this.style.background='white'" onmouseover="this.style.background='#f5f5f5'" style="padding: 10px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #eee;">AZ</a>
+<a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='EN'); window.updateContent('en'); this.parentElement.style.display='none';" onmouseout="this.style.background='white'" onmouseover="this.style.background='#f5f5f5'" style="padding: 10px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #eee;">EN</a>
+<a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='RU'); window.updateContent('ru'); this.parentElement.style.display='none';" onmouseout="this.style.background='white'" onmouseover="this.style.background='#f5f5f5'" style="padding: 10px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center;">RU</a>
+</div>
+</div>
+<a class="btn btn-primary nav-btn" data-i18n="nav-register" href="schools.html">Qeydiyyat</a>
+</div>
+<div class="mobile-menu-btn" id="mobile-toggle"><i class="fas fa-bars"></i></div>
+</div>
+</header>
+<!-- Mobile Navigation Overlay (Neo-Glass) -->
+<div class="mobile-nav-overlay" id="mobile-nav">
+<div class="close-mobile" id="mobile-close"><i class="fas fa-times"></i></div>
+<div class="mobile-lang-wrapper" style="position: absolute; top: 25px; left: 25px; z-index: 10001;">
+<div class="lang-dropdown-wrapper" style="position: relative; display: inline-block;">
+<button class="lang-toggle-btn" onblur="let menu = this.nextElementSibling; setTimeout(() =&gt; menu.style.display = 'none', 200);" onclick="let menu = this.nextElementSibling; menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';" onmouseout="this.style.background='#1e3a8a'" onmouseover="this.style.background='#284baf'" style="background: #1e3a8a; border: none; color: white; padding: 12px 20px; border-radius: 100px; font-weight: 800; font-size: 0.95rem; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; min-width: 70px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+<span class="lang-text">AZ</span> <i class="fas fa-chevron-down" style="margin-left: 8px; font-size: 0.75rem; opacity: 0.9;"></i>
+</button>
+<div class="lang-menu" style="position: absolute; top: 115%; left: 0; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: none; flex-direction: column; overflow: hidden; min-width: 90px; z-index: 100;">
+<a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='AZ'); window.updateContent('az'); this.parentElement.style.display='none';" onmouseout="this.style.background='white'" onmouseover="this.style.background='#f5f5f5'" style="padding: 12px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #eee;">AZ</a>
+<a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='EN'); window.updateContent('en'); this.parentElement.style.display='none';" onmouseout="this.style.background='white'" onmouseover="this.style.background='#f5f5f5'" style="padding: 12px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #eee;">EN</a>
+<a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='RU'); window.updateContent('ru'); this.parentElement.style.display='none';" onmouseout="this.style.background='white'" onmouseover="this.style.background='#f5f5f5'" style="padding: 12px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center;">RU</a>
+</div>
+</div>
+</div>
+<div class="mobile-nav-links">
+<a data-i18n="nav-home" href="index.html">Ana Səhifə</a>
+<div class="mobile-accordion" id="mob-acc-about">
+<div class="mobile-accordion-trigger" onclick="toggleMobileAcc('mob-acc-about')">
+          Haqqımızda
+          <i class="fas fa-chevron-right acc-arrow"></i>
+</div>
+<div class="mobile-accordion-body">
+<a href="about.html">
+<div class="acc-icon"><i class="fas fa-info-circle"></i></div>
+<div class="acc-text"><span class="acc-title" data-i18n="nav-about">Haqqımızda</span><span class="acc-desc">Bizim hekayəmiz</span></div>
+</a>
+<a href="alumni.html">
+<div class="acc-icon"><i class="fas fa-user-graduate"></i></div>
+<div class="acc-text"><span class="acc-title">Məzunlar</span><span class="acc-desc">Fəxrlərimiz</span></div>
+</a>
+<a href="achievements.html">
+<div class="acc-icon"><i class="fas fa-trophy"></i></div>
+<div class="acc-text"><span class="acc-title">Uğurlar</span><span class="acc-desc">Nailiyyətlərimiz</span></div>
+</a>
+<a href="news.html">
+<div class="acc-icon"><i class="fas fa-newspaper"></i></div>
+<div class="acc-text"><span class="acc-title">Xəbərlər</span><span class="acc-desc">Ən son yeniliklər</span></div>
+</a>
+</div>
+</div>
+<div class="mobile-accordion" id="mob-acc-academic">
+<div class="mobile-accordion-trigger" onclick="toggleMobileAcc('mob-acc-academic')">
+          Akademik İstiqamətlər
+          <i class="fas fa-chevron-right acc-arrow"></i>
+</div>
+<div class="mobile-accordion-body">
+<a href="lisey.html">
+<div class="acc-icon"><i class="fas fa-microscope"></i></div>
+<div class="acc-text"><span class="acc-title">Evrika BETL Nərimanov</span><span class="acc-desc">Elm və Texnologiya Mərkəzi</span></div>
+</a>
+<a href="lisey2.html">
+<div class="acc-icon"><i class="fas fa-atom"></i></div>
+<div class="acc-text"><span class="acc-title">Evrika BETL Gənclik</span><span class="acc-desc">Beynəlxalq Təhsil Kampusu</span></div>
+</a>
+<a href="montessori.html">
+<div class="acc-icon"><i class="fas fa-child"></i></div>
+<div class="acc-text"><span class="acc-title">Montessori Kids Academy</span><span class="acc-desc">Bağça və Erkən İnkişaf</span></div>
+</a>
+<a href="eduhome.html">
+<div class="acc-icon"><i class="fas fa-graduation-cap"></i></div>
+<div class="acc-text"><span class="acc-title">Eduhome Hazırlıq</span><span class="acc-desc">Xaricdə Təhsil və Hazırlıq</span></div>
+</a>
+<a href="zumrud.html">
+<div class="acc-icon"><i class="fas fa-swimmer"></i></div>
+<div class="acc-text"><span class="acc-title">Zümrüd İdman Mərkəzi</span><span class="acc-desc">Sağlam Həyat və Fəaliyyət</span></div>
+</a>
+</div>
+</div>
+<div class="mobile-accordion" id="mob-acc-vacancy">
+<div class="mobile-accordion-trigger" onclick="toggleMobileAcc('mob-acc-vacancy')">
+          Vakansiya &amp; Təcrübə
+          <i class="fas fa-chevron-right acc-arrow"></i>
+</div>
+<div class="mobile-accordion-body">
+<a href="vacancy.html">
+<div class="acc-icon"><i class="fas fa-briefcase"></i></div>
+<div class="acc-text"><span class="acc-title">Karyera və Vakansiyalar</span><span class="acc-desc">Açıq iş elanları</span></div>
+</a>
+<a href="ptim.html">
+<div class="acc-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+<div class="acc-text"><span class="acc-title">Pedaqoji Təcrübə və İnkişaf Mərkəzi</span><span class="acc-desc">PTİM</span></div>
+</a>
+</div>
+</div>
+<a data-i18n="nav-journal" href="jurnal.html">Evrika Jurnalı</a>
+<a data-i18n="nav-contact" href="contact.html">Əlaqə</a>
+<a data-i18n="nav-register" href="schools.html" style="color: var(--burgundy);">Qeydiyyat</a>
+</div>
+</div>
+<main>
+<!-- Hero Section (Titan-Scale Cinematic) -->
+<!-- Hero Section (Cinematic Slider with Per-Slide Backgrounds) -->
+<section class="hero-video-slider" id="home">
+<div class="hero-slider-overlay">
+<div class="swiper heroSwiper">
+<div class="swiper-wrapper">
+<!-- Slide 1: Reklam Video — with inline controls -->
+<div class="swiper-slide slide-video-only">
+<div class="slide-bg">
+<div class="video-overlay" style="background: linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.02) 40%, rgba(0,0,0,0.6) 100%);">
+</div>
+<!-- loop silinib ki video.ended işləsin -->
+<video autoplay="" class="hero-video" id="heroReklam" muted="" playsinline="" style="width:100%;height:100%;min-height:100%;object-fit:cover;position:absolute;inset:0;">
+<source src="./assets/intro-CybWgz2P.mp4" type="video/mp4"/>
+</video>
+<!-- Bottom content: title + subtitle + all buttons in one row -->
+<div class="hero-content-responsive" style="position:absolute;bottom:0;left:0;right:0;z-index:20;padding:36px 56px 48px;background:linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);text-align:left;">
+<h1 class="hero-main-title" data-i18n="hero-title" style="font-family:'Inter',sans-serif;font-size:clamp(2rem,4vw,3.4rem);font-weight:900;color:white;line-height:1.05;letter-spacing:-0.02em;margin:0 0 12px;text-transform:uppercase;-webkit-text-fill-color:white;background:none;max-width:800px;">
+                    HƏR UŚAQDA BİR GƎLƎCƎK<br/>GİZLİDİR
+                  </h1>
+<p data-i18n="hero-subtitle" style="color:rgba(255,255,255,0.82);font-size:clamp(0.85rem,1.4vw,1rem);margin:0 0 24px;max-width:480px;line-height:1.5;">
+                    Biz o gələcəyi kəşf edir, inkişaf etdirir və uğura çeviririk!
+                  </p>
+<!-- All buttons in ONE row -->
+<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+<!-- Qeydiyyat -->
+<a class="hero-cta-btn" data-i18n="nav-register" href="register-lisey1.html" onmouseout="this.style.background='white'" onmouseover="this.style.background='#eee'" style="padding:11px 26px;border-radius:50px;background:white;color:#111;font-weight:700;font-size:0.88rem;text-decoration:none;display:inline-flex;align-items:center;transition:all 0.3s ease;">
+                      Qeydiyyat
+                    </a>
+<!-- İzlə -->
+<button class="hero-cta-btn" onclick="openVideoModal('assets/intro.mp4')" onmouseout="this.style.background='rgba(255,255,255,0.12)'" onmouseover="this.style.background='rgba(255,255,255,0.22)'" style="padding:11px 26px;border-radius:50px;background:rgba(255,255,255,0.12);backdrop-filter:blur(12px);border:1.5px solid rgba(255,255,255,0.4);color:white;font-weight:700;font-size:0.88rem;cursor:pointer;display:inline-flex;align-items:center;gap:9px;transition:all 0.3s ease;">
+<span data-i18n="btn-watch">İzlə</span> <i class="fas fa-play" style="font-size:0.75rem;"></i>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Slide 4: Montessori Kids Academy -->
+<div class="swiper-slide">
+<div class="slide-bg" style="overflow:hidden;">
+<div class="video-overlay" style="background: rgba(0, 0, 0, 0.55); z-index:2;"></div>
+<img alt="Evrika Montessori Kids Academy" src="./assets/IMG_8894-C_DhyDCe.jpg" style="width:100%;height:100%;min-height:100%;object-fit:cover;object-position:center center;position:absolute;inset:0;z-index:1;"/>
+</div>
+<div class="container slide-content-center">
+<div class="reveal">
+<div class="brand-eyebrow modern-glow" data-i18n="home-sec1-badge" style="margin-bottom: 32px; color: var(--white); opacity: 0.8; letter-spacing: 0.8em; text-transform: uppercase;">
+                    Erkən İnkişaf</div>
+<h2 class="titan-header" style="font-size: clamp(2.5rem, 5vw, 4.5rem); color: var(--white); margin-bottom: 32px; font-weight: 900; text-transform: uppercase;">
+                    Evrika <span style="color: var(--burgundy); -webkit-text-fill-color: var(--burgundy);">Montessori</span> <br/>
+                    Kids Academy
+                  </h2>
+<p class="subtitle-pro hero-sub-text" data-i18n="home-sec1-desc" style="color: rgba(255,255,255,0.9); max-width: 750px; margin: 0 auto 48px; font-size: clamp(1rem, 2vw, 1.4rem);">
+                    Uşaqların təbii marağını, yaradıcılığını və müstəqilliyini inkişaf etdirən Montessori metodu əsasında fərdi yanaşma ilə erkən uşaqlıq təhsili.
+                  </p>
+<a class="btn btn-primary btn-xl" data-i18n="btn-detail" href="montessori.html">Ətraflı</a>
+</div>
+</div>
+</div>
+<!-- Slide 3: Evrika BETL Nərimanov + Gənclik -->
+<div class="swiper-slide">
+<div class="slide-bg" style="overflow:hidden;">
+<div class="video-overlay" style="background: linear-gradient(135deg, rgba(5,10,24,0.85) 0%, rgba(26,42,90,0.6) 100%); z-index:2;"></div>
+<img alt="Evrika BETL Liseyi" src="./assets/genclik-bg-BD_eDJKQ.jpg" style="width:100%;height:100%;min-height:100%;object-fit:cover;object-position:center 15%;position:absolute;inset:0;z-index:1;"/>
+</div>
+<div class="container slide-content-center">
+<div class="reveal">
+<div class="brand-eyebrow modern-glow" data-i18n="home-sec2-badge" style="margin-bottom: 32px; color: var(--white); opacity: 0.8; letter-spacing: 0.8em; text-transform: uppercase;">
+                    Qlobal Təhsil</div>
+<h2 class="titan-header" style="font-size: clamp(2.5rem, 5vw, 4.5rem); color: var(--white); margin-bottom: 32px; font-weight: 900; text-transform: uppercase;">
+<span style="color: var(--burgundy); -webkit-text-fill-color: var(--burgundy);">Evrika</span> Beynəlxalq Elm və Texnologiya Liseyi
+                  </h2>
+<p class="subtitle-pro hero-sub-text" data-i18n="home-sec2-desc" style="color: rgba(255,255,255,0.9); max-width: 750px; margin: 0 auto 48px; font-size: clamp(1rem, 2vw, 1.4rem);">
+                    Cambridge proqramı, STEAM yönümlü tədris və laboratoriya əsaslı innovasiya mühiti ilə şagirdləri gələcəyə hazırlayan beynəlxalq akademik mərkəz.
+                  </p>
+<div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+<a class="btn btn-primary btn-xl" data-i18n="btn-nerimanov" href="lisey.html">Nərimanov — Ətraflı</a>
+<a class="btn btn-xl" data-i18n="btn-genclik" href="lisey2.html" style="background:rgba(255,255,255,0.12);color:white;border:1.5px solid rgba(255,255,255,0.4);backdrop-filter:blur(10px);">Gənclik — Ətraflı</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Slide 5: Eduhome Hazırlıq Mərkəzi -->
+<div class="swiper-slide">
+<div class="slide-bg" style="overflow:hidden;">
+<div class="video-overlay" style="background: rgba(0, 0, 0, 0.60); z-index:2;"></div>
+<img alt="Eduhome Hazırlıq Mərkəzi" src="./assets/1000720067-sTXNOePm.jpg" style="width:100%;height:100%;min-height:100%;object-fit:cover;object-position:center 3%;position:absolute;inset:0;z-index:1;"/>
+</div>
+<div class="container slide-content-center">
+<div class="reveal">
+<div class="brand-eyebrow modern-glow" data-i18n="home-sec3-badge" style="margin-bottom: 32px; color: var(--white); opacity: 0.8; letter-spacing: 0.8em; text-transform: uppercase;">
+                    Akademik Dəstək</div>
+<h2 class="titan-header" style="font-size: clamp(2.5rem, 5vw, 4.5rem); color: var(--white); margin-bottom: 32px; font-weight: 900; text-transform: uppercase;">
+<span style="color: var(--burgundy); -webkit-text-fill-color: var(--burgundy);">Eduhome</span> <br/>
+                    Təhsil Mərkəzi
+                  </h2>
+<p class="subtitle-pro hero-sub-text" data-i18n="home-sec3-desc" style="color: rgba(255,255,255,0.9); max-width: 750px; margin: 0 auto 48px; font-size: clamp(1rem, 2vw, 1.4rem);">
+                    Xaricdə təhsil, universitetlərə hazırlıq, dil kursları və peşəkar akademik mentorluq ilə hər şagirdin potensialını açan hazırlıq mərkəzi.
+                  </p>
+<a class="btn btn-primary btn-xl" data-i18n="btn-detail" href="eduhome.html">Ətraflı</a>
+</div>
+</div>
+</div>
+<!-- Slide 6: Zümrüd Women Club -->
+<div class="swiper-slide">
+<div class="slide-bg">
+<div class="video-overlay" style="background: rgba(0, 0, 0, 0.60); z-index:2;"></div>
+<img alt="Zümrüd Womens Club" src="./assets/slide6-zumrud-D3xCkXu7.png" style="width:100%;height:100%;min-height:100%;object-fit:cover;object-position:center center;position:absolute;inset:0;z-index:1;"/>
+</div>
+<div class="container slide-content-center">
+<div class="reveal">
+<div class="brand-eyebrow modern-glow" data-i18n="home-sec4-badge" style="margin-bottom: 32px; color: var(--white); opacity: 0.8; letter-spacing: 0.8em; text-transform: uppercase;">
+                    Sağlam Həyat</div>
+<h2 class="titan-header hero-main-title" style="font-size: clamp(2.5rem, 5vw, 4.5rem); color: var(--white); margin-bottom: 32px; font-weight: 900; text-transform: uppercase;">
+<span style="color: var(--burgundy); -webkit-text-fill-color: var(--burgundy);">Zümrüd</span> <br/>
+                    Women Club
+                  </h2>
+<p class="subtitle-pro hero-sub-text" data-i18n="home-sec4-desc" style="color: rgba(255,255,255,0.9); max-width: 750px; margin: 0 auto 48px; font-size: clamp(1rem, 2vw, 1.4rem);">
+                    Evrika Active Life tərəfindən qadınlar üçün sağlam həyat tərzi, fitness, yoga və sosial inkişaf fəaliyyətlərini özündə birləşdirən premium idman mərkəzi.
+                  </p>
+<a class="btn btn-primary btn-xl" data-i18n="btn-detail" href="zumrud.html" style="background: var(--burgundy) !important; border-color: var(--burgundy) !important; color: white !important;">Ətraflı</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Slider Navigation (gizli) -->
+<div class="swiper-pagination" style="display:none;"></div>
+<div class="swiper-button-next swiper-nav-custom" style="display:none;"></div>
+<div class="swiper-button-prev swiper-nav-custom" style="display:none;"></div>
+</div>
+
+<!-- Global Hero Controls — bottom-right, all slides -->
+<div class="hero-controls-container" id="heroControls">
+<!-- Pause/Play with circular progress ring -->
+<button id="heroPlayBtn" onclick="toggleHeroPlay()" style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.15);backdrop-filter:blur(12px);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;padding:0;transition:all 0.25s ease;" title="Pause/Play">
+<svg class="progress-svg" height="48" style="position:absolute;top:0;left:0;transform:rotate(-90deg);" viewbox="0 0 48 48" width="48">
+<circle cx="24" cy="24" fill="none" r="21" stroke="rgba(255,255,255,0.2)" stroke-width="2.5"></circle>
+<circle cx="24" cy="24" fill="none" id="progressRing" r="21" stroke="white" stroke-dasharray="131.95" stroke-dashoffset="131.95" stroke-width="2.5" style="transition:stroke-dashoffset 0.05s linear;"></circle>
+</svg>
+<i class="fas fa-pause" id="heroPlayIcon" style="color:white;font-size:0.9rem;position:relative;z-index:1;"></i>
+</button>
+<!-- Prev -->
+<button id="heroPrevBtn" onclick="heroSlidePrev()" onmouseout="this.style.opacity='1'" onmouseover="this.style.opacity='0.7'" style="width:48px;height:48px;border-radius:50%;background:none;backdrop-filter:none;border:none;color:white;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.25s ease;">
+<i class="fas fa-chevron-left"></i>
+</button>
+<!-- Next -->
+<button id="heroNextBtn" onclick="heroSlideNext()" onmouseout="this.style.opacity='1'" onmouseover="this.style.opacity='0.7'" style="width:48px;height:48px;border-radius:50%;background:none;backdrop-filter:none;border:none;color:white;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.25s ease;">
+<i class="fas fa-chevron-right"></i>
+</button>
+</div>
+<style>
+        .hero-controls-container {
+          position: absolute;
+          bottom: 32px;
+          right: 36px;
+          z-index: 100;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        @media (max-width: 768px) {
+          .hero-controls-container {
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: block; /* Break flex for absolute children */
+          }
+
+          #heroPlayBtn {
+            display: none !important; /* Hide play button entirely */
+          }
+
+          #heroPrevBtn, #heroNextBtn {
+            pointer-events: auto;
+            position: absolute !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            width: 36px !important;
+            height: 36px !important;
+            background: rgba(0,0,0,0.4) !important;
+            border-radius: 50% !important;
+            color: white !important;
+            font-size: 1rem !important; /* Small arrows */
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,0.2) !important;
+            backdrop-filter: blur(5px);
+          }
+
+          #heroPrevBtn {
+            left: 15px !important;
+          }
+
+          #heroNextBtn {
+            right: 15px !important;
+          }
+        }
+      </style>
+</section>
+<!-- Schools Section (Ultra-Modern Glass Cards) -->
+<section class="section bg-light" id="schools">
+<div class="container">
+<div class="section-header reveal" style="text-align: center; max-width: 800px; margin: 0 auto 80px;">
+<div class="brand-eyebrow" data-i18n="eco-title1" style="margin-bottom: 24px; text-transform: uppercase; letter-spacing: 0.25em; font-size: 0.95rem; color: var(--burgundy); font-weight: 800;">
+            EVRİKA TƏHSİL EKOSİSTEMİ</div>
+<h2 class="titan-header" style="font-size: 3.5rem; line-height: 1.1; margin-bottom: 24px; font-weight: 900;">
+<span style="color: var(--navy);">Akademik</span> <span style="color: var(--burgundy);">istiqamətlərimiz</span>
+</h2>
+<div style="width: 80px; height: 5px; background: var(--burgundy); margin: 0 auto 32px; border-radius: 10px;">
+</div>
+<p class="subtitle-pro" data-i18n="eco-desc" style="font-size: 1.3rem; color: var(--text-dark); line-height: 1.6; font-weight: 500; opacity: 0.9;">
+            İxtisaslaşmış akademik istiqamətlər və fərdi inkişaf modeli ilə hər yaş dövrünə uyğun təhsil mühiti.
+          </p>
+</div>
+<div class="expanding-grid" style="display: flex; gap: 15px; height: 680px; width: 100%;">
+<!-- Entity 1: Montessori -->
+<div class="exp-card reveal" data-id="3" style="flex: 1; position: relative; border-radius: 40px; overflow: hidden; cursor: pointer; transition: flex 0.6s cubic-bezier(0.25, 1, 0.3, 1), transform 0.6s ease; transform: translateZ(0); will-change: flex;">
+<div class="exp-bg" style="position: absolute; inset: 0; z-index: 1; background-image: url('./assets/IMG_8923_2-DjEkUegD.jpg'); background-size: cover; background-position: center; transition: transform 0.8s ease, opacity 0.8s ease; will-change: transform, opacity;">
+<div class="exp-overlay" style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(20, 40, 100, 0.75) 0%, rgba(20, 40, 100, 0.35) 50%, rgba(20, 40, 100, 0.15) 100%); transition: transform 0.8s ease, opacity 0.8s ease; will-change: transform, opacity;">
+</div>
+</div>
+<div class="compressed-meta" style="position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 50px 0; transition: opacity 0.5s ease, visibility 0.5s ease; will-change: opacity, visibility;">
+<div class="compressed-idx" style="font-size: 3.5rem; font-weight: 900; color: white; opacity: 0.5; font-family: 'Inter', sans-serif; letter-spacing: -0.05em; margin-bottom: 20px;">
+                01</div>
+<div class="compressed-title-wrap" style="flex: 1; display: flex; align-items: center; justify-content: center; width: 100%;">
+<div class="compressed-title" style="transform: rotate(-90deg); white-space: nowrap; color: white; font-weight: 800; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.3em; text-shadow: 0 2px 8px rgba(0,0,0,0.7);">
+                  EVRIKA MONTESSORI KIDS ACADEMY</div>
+</div>
+</div>
+<div class="expanded-info" style="position: absolute; bottom: 0; left: 0; right: 0; padding: 60px; z-index: 5; opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; will-change: transform, opacity; pointer-events: none;">
+<h3 data-i18n="home-sec1-tag" style="color: white; font-size: 3.2rem; font-weight: 900; margin-bottom: 16px; line-height: 1.1;">
+                Evrika Montessori Kids Academy</h3>
+<div style="margin-bottom: 25px; color: rgba(255,255,255,0.9); font-size: 1.05rem; line-height: 1.6;">
+<p style="margin-bottom: 8px;"><i class="fas fa-map-marker-alt" style="margin-right: 10px; color: var(--burgundy);"></i> Qafur Rəşad 16, Baku, Azerbaijan</p>
+<p><i class="fas fa-phone-alt" style="margin-right: 10px; color: var(--burgundy);"></i> (+994) 10 300 50 50</p>
+</div>
+<div style="display:flex; gap:12px; flex-wrap:wrap;">
+<a class="btn btn-primary" data-i18n="nav-register" href="register-montessori.html" onclick="event.stopPropagation()" style="padding: 12px 28px; background: var(--burgundy); border-color: var(--burgundy);">Qeydiyyat</a>
+<a class="btn btn-outline" href="montessori.html" style="padding: 12px 28px; color: white; border-color: white;">Detallara bax <i class="fas fa-arrow-right"></i></a>
+</div>
+</div>
+</div>
+<!-- Entity 2: Lisey Nərimanov -->
+<div class="exp-card reveal" data-id="1" style="flex: 1; position: relative; border-radius: 40px; overflow: hidden; cursor: pointer; transition: flex 0.6s cubic-bezier(0.25, 1, 0.3, 1), transform 0.6s ease; transform: translateZ(0); will-change: flex;">
+<div class="exp-bg" style="position: absolute; inset: 0; z-index: 1; background-image: url('./assets/nerimanov-DzpJXM9Q.jpeg'); background-size: cover; background-position: center top; transition: transform 0.8s ease, opacity 0.8s ease; will-change: transform, opacity;">
+<div class="exp-overlay" style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(20, 40, 100, 0.75) 0%, rgba(20, 40, 100, 0.35) 50%, rgba(20, 40, 100, 0.15) 100%); transition: transform 0.8s ease, opacity 0.8s ease; will-change: transform, opacity;">
+</div>
+</div>
+<div class="compressed-meta" style="position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 50px 0; transition: opacity 0.5s ease, visibility 0.5s ease; will-change: opacity, visibility;">
+<div class="compressed-idx" style="font-size: 3.5rem; font-weight: 900; color: white; opacity: 0.5; font-family: 'Inter', sans-serif; letter-spacing: -0.05em; margin-bottom: 20px;">
+                02</div>
+<div class="compressed-title-wrap" style="flex: 1; display: flex; align-items: center; justify-content: center; width: 100%;">
+<div class="compressed-title" style="transform: rotate(-90deg); white-space: nowrap; color: white; font-weight: 800; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.3em; text-shadow: 0 2px 8px rgba(0,0,0,0.7);">
+                  EVRIKA BETL NERIMANOV</div>
+</div>
+</div>
+<div class="expanded-info" style="position: absolute; bottom: 0; left: 0; right: 0; padding: 60px; z-index: 5; opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; will-change: transform, opacity; pointer-events: none;">
+<h3 data-i18n="branch-betl-nerimanov-title" style="color: white; font-size: 3rem; font-weight: 900; margin-bottom: 16px; line-height: 1.1;">
+                Evrika Beynəlxalq Elm və Texnologiya Liseyi (Nərimanov filialı)</h3>
+<div style="margin-bottom: 25px; color: rgba(255,255,255,0.9); font-size: 1.05rem; line-height: 1.6;">
+<p style="margin-bottom: 8px;"><i class="fas fa-map-marker-alt" style="margin-right: 10px; color: var(--burgundy);"></i> 68 Fəxrəddin Musayev, Baku, Azerbaijan</p>
+<p style="margin-bottom: 5px;"><i class="fas fa-phone-alt" style="margin-right: 10px; color: var(--burgundy);"></i> (+994) 12 525 10 10</p>
+<p><i class="fas fa-phone-alt" style="margin-right: 10px; color: var(--burgundy);"></i> (+994) 77 704 04 04</p>
+</div>
+<div style="display:flex; gap:12px; flex-wrap:wrap;">
+<a class="btn btn-primary" data-i18n="nav-register" href="register-lisey1.html" onclick="event.stopPropagation()" style="padding: 12px 28px; background: var(--burgundy); border-color: var(--burgundy);">Qeydiyyat</a>
+<a class="btn btn-outline" href="lisey.html" style="padding: 12px 28px; color: white; border-color: white;">Detallara bax <i class="fas fa-arrow-right"></i></a>
+</div>
+</div>
+</div>
+<!-- Entity 3: Lisey Gənclik -->
+<div class="exp-card reveal" data-id="2" style="flex: 1; position: relative; border-radius: 40px; overflow: hidden; cursor: pointer; transition: flex 0.6s cubic-bezier(0.25, 1, 0.3, 1), transform 0.6s ease; transform: translateZ(0); will-change: flex;">
+<div class="exp-bg" style="position: absolute; inset: 0; z-index: 1; background-image: url('https://files.cdn-files-a.com/uploads/10086696/2000_695e52c388a8e.jpg'); background-size: cover; background-position: center; transition: transform 0.8s ease, opacity 0.8s ease; will-change: transform, opacity;">
+<div class="exp-overlay" style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(20, 40, 100, 0.75) 0%, rgba(20, 40, 100, 0.35) 50%, rgba(20, 40, 100, 0.15) 100%); transition: transform 0.8s ease, opacity 0.8s ease; will-change: transform, opacity;">
+</div>
+</div>
+<div class="compressed-meta" style="position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 50px 0; transition: opacity 0.5s ease, visibility 0.5s ease; will-change: opacity, visibility;">
+<div class="compressed-idx" style="font-size: 3.5rem; font-weight: 900; color: white; opacity: 0.5; font-family: 'Inter', sans-serif; letter-spacing: -0.05em; margin-bottom: 20px;">
+                03</div>
+<div class="compressed-title-wrap" style="flex: 1; display: flex; align-items: center; justify-content: center; width: 100%;">
+<div class="compressed-title" style="transform: rotate(-90deg); white-space: nowrap; color: white; font-weight: 800; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.3em; text-shadow: 0 2px 8px rgba(0,0,0,0.7);">
+                  EVRIKA BETL GENCLIK</div>
+</div>
+</div>
+<div class="expanded-info" style="position: absolute; bottom: 0; left: 0; right: 0; padding: 60px; z-index: 5; opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; will-change: transform, opacity; pointer-events: none;">
+<h3 data-i18n="branch-betl-genclik-title" style="color: white; font-size: 3rem; font-weight: 900; margin-bottom: 16px; line-height: 1.1;">
+                Evrika Beynəlxalq Elm və Texnologiya Liseyi (Gənclik filialı)</h3>
+<div style="margin-bottom: 25px; color: rgba(255,255,255,0.9); font-size: 1.05rem; line-height: 1.6;">
+<p style="margin-bottom: 8px;"><i class="fas fa-map-marker-alt" style="margin-right: 10px; color: var(--burgundy);"></i> Yəhya Bakuvi küç. 42, Zümrüd Yaşayış Kompleksi</p>
+<p style="margin-bottom: 5px;"><i class="fas fa-phone-alt" style="margin-right: 10px; color: var(--burgundy);"></i> (+994) 10 300 10 30</p>
+<p><i class="fas fa-phone-alt" style="margin-right: 10px; color: var(--burgundy);"></i> (+994) 10 300 10 25</p>
+</div>
+<div style="display:flex; gap:12px; flex-wrap:wrap;">
+<a class="btn btn-primary" data-i18n="nav-register" href="register-lisey2.html" onclick="event.stopPropagation()" style="padding: 12px 28px; background: var(--burgundy); border-color: var(--burgundy);">Qeydiyyat</a>
+<a class="btn btn-outline" href="lisey2.html" style="padding: 12px 28px; color: white; border-color: white;">Detallara bax <i class="fas fa-arrow-right"></i></a>
+</div>
+</div>
+</div>
+<!-- Entity 4: Eduhome -->
+<div class="exp-card reveal" data-id="4" style="flex: 1; position: relative; border-radius: 40px; overflow: hidden; cursor: pointer; transition: flex 0.6s cubic-bezier(0.25, 1, 0.3, 1), transform 0.6s ease; transform: translateZ(0); will-change: flex;">
+<div class="exp-bg" style="position: absolute; inset: 0; z-index: 1; background-image: url('./assets/1000720061-Bo33HIsY.jpg'); background-size: cover; background-position: center; transition: transform 0.8s ease, opacity 0.8s ease; will-change: transform, opacity;">
+<div class="exp-overlay" style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(20, 40, 100, 0.75) 0%, rgba(20, 40, 100, 0.35) 50%, rgba(20, 40, 100, 0.15) 100%); transition: transform 0.8s ease, opacity 0.8s ease; will-change: transform, opacity;">
+</div>
+</div>
+<div class="compressed-meta" style="position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 50px 0; transition: opacity 0.5s ease, visibility 0.5s ease; will-change: opacity, visibility;">
+<div class="compressed-idx" style="font-size: 3.5rem; font-weight: 900; color: white; opacity: 0.5; font-family: 'Inter', sans-serif; letter-spacing: -0.05em; margin-bottom: 20px;">
+                04</div>
+<div class="compressed-title-wrap" style="flex: 1; display: flex; align-items: center; justify-content: center; width: 100%;">
+<div class="compressed-title" style="transform: rotate(-90deg); white-space: nowrap; color: white; font-weight: 800; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.3em; text-shadow: 0 2px 8px rgba(0,0,0,0.7);">
+                  EVRIKA EDUHOME</div>
+</div>
+</div>
+<div class="expanded-info" style="position: absolute; bottom: 0; left: 0; right: 0; padding: 60px; z-index: 5; opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; will-change: transform, opacity; pointer-events: none;">
+<h3 data-i18n="branch-eduhome-title" style="color: white; font-size: 3.2rem; font-weight: 900; margin-bottom: 16px; line-height: 1.1;">
+                Evrika Eduhome Hazırlıq Mərkəzi</h3>
+<div style="margin-bottom: 25px; color: rgba(255,255,255,0.9); font-size: 1.05rem; line-height: 1.6;">
+<p style="margin-bottom: 8px;"><i class="fas fa-map-marker-alt" style="margin-right: 10px; color: var(--burgundy);"></i> Baləmi Dadaşov küçəsi, Zümrüd Residence Kompleksi</p>
+<p><i class="fas fa-phone-alt" style="margin-right: 10px; color: var(--burgundy);"></i> +994 10 300 30 05</p>
+</div>
+<div style="display:flex; gap:12px; flex-wrap:wrap;">
+<a class="btn btn-primary" data-i18n="nav-register" href="register-eduhome.html" onclick="event.stopPropagation()" style="padding: 12px 28px; background: var(--burgundy); border-color: var(--burgundy);">Qeydiyyat</a>
+<a class="btn btn-outline" href="eduhome.html" style="padding: 12px 28px; color: white; border-color: white;">Detallara bax <i class="fas fa-arrow-right"></i></a>
+</div>
+</div>
+</div>
+<!-- Entity 5: Zumrud -->
+<div class="exp-card reveal" data-id="5" style="flex: 1; position: relative; border-radius: 40px; overflow: hidden; cursor: pointer; transition: flex 0.6s cubic-bezier(0.25, 1, 0.3, 1), transform 0.6s ease; transform: translateZ(0); will-change: flex;">
+<div class="exp-bg" style="position: absolute; inset: 0; z-index: 1; background-image: url('https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&q=80&w=1200'); background-size: cover; background-position: center; transition: transform 0.8s ease, opacity 0.8s ease; will-change: transform, opacity;">
+<div class="exp-overlay" style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(20, 40, 100, 0.75) 0%, rgba(20, 40, 100, 0.35) 50%, rgba(20, 40, 100, 0.15) 100%); transition: transform 0.8s ease, opacity 0.8s ease; will-change: transform, opacity;">
+</div>
+</div>
+<div class="compressed-meta" style="position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 50px 0; transition: opacity 0.5s ease, visibility 0.5s ease; will-change: opacity, visibility;">
+<div class="compressed-idx" style="font-size: 3.5rem; font-weight: 900; color: white; opacity: 0.5; font-family: 'Inter', sans-serif; letter-spacing: -0.05em; margin-bottom: 20px;">
+                05</div>
+<div class="compressed-title-wrap" style="flex: 1; display: flex; align-items: center; justify-content: center; width: 100%;">
+<div class="compressed-title" style="transform: rotate(-90deg); white-space: nowrap; color: white; font-weight: 800; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.3em; text-shadow: 0 2px 8px rgba(0,0,0,0.7);">
+                  ZUMRUD WOMEN CLUB</div>
+</div>
+</div>
+<div class="expanded-info" style="position: absolute; bottom: 0; left: 0; right: 0; padding: 60px; z-index: 5; opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; will-change: transform, opacity; pointer-events: none;">
+<h3 data-i18n="branch-zumrud-title" style="color: white; font-size: 3.2rem; font-weight: 900; margin-bottom: 16px; line-height: 1.1;">
+                Zumrud Women Club by Evrika Active Life</h3>
+<div style="margin-bottom: 25px; color: rgba(255,255,255,0.9); font-size: 1.05rem; line-height: 1.6;">
+<p style="margin-bottom: 8px;"><i class="fas fa-map-marker-alt" style="margin-right: 10px; color: var(--burgundy);"></i> Yəhya Bakuvi küç. 42, Zümrüd Yaşayış Kompleksi</p>
+<p><i class="fas fa-phone-alt" style="margin-right: 10px; color: var(--burgundy);"></i> (+994) 10 100 12 23</p>
+</div>
+<div style="display:flex; gap:12px; flex-wrap:wrap;">
+<a class="btn btn-primary" data-i18n="nav-register" href="register-zumrud.html" onclick="event.stopPropagation()" style="padding: 12px 28px; background: var(--burgundy); border-color: var(--burgundy);">Qeydiyyat</a>
+<a class="btn btn-outline" href="zumrud.html" style="padding: 12px 28px; color: white; border-color: white;">Detallara bax <i class="fas fa-arrow-right"></i></a>
+</div>
+</div>
+</div>
+</div>
+<style>
+          .exp-card:hover, .exp-card.touch-active {
+            flex: 5 !important;
+          }
+
+          .exp-card:hover .exp-bg, .exp-card.touch-active .exp-bg {
+            opacity: 1 !important;
+            transform: scale(1.05);
+          }
+
+          .exp-card:hover .exp-overlay, .exp-card.touch-active .exp-overlay {
+            background: linear-gradient(to top, rgba(10, 20, 60, 0.92) 0%, rgba(10, 20, 60, 0.6) 60%, rgba(10, 20, 60, 0.2) 100%) !important;
+          }
+
+          .exp-card:hover .compressed-meta, .exp-card.touch-active .compressed-meta {
+            opacity: 0 !important;
+            visibility: hidden;
+          }
+
+          .exp-card:hover .expanded-info {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+            pointer-events: auto !important;
+          }
+
+          /* ── MOBILE: Static vertical cards, no expand ── */
+          @media (max-width: 768px) {
+            .expanding-grid {
+              flex-direction: column !important;
+              height: auto !important;
+              gap: 16px !important;
+            }
+
+            .exp-card {
+              flex: none !important;
+              height: auto !important;
+              min-height: 460px !important;
+              border-radius: 20px !important;
+              transition: none !important;
+              cursor: default !important;
+            }
+
+            /* Disable all hover/touch-active effects on mobile */
+            .exp-card:hover,
+            .exp-card.touch-active {
+              flex: none !important;
+            }
+
+            .exp-card:hover .exp-bg,
+            .exp-card.touch-active .exp-bg {
+              transform: none !important;
+              opacity: 1 !important;
+            }
+
+            /* Enlarge and brighten the background photos */
+            .exp-card .exp-bg {
+              background-size: 130% !important; /* Zoom in more */
+              background-position: center center !important;
+              transform: none !important;
+            }
+
+            .exp-card:hover .exp-overlay,
+            .exp-card.touch-active .exp-overlay {
+              background: linear-gradient(to top, rgba(10, 20, 60, 0.95) 0%, rgba(10, 20, 60, 0.8) 50%, rgba(10, 20, 60, 0.4) 100%) !important;
+            }
+
+            /* Hide the compressed vertical number+title */
+            .exp-card .compressed-meta {
+              opacity: 0 !important;
+              visibility: hidden !important;
+            }
+
+            .exp-card:hover .compressed-meta,
+            .exp-card.touch-active .compressed-meta {
+              opacity: 0 !important;
+              visibility: hidden !important;
+            }
+
+            /* Always show the expanded info on mobile (static) */
+            .exp-card .expanded-info {
+              opacity: 1 !important;
+              transform: translateY(0) !important;
+              pointer-events: auto !important;
+              padding: 20px 24px !important;
+            }
+
+            .exp-card:hover .expanded-info {
+              opacity: 1 !important;
+              transform: translateY(0) !important;
+            }
+
+            /* Simplify the expanded-info content for small cards */
+            .exp-card .expanded-info h3 {
+              font-size: 1.15rem !important;
+              margin-bottom: 8px !important;
+              line-height: 1.2 !important;
+            }
+
+            .exp-card .expanded-info > div:first-child {
+              margin-bottom: 10px !important;
+              font-size: 0.7rem !important;
+              padding: 4px 10px !important;
+            }
+
+            /* Hide address/phone details to keep it compact */
+            .exp-card .expanded-info > div:nth-child(3) {
+              display: block !important;
+              font-size: 0.95rem !important;
+            }
+
+            /* Shrink action buttons */
+            .exp-card .expanded-info > div:last-child {
+              gap: 8px !important;
+            }
+
+            .exp-card .expanded-info .btn {
+              padding: 8px 16px !important;
+              font-size: 0.8rem !important;
+            }
+          }
+        </style>
+</div>
+</section>
+<!-- Quotes / State Symbols Slider -->
+<section class="overflow-hidden" id="state-symbols" style="padding: 70px 0 80px; background: var(--burgundy); position: relative;">
+<!-- Decorative background elements -->
+<div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(ellipse at 20% 50%, rgba(255,255,255,0.07) 0%, transparent 55%); pointer-events: none;">
+</div>
+<div style="position: absolute; top: 0; right: 0; width: 100%; height: 100%; background: radial-gradient(ellipse at 80% 50%, rgba(0,0,0,0.2) 0%, transparent 55%); pointer-events: none;">
+</div>
+<!-- Subtle top/bottom lines -->
+<div style="position: absolute; top: 0; left: 0; width: 100%; height: 1px; background: rgba(255,255,255,0.12);">
+</div>
+<div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 1px; background: rgba(255,255,255,0.12);">
+</div>
+<div class="container" style="position: relative; z-index: 2;">
+<div class="swiper quotesSwiper reveal">
+<div class="swiper-wrapper">
+<!-- Slide 1: Heydər Əliyev -->
+<div class="swiper-slide">
+<div class="quote-cinematic" style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 70px; max-width: 1100px; margin: 0 auto; padding: 0 20px;">
+<!-- Portrait -->
+<div class="portrait-hover-wrap" style="position: relative; flex-shrink: 0;">
+<div class="portrait-glow-ring"></div>
+<div class="portrait-wrapper" style="width: 300px; height: 420px; border-radius: 20px; overflow: hidden; position: relative; box-shadow: 0 40px 80px rgba(0,0,0,0.5); z-index: 1; background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Heydar_Aliyev_%28crop%29.jpg/500px-Heydar_Aliyev_%28crop%29.jpg'); background-size: cover; background-position: center 10%;">
+<div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(100,0,20,0.85) 0%, transparent 55%); z-index: 1;">
+</div>
+<div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 22px 24px; z-index: 2;">
+<div data-i18n="leader-role" style="font-size: 0.7rem; color: rgba(255,255,255,0.6); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 4px;">
+                        Ümummilli Lider</div>
+<div style="font-size: 1.1rem; color: white; font-weight: 800; letter-spacing: 0.05em;">Heydər
+                        Əliyev</div>
+</div>
+</div>
+</div>
+<!-- Quote text -->
+<div class="quote-text-block" style="flex: 1; text-align: left; position: relative;">
+<div class="quote-mark">"</div>
+<p style="color: rgba(255,255,255,0.92); font-size: 2.1rem; line-height: 1.5; font-weight: 300; font-family: 'Inter', sans-serif; letter-spacing: -0.02em; margin-bottom: 40px; margin-top: -22px;">
+                    Təhsil hər bir dövlətin, ölkənin, cəmiyyətin həyatının, fəaliyyətinin mühüm bir sahəsidir. Cəmiyyət
+                    <em style="color: white; font-weight: 700; font-style: normal; border-bottom: 2px solid rgba(255,255,255,0.4); padding-bottom: 2px;">təhsilsiz
+                      inkişaf edə bilməz.</em>
+</p>
+<div style="display: flex; align-items: center; gap: 20px;">
+<div style="width: 50px; height: 1px; background: rgba(255,255,255,0.4);"></div>
+<div>
+<div style="font-size: 1.1rem; color: white; font-weight: 700; letter-spacing: 0.06em;">Heydər
+                        Əliyev</div>
+<div data-i18n="leader-role" style="font-size: 0.75rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.25em; margin-top: 6px;">
+                        Ümummilli Lider</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Slide 2: Heydər Əliyev (Yeni) -->
+<div class="swiper-slide">
+<div class="quote-cinematic" style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 70px; max-width: 1100px; margin: 0 auto; padding: 0 20px;">
+<!-- Portrait -->
+<div class="portrait-hover-wrap" style="position: relative; flex-shrink: 0;">
+<div class="portrait-glow-ring"></div>
+<div class="portrait-wrapper" style="width: 300px; height: 420px; border-radius: 20px; overflow: hidden; position: relative; box-shadow: 0 40px 80px rgba(0,0,0,0.5); z-index: 1; background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Heydar_Aliyev_%28crop%29.jpg/500px-Heydar_Aliyev_%28crop%29.jpg'); background-size: cover; background-position: center 10%;">
+<div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(100,0,20,0.85) 0%, transparent 55%); z-index: 1;">
+</div>
+<div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 22px 24px; z-index: 2;">
+<div data-i18n="leader-role" style="font-size: 0.7rem; color: rgba(255,255,255,0.6); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 4px;">
+                        Ümummilli Lider</div>
+<div style="font-size: 1.1rem; color: white; font-weight: 800; letter-spacing: 0.05em;">Heydər
+                        Əliyev</div>
+</div>
+</div>
+</div>
+<!-- Quote text -->
+<div class="quote-text-block" style="flex: 1; text-align: left; position: relative;">
+<div class="quote-mark">"</div>
+<p style="color: rgba(255,255,255,0.92); font-size: 2.1rem; line-height: 1.5; font-weight: 300; font-family: 'Inter', sans-serif; letter-spacing: -0.02em; margin-bottom: 40px; margin-top: -22px;">
+                    “Hər bir xalqın tərəqqisi onun <em style="color: white; font-weight: 700; font-style: normal; border-bottom: 2px solid rgba(255,255,255,0.4); padding-bottom: 2px;">təhsil səviyyəsi</em> ilə müəyyən olunur.”
+                  </p>
+<div style="display: flex; align-items: center; gap: 20px;">
+<div style="width: 50px; height: 1px; background: rgba(255,255,255,0.4);"></div>
+<div>
+<div style="font-size: 1.1rem; color: white; font-weight: 700; letter-spacing: 0.06em;">Heydər
+                        Əliyev</div>
+<div data-i18n="leader-role" style="font-size: 0.75rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.25em; margin-top: 6px;">
+                        Ümummilli Lider</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Slide 2: İlham Əliyev -->
+<div class="swiper-slide">
+<div class="quote-cinematic" style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 70px; max-width: 1100px; margin: 0 auto; padding: 0 20px;">
+<div class="portrait-hover-wrap" style="position: relative; flex-shrink: 0;">
+<div class="portrait-glow-ring"></div>
+<div class="portrait-wrapper" style="width: 300px; height: 420px; border-radius: 20px; overflow: hidden; position: relative; box-shadow: 0 40px 80px rgba(0,0,0,0.5); z-index: 1; background-image: url('https://static.president.az/upload/1562x1100/2018/03/05/2d5g5d0afw_368.jpg'); background-size: cover; background-position: center top;">
+<div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(100,0,20,0.85) 0%, transparent 55%); z-index: 1;">
+</div>
+<div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 22px 24px; z-index: 2;">
+<div style="font-size: 0.7rem; color: rgba(255,255,255,0.6); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 4px;">
+                        Prezident</div>
+<div style="font-size: 1.1rem; color: white; font-weight: 800; letter-spacing: 0.05em;">İlham
+                        Əliyev</div>
+</div>
+</div>
+</div>
+<div class="quote-text-block" style="flex: 1; text-align: left; position: relative;">
+<div class="quote-mark">"</div>
+<p style="color: rgba(255,255,255,0.92); font-size: 2.4rem; line-height: 1.2; font-weight: 300; font-family: 'Inter', sans-serif; letter-spacing: -0.03em; margin-bottom: 40px; margin-top: -22px;">
+                    Təhsil bizim <em style="color: white; font-weight: 800; font-style: normal;">gələcəyimizdir!</em>
+</p>
+<div style="display: flex; align-items: center; gap: 20px;">
+<div style="width: 50px; height: 1px; background: rgba(255,255,255,0.4);"></div>
+<div>
+<div style="font-size: 1.1rem; color: white; font-weight: 700; letter-spacing: 0.06em;">İlham
+                        Əliyev</div>
+<div data-i18n="pres-role" style="font-size: 0.75rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.25em; margin-top: 6px;">
+                        Azərbaycan Respublikasının Prezidenti</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Slide 3: Mehriban Əliyeva -->
+<div class="swiper-slide">
+<div class="quote-cinematic" style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 70px; max-width: 1100px; margin: 0 auto; padding: 0 20px;">
+<div class="portrait-hover-wrap" style="position: relative; flex-shrink: 0;">
+<div class="portrait-glow-ring"></div>
+<div class="portrait-wrapper" style="width: 300px; height: 420px; border-radius: 20px; overflow: hidden; position: relative; box-shadow: 0 40px 80px rgba(0,0,0,0.5); z-index: 1; background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Mehriban_Aliyeva_%28portrait_in_2023%29.jpg/960px-Mehriban_Aliyeva_%28portrait_in_2023%29.jpg'); background-size: cover; background-position: center top;">
+<div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(100,0,20,0.85) 0%, transparent 55%); z-index: 1;">
+</div>
+<div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 22px 24px; z-index: 2;">
+<div data-i18n="vp-role" style="font-size: 0.7rem; color: rgba(255,255,255,0.6); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 4px;">
+                        Birinci Vitse-Prezident</div>
+<div style="font-size: 1.1rem; color: white; font-weight: 800; letter-spacing: 0.05em;">Mehriban
+                        Əliyeva</div>
+</div>
+</div>
+</div>
+<div class="quote-text-block" style="flex: 1; text-align: left; position: relative;">
+<div class="quote-mark">"</div>
+<p style="color: rgba(255,255,255,0.92); font-size: 2.1rem; line-height: 1.5; font-weight: 300; font-family: 'Inter', sans-serif; letter-spacing: -0.02em; margin-bottom: 40px; margin-top: -22px;">
+                    Müasir dünyada hər bir ölkənin inkişafı, onun dünya birliyinə inteqrasiyası üçün <em style="color: white; font-weight: 700; font-style: normal; border-bottom: 2px solid rgba(255,255,255,0.4); padding-bottom: 2px;">təhsilin
+                      rolu əvəzsizdir.</em>
+</p>
+<div style="display: flex; align-items: center; gap: 20px;">
+<div style="width: 50px; height: 1px; background: rgba(255,255,255,0.4);"></div>
+<div>
+<div style="font-size: 1.1rem; color: white; font-weight: 700; letter-spacing: 0.06em;">Mehriban
+                        Əliyeva</div>
+<div data-i18n="vp-role" style="font-size: 0.75rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.25em; margin-top: 6px;">
+                        Birinci Vitse-Prezident</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="swiper-pagination quotes-pagination"></div>
+<!-- Manual Navigation Arrows -->
+<div class="quotes-nav">
+<button aria-label="Əvvəlki" class="quotes-prev">
+<i class="fas fa-arrow-left"></i>
+</button>
+<button aria-label="Növbəti" class="quotes-next">
+<i class="fas fa-arrow-right"></i>
+</button>
+</div>
+</div>
+</div>
+<style>
+        /* Swiper basics */
+        .quotesSwiper {
+          padding-bottom: 80px;
+          overflow: visible;
+        }
+
+        /* Elegant custom pagination */
+        .quotes-pagination {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+        }
+
+        .quotes-pagination .swiper-pagination-bullet {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.25);
+          border: 1.5px solid rgba(255, 255, 255, 0.4);
+          opacity: 1;
+          transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+          margin: 0 !important;
+          position: relative;
+        }
+
+        .quotes-pagination .swiper-pagination-bullet::after {
+          content: '';
+          position: absolute;
+          inset: -4px;
+          border-radius: 50%;
+          border: 1px solid rgba(255, 255, 255, 0);
+          transition: all 0.5s ease;
+        }
+
+        .quotes-pagination .swiper-pagination-bullet-active {
+          width: 36px;
+          height: 10px;
+          border-radius: 5px;
+          background: white;
+          border-color: white;
+          box-shadow: 0 0 12px rgba(255, 255, 255, 0.5), 0 0 24px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Manual navigation arrows */
+        .quotesSwiper {
+          position: relative;
+        }
+        .quotes-nav {
+          position: absolute;
+          top: 50%;
+          left: -80px;
+          right: -80px;
+          transform: translateY(-50%);
+          display: flex;
+          justify-content: space-between;
+          pointer-events: none;
+          z-index: 10;
+        }
+        .quotes-prev, .quotes-next {
+          pointer-events: all;
+          width: 52px;
+          height: 52px;
+          border-radius: 50%;
+          border: 1.5px solid rgba(255,255,255,0.25);
+          background: rgba(255,255,255,0.07);
+          color: white;
+          font-size: 1rem;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s ease;
+          backdrop-filter: blur(10px);
+        }
+        .quotes-prev:hover, .quotes-next:hover {
+          background: rgba(255,255,255,0.18);
+          border-color: white;
+          transform: translateY(-2px);
+        }
+
+        .quotes-pagination .swiper-pagination-bullet-active::after {
+          border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Slide entrance animation */
+        .quote-cinematic {
+          transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+          opacity: 0;
+          transform: translateX(40px);
+        }
+
+        .swiper-slide-active .quote-cinematic {
+          opacity: 1;
+          transform: translateX(0);
+        }
+
+        /* Portrait image subtle zoom on slide active */
+        .portrait-wrapper img {
+          transition: transform 9s cubic-bezier(0.2, 0.8, 0.2, 1);
+          transform: scale(1);
+        }
+
+        .swiper-slide-active .portrait-wrapper img {
+          transform: scale(1.08);
+        }
+
+        /* Portrait container - static, no hover */
+        .portrait-hover-wrap {
+          position: relative;
+          flex-shrink: 0;
+        }
+
+        /* Glowing ring - static */
+        .portrait-glow-ring {
+          position: absolute;
+          inset: -6px;
+          border-radius: 24px;
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.05));
+          z-index: 0;
+        }
+
+        /* Big quote mark animation */
+        .quote-mark {
+          font-size: 11rem;
+          line-height: 0.55;
+          color: rgba(255, 255, 255, 0.08);
+          font-family: Georgia, serif;
+          font-weight: 900;
+          margin-bottom: 20px;
+          user-select: none;
+          letter-spacing: -0.05em;
+          transition: color 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), text-shadow 0.6s ease;
+          display: inline-block;
+          transform-origin: left bottom;
+          animation: quote-breathe 4s ease-in-out infinite;
+        }
+
+        @keyframes quote-breathe {
+
+          0%,
+          100% {
+            opacity: 0.08;
+            transform: scale(1) translateY(0);
+          }
+
+          50% {
+            opacity: 0.14;
+            transform: scale(1.04) translateY(-4px);
+          }
+        }
+
+        .quote-text-block:hover .quote-mark {
+          color: rgba(255, 255, 255, 0.28);
+          text-shadow: 0 0 40px rgba(255, 200, 180, 0.4);
+          animation: none;
+          transform: scale(1.08) translateY(-6px);
+        }
+
+        /* Quote text block - default state (inactive slides) */
+        .quote-text-block {
+          transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .quote-text-block p {
+          transition: color 0.7s ease;
+          color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Active slide: quote automatically "opens" */
+        .swiper-slide-active .quote-text-block {
+          transform: translateX(6px);
+        }
+
+        .swiper-slide-active .quote-text-block p {
+          color: rgba(255, 255, 255, 0.95) !important;
+        }
+
+        .swiper-slide-active .quote-mark {
+          color: rgba(255, 255, 255, 0.28) !important;
+          text-shadow: 0 0 40px rgba(255, 200, 180, 0.4);
+          animation: none !important;
+          transform: scale(1.08) translateY(-6px) !important;
+        }
+
+        @media (max-width: 992px) {
+          .quote-cinematic {
+            flex-direction: column !important;
+            text-align: center !important;
+            gap: 30px !important;
+          }
+
+          .quote-cinematic>div:last-child {
+            text-align: center !important;
+          }
+
+          .quote-cinematic>div:last-child>div {
+            justify-content: center !important;
+          }
+
+          .quote-mark {
+            font-size: 7rem;
+          }
+
+          .quotes-nav {
+            left: 10px;
+            right: 10px;
+          }
+        }
+      
+        @media (max-width: 768px) {
+          .quote-cinematic {
+            flex-direction: column !important;
+            text-align: center !important;
+            gap: 28px !important;
+            padding: 0 !important;
+          }
+          .portrait-hover-wrap > div {
+            width: 220px !important;
+            height: 300px !important;
+          }
+          .quote-mark { font-size: 6rem; }
+          .quote-cinematic p { font-size: 1.05rem !important; line-height: 1.7 !important; }
+          .quote-cinematic [style*="font-size: 1.1rem"] { font-size: 1rem !important; }
+          .quote-cinematic [style*="font-size: 0.8rem"]  { font-size: 0.75rem !important; }
+          .quotes-nav { left: 0; right: 0; }
+          .quotes-prev, .quotes-next { width: 38px; height: 38px; font-size: 0.85rem; }
+        }
+      </style>
+</section>
+<!-- Breathtaking Modern UI Stats Section -->
+<section class="section overflow-hidden" id="stats-slider" style="position: relative; padding: 120px 0; background: linear-gradient(135deg, #0a1628 0%, #0d2247 40%, #1a3a6b 70%, #0f2c55 100%);">
+<div class="container" style="max-width: 1100px;">
+<div style="text-align: center; margin-bottom: 60px;">
+<h2 style="font-size: 3rem; color: #ffffff; line-height: 1.1; font-weight: 900; letter-spacing: -0.03em;">
+            Mükəmməlliyin Rəqəmlərlə İfadəsi<span style="color: #60a5fa;">.</span>
+</h2>
+</div>
+<div class="ssc-grid-4">
+<!-- Card 1: Alumni -->
+<div class="super-stat-card" style="--card-theme: #f87171; --card-glow: rgba(248,113,113,0.15);">
+<div class="ssc-bg-glow"></div>
+<div class="ssc-content">
+<div class="ssc-icon-box">
+<i class="fas fa-user-graduate"></i>
+</div>
+<div class="ssc-text-group">
+<div class="ssc-num-unified">
+<span class="achievement-number" data-target="1200">0</span>+
+                </div>
+<div class="ssc-label" data-i18n="stats-desc1">Evrika şagirdi</div>
+</div>
+</div>
+</div>
+<!-- Card 2: Olympiad -->
+<div class="super-stat-card" style="--card-theme: #34d399; --card-glow: rgba(52,211,153,0.15);">
+<div class="ssc-bg-glow"></div>
+<div class="ssc-content">
+<div class="ssc-icon-box">
+<i class="fas fa-trophy"></i>
+</div>
+<div class="ssc-text-group">
+<div class="ssc-num-unified">
+<span class="achievement-number" data-target="20">0</span>+
+                </div>
+<div class="ssc-label" data-i18n="stats-desc2">Olimpiada qalibi</div>
+</div>
+</div>
+</div>
+<!-- Card 3: Medals -->
+<div class="super-stat-card" style="--card-theme: #fbbf24; --card-glow: rgba(251,191,36,0.15);">
+<div class="ssc-bg-glow"></div>
+<div class="ssc-content">
+<div class="ssc-icon-box">
+<i class="fas fa-medal"></i>
+</div>
+<div class="ssc-text-group">
+<div class="ssc-num-unified">
+<span class="achievement-number" data-target="30">0</span>+
+                </div>
+<div class="ssc-label" data-i18n="stats-desc3">Qızıl medal</div>
+</div>
+</div>
+</div>
+<!-- Card 4: Red Attestat -->
+<div class="super-stat-card" style="--card-theme: #a78bfa; --card-glow: rgba(167,139,250,0.15);">
+<div class="ssc-bg-glow"></div>
+<div class="ssc-content">
+<div class="ssc-icon-box">
+<i class="fas fa-certificate"></i>
+</div>
+<div class="ssc-text-group">
+<div class="ssc-num-unified">
+<span class="achievement-number" data-target="50">0</span>+
+                </div>
+<div class="ssc-label" data-i18n="stats-desc4">Qırmızı attestat</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<style>
+        /* 4-card 2x2 grid */
+        .ssc-grid-4 {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 30px;
+        }
+        @media (max-width: 700px) {
+          .ssc-grid-4 { grid-template-columns: 1fr; }
+        }
+
+        .super-stat-card {
+          background: rgba(255, 255, 255, 0.03);
+          backdrop-filter: blur(25px);
+          -webkit-backdrop-filter: blur(25px);
+          border-radius: 32px;
+          padding: 40px;
+          position: relative;
+          z-index: 1;
+          box-shadow: 0 10px 40px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.08);
+          transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+          overflow: hidden;
+          cursor: default;
+        }
+
+        .super-stat-card:hover {
+          transform: translateY(-12px) scale(1.03);
+          background: rgba(255, 255, 255, 0.06);
+          border-color: var(--card-theme);
+          box-shadow: 0 40px 80px rgba(0,0,0,0.4), 0 0 20px var(--card-glow);
+        }
+
+        .ssc-bg-glow {
+          position: absolute;
+          top: -20%;
+          right: -10%;
+          width: 250px;
+          height: 250px;
+          background: var(--card-theme);
+          border-radius: 50%;
+          filter: blur(80px);
+          z-index: 0;
+          opacity: 0.05;
+          transition: all 0.8s ease;
+        }
+        .super-stat-card:hover .ssc-bg-glow { 
+          opacity: 0.2; 
+          transform: scale(1.4) translate(-10%, 10%);
+        }
+
+        .ssc-content {
+          position: relative;
+          z-index: 2;
+          display: flex;
+          align-items: center;
+          gap: 25px;
+          height: 100%;
+        }
+
+        .ssc-icon-box {
+          width: 64px;
+          height: 64px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 20px;
+          font-size: 1.6rem;
+          color: var(--card-theme);
+          background: var(--card-glow);
+          transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .super-stat-card:hover .ssc-icon-box {
+          transform: rotate(-10deg) scale(1.1);
+          background: var(--card-theme);
+          color: white;
+          box-shadow: 0 10px 25px var(--card-glow);
+        }
+
+        .ssc-text-group {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .ssc-num-unified {
+          font-size: 2.8rem;
+          font-weight: 900;
+          line-height: 1;
+          font-family: 'Inter', sans-serif;
+          letter-spacing: -0.04em;
+          background: linear-gradient(135deg, #ffffff 30%, var(--card-theme) 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          transition: all 0.5s ease;
+        }
+
+        .ssc-label {
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: rgba(255,255,255,0.5);
+          letter-spacing: 0.02em;
+          transition: all 0.5s ease;
+        }
+
+        .super-stat-card:hover .ssc-label {
+          color: white;
+          transform: translateX(5px);
+        }
+
+        @media (max-width: 768px) {
+          #stats-slider { padding: 50px 0 !important; }
+          #stats-slider h2 { font-size: 1.4rem !important; line-height: 1.2 !important; margin-bottom: 8px !important; }
+          #stats-slider > .container > div:first-child { margin-bottom: 28px !important; }
+          .ssc-grid-4 { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+          .super-stat-card { padding: 14px 12px !important; border-radius: 16px !important; }
+          .ssc-content { flex-direction: column !important; align-items: flex-start !important; gap: 8px !important; }
+          .ssc-num-unified { font-size: 1.5rem !important; }
+          .ssc-label { font-size: 0.75rem !important; line-height: 1.3 !important; }
+          .ssc-icon-box { width: 34px !important; height: 34px !important; font-size: 0.9rem !important; border-radius: 10px !important; }
+        }
+      </style>
+</section>
+<!-- Evrika Dəyərləri Section -->
+<section class="overflow-hidden" id="values" style="padding: 120px 0; background: var(--burgundy); position: relative;">
+<!-- decorative background rings -->
+<div style="position: absolute; top: -100px; left: -100px; width: 400px; height: 400px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.05); pointer-events: none;">
+</div>
+<div style="position: absolute; bottom: -150px; right: -50px; width: 600px; height: 600px; border-radius: 50%; border: 1px dashed rgba(255,255,255,0.03); pointer-events: none;">
+</div>
+<div class="container" style="position: relative; z-index: 2;">
+<div style="text-align: center; margin-bottom: 80px;">
+<div data-i18n="eco-title1" style="display: inline-block; padding: 8px 16px; background: rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 20px; font-weight: 800; color: white; text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.85rem;">
+            EVRİKA TƏHSİL EKOSİSTEMİ</div>
+<h2 class="titan-header" data-i18n="values-title" style="font-size: 3.5rem; color: white;">DƏYƏRLƏRİMİZ</h2>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px;">
+<div class="reveal bento-card bento-blue">
+<div class="bento-icon"><i class="fas fa-graduation-cap"></i></div>
+<h3 class="bento-title" data-i18n="val1-title">AKADEMİK GÜC</h3>
+<p class="bento-text" data-i18n="val1-desc">Güclü tədris proqramı və nəticə yönümlü yanaşma</p>
+</div>
+<div class="reveal bento-card bento-green">
+<div class="bento-icon"><i class="fas fa-user-shield"></i></div>
+<h3 class="bento-title" data-i18n="val2-title">XARAKTER</h3>
+<p class="bento-text" data-i18n="val2-desc">Dəyərlər, məsuliyyət və şəxsiyyət formalaşması</p>
+</div>
+<div class="reveal bento-card bento-purple">
+<div class="bento-icon"><i class="fas fa-landmark"></i></div>
+<h3 class="bento-title" data-i18n="val3-title">MİLLİ KİMLİK</h3>
+<p class="bento-text" data-i18n="val3-desc">Məsuliyyətli vətəndaşlıq və vətənpərvərlik.</p>
+</div>
+<div class="reveal bento-card bento-orange">
+<div class="bento-icon"><i class="fas fa-rocket"></i></div>
+<h3 class="bento-title" data-i18n="val4-title">İNNOVASİYA</h3>
+<p class="bento-text" data-i18n="val4-desc">Müasir texnologiyalar və yeni nəsil təhsil modeli</p>
+</div>
+<div class="reveal bento-card bento-red">
+<div class="bento-icon"><i class="fas fa-globe"></i></div>
+<h3 class="bento-title" data-i18n="val5-title">BEYNƏLXALQ DÜŞÜNCƏ</h3>
+<p class="bento-text" data-i18n="val5-desc">Multikultural dəyərlərə hörmət və qlobal baxış.</p>
+</div>
+<div class="reveal bento-card bento-cyan">
+<div class="bento-icon"><i class="fas fa-hands-helping"></i></div>
+<h3 class="bento-title" data-i18n="val6-title">SOSİAL TƏŞƏBBÜSKARLIQ</h3>
+<p class="bento-text" data-i18n="val6-desc">Şəxsi inkişaf, liderlik və özünə inamın formalaşması</p>
+</div>
+</div>
+</div>
+<style>
+        /* Colorful accent themes — same as mission.html */
+        .bento-blue {
+          --theme-color: #3b82f6;
+          --theme-bg: rgba(59, 130, 246, 0.15);
+          --theme-glow: rgba(59, 130, 246, 0.4);
+        }
+
+        .bento-green {
+          --theme-color: #10b981;
+          --theme-bg: rgba(16, 185, 129, 0.15);
+          --theme-glow: rgba(16, 185, 129, 0.4);
+        }
+
+        .bento-purple {
+          --theme-color: #8b5cf6;
+          --theme-bg: rgba(139, 92, 246, 0.15);
+          --theme-glow: rgba(139, 92, 246, 0.4);
+        }
+
+        .bento-orange {
+          --theme-color: #f59e0b;
+          --theme-bg: rgba(245, 158, 11, 0.15);
+          --theme-glow: rgba(245, 158, 11, 0.4);
+        }
+
+        .bento-red {
+          --theme-color: #ef4444;
+          --theme-bg: rgba(239, 68, 68, 0.15);
+          --theme-glow: rgba(239, 68, 68, 0.4);
+        }
+
+        .bento-cyan {
+          --theme-color: #06b6d4;
+          --theme-bg: rgba(6, 182, 212, 0.15);
+          --theme-glow: rgba(6, 182, 212, 0.4);
+        }
+
+        .bento-card {
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 32px;
+          padding: 40px;
+          position: relative;
+          overflow: hidden;
+          transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          align-items: flex-start;
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+          height: 100%;
+          min-height: 240px;
+          cursor: default;
+        }
+
+        .bento-card:hover {
+          background: rgba(255, 255, 255, 0.08);
+          transform: translateY(-12px) scale(1.02);
+          border-color: var(--theme-color);
+          box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4), 0 0 30px var(--theme-glow);
+        }
+
+        .bento-icon {
+          position: absolute;
+          right: -20px;
+          bottom: -20px;
+          font-size: 10rem;
+          color: var(--theme-color);
+          opacity: 0.1;
+          z-index: 0;
+          transition: all 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+          pointer-events: none;
+        }
+
+        .bento-card:hover .bento-icon {
+          opacity: 0.4;
+          transform: rotate(-15deg) scale(1.15) translate(-10px, -10px);
+          filter: drop-shadow(0 10px 30px var(--theme-glow));
+        }
+
+        .bento-title {
+          font-size: 1.6rem;
+          color: white;
+          font-weight: 900;
+          margin-bottom: 16px;
+          position: relative;
+          z-index: 1;
+          letter-spacing: -0.02em;
+          background: linear-gradient(135deg, #fff 50%, var(--theme-color) 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        .bento-text {
+          font-size: 1.1rem;
+          color: rgba(255, 255, 255, 0.5);
+          line-height: 1.7;
+          position: relative;
+          z-index: 1;
+          transition: color 0.4s ease;
+        }
+        
+        .bento-card:hover .bento-text {
+          color: rgba(255, 255, 255, 0.9);
+        }
+
+        .bento-text .highlight {
+          color: rgba(255, 255, 255, 0.9);
+          font-weight: 600;
+          display: block;
+          margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+          #values { padding: 60px 0 !important; }
+          #values h2.titan-header { font-size: 2rem !important; }
+          #values > .container > div:first-child { margin-bottom: 40px !important; }
+          #values .container > div:last-child {
+            grid-template-columns: 1fr !important;
+            gap: 16px !important;
+          }
+          .bento-card {
+            padding: 24px !important;
+            border-radius: 20px !important;
+            min-height: 160px !important;
+          }
+          .bento-title { font-size: 1.1rem !important; margin-bottom: 10px !important; }
+          .bento-text  { font-size: 0.88rem !important; }
+          .bento-icon  { font-size: 6rem !important; }
+        }
+      </style>
+</section>
+<div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(ellipse at 10% 50%, rgba(139,26,43,0.12) 0%, transparent 50%); pointer-events: none;">
+</div>
+
+<!-- Missiya & Vizyon Section -->
+<section style="padding: 0; background: #060e24; position: relative; overflow: hidden;">
+<!-- Rich layered background -->
+<div style="position:absolute;inset:0;background:linear-gradient(135deg,#060e24 0%,#0d1b3e 50%,#0a1628 100%);pointer-events:none;"></div>
+<div style="position:absolute;top:-200px;left:-100px;width:700px;height:700px;background:radial-gradient(circle,rgba(139,26,43,0.22)0%,transparent 65%);pointer-events:none;filter:blur(20px);"></div>
+<div style="position:absolute;bottom:-200px;right:-100px;width:700px;height:700px;background:radial-gradient(circle,rgba(76,96,171,0.22)0%,transparent 65%);pointer-events:none;filter:blur(20px);"></div>
+<div style="position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,0.03) 1px,transparent 1px);background-size:30px 30px;pointer-events:none;"></div>
+<!-- Split layout -->
+<div class="mv-split">
+<!-- LEFT: Missiya -->
+<div class="reveal mv-side mv-left" style="padding:110px 80px;flex:1;position:relative;cursor:default;">
+<!-- hover glow layer -->
+<div class="mv-hover-glow mv-glow-red"></div>
+<h3 class="mv-title" data-i18n="mission-title" style="font-size:clamp(2.4rem,4vw,3.8rem);font-weight:900;color:#ffffff;margin:0 0 24px;letter-spacing:-0.04em;line-height:1;">Missiyamız</h3>
+<div class="mv-line mv-line-red"></div>
+<p style="font-size:clamp(1rem,1.4vw,1.2rem);color:rgba(255,255,255,0.65);line-height:1.85;font-weight:300;margin:0;max-width:500px;transition:color 0.4s ease;">
+            Milli dəyərlərə sadiq, qlobal düşüncəyə malik, <strong style="color:white;font-weight:700;">yenilikçi şəxsiyyətlər</strong> yetişdirməkdir!
+          </p>
+</div>
+<!-- CENTER divider -->
+<div class="mv-divider"></div>
+<!-- RIGHT: Vizyon -->
+<div class="reveal mv-side mv-right" style="padding:110px 80px;flex:1;position:relative;cursor:default;transition-delay:0.12s;">
+<!-- hover glow layer -->
+<div class="mv-hover-glow mv-glow-blue"></div>
+<h3 class="mv-title" data-i18n="vision-title" style="font-size:clamp(2.4rem,4vw,3.8rem);font-weight:900;color:#ffffff;margin:0 0 24px;letter-spacing:-0.04em;line-height:1;">Vizyonumuz</h3>
+<div class="mv-line mv-line-blue"></div>
+<p style="font-size:clamp(1rem,1.4vw,1.2rem);color:rgba(255,255,255,0.65);line-height:1.85;font-weight:300;margin:0;max-width:500px;transition:color 0.4s ease;">
+            Gələcəyin yalnız liderlərini deyil, dünyanı dəyişdirə bilən, cəmiyyətə fayda verən <strong style="color:white;font-weight:700;">şəxsiyyətlər formalaşdırmaqdır!</strong>
+</p>
+</div>
+</div>
+<style>
+        .mv-split {
+          display: flex;
+          align-items: stretch;
+          min-height: 500px;
+          position: relative;
+          z-index: 2;
+        }
+        .mv-side {
+          transition: background 0.5s ease;
+        }
+        /* Hover glow overlay */
+        .mv-hover-glow {
+          position: absolute;
+          inset: 0;
+          opacity: 0;
+          transition: opacity 0.5s ease;
+          pointer-events: none;
+        }
+        .mv-glow-red  { background: radial-gradient(ellipse at 30% 50%, rgba(139,26,43,0.25) 0%, transparent 70%); }
+        .mv-glow-blue { background: radial-gradient(ellipse at 70% 50%, rgba(76,96,171,0.25) 0%, transparent 70%); }
+        .mv-left:hover  .mv-hover-glow,
+        .mv-right:hover .mv-hover-glow { opacity: 1; }
+
+        /* Title lift on hover */
+        .mv-side:hover .mv-title {
+          transform: translateY(-4px);
+          transition: transform 0.4s cubic-bezier(0.25,1,0.5,1);
+        }
+        .mv-title { transition: transform 0.4s cubic-bezier(0.25,1,0.5,1); }
+
+        /* Animated underline */
+        .mv-line {
+          height: 3px;
+          border-radius: 10px;
+          margin-bottom: 36px;
+          width: 40px;
+          transition: width 0.5s cubic-bezier(0.25,1,0.5,1);
+        }
+        .mv-line-red  { background: var(--burgundy); }
+        .mv-line-blue { background: rgba(76,96,171,0.9); }
+        .mv-left:hover  .mv-line,
+        .mv-right:hover .mv-line { width: 90px; }
+
+        /* Text brighten on hover */
+        .mv-side:hover p { color: rgba(255,255,255,0.88) !important; }
+
+        /* Divider */
+        .mv-divider {
+          width: 1px;
+          background: linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.12) 25%, rgba(255,255,255,0.12) 75%, transparent 100%);
+          flex-shrink: 0;
+          align-self: stretch;
+        }
+
+        @media(max-width:768px){
+          .mv-split  { flex-direction: column; }
+          .mv-side   { padding: 70px 28px !important; }
+          .mv-divider {
+            width: 80%; height: 1px; margin: 0 auto;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.12), transparent);
+          }
+        }
+      </style>
+</section>
+<!-- Vision 2026 Ecosystem Banner Section -->
+<section class="section overflow-hidden" id="ecosystem" style="padding: 140px 0; background: linear-gradient(135deg, #070d1f 0%, #0d2247 50%, #0f2c55 100%); position: relative;">
+<!-- Decorative Background Elements -->
+<div style="position: absolute; top: -10vw; left: -10vw; width: 40vw; height: 40vw; background: radial-gradient(circle, rgba(96,165,250,0.05) 0%, transparent 70%); pointer-events: none;"></div>
+<div style="position: absolute; bottom: -10vw; right: -5vw; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(139,26,43,0.08) 0%, transparent 60%); pointer-events: none;"></div>
+<!-- End Decorative Elements -->
+<div class="container relative z-10">
+<div class="reveal ecosystem-banner">
+<div class="banner-glow"></div>
+<div class="banner-content">
+<div class="banner-badge" data-i18n="v2026-title1">VİZYON 2026</div>
+<h4 class="banner-title">GƏLƏCƏYİ BU GÜN VAR EDƏN <span class="highlight">TƏHSİL EKOSİSTEMİ</span></h4>
+<div class="banner-sep"></div>
+<p class="banner-text">
+                    EVRİKA artıq sadəcə məktəb deyil. <br/>
+<span class="main-statement" data-i18n="v2026-desc2">EVRİKA – gələcək quran təhsil ekosistemidir.</span>
+</p>
+</div>
+</div>
+</div>
+<style>
+          .ecosystem-banner {
+            position: relative;
+            padding: 80px 40px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            cursor: default;
+          }
+
+          .ecosystem-banner:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-5px);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.3);
+          }
+
+          .banner-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 300px;
+            background: var(--burgundy);
+            filter: blur(120px);
+            border-radius: 50%;
+            opacity: 0.15;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            pointer-events: none;
+          }
+
+          .ecosystem-banner:hover .banner-glow {
+            opacity: 0.3;
+            transform: translate(-50%, -50%) scale(1.5);
+          }
+
+          .banner-badge {
+            display: inline-block;
+            padding: 8px 18px;
+            background: var(--burgundy);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 0.2em;
+            border-radius: 50px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(139, 26, 43, 0.3);
+          }
+
+          .banner-title {
+            color: white;
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            margin-bottom: 25px;
+            line-height: 1.2;
+          }
+
+          .banner-title .highlight {
+            color: #60a5fa;
+            position: relative;
+            z-index: 1;
+          }
+
+          .banner-sep {
+            width: 60px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.15);
+            margin: 0 auto 25px;
+            transition: width 0.6s ease;
+          }
+
+          .ecosystem-banner:hover .banner-sep {
+            width: 120px;
+            background: #60a5fa;
+          }
+
+          .banner-text {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.3rem;
+            line-height: 1.8;
+          }
+
+          .main-statement {
+            color: white;
+            font-weight: 800;
+            display: block;
+            margin-top: 15px;
+            font-size: 1.6rem;
+            letter-spacing: 0.02em;
+          }
+
+          @media (max-width: 768px) {
+            .ecosystem-banner {
+              padding: 48px 24px;
+              border-radius: 20px;
+            }
+            .banner-title {
+              font-size: 1.5rem;
+              letter-spacing: 0.02em;
+            }
+            .banner-text {
+              font-size: 1rem;
+            }
+            .main-statement {
+              font-size: 1.1rem;
+            }
+            .banner-badge {
+              font-size: 0.7rem;
+              padding: 6px 14px;
+            }
+          }
+      </style>
+</section>
+<!-- Alumni Section -->
+<section class="section bg-light" id="alumni">
+<div class="container">
+<div class="text-center reveal" style="margin-bottom: 50px; display: flex; flex-direction: column; align-items: center;">
+<!-- Modern Premium Eyebrow -->
+<div style="padding: 8px 20px 8px 8px; background: #ffffff; border: 1px solid rgba(0,0,0,0.06); border-radius: 100px; margin-bottom: 30px; display: inline-flex; align-items: center; gap: 12px; box-shadow: 0 10px 30px rgba(76, 96, 171,0.04);">
+<span style="display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: var(--burgundy); border-radius: 50%; color: white; font-size: 0.7rem; box-shadow: 0 4px 10px rgba(139,26,43,0.3);"><i class="fas fa-crown"></i></span>
+<span data-i18n="alumni-sec-title1" style="font-weight: 800; color: var(--navy); font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase;">Məzunlarımız</span>
+</div>
+<!-- Bold and Clean Typography -->
+<h2 style="font-size: clamp(2rem, 6vw, 5.5rem); color: var(--navy); margin-bottom: 30px; line-height: 1.05; font-weight: 900; letter-spacing: -0.04em; text-align: center;">
+            Dünyaya Açılan<br>
+<span style="display: inline-block; margin-top: 5px; color: var(--burgundy); position: relative; z-index: 1;">
+              Uğur Yolumuz!
+              <!-- Clean Vector Wave Underline -->
+<svg height="20" preserveaspectratio="none" style="position: absolute; bottom: -8px; left: 0; z-index: -1; opacity: 0.15;" viewbox="0 0 100 20" width="100%">
+<path d="M0 15 C 30 0, 70 20, 100 10 L 100 20 L 0 20 Z" fill="var(--burgundy)"></path>
+</svg>
+</span>
+</br></h2>
+</div>
+</div>
+<div class="alumni-carousel-wrapper reveal">
+<div class="alumni-fade alumni-fade-left"></div>
+<div class="alumni-fade alumni-fade-right"></div>
+<div class="alumni-track track-lft" id="alumni-track-1-idx"></div>
+<div class="alumni-track track-rgt" id="alumni-track-2-idx" style="margin-top: 35px;"></div>
+</div>
+<style>
+        .alumni-carousel-wrapper {
+          position: relative;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          padding: 20px 0;
+          margin-top: 30px;
+        }
+
+        .alumni-fade {
+          position: absolute;
+          top: 0;
+          width: 15%;
+          height: 100%;
+          z-index: 5;
+          pointer-events: none;
+        }
+
+        .alumni-fade-left {
+          left: 0;
+          background: linear-gradient(to right, var(--off-white), transparent);
+        }
+
+        .alumni-fade-right {
+          right: 0;
+          background: linear-gradient(to left, var(--off-white), transparent);
+        }
+
+        .alumni-track {
+          display: flex;
+          width: max-content;
+          gap: 35px;
+          padding: 20px 0;
+        }
+
+        .alumni-track:hover {
+          animation-play-state: paused !important;
+        }
+
+        .track-lft {
+          animation: scrollAlumniLeft 55s linear infinite;
+        }
+
+        .track-rgt {
+          animation: scrollAlumniRight 55s linear infinite;
+        }
+
+        .alumni-group {
+          display: flex;
+          gap: 35px;
+        }
+
+        .al-card {
+          width: 300px;
+          height: 375px;
+          border-radius: 24px;
+          overflow: hidden;
+          position: relative;
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+          cursor: pointer;
+          transform: scale(1);
+          transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+          background: #ffffff;
+        }
+
+        .al-card img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+          display: block;
+          margin: 0;
+        }
+
+        .al-name {
+          font-weight: 800;
+          font-size: 1.4rem;
+          margin-bottom: 5px;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .al-uni {
+          font-size: 0.95rem;
+          color: #ffcccb;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+
+        @keyframes scrollAlumniLeft {
+          0% {
+            transform: translateX(0);
+          }
+
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+
+        @keyframes scrollAlumniRight {
+          0% {
+            transform: translateX(-50%);
+          }
+
+          100% {
+            transform: translateX(0);
+          }
+        }
+
+        @media (max-width: 768px) {
+          .al-card {
+            width: 200px;
+            height: 260px;
+            border-radius: 16px;
+          }
+          .al-name { font-size: 1rem; }
+          .al-uni  { font-size: 0.75rem; }
+          .alumni-track { gap: 18px; }
+          .alumni-group { gap: 18px; }
+        }
+      </style>
+<script>
+        // Optimization: Start fetching data immediately, in parallel with DOM parsing
+        const ALUMNI_API_URL = 'https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1';
+        const ALUMNI_API_KEY = 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV';
+
+        // Define static fallback array first
+        const STATIC_ALUMNI = [
+          { img: "assets/mezunlar/mezun_1.png", name: "Evrika Məzunu", uni: "" },
+          { img: "assets/mezunlar/mezun_2.png", name: "Evrika Məzunu", uni: "" },
+          { img: "assets/mezunlar/mezun_3.png", name: "Evrika Məzunu", uni: "" },
+          { img: "assets/mezunlar/mezun_4.png", name: "Evrika Məzunu", uni: "" },
+          { img: "assets/mezunlar/mezun_5.jpeg", name: "Evrika Məzunu", uni: "" },
+          { img: "assets/mezunlar/mezun_6.jpeg", name: "Evrika Məzunu", uni: "" },
+          { img: "assets/mezunlar/mezun_7.jpeg", name: "Evrika Məzunu", uni: "" },
+          { img: "assets/mezunlar/mezun_8.jpeg", name: "Evrika Məzunu", uni: "" },
+          { img: "assets/mezunlar/mezun_9.jpeg", name: "Evrika Məzunu", uni: "" },
+          { img: "assets/mezunlar/mezun_10.jpeg", name: "Evrika Məzunu", uni: "" },
+          { img: "assets/mezunlar/mezun_11.jpeg", name: "Evrika Məzunu", uni: "" },
+          { img: "assets/mezunlar/mezun_12.jpeg", name: "Evrika Məzunu", uni: "" },
+          { img: "assets/mezunlar/mezun_13.jpeg", name: "Evrika Məzunu", uni: "" },
+          { img: "assets/mezunlar/mezun_14.jpeg", name: "Evrika Məzunu", uni: "" },
+          { img: "assets/mezunlar/mezun_15.jpeg", name: "Evrika Məzunu", uni: "" },
+          { img: "assets/mezunlar/mezun_16.jpeg", name: "Evrika Məzunu", uni: "" },
+          { img: "assets/mezunlar/mezun_17.jpeg", name: "Evrika Məzunu", uni: "" },
+          { img: "assets/mezunlar/mezun_18.jpeg", name: "Evrika Məzunu", uni: "" },
+          { img: "assets/mezunlar/mezun_19.jpeg", name: "Evrika Məzunu", uni: "" },
+          { img: "assets/mezunlar/mezun_20.jpeg", name: "Evrika Məzunu", uni: "" },
+        ];
+
+        async function fetchAlumniForHome() {
+          try {
+            const res = await fetch(`${ALUMNI_API_URL}/mezunlar?select=*&order=id.desc&limit=30`, { 
+              headers: { 'apikey': ALUMNI_API_KEY, 'Authorization': 'Bearer ' + ALUMNI_API_KEY } 
+            });
+            if (res.ok) {
+              const data = await res.json();
+              return data.map(r => r.payload);
+            }
+          } catch (e) { console.error(e); }
+          // Static fallback if DB is empty or fails
+          return STATIC_ALUMNI;
+        }
+
+        const alumniDataPromise = fetchAlumniForHome();
+
+        // Render alumni immediately with static fallback, update when API responds
+
+        function renderAlumniTracks(data) {
+          const renderGroupIdx = (items) => {
+            if (!items || items.length === 0) return '';
+            return '<div class="alumni-group">' + items.map(a => `
+                    <div class="al-card">
+                      <img src="${a.img}" alt="Məzun" >
+                    </div>
+                 `).join('') + '</div>';
+          };
+          // Use full data to ensure no empty slots on large screens
+          const t1Items = [...data];
+          // Shift the second track so it doesn't look identical vertically
+          const t2Items = [...data.slice(5), ...data.slice(0, 5)];
+          
+          // Render 4 groups to be absolutely sure it's wide enough for any screen
+          const track1HTML = renderGroupIdx(t1Items) + renderGroupIdx(t1Items) + renderGroupIdx(t1Items) + renderGroupIdx(t1Items);
+          const track2HTML = renderGroupIdx(t2Items) + renderGroupIdx(t2Items) + renderGroupIdx(t2Items) + renderGroupIdx(t2Items);
+          const el1 = document.getElementById('alumni-track-1-idx');
+          const el2 = document.getElementById('alumni-track-2-idx');
+          if (el1) el1.innerHTML = track1HTML;
+          if (el2) el2.innerHTML = track2HTML;
+        }
+
+        // Show static data immediately
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => renderAlumniTracks(STATIC_ALUMNI));
+        } else {
+          renderAlumniTracks(STATIC_ALUMNI);
+        }
+
+        // Then update with real API data when ready
+        alumniDataPromise.then(data => {
+          if (data && data.length > 0) renderAlumniTracks(data);
+        });
+      </script>
+<!-- Premium Dynamic Parent Testimonials -->
+<section class="parents-modern-section reveal" id="testimonials">
+<div class="container">
+<div class="parents-header">
+<h2 class="parents-title" data-i18n="parents-title1">VALİDEYNLƏRİMİZ</h2>
+<p class="parents-desc" data-i18n="parents-desc1">Uşaqlarımızın Evrikada keçirdiyi hər gün onların gələcəyinə qoyulan ən böyük sərmayədir.</p>
+</div>
+</div>
+
+<div class="swiper parentTestimonialSwiper" style="padding: 0 4% 40px;">
+<div class="swiper-wrapper" id="parent-testimonials-wrapper">
+<div class="swiper-slide"><div class="skeleton-card"></div></div>
+</div>
+</div>
+<div class="container">
+<!-- Modern Centered Navigation -->
+<div class="parents-controls-center">
+<div class="control-circle parent-prev"><i class="fas fa-arrow-left"></i></div>
+<div class="control-circle parent-next"><i class="fas fa-arrow-right"></i></div>
+</div>
+</div>
+
+</section>
+<style>
+      .parents-modern-section {
+        padding: 120px 0;
+        background: #ffffff;
+        overflow: hidden;
+      }
+      .parents-header {
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto 60px;
+      }
+      .premium-eyebrow {
+        font-family: 'Inter', sans-serif;
+        font-weight: 800;
+        font-size: 0.8rem;
+        letter-spacing: 0.3em;
+        color: var(--burgundy);
+        margin-bottom: 20px;
+      }
+      .parents-title {
+        font-family: 'Inter', sans-serif;
+        font-weight: 900;
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        color: var(--navy);
+        line-height: 1.1;
+        margin-bottom: 24px;
+      }
+      .burgundy-glow {
+        color: var(--burgundy);
+        position: relative;
+      }
+      .parents-desc {
+        font-size: 1.1rem;
+        color: var(--text-muted);
+        line-height: 1.6;
+      }
+
+      /* Specific Card Styles based on USER Image */
+      .parent-testimonial-card {
+        background: rgba(139, 26, 43, 0.95); /* Burgundy Glass */
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        color: white;
+        border-radius: 24px;
+        padding: 40px;
+        display: flex;
+        gap: 40px;
+        transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+        height: 100%;
+        width: 100%;
+        max-width: 900px;
+        align-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+      }
+      /* Ensure equal height in swiper */
+      .parentTestimonialSwiper .swiper-wrapper {
+        align-items: stretch;
+      }
+      .parentTestimonialSwiper .swiper-slide {
+        height: auto;
+        display: flex;
+        justify-content: center;
+      }
+      /* Hover effect fix: remove scale and use subtle lift to prevent clipping */
+      .parent-testimonial-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 40px 80px rgba(139, 26, 43, 0.25);
+        border-color: rgba(255, 255, 255, 0.3);
+      }
+
+      /* Padding for swiper to show hover effect without clipping */
+      .parentTestimonialSwiper {
+        padding: 20px 20px 60px !important;
+        margin-top: -20px !important;
+      }
+      .parent-testimonial-card .parent-quote { color: rgba(255,255,255,0.95); font-style: italic; }
+      .parent-testimonial-card .parent-meta-box h4 { color: white; letter-spacing: -0.02em; }
+      .parent-testimonial-card .parent-meta-box p { color: rgba(255,255,255,0.6); }
+
+      .parent-testimonial-card.card-dark {
+        background: rgba(255, 255, 255, 0.95); /* White Glass */
+        color: #070d1f;
+        border-color: rgba(139, 26, 43, 0.15);
+      }
+      .parent-testimonial-card.card-dark .parent-quote { color: #1e293b; }
+      .parent-testimonial-card.card-dark .parent-meta-box h4 { color: #8b1a2b; }
+      .parent-testimonial-card.card-dark .parent-meta-box p { color: #64748b; }
+
+      .parent-card-media {
+        width: 280px;
+        height: 280px;
+        flex: 0 0 280px;
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+        background: #000; /* Dark background as backup */
+      }
+      .parent-card-media img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        object-position: center !important;
+        display: block !important;
+      }
+      .play-btn-small {
+        position: absolute;
+        bottom: 15px;
+        left: 15px;
+        width: 32px;
+        height: 32px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #2D1B69;
+        font-size: 0.8rem;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        cursor: pointer;
+        z-index: 2;
+      }
+
+      .parent-card-text {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        text-align: left;
+        align-self: stretch;
+      }
+      .parent-quote-wrapper {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        width: 100%;
+      }
+      .parent-quote {
+        font-size: 1.05rem;
+        line-height: 1.6;
+        font-weight: 400;
+        margin: 0;
+      }
+      .parent-meta-box {
+        margin-top: auto;
+      }
+      .parent-meta-box h4 {
+        margin: 0;
+        font-size: 1.15rem;
+        font-weight: 700;
+      }
+      .parent-meta-box p {
+        margin: 5px 0 0;
+        font-size: 0.85rem;
+        color: #666;
+        font-weight: 500;
+      }
+
+      .parents-controls-center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        margin-top: 40px;
+      }
+      .control-circle {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 1px solid #ddd;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: 0.3s;
+        font-size: 0.9rem;
+        color: #555;
+      }
+      .control-circle:hover {
+        background: #f8f8f8;
+        border-color: #bbb;
+      }
+
+      .skeleton-card {
+        height: 380px;
+        background: #f0f2f5;
+        border-radius: 20px;
+        animation: pulse 1.5s infinite;
+      }
+
+      @media (max-width: 768px) {
+        .parents-modern-section { padding: 60px 0; }
+        .parents-title { font-size: clamp(1.6rem, 6vw, 2.5rem); margin-bottom: 14px; }
+        .parents-desc  { font-size: 0.9rem; }
+        .parents-header { margin-bottom: 36px; }
+        .parent-testimonial-card {
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+            gap: 20px;
+            min-height: unset;
+        }
+        .parent-card-media {
+            width: 160px;
+            height: 160px;
+            flex: 0 0 160px;
+            margin: 0 auto;
+        }
+        .parent-card-text { text-align: center; }
+        .parent-quote    { font-size: 0.88rem; line-height: 1.55; }
+        .parent-meta-box h4 { font-size: 0.95rem; }
+        .parent-meta-box p  { font-size: 0.75rem; }
+      }
+
+      /* Partners Section Styles */
+      .partners-section {
+        padding: 100px 0 120px;
+        background: var(--burgundy);
+        position: relative;
+        overflow: hidden;
+      }
+      /* White dot pattern over red */
+      .partners-section::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(rgba(255,255,255,0.2) 1.5px, transparent 1.5px);
+        background-size: 30px 30px;
+        opacity: 0.4;
+        pointer-events: none;
+      }
+
+      .partners-track-wrapper {
+        width: 100%;
+        overflow: hidden;
+        padding: 40px 0;
+        mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+        -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+        position: relative;
+        z-index: 2;
+      }
+
+      .partners-track {
+        display: flex;
+        gap: 40px;
+        align-items: center;
+        width: max-content;
+        animation: scrollRight 35s linear infinite;
+      }
+
+      @keyframes scrollRight {
+        0% { transform: translateX(calc(-50%)); }
+        100% { transform: translateX(0); }
+      }
+
+      .partner-item {
+        position: relative;
+        overflow: hidden;
+        flex-shrink: 0;
+        width: 260px;
+        height: 160px;
+        background: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+        gap: 12px;
+      }
+      
+      .partner-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(7, 13, 31, 0.92);
+        backdrop-filter: blur(10px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 15px;
+        opacity: 0;
+        transform: translateY(100%);
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        z-index: 10;
+        text-align: center;
+      }
+      
+      .partner-item:hover .partner-overlay {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      
+      .partner-info-text {
+        color: rgba(255,255,255,0.8);
+        font-size: 0.75rem;
+        line-height: 1.5;
+        font-weight: 400;
+        margin-top: 5px;
+      }
+
+      .partner-item:hover {
+        transform: translateY(-8px) scale(1.05);
+        background: #ffffff;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+        border-color: var(--burgundy);
+      }
+
+      .partner-item img {
+        max-width: 100%;
+        max-height: 80px;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        transition: all 0.5s ease;
+      }
+      .partner-name {
+        font-family: 'Inter', sans-serif;
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: #070d1f;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .partner-item:hover img {
+        transform: scale(1.05);
+      }
+      .partner-placeholder {
+        font-weight: 800;
+        color: var(--navy);
+        font-size: 1.2rem;
+        white-space: nowrap;
+      }
+      .partner-placeholder {
+        font-weight: 800;
+        color: #222;
+        font-size: 1.2rem;
+        opacity: 0.3;
+        letter-spacing: -0.02em;
+        transition: all 0.4s;
+      }
+      .partner-item:hover .partner-placeholder {
+        opacity: 1;
+        color: var(--burgundy);
+      }
+
+      @media (max-width: 768px) {
+        .partners-section { padding: 56px 0 64px !important; }
+        .partners-section .section-header { margin-bottom: 40px !important; }
+        .partners-section h2 { font-size: 2rem !important; }
+        .partners-section .premium-eyebrow { font-size: 0.65rem !important; }
+        .partners-section .section-header > div:last-child { margin-top: 16px !important; }
+        .partners-track-wrapper { padding: 24px 0 !important; }
+        .partners-track { gap: 20px !important; }
+        .partner-item {
+          width: 160px !important;
+          height: 100px !important;
+          padding: 12px !important;
+          border-radius: 14px !important;
+          gap: 6px !important;
+        }
+        .partner-item img { max-height: 50px !important; }
+        .partner-name { font-size: 0.72rem !important; }
+        .partner-placeholder { font-size: 0.85rem !important; }
+        .partner-info-text { font-size: 0.65rem !important; }
+      }
+    </style>
+<!-- Founder/Message Section (Cinematic Deep Vision Aesthetic) -->
+<section class="section reveal" id="founder" style="background: radial-gradient(circle at 70% 30%, #1a2a5a 0%, #050a18 100%); color: var(--white); position: relative; overflow: hidden; padding: 160px 0;">
+<!-- Cinematic Background Text -->
+<div class="background-text-founder" style="position: absolute; top: 10%; left: 5%; font-size: 15rem; font-weight: 900; color: rgba(255,255,255,0.02); line-height: 1; pointer-events: none; text-transform: uppercase; user-select: none;">
+        FOUNDER
+      </div>
+<!-- Decorative ambient glow -->
+<div style="position: absolute; bottom: -10%; left: -5%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(139,26,43,0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; z-index: 1;"></div>
+<div class="container" style="position: relative; z-index: 5;">
+<div class="grid-founder-cinematic">
+<!-- Modern Portrait with Glass Frame -->
+<div class="founder-portrait-area">
+<div class="portrait-glass-frame">
+<div class="portrait-glow-ring-premium"></div>
+<div class="portrait-main-img-box">
+<img alt="Təsisçi Xudaqulu Rzayev" src="./ffounder.jpeg"/>
+<div class="portrait-reflection-overlay"></div>
+</div>
+<!-- Floating geometric accents -->
+<div class="founder-accent-box" style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: rgba(139,26,43,0.8); border-radius: 12px; z-index: 3; display: flex; align-items: center; justify-content: center; transform: rotate(15deg); box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);">
+<i class="fas fa-quote-right" style="color: white; font-size: 1.5rem;"></i>
+</div>
+</div>
+</div>
+<div class="founder-message-content">
+<div class="brand-eyebrow modern-glow" style="margin-bottom: 24px; color: var(--burgundy); letter-spacing: 0.4em; text-transform: uppercase; font-weight: 800; font-size: 0.9rem;">
+<h2 class="titan-header" style="font-size: clamp(3rem, 5vw, 4.5rem); color: var(--white); line-height: 1.05; margin-bottom: 40px; letter-spacing: -0.01em; text-transform: none;">
+              TƏSİSÇİNİN <br/>
+<span class="gradient-text-burgundy" style="position: relative; z-index: 1;">
+                MESAJI
+                <span style="position: absolute; bottom: 8px; left: 0; width: 100%; height: 12px; background: var(--burgundy); z-index: -1; opacity: 0.2; border-radius: 4px;"></span>
+</span>
+</h2>
+<!-- Mobile-only portrait (shown between heading and quote) -->
+<div class="mobile-founder-portrait-mid">
+<div class="portrait-glass-frame" style="max-width:240px; margin: 0 auto 28px;">
+<div class="portrait-glow-ring-premium"></div>
+<div class="portrait-main-img-box">
+<img alt="Təsisçi Xudaqulu Rzayev" src="./ffounder.jpeg"/>
+<div class="portrait-reflection-overlay"></div>
+</div>
+</div>
+</div>
+<div class="cinematic-quote-wrap">
+<div class="huge-quote-mark" style="font-size: 8rem; font-family: serif; line-height: 1; color: var(--burgundy); opacity: 0.4; margin-bottom: -50px; margin-left: -20px;">“</div>
+<blockquote class="premium-quote" style="font-size: 1.3rem; line-height: 1.7; color: rgba(255,255,255,0.88); font-weight: 300; font-style: italic; margin-bottom: 36px; position: relative; z-index: 2; letter-spacing: 0; text-transform: none;">
+                 "Evrika Təhsil Ekosistemi” mənim üçün yalnız bir təhsil müəssisəsi deyil — vətənimə, millətimə və onun gələcək tərəqqisinə olan sevgimin təzahürüdür
+               </blockquote>
+</div>
+<div class="founder-official-meta">
+<div class="f-info-box">
+<div class="f-name" data-i18n="founder-name" style="font-size: 1.2rem; font-weight: 800; color: white;">Xudaqulu Rzayev</div>
+<div class="f-title" data-i18n="founder-role" style="font-size: 0.72rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 4px;">EVRİKA TƏHSİL EKOSİSTEMİNİN TƏSİSÇİSİ</div>
+</div>
+<div class="f-seal-box">
+<div class="institutional-seal">
+<div class="seal-inner">
+<img alt="Evrika" src="./assets/loqoYeni-BW1Euzrg.PNG" style="width: 70%; height: auto; filter: brightness(0) invert(1);"/>
+</div>
+<svg class="seal-text-svg" viewbox="0 0 100 100">
+<path d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" id="circlePath"></path>
+<text fill="rgba(255,255,255,0.4)" font-size="10" font-weight="700">
+<textpath startoffset="0%" xlink:href="#circlePath">• EVRİKA • EKOSİSTEMİ •</textpath>
+</text>
+</svg>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<style>
+        .grid-founder-cinematic {
+          display: grid;
+          grid-template-columns: 1fr 1.2fr;
+          gap: 100px;
+          align-items: center;
+        }
+
+        .portrait-glass-frame {
+          position: relative;
+          width: 100%;
+          max-width: 440px;
+          height: auto;
+          animation: floating-portrait 6s ease-in-out infinite;
+        }
+
+        .portrait-main-img-box {
+          position: relative;
+          width: 100%;
+          height: auto;
+          border-radius: 30px;
+          overflow: hidden;
+          z-index: 2;
+          box-shadow: 0 50px 100px rgba(0,0,0,0.6);
+          border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .portrait-main-img-box img {
+          width: 100%;
+          height: auto;
+          display: block;
+          object-fit: contain;
+          transition: transform 1s ease;
+        }
+
+        .portrait-glass-frame:hover .portrait-main-img-box img {
+          transform: scale(1.05);
+        }
+
+        .portrait-glow-ring-premium {
+          position: absolute;
+          inset: -15px;
+          border-radius: 40px;
+          background: linear-gradient(135deg, rgba(139,26,43,0.3) 0%, transparent 40%, rgba(255,255,255,0.1) 100%);
+          z-index: 1;
+          backdrop-filter: blur(5px);
+        }
+
+        .portrait-reflection-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(0,0,0,0.2) 100%);
+          pointer-events: none;
+        }
+
+        .founder-official-meta {
+          display: flex;
+          align-items: center;
+          gap: 40px;
+          border-top: 1px solid rgba(255,255,255,0.1);
+          padding-top: 40px;
+          margin-top: 20px;
+        }
+
+        .institutional-seal {
+          position: relative;
+          width: 100px;
+          height: 100px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .seal-inner {
+          width: 60px;
+          height: 60px;
+          background: var(--burgundy);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-weight: 900;
+          font-size: 1.2rem;
+          box-shadow: 0 0 30px rgba(139, 26, 43, 0.5);
+          z-index: 2;
+          border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .seal-text-svg {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          animation: rotate-seal 15s linear infinite;
+          z-index: 1;
+          pointer-events: none;
+        }
+
+        @keyframes rotate-seal {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+
+        @keyframes floating-portrait {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(1deg); }
+        }
+
+        @media (max-width: 992px) {
+          .grid-founder-cinematic {
+            grid-template-columns: 1fr;
+            gap: 60px;
+            text-align: center;
+          }
+          .founder-portrait-area {
+            display: flex;
+            justify-content: center;
+          }
+          .founder-official-meta {
+            flex-direction: column;
+            gap: 30px;
+          }
+          .huge-quote-mark {
+            margin-left: 0;
+            text-align: center;
+          }
+        }
+
+        @media (max-width: 768px) {
+          #founder .section-inner { padding: 60px 20px; }
+          .grid-founder-cinematic { gap: 36px; }
+          .founder-message-content { order: 1; }
+          .founder-portrait-area   { display: none; }
+          .mobile-founder-portrait-mid { display: block; }
+          .portrait-glass-frame { max-width: 260px; }
+          .premium-quote {
+            font-size: 1rem !important;
+            line-height: 1.6 !important;
+            margin-bottom: 24px !important;
+          }
+          .founder-message-content h2 {
+            font-size: 2.2rem !important;
+          }
+          .f-name  { font-size: 0.85rem !important; }
+          .f-title { font-size: 0.65rem !important; }
+          .founder-official-meta { padding-top: 24px; gap: 20px; }
+          .institutional-seal { width: 72px; height: 72px; }
+          .seal-inner { width: 44px; height: 44px; font-size: 0.9rem; }
+        }
+
+        /* Desktop: hide mobile-only portrait */
+        @media (min-width: 769px) {
+          .mobile-founder-portrait-mid { display: none; }
+        }
+      </style>
+</div></section>
+<!-- Embedded Application Form Section -->
+<section class="section overflow-hidden" id="application-form" style="padding: 140px 0 80px; background: #0a1930; position: relative;">
+<!-- Modern Grid Pattern -->
+<div style="position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 40px 40px; -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%); pointer-events: none; z-index: 1;"></div>
+<!-- Dynamic Ambient Glow Effects -->
+<div style="position: absolute; top: -10vw; right: 10vw; width: 40vw; height: 40vw; background: radial-gradient(circle, rgba(139,26,43,0.2) 0%, transparent 70%); pointer-events: none; filter: blur(50px); z-index: 2;"></div>
+<div style="position: absolute; bottom: -5vw; left: 5vw; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(13,44,102,0.4) 0%, transparent 70%); pointer-events: none; filter: blur(60px); z-index: 2;"></div>
+<div class="container relative z-10">
+<div class="reveal dynamic-app-form">
+<div class="text-center" style="margin-bottom: 30px;">
+<div class="premium-eyebrow" data-i18n="join-title3" style="color: #fca5a5; letter-spacing: 0.15em; font-weight: 700; font-size: 0.75rem; margin-bottom: 10px;">BİZƏ QOŞULUN!</div>
+<h2 data-i18n="join-form-title" style="font-size: 2.4rem; color: white; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em;">Müraciət Forması</h2>
+</div>
+<form class="dyn-form" id="mainContactForm">
+<div class="dyn-form-grid">
+<div class="dyn-input-group">
+<label data-i18n="form-child-name">Övladınızın adı</label>
+<input id="mf_firstName" placeholder="Məs: Əli" required="" type="text"/>
+</div>
+<div class="dyn-input-group">
+<label data-i18n="form-child-surname">Övladınızın soyadı</label>
+<input id="mf_lastName" placeholder="Məs: Əliyev" required="" type="text"/>
+</div>
+<div class="dyn-input-group">
+<label data-i18n="form-center">Müraciət etmək istədiyiniz Təhsil Mərkəzi</label>
+<div style="position: relative;">
+<select id="branchSelect" onchange="window.updateSector()" required="">
+<option disabled="" selected="" value="">Təhsil Mərkəzi seçin</option>
+<option value="nerimanov">Evrika BETL Nərimanov filalı</option>
+<option value="genclik">Evrika BETL Gənclik filalı</option>
+<option value="montessori">Montessori Kids Academy</option>
+<option value="eduhome">Eduhome Hazırlıq</option>
+</select>
+<i class="fas fa-chevron-down select-arrow"></i>
+</div>
+</div>
+<div class="dyn-input-group">
+<label data-i18n="form-section">Müraciət etmək istədiyiniz bölmə</label>
+<div style="position: relative;">
+<select id="sectorSelect" required="">
+<option disabled="" selected="" value="">Əvvəlcə mərkəz seçin</option>
+</select>
+<i class="fas fa-chevron-down select-arrow"></i>
+</div>
+</div>
+<div class="dyn-input-group">
+<label data-i18n="form-class">Müraciət etmək istədiyiniz sinif</label>
+<div style="position: relative;">
+<select id="mf_class" required="">
+<option disabled="" selected="" value="">Sinif seçin</option>
+<option value="Məktəbəqədər">Məktəbəqədər</option>
+<option value="1-ci sinif">1-ci sinif</option>
+<option value="2-ci sinif">2-ci sinif</option>
+<option value="3-cü sinif">3-cü sinif</option>
+<option value="4-cü sinif">4-cü sinif</option>
+<option value="5-ci sinif">5-ci sinif</option>
+<option value="6-cı sinif">6-cı sinif</option>
+<option value="7-ci sinif">7-ci sinif</option>
+<option value="8-ci sinif">8-ci sinif</option>
+<option value="9-cu sinif">9-cu sinif</option>
+<option value="10-cu sinif">10-cu sinif</option>
+<option value="11-ci sinif">11-ci sinif</option>
+</select>
+<i class="fas fa-chevron-down select-arrow"></i>
+</div>
+</div>
+<div class="dyn-input-group">
+<label data-i18n="form-school">Gəldiyiniz təhsil müəssisəsi</label>
+<input id="mf_previousSchool" placeholder="Məs: 20 nömrəli məktəb" required="" type="text"/>
+</div>
+<div class="dyn-input-group">
+<label data-i18n="form-phone">Telefon</label>
+<div style="position: relative; display: flex; gap: 10px;">
+<div style="position: relative; width: 100px;">
+<select id="mf_phoneCode" style="padding-right: 30px;">
+<option value="+994">+994</option>
+<option value="+90">+90</option>
+<option value="+1">+1</option>
+<option value="+7">+7</option>
+</select>
+<i class="fas fa-chevron-down select-arrow"></i>
+</div>
+<input id="mf_phoneNum" placeholder="(000) 000-00-00" required="" style="flex: 1;" type="tel"/>
+</div>
+</div>
+<div class="dyn-input-group">
+<label data-i18n="form-email">E-mail</label>
+<input id="mf_email" placeholder="nümunə@mail.com" required="" type="email"/>
+</div>
+</div>
+<button class="dyn-submit-btn" data-i18n="form-submit" type="submit">
+              Göndər <i class="fas fa-arrow-right" style="font-size: 0.9rem;"></i>
+</button>
+</form>
+<script>
+            window.updateSector = function() {
+              try {
+                var branchSelect = document.getElementById('branchSelect');
+                var sectorSelect = document.getElementById('sectorSelect');
+                var branch = branchSelect.value;
+                
+                sectorSelect.innerHTML = '';
+                
+                var defOpt = document.createElement('option');
+                defOpt.value = '';
+                defOpt.disabled = true;
+                defOpt.selected = true;
+                defOpt.innerHTML = 'Bölmə seçin';
+                sectorSelect.appendChild(defOpt);
+                
+                if (branch === 'nerimanov') {
+                  sectorSelect.innerHTML += '<option value="az">Azərbaycan bölməsi</option>';
+                  sectorSelect.innerHTML += '<option value="rus">Rus bölməsi</option>';
+                  sectorSelect.innerHTML += '<option value="ing">İngilis bölməsi</option>';
+                } else if (branch === 'genclik') {
+                  sectorSelect.innerHTML += '<option value="az">Azərbaycan bölməsi</option>';
+                  sectorSelect.innerHTML += '<option value="rus">Rus bölməsi</option>';
+                  sectorSelect.innerHTML += '<option value="ing">İngilis bölməsi</option>';
+                  sectorSelect.innerHTML += '<option value="turk">Türk bölməsi</option>';
+                  sectorSelect.innerHTML += '<option value="montessori">Montessori məktəbi (ibtidai)</option>';
+                } else if (branch === 'montessori') {
+                  sectorSelect.innerHTML += '<option value="az">Azərbaycan bölməsi</option>';
+                  sectorSelect.innerHTML += '<option value="turk">Türk bölməsi</option>';
+                  sectorSelect.innerHTML += '<option value="rus">Rus bölməsi</option>';
+                  sectorSelect.innerHTML += '<option value="ing">İngilis bölməsi</option>';
+                } else if (branch === 'eduhome') {
+                  sectorSelect.innerHTML += '<option value="sat">SAT hazırlığı</option>';
+                  sectorSelect.innerHTML += '<option value="ielts">IELTS hazırlığı</option>';
+                  sectorSelect.innerHTML += '<option value="toefl">TOEFL hazırlığı</option>';
+                  sectorSelect.innerHTML += '<option value="dim">DİM hazırlığı</option>';
+                  sectorSelect.innerHTML += '<option value="other">Digər</option>';
+                }
+              } catch(e) {
+                console.error(e);
+              }
+            };
+
+            (function() {
+              var mainForm = document.getElementById('mainContactForm');
+              if (mainForm) {
+                mainForm.addEventListener('submit', async function(event) {
+                  event.preventDefault();
+                  var btn = event.target.querySelector('button[type="submit"]');
+                  var originalBtnContent = btn.innerHTML;
+                  btn.disabled = true;
+                  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Göndərilir...';
+
+                  var firstName = document.getElementById('mf_firstName').value;
+                  var lastName = document.getElementById('mf_lastName').value;
+                  
+                  var branchSelect = document.getElementById('branchSelect');
+                  var branchText = branchSelect.options[branchSelect.selectedIndex] ? branchSelect.options[branchSelect.selectedIndex].text : '';
+                  
+                  var sectorSelect = document.getElementById('sectorSelect');
+                  var sectorText = sectorSelect.options[sectorSelect.selectedIndex] ? sectorSelect.options[sectorSelect.selectedIndex].text : '';
+                  
+                  var grade = document.getElementById('mf_class').value;
+                  var phonePrefix = document.getElementById('mf_phoneCode').value;
+                  var phoneNum = document.getElementById('mf_phoneNum').value;
+                  var email = document.getElementById('mf_email').value;
+                  var previousSchool = document.getElementById('mf_previousSchool').value;
+
+                  var note = "Mərkəz: " + branchText + " | Bölmə: " + sectorText + " | Sinif: " + grade + " | E-mail: " + email + " | Əvvəlki müəssisə: " + previousSchool;
+
+                  var payloadData = {
+                    name: firstName + " " + lastName,
+                    phone: phonePrefix + phoneNum,
+                    source: "Ana Səhifə - Form",
+                    status: "Yeni",
+                    note: note,
+                    date: new Date().toISOString()
+                  };
+
+                  try {
+                    await fetch('https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1/registrations', {
+                      method: 'POST',
+                      headers: {
+                        'apikey': 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
+                        'Authorization': 'Bearer sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({ payload: payloadData })
+                    });
+                    alert('Müraciətiniz uğurla göndərildi! Sizinlə tezliklə əlaqə saxlayacağıq.');
+                    event.target.reset();
+                    sectorSelect.innerHTML = '<option value="" disabled selected>Əvvəlcə mərkəz seçin</option>';
+                  } catch(e) {
+                    alert('Xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.');
+                  } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = originalBtnContent;
+                  }
+                });
+              }
+            })();
+          </script>
+</div>
+</div>
+<style>
+        .dynamic-app-form {
+          max-width: 650px; 
+          margin: 0 auto; 
+          background: linear-gradient(135deg, rgba(180, 30, 50, 0.85) 0%, rgba(80, 10, 20, 0.95) 100%); 
+          padding: 40px; 
+          border-radius: 24px; 
+          box-shadow: 0 20px 40px rgba(0,0,0,0.3); 
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
+          transition: all 0.4s ease;
+        }
+
+        .dynamic-app-form:hover {
+          transform: translateY(-5px);
+          border-color: rgba(255, 255, 255, 0.1);
+          box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 0 30px rgba(255, 255, 255, 0.02);
+        }
+
+        .dyn-form-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 20px;
+        }
+
+        .dyn-input-group.full-width {
+          grid-column: 1 / -1;
+        }
+
+        .dyn-input-group label {
+          display: block;
+          font-size: 0.8rem;
+          font-weight: 600;
+          color: rgba(255, 255, 255, 0.5);
+          margin-bottom: 8px;
+          transition: color 0.3s ease;
+        }
+
+        .dyn-input-group:focus-within label {
+          color: rgba(255, 255, 255, 0.9);
+        }
+
+        .dyn-input-group input, 
+        .dyn-input-group select {
+          width: 100%;
+          padding: 14px 18px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: 12px;
+          font-family: inherit;
+          font-size: 0.95rem;
+          color: white;
+          transition: all 0.3s ease;
+          appearance: none;
+        }
+
+        .dyn-input-group input::placeholder {
+          color: rgba(255, 255, 255, 0.2);
+        }
+
+        .dyn-input-group select option {
+          background: var(--navy);
+          color: white;
+        }
+
+        .dyn-input-group input:hover, 
+        .dyn-input-group select:hover {
+          background: rgba(255, 255, 255, 0.06);
+          border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .dyn-input-group input:focus, 
+        .dyn-input-group select:focus {
+          border-color: rgba(255, 255, 255, 0.3);
+          background: rgba(255, 255, 255, 0.05);
+          box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
+          outline: none;
+        }
+
+        .select-arrow {
+          position: absolute; 
+          right: 15px; 
+          top: 50%; 
+          transform: translateY(-50%); 
+          color: rgba(255,255,255,0.3); 
+          pointer-events: none;
+          transition: color 0.3s ease;
+          font-size: 0.8rem;
+        }
+
+        .dyn-input-group select:focus + .select-arrow {
+          color: rgba(255,255,255,0.8);
+        }
+
+        .dyn-submit-btn {
+          width: 100%;
+          margin-top: 30px;
+          padding: 16px;
+          background: white;
+          color: var(--navy);
+          border: none;
+          border-radius: 12px;
+          font-size: 1rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+        }
+
+        .dyn-submit-btn:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 15px 30px rgba(255, 255, 255, 0.1);
+          background: #f8fafc;
+        }
+
+        @media (max-width: 768px) {
+          #application-form { padding: 60px 0 40px !important; }
+          #application-form h2 { font-size: 1.6rem !important; }
+          #application-form .premium-eyebrow { font-size: 0.65rem !important; }
+          .dynamic-app-form {
+            padding: 22px 16px !important;
+            border-radius: 18px !important;
+            width: 95% !important;
+          }
+          .dyn-form-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+          .dyn-input-group label { font-size: 0.72rem !important; margin-bottom: 5px !important; }
+          .dyn-input-group input,
+          .dyn-input-group select { padding: 11px 14px !important; font-size: 0.88rem !important; border-radius: 10px !important; }
+          .dyn-submit-btn { padding: 13px !important; font-size: 0.9rem !important; margin-top: 18px !important; border-radius: 10px !important; }
+        }
+      </style>
+</section>
+</section></main>
+<!-- Premium Registration Modal -->
+<div class="reg-modal-overlay" id="registrationModal" onclick="if(event.target===this)closeRegistrationModal()">
+<div class="reg-modal-content">
+<button class="reg-modal-close" onclick="closeRegistrationModal()"><i class="fas fa-times"></i></button>
+<div class="reg-modal-header">
+<div class="reg-school-icon" id="reg-school-icon"><i class="fas fa-graduation-cap"></i></div>
+<div class="reg-badge">RƏSMİ QEYDİYYAT</div>
+<h2 id="reg-school-title">Evrika Liseyi</h2>
+<div class="reg-theme-line" id="reg-theme-line"></div>
+</div>
+<form class="reg-modern-form" id="activeRegistrationForm">
+<input id="reg-school-id" name="source" type="hidden" value=""/>
+<div class="reg-form-grid">
+<div class="reg-input-group">
+<label>Valideynin Adı və Soyadı</label>
+<input name="parent_name" placeholder="Məs: Əli Əliyev" required="" type="text"/>
+</div>
+<div class="reg-input-group">
+<label>Əlaqə Nömrəsi</label>
+<input name="phone" placeholder="+994 (__) ___-__-__" required="" type="tel"/>
+</div>
+<div class="reg-input-group">
+<label>Şagirdin Adı və Soyadı</label>
+<input name="student_name" placeholder="Şagirdin tam adı" required="" type="text"/>
+</div>
+<div class="reg-input-group">
+<label>Tədris Sektor</label>
+<select name="sector">
+<option value="az">Azərbaycan Bölməsi</option>
+<option value="ru">Rus Bölməsi</option>
+<option value="en">Ingilis Bölməsi (Cambridge)</option>
+</select>
+</div>
+</div>
+<div class="reg-input-group full-width" style="margin-top: 20px;">
+<label>Əlavə Qeyd (İstəyə bağlı)</label>
+<textarea name="message" placeholder="Sualınız və ya xüsusi qeydiniz..." rows="3"></textarea>
+</div>
+<button class="reg-submit-btn" type="submit">
+            Qeydiyyatı Tamamla <i class="fas fa-paper-plane" style="margin-left: 10px;"></i>
+</button>
+</form>
+<p class="reg-modal-footer">Müraciətinizə 24 saat ərzində cavab veriləcəkdir.</p>
+</div>
+</div>
+<style>
+      .reg-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(5, 10, 24, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        z-index: 10000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+      }
+      .reg-modal-overlay.active {
+        opacity: 1;
+      }
+      .reg-modal-content {
+        background: rgba(255, 255, 255, 0.98);
+        width: 100%;
+        max-width: 700px;
+        padding: 60px;
+        border-radius: 35px;
+        position: relative;
+        transform: translateY(40px) scale(0.95);
+        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+      }
+      .reg-modal-overlay.active .reg-modal-content {
+        transform: translateY(0) scale(1);
+      }
+      .reg-modal-close {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #111;
+        cursor: pointer;
+        opacity: 0.3;
+        transition: all 0.3s ease;
+      }
+      .reg-modal-close:hover {
+        opacity: 1;
+        transform: rotate(90deg);
+      }
+      .reg-modal-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .reg-school-icon {
+        width: 80px;
+        height: 80px;
+        background: rgba(139, 26, 43, 0.05);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 25px;
+        font-size: 2.2rem;
+        color: var(--burgundy);
+        transition: all 0.4s ease;
+      }
+      .reg-theme-line {
+        width: 80px;
+        height: 4px;
+        background: var(--burgundy);
+        margin: 25px auto 0;
+        border-radius: 10px;
+        transition: all 0.4s ease;
+      }
+      .reg-badge {
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--burgundy);
+        letter-spacing: 0.2em;
+        margin-bottom: 12px;
+      }
+      #reg-school-title {
+        font-size: 2.5rem;
+        font-weight: 900;
+        color: var(--navy);
+        line-height: 1.1;
+      }
+      .reg-form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+      }
+      .reg-input-group label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #555;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .reg-input-group input, 
+      .reg-input-group select, 
+      .reg-input-group textarea {
+        width: 100%;
+        padding: 16px 20px;
+        background: #f8f9fc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        font-family: inherit;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+      .reg-input-group input:focus, 
+      .reg-input-group select:focus, 
+      .reg-input-group textarea:focus {
+        border-color: var(--burgundy);
+        background: white;
+        box-shadow: 0 0 0 4px rgba(139, 26, 43, 0.1);
+        outline: none;
+      }
+      .reg-submit-btn {
+        width: 100%;
+        margin-top: 40px;
+        padding: 20px;
+        background: var(--burgundy);
+        color: white;
+        border: none;
+        border-radius: 15px;
+        font-size: 1.1rem;
+        font-weight: 800;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(139, 26, 43, 0.3);
+      }
+      .reg-submit-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(139, 26, 43, 0.4);
+        filter: brightness(1.1);
+      }
+      .reg-modal-footer {
+        text-align: center;
+        margin-top: 30px;
+        font-size: 0.9rem;
+        color: #888;
+      }
+      @media (max-width: 768px) {
+        .reg-modal-content {
+          padding: 40px 25px;
+          border-radius: 25px;
+          width: 92%;
+        }
+        .reg-form-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .whatsapp-float {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 65px;
+        height: 65px;
+        background: #25d366;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
+        z-index: 1000;
+        transition: all 0.3s ease;
+        text-decoration: none;
+      }
+      .whatsapp-float:hover {
+        transform: scale(1.1) translateY(-5px);
+        box-shadow: 0 15px 35px rgba(37, 211, 102, 0.4);
+      }
+    </style>
+<!-- LATEST NEWS SECTION -->
+<section class="section" id="news-section" style="padding: 100px 0; background: #070d1f; position: relative; overflow: hidden;">
+<div style="position: absolute; top: -10%; left: -5%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(139,26,43,0.3) 0%, transparent 70%); filter: blur(60px); pointer-events: none;"></div>
+<div style="position: absolute; bottom: -10%; right: -5%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(76, 96, 171,0.2) 0%, transparent 70%); filter: blur(80px); pointer-events: none;"></div>
+<div style="position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 30px 30px; pointer-events: none;"></div>
+<div class="container" style="position: relative; z-index: 10;">
+<div class="sec-header text-center" style="margin-bottom: 60px;">
+<h2 class="titan-header" data-i18n="news-eyebrow" style="font-size: clamp(2.5rem, 5vw, 4rem); color: #ffffff; line-height: 1.1; font-weight: 900; letter-spacing: -0.02em;">XƏBƏRLƏR</h2>
+<div style="width: 60px; height: 4px; background: var(--burgundy); margin: 20px auto 0; border-radius: 2px;"></div>
+</div>
+<div class="news-grid" id="home-news-grid" style="gap: 25px;">
+<div style="text-align:center; width:100%; grid-column:1/-1; color: white; opacity:0.7; font-size:1.1rem;"><i class="fas fa-spinner fa-spin"></i> Xəbərlər yüklənir...</div>
+</div>
+<div style="text-align: center; margin-top: 50px;">
+<a class="btn btn-xl" href="news.html" onmouseout="this.style.background='rgba(255,255,255,0.1)'; this.style.borderColor='rgba(255,255,255,0.2)';" onmouseover="this.style.background='#8B1A2B'; this.style.borderColor='#8B1A2B';" style="padding: 14px 35px; border-radius: 50px; font-size: 0.95rem; font-weight: 700; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px); transition: 0.3s;">Bütün Xəbərlər <i class="fas fa-arrow-right" style="margin-left: 8px;"></i></a>
+</div>
+</div>
+</section>
+<!-- Partnerships Section -->
+<section class="partners-section reveal">
+<div class="container">
+<div class="section-header text-center" style="margin-bottom: 80px;">
+<div class="premium-eyebrow" data-i18n="partners-title" style="letter-spacing: 0.5em; color: rgba(255,255,255,0.7); font-weight: 800; font-size: 0.8rem; margin-bottom: 20px; text-transform: uppercase;">ƏMƏKDAŞLIQLARIMIZ</div>
+<h2 data-i18n="partners-subtitle" style="font-size: 3.5rem; font-weight: 900; color: #ffffff; letter-spacing: -0.04em; line-height: 1.1;">Partnyorlarımız</h2>
+<div style="width: 60px; height: 4px; background: #ffffff; margin: 30px auto 0; border-radius: 2px;"></div>
+</div>
+<div class="partners-track-wrapper">
+<div class="partners-track" id="partners-grid-content">
+<!-- Dynamically populated -->
+<div class="partner-item"><div class="partner-placeholder">Yüklənir...</div></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="site-footer" style="background: #070d1f; color: white; padding: 80px 0 40px; border-top: 1px solid rgba(255,255,255,0.05);">
+<div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 60px;">
+<div class="footer-brand">
+<a class="logo" data-i18n="join-title1" href="index.html" style="color: var(--accent, #8B1A2B); font-size: 1.8rem; font-weight: 900; text-decoration: none; display: block; margin-bottom: 25px;">EVRİKA</a>
+<p style="color: rgba(255,255,255,0.6); line-height: 1.7; margin-bottom: 30px; font-size: 0.95rem; max-width: 320px;" data-i18n="footer-desc">Evrika Təhsil Ekosistemi — Qlobal təhsil standartları, innovativ yanaşma və parlaq gələcəkdir.</p>
+<div class="social-icons" style="display: flex; gap: 15px;">
+<a href="#" style="width: 45px; height: 45px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; transition: 0.3s;"><i class="fab fa-facebook-f"></i></a>
+<a href="#" style="width: 45px; height: 45px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; transition: 0.3s;"><i class="fab fa-instagram"></i></a>
+</div>
+</div>
+<div class="footer-links">
+<h4 style="text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 30px; font-size: 0.9rem; font-weight: 800; color: var(--accent, #8B1A2B);" data-i18n="footer-nav">NAVİQASİYA</h4>
+<div style="display: flex; flex-direction: column; gap: 15px;">
+<a data-i18n="nav-home" href="index.html" style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.95rem; transition: 0.3s;">Ana Səhifə</a>
+<a data-i18n="nav-about" href="about.html" style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.95rem; transition: 0.3s;">Haqqımızda</a>
+<a data-i18n="nav-academic" href="schools.html" style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.95rem; transition: 0.3s;">Akademik İstiqamətlər</a>
+<a data-i18n="nav-contact" href="contact.html" style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.95rem; transition: 0.3s;">Əlaqə</a>
+</div>
+</div>
+<div class="footer-contact">
+<h4 data-i18n="nav-contact" style="text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 30px; font-size: 0.9rem; font-weight: 800; color: var(--accent, #8B1A2B);">Əlaqə</h4>
+<div style="display: flex; flex-direction: column; gap: 20px;">
+<div style="display: flex; gap: 15px; align-items: center;"><i class="fas fa-phone-alt" style="color: var(--accent, #8B1A2B);"></i><span style="color: rgba(255,255,255,0.7); font-weight: 800; font-size: 1.2rem; letter-spacing: 0.1em;">(+994) 12 525 10 10</span></div>
+</div>
+</div>
+</div>
+
+<div class="footer-bottom" style="margin-top: 80px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.05);">
+<div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+<p style="color: rgba(255,255,255,0.4); font-size: 0.85rem;">© 2026 Evrika Təhsil Ekosistemi. Bütün hüquqlar qorunur.</p>
+<div style="display: flex; gap: 30px;">
+<a href="privacy.html" style="color: rgba(255,255,255,0.3); text-decoration: none; font-size: 0.85rem; transition: 0.3s;">Məxfilik Siyasəti</a>
+<a href="terms.html" style="color: rgba(255,255,255,0.3); text-decoration: none; font-size: 0.85rem; transition: 0.3s;">İstifadə Şərtləri</a>
+</div>
+</div>
+</div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+        // Initialize Swiper for Hero
+        const swiper = new Swiper('.heroSwiper', {
+          loop: false,
+          parallax: true,
+          speed: 1200,
+          autoplay: false,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+
+        // ── Hero Slider Controls ──────────────────────────────────
+        const SLIDE_DELAY = 5000; // ms
+        let progressTimer = null;
+        let progressStart = null;
+        let heroPaused = false;
+        function setRing(fraction) {
+          const ring = document.getElementById('progressRing');
+          if (ring) {
+            const r = parseFloat(ring.getAttribute('r'));
+            const circumference = 2 * Math.PI * r;
+            ring.style.strokeDashoffset = circumference * (1 - fraction);
+          }
+        }
+
+        function startRing(onComplete) {
+          clearInterval(progressTimer);
+          progressStart = Date.now();
+          progressTimer = setInterval(() => {
+            if (heroPaused) return;
+            const elapsed = Date.now() - progressStart;
+            const fraction = Math.min(elapsed / SLIDE_DELAY, 1);
+            setRing(fraction);
+            if (fraction >= 1) {
+              clearInterval(progressTimer);
+              setRing(0);
+              if (onComplete) onComplete();
+            }
+          }, 40);
+        }
+
+        function resetRing() {
+          clearInterval(progressTimer);
+          setRing(0);
+        }
+
+        function advanceAndRestart() {
+          if (swiper.isEnd) {
+            swiper.slideTo(0);
+          } else {
+            swiper.slideNext();
+          }
+          // ring restart handled in slideChange
+        }
+
+        // Slide change → restart ring for new slide
+        swiper.on('slideChange', () => {
+          resetRing();
+          const navbar = document.querySelector('.navbar');
+          if (swiper.activeIndex === 0) {
+            // Slide 1: wait for video to end, then start 5s countdown
+            const vid = document.getElementById('heroReklam');
+            if (vid) {
+              vid.currentTime = 0;
+              vid.play();
+            }
+          } else {
+            if (!heroPaused) startRing(advanceAndRestart);
+          }
+        });
+
+        // Slide 1: video ends → start 5s countdown
+        const heroVideo = document.getElementById('heroReklam');
+        if (heroVideo) {
+          heroVideo.addEventListener('ended', () => {
+            if (!heroPaused) startRing(advanceAndRestart);
+          });
+        }
+
+        // Toggle pause/play
+        function toggleHeroPlay() {
+          const icon = document.getElementById('heroPlayIcon');
+          heroPaused = !heroPaused;
+          const vid = document.getElementById('heroReklam');
+          const isSlide1 = swiper.activeIndex === 0;
+
+          if (heroPaused) {
+            icon.className = 'fas fa-play';
+            clearInterval(progressTimer);
+            // Slide 1 → pause video; others → ring already stopped
+            if (isSlide1 && vid) vid.pause();
+          } else {
+            icon.className = 'fas fa-pause';
+            if (isSlide1 && vid) {
+              // Resume video; ring starts when video.ended fires
+              vid.play();
+            } else {
+              // Resume ring countdown
+              progressStart = Date.now();
+              startRing(advanceAndRestart);
+            }
+          }
+        }
+
+        // Prev / Next helpers
+        function heroSlidePrev() {
+          resetRing();
+          swiper.slidePrev();
+          setTimeout(() => {
+            const vid = document.getElementById('heroReklam');
+            if (swiper.activeIndex === 0 && vid) {
+              vid.currentTime = 0; vid.play();
+            } else if (!heroPaused) {
+              startRing(advanceAndRestart);
+            }
+          }, 150);
+        }
+        function heroSlideNext() {
+          resetRing();
+          swiper.slideNext();
+          setTimeout(() => {
+            if (swiper.activeIndex === 0) {
+              const vid = document.getElementById('heroReklam');
+              if (vid) { vid.currentTime = 0; vid.play(); }
+            } else if (!heroPaused) {
+              startRing(advanceAndRestart);
+            }
+          }, 150);
+        }
+
+
+        window.openVideoModal = (url) => {
+          const modal = document.getElementById('videoModal');
+          const modalVid = document.getElementById('modalVideo');
+          const modalIf = document.getElementById('modalIframe');
+          const wrapper = document.querySelector('.modern-video-wrapper');
+          const navbar = document.querySelector('.navbar');
+          if (!modal || !modalVid || !modalIf || !wrapper) return;
+
+          // Helper to get YouTube Embed URL
+          const getYoutubeEmbed = (link) => {
+            if (!link) return '';
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = link.match(regExp);
+            return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}?autoplay=1` : '';
+          };
+
+          // Helper to get Instagram Embed URL
+          const getInstagramEmbed = (link) => {
+            if (!link || !link.includes('instagram.com')) return '';
+            try {
+              let u = new URL(link);
+              let path = u.pathname;
+              if (path.endsWith('/')) path = path.slice(0, -1);
+              if (path.includes('/p/') || path.includes('/reel/') || path.includes('/tv/')) {
+                return `https://www.instagram.com${path}/embed/`;
+              }
+            } catch(e) {}
+            return '';
+          };
+
+          const ytEmbed = getYoutubeEmbed(url);
+          const igEmbed = getInstagramEmbed(url);
+
+          // Reset styles
+          wrapper.style.background = '#000';
+          wrapper.style.padding = '4px';
+          wrapper.style.maxWidth = '1000px';
+          wrapper.style.width = '90vw';
+          wrapper.style.aspectRatio = '';
+          modalIf.style.marginTop = '0';
+          modalIf.style.height = '100%';
+          modalIf.style.width = '100%';
+
+          if (ytEmbed || igEmbed) {
+            modalVid.style.display = 'none';
+            modalVid.pause();
+            modalIf.src = ytEmbed || igEmbed;
+            modalIf.style.display = 'block';
+            
+            if (igEmbed) {
+                // Seamless Instagram Look: Remove black bars and crop UI
+                wrapper.style.background = 'transparent';
+                wrapper.style.padding = '0';
+                wrapper.style.boxShadow = 'none';
+                
+                if (url.includes('/reel/')) {
+                    wrapper.style.maxWidth = '420px';
+                    wrapper.style.aspectRatio = '9/16';
+                    // Crop the Instagram header and footer
+                    modalIf.style.height = '115%'; 
+                    modalIf.style.marginTop = '-45px';
+                } else {
+                    wrapper.style.maxWidth = '600px';
+                    wrapper.style.aspectRatio = '1/1';
+                    modalIf.style.height = '112%';
+                    modalIf.style.marginTop = '-40px';
+                }
+            } else {
+                wrapper.style.aspectRatio = '16/9';
+            }
+          } else {
+            modalIf.style.display = 'none';
+            modalIf.src = '';
+            modalVid.src = url;
+            modalVid.style.display = 'block';
+          }
+          
+          modal.style.display = 'flex';
+          document.body.style.overflow = 'hidden';
+          if (navbar) navbar.classList.add('nav-hidden');
+          
+          if (!ytEmbed && !igEmbed) {
+              modalVid.play().catch(e => console.log('Video play failed:', e));
+          }
+        };
+
+        window.openParentVideo = window.openVideoModal;
+
+        window.closeVideoModal = () => {
+          const modal = document.getElementById('videoModal');
+          const modalVid = document.getElementById('modalVideo');
+          const modalIf = document.getElementById('modalIframe');
+          const navbar = document.querySelector('.navbar');
+          if (modal) modal.style.display = 'none';
+          if (modalVid) { modalVid.pause(); modalVid.src = ''; }
+          if (modalIf) modalIf.src = '';
+          document.body.style.overflow = '';
+          if (navbar) navbar.classList.remove('nav-hidden');
+        };
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') closeVideoModal();
+        });
+
+
+
+        // Initialize Swiper for Modern Stats
+        const modernStatsSwiper = new Swiper('.modernStatsSwiper', {
+          slidesPerView: 1,
+          spaceBetween: 40,
+          loop: true,
+          autoplay: {
+            delay: 4500,
+            disableOnInteraction: false,
+          },
+          pagination: {
+            el: '.modernStatsSwiper .swiper-pagination',
+            clickable: true,
+          },
+          breakpoints: {
+            768: { slidesPerView: 2, spaceBetween: 40 }
+          }
+        });
+
+        // Initialize Swiper for Parent Testimonials
+        async function initParentTestimonials() {
+          const API_URL = 'https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1';
+          const API_KEY = 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV';
+          const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY };
+          
+          const wrapper = document.getElementById('parent-testimonials-wrapper');
+          if (!wrapper) return;
+
+          try {
+            const res = await fetch(`${API_URL}/parent_testimonials?select=*&order=id.desc`, { headers: HEADERS });
+            if (res.ok) {
+              const data = await res.json();
+              if (data.length > 0) {
+                let instagramCount = 0;
+                wrapper.innerHTML = data.map((item, idx) => {
+                  const p = item.payload;
+                  const isVideo = p.type === 'video';
+                  const isDark = idx % 2 !== 0;
+                  
+                  // Extract YouTube or Instagram ID for the cover if it's a video
+                  let coverImg = p.thumbnail_url || p.avatar || 'https://via.placeholder.com/400';
+                  if (isVideo && p.media_url) {
+                      const ytMatch = p.media_url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/);
+                      if (ytMatch && ytMatch[1]) {
+                          coverImg = `https://img.youtube.com/vi/${ytMatch[1]}/maxresdefault.jpg`;
+                      }
+                      
+                      const igMatch = p.media_url.match(/(?:instagram\.com\/(?:p|reel|tv)\/)([^/?#&]+)/);
+                      if (igMatch && igMatch[1]) {
+                          instagramCount++;
+                          // Alternating between cover 1 and cover 2 for variety
+                          coverImg = (instagramCount % 2 === 1) ? 'assets/parent_video_cover.png' : 'assets/parent_video_cover_2.png';
+                      }
+                  }
+
+                  // Specific cover for Şahbaz Xuduoğlu
+                  if (p.name && p.name.includes('Şahbaz Xuduoğlu')) {
+                      coverImg = 'assets/parent_video_cover_2.png';
+                  }
+
+                  // Auto-format status if it's just a year
+                  let displayStatus = p.status || '';
+                  if (/^\d{4}$/.test(displayStatus.trim())) {
+                      displayStatus = `${displayStatus}-cu ildən bəri Evrika Liseyi valideynidir`;
+                  }
+
+                  return `
+                    <div class="swiper-slide">
+                      <div class="parent-testimonial-card ${isDark ? 'card-dark' : ''}">
+                        <div class="parent-card-media">
+                          <img src="${coverImg}" alt="${p.name}">
+                          ${isVideo ? `
+                            <div class="play-btn-small" onclick="openParentVideo('${p.media_url}')">
+                              <i class="fas fa-play"></i>
+                            </div>
+                          ` : ''}
+                        </div>
+                        <div class="parent-card-text">
+                           <div class="parent-quote-wrapper">
+                             <div class="parent-quote">"${p.quote || ''}"</div>
+                           </div>
+                           <div class="parent-meta-box">
+                             <h4 style="margin: 0; font-size: 1.2rem; font-weight: 800;">${p.name}</h4>
+                             <p style="margin: 5px 0 0; font-size: 0.85rem; font-weight: 600;">${displayStatus}</p>
+                           </div>
+                        </div>
+                      </div>
+                    </div>
+                  `;
+                }).join('');
+              } else {
+                wrapper.innerHTML = '<div class="swiper-slide"><div class="parent-testimonial-card">Hələ ki rəy əlavə edilməyib.</div></div>';
+              }
+            }
+          } catch (e) {
+            console.error(e);
+          }
+
+          new Swiper('.parentTestimonialSwiper', {
+            slidesPerView: 1,
+            spaceBetween: 20,
+            loop: true,
+            autoplay: { delay: 7000, disableOnInteraction: false },
+            navigation: {
+              nextEl: '.parent-next',
+              prevEl: '.parent-prev',
+            },
+            breakpoints: {
+              1024: { slidesPerView: 1.5 }
+            }
+          });
+        }
+
+        const STATIC_PARTNERS = [
+          { name: 'TEDx', logo: 'assets/partners/tedx.jpg', description: '' },
+          { name: 'Cambridge', logo: 'assets/partners/cambridge.png', description: '' },
+          { name: 'AP', logo: 'assets/partners/ap.jpg', description: '' },
+          { name: 'EC IS', logo: 'assets/partners/ecis.png', description: '' },
+          { name: 'APEIA', logo: 'assets/partners/aotmalogo.png', description: '', imgStyle: 'transform: scale(1.6);' },
+          { name: 'Elm və Təhsil Nazirliyi', logo: 'assets/partners/tehsilnazirliyi.png', description: '' }
+        ];
+
+        function renderPartners(partners) {
+          const grid = document.getElementById('partners-grid-content');
+          if (!grid) return;
+          const repeated = [...partners, ...partners, ...partners, ...partners, ...partners];
+          grid.innerHTML = repeated.map(p => `
+            <div class="partner-item">
+              <img src="${p.logo}" alt="${p.name}"  ${p.imgStyle ? `style="${p.imgStyle}"` : ''}>
+              <span class="partner-name">${p.name}</span>
+              ${p.description ? `
+                <div class="partner-overlay">
+                  <div style="font-weight: 800; color: white; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 5px;">${p.name}</div>
+                  <div class="partner-info-text">${p.description}</div>
+                </div>
+              ` : ''}
+            </div>
+          `).join('');
+        }
+
+        // Render partners immediately with static data
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => renderPartners(STATIC_PARTNERS));
+        } else {
+          renderPartners(STATIC_PARTNERS);
+        }
+
+        async function initPartners() {
+          // Admin panel fetch removed by user request
+          // Now relies completely on STATIC_PARTNERS
+        }
+
+        async function initNews() {
+          const API_URL = 'https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1';
+          const API_KEY = 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV';
+          const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY };
+          const container = document.getElementById('dynamic-news-container');
+          if (!container) return;
+          try {
+            const res = await fetch(`${API_URL}/news?select=*&order=id.desc&limit=3`, { headers: HEADERS });
+            if (res.ok) {
+              const data = await res.json();
+              if (data.length > 0) {
+                container.innerHTML = data.map(item => `
+                  <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; overflow: hidden; backdrop-filter: blur(10px); display: flex; flex-direction: column;">
+                    <img src="${item.payload.img}" style="width: 100%; height: 220px; object-fit: cover;" alt="${item.payload.title}">
+                    <div style="padding: 25px; flex: 1; display: flex; flex-direction: column;">
+                      <span style="font-size: 0.8rem; color: #fca5a5; font-weight: 700; margin-bottom: 10px;">${item.payload.date}</span>
+                      <h3 style="font-size: 1.3rem; color: white; font-weight: 700; margin-bottom: 15px;">${item.payload.title}</h3>
+                      <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem; margin-bottom: 20px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">${item.payload.text}</p>
+                      <button onclick="window.location.href='news.html'" style="margin-top: auto; align-self: flex-start; background: rgba(255,255,255,0.1); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.3s;">Ətraflı Oxu <i class="fas fa-arrow-right" style="margin-left: 5px;"></i></button>
+                    </div>
+                  </div>
+                `).join('');
+              }
+            }
+          } catch(e) { console.error(e); }
+        }
+
+        async function initPopups() {
+          const API_URL = 'https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1';
+          const API_KEY = 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV';
+          const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY };
+          
+          if (sessionStorage.getItem('evrika_popup_seen')) return;
+
+          try {
+            const res = await fetch(`${API_URL}/popups?select=*&order=id.desc`, { headers: HEADERS });
+            if (res.ok) {
+              const data = await res.json();
+              const activePopup = data.find(p => p.payload && p.payload.status === 'active');
+              if (activePopup) {
+                const p = activePopup.payload;
+                const modal = document.createElement('div');
+                modal.style.cssText = "position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(10px); z-index:100000; display:flex; align-items:center; justify-content:center; opacity:0; transition:0.4s ease;";
+                
+                let linkHTML = p.link ? `<a href="${p.link}" style="display:inline-block; margin-top:20px; background:var(--burgundy); color:white; padding:12px 25px; border-radius:12px; font-weight:700; text-decoration:none;">Ətraflı <i class="fas fa-arrow-right"></i></a>` : '';
+                
+                modal.innerHTML = `
+                  <div style="background:#0f172a; border:1px solid rgba(255,255,255,0.1); border-radius:24px; max-width:500px; width:90%; position:relative; overflow:hidden; transform:scale(0.9); transition:0.4s cubic-bezier(0.16,1,0.3,1);">
+                    <button id="close-campaign-popup" style="position:absolute; top:15px; right:15px; background:rgba(0,0,0,0.5); border:none; color:white; width:35px; height:35px; border-radius:50%; cursor:pointer; z-index:10;"><i class="fas fa-times"></i></button>
+                    ${p.img ? `<img src="${p.img}" style="width:100%; height:auto; display:block;" alt="${p.title}">` : ''}
+                    <div style="padding:30px; text-align:center;">
+                      <h3 style="font-size:1.5rem; color:white; font-weight:800; margin-bottom:10px;">${p.title}</h3>
+                      ${linkHTML}
+                    </div>
+                  </div>
+                `;
+                document.body.appendChild(modal);
+                
+                setTimeout(() => {
+                  modal.style.opacity = '1';
+                  modal.children[0].style.transform = 'scale(1)';
+                }, 1000);
+                
+                document.getElementById('close-campaign-popup').onclick = () => {
+                   modal.style.opacity = '0';
+                   modal.children[0].style.transform = 'scale(0.9)';
+                   setTimeout(() => modal.remove(), 400);
+                   sessionStorage.setItem('evrika_popup_seen', 'true');
+                };
+              }
+            }
+          } catch(e) {}
+        }
+
+        // Global Init
+        document.addEventListener('DOMContentLoaded', () => {
+           initParentTestimonials();
+           initPartners();
+           initNews();
+           initPopups();
+        });
+
+        // Functional unified in above global scope
+
+        initParentTestimonials();
+
+        // Initialize Swiper for State Symbols/Quotes
+        const quotesSwiper = new Swiper('.quotesSwiper', {
+          slidesPerView: 1,
+          spaceBetween: 40,
+          effect: "fade",
+          fadeEffect: { crossFade: true },
+          loop: true,
+          autoplay: {
+            delay: 3000,
+            disableOnInteraction: false
+          },
+          navigation: {
+            nextEl: '.quotes-next',
+            prevEl: '.quotes-prev',
+          },
+          pagination: {
+            el: '.quotesSwiper .swiper-pagination',
+            clickable: true,
+          }
+        });
+
+        // Initialize Swiper for Testimonials
+        const testimonialSwiper = new Swiper('.simpleTestimonialSwiper', {
+          slidesPerView: 1,
+          spaceBetween: 40,
+          loop: true,
+          autoplay: {
+            delay: 5000,
+            disableOnInteraction: false,
+          },
+          navigation: {
+            nextEl: '.testimonial-next',
+            prevEl: '.testimonial-prev',
+          },
+          breakpoints: {
+            768: { slidesPerView: 2, spaceBetween: 40 },
+            1024: { slidesPerView: 3, spaceBetween: 40 }
+          }
+        });
+
+        // Specific School Metadata for Differentiation
+        const schoolRegistry = {
+          lisey1: { name: 'Evrika BETL Nərimanov', icon: 'fa-microscope', color: '#8B1A2B' },
+          lisey2: { name: 'Evrika BETL Gənclik', icon: 'fa-atom', color: '#8B1A2B' },
+          montessori: { name: 'Montessori Kids Academy', icon: 'fa-child', color: '#4C60AB' },
+          eduhome: { name: 'Eduhome Hazırlıq Mərkəzi', icon: 'fa-graduation-cap', color: '#8B1A2B' },
+          zumrud: { name: 'Zümrüd Women Club', icon: 'fa-swimmer', color: '#4C60AB' },
+          general: { name: 'Ümumi Qeydiyyat', icon: 'fa-school', color: '#8B1A2B' }
+        };
+
+        // Unique Registration Modal Logic
+        function openRegistrationModal(titleText, schoolId) {
+          const modal = document.getElementById('registrationModal');
+          const title = document.getElementById('reg-school-title');
+          const iconContainer = document.getElementById('reg-school-icon');
+          const themeLine = document.getElementById('reg-theme-line');
+          const submitBtn = modal.querySelector('.reg-submit-btn');
+          const hiddenInput = document.getElementById('reg-school-id');
+          const navbar = document.querySelector('.navbar');
+          
+          if (!modal || !title) return;
+
+          // Get metadata
+          const schoolData = schoolRegistry[schoolId] || schoolRegistry.general;
+          
+          // Update Content
+          title.textContent = schoolData.name;
+          if (hiddenInput) hiddenInput.value = schoolId;
+          if (iconContainer) {
+            iconContainer.innerHTML = `<i class="fas ${schoolData.icon}"></i>`;
+            iconContainer.style.color = schoolData.color;
+            iconContainer.style.background = `${schoolData.color}10`; // 10% opacity
+          }
+          if (themeLine) themeLine.style.background = schoolData.color;
+          if (submitBtn) {
+            submitBtn.style.background = schoolData.color;
+            submitBtn.style.boxShadow = `0 10px 30px ${schoolData.color}40`;
+          }
+          
+          modal.style.display = 'flex';
+          document.body.style.overflow = 'hidden';
+          if (navbar) navbar.classList.add('nav-hidden');
+          
+          // Animate in
+          setTimeout(() => {
+            modal.classList.add('active');
+          }, 10);
+        }
+
+        function closeRegistrationModal() {
+          const modal = document.getElementById('registrationModal');
+          const navbar = document.querySelector('.navbar');
+          if (!modal) return;
+          
+          modal.classList.remove('active');
+          setTimeout(() => {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+            if (navbar && window.scrollY <= 100) navbar.classList.remove('nav-hidden');
+          }, 400);
+        }
+
+
+
+        // Reveal Animations
+        document.addEventListener('DOMContentLoaded', () => {
+          const reveals = document.querySelectorAll('.reveal');
+          setTimeout(() => {
+            reveals.forEach(r => r.classList.add('visible'));
+          }, 100);
+        });
+      </script>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof updateContent === 'function') {
+                updateContent(localStorage.getItem('evrika-lang') || 'az');
+            }
+
+            // Welcome Modal Logic (Temporarily always shown for review)
+            setTimeout(() => {
+                const welcomeModal = document.getElementById('welcomeModal');
+                if (welcomeModal) {
+                    welcomeModal.style.display = 'flex';
+                    setTimeout(() => welcomeModal.classList.add('active'), 10);
+                }
+            }, 500); // Faster trigger for review
+        });
+
+        function closeWelcomeModal() {
+            const welcomeModal = document.getElementById('welcomeModal');
+            if (welcomeModal) {
+                welcomeModal.classList.remove('active');
+                setTimeout(() => {
+                    welcomeModal.style.display = 'none';
+                    // Removed overflow toggle
+                }, 500);
+                sessionStorage.setItem('evrika_welcome_shown', 'true');
+            }
+        }
+    </script>
+<!-- Cookie Consent Scripts Removed -->
+<!-- Video Modal (Global scope) -->
+<style>
+    @keyframes modalReveal {
+      from { opacity: 0; backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); }
+      to { opacity: 1; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
+    }
+    @keyframes videoScaleUp {
+      from { opacity: 0; transform: scale(0.95) translateY(20px) rotateX(-5deg); }
+      to { opacity: 1; transform: scale(1) translateY(0) rotateX(0deg); }
+    }
+    #videoModal {
+      background: rgba(10, 10, 12, 0.85);
+      animation: modalReveal 0.4s ease-out forwards;
+    }
+    .modern-video-wrapper {
+      position: relative;
+      max-width: 1000px;
+      width: 90vw;
+      border-radius: 20px;
+      background: #000;
+      padding: 4px;
+      box-shadow: 0 40px 120px -10px rgba(0, 0, 0, 0.8), 0 0 40px rgba(139, 39, 44, 0.4);
+      perspective: 1000px;
+      overflow: hidden;
+      animation: videoScaleUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .modern-video-wrapper video, .modern-video-wrapper iframe {
+      width: 100%;
+      border-radius: 16px;
+      display: block;
+    }
+    .close-modal-btn {
+      position: absolute;
+      top: 40px;
+      right: 40px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.8);
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 10000;
+    }
+    .close-modal-btn:hover {
+      background: var(--burgundy);
+      color: #fff;
+      transform: scale(1.1) rotate(90deg);
+      border-color: var(--burgundy);
+      box-shadow: 0 0 20px rgba(139, 39, 44, 0.6);
+    }
+    @media (max-width: 768px) {
+      .close-modal-btn { top: 20px; right: 20px; width: 44px; height: 44px; font-size: 1.2rem; }
+    }
+  </style>
+<div id="videoModal" onclick="if(event.target===this)closeVideoModal()" style="display:none; position:fixed; inset:0; z-index:99999; align-items:center; justify-content:center; flex-direction:column;">
+<button class="close-modal-btn" onclick="closeVideoModal()"><i class="fas fa-times"></i></button>
+<div class="modern-video-wrapper">
+<video controls="" id="modalVideo" playsinline="" style="display:none; width:100%; border-radius:16px;"></video>
+<iframe allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen="" frameborder="0" id="modalIframe" src="" style="display:none; width:100%; aspect-ratio:16/9; border-radius:16px;"></iframe>
+</div>
+</div>
+<script>
+    function toggleMobileAcc(id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.classList.toggle('open');
+    }
+  </script>
+<!-- Premium Centered Cookie Modal -->
+<div id="premium-cookie-banner" style="position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 100000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.4s ease;">
+<div id="cookie-modal-content" style="background: white; border-radius: 24px; padding: 40px; max-width: 450px; width: 90%; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.2); transform: scale(0.9); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);">
+<div style="width: 70px; height: 70px; border-radius: 50%; background: rgba(139,26,43,0.1); display: flex; align-items: center; justify-content: center; color: var(--burgundy); font-size: 2rem; margin: 0 auto 20px;">
+<i class="fas fa-cookie-bite"></i>
+</div>
+<h4 style="color: var(--navy); margin-bottom: 15px; font-weight: 900; font-size: 1.4rem;">Kuki (Cookie) Siyasətimiz</h4>
+<p style="color: #555; margin-bottom: 30px; font-size: 0.95rem; line-height: 1.6;">Saytımızdan ən yaxşı şəkildə yararlanmağınız və təcrübənizi fərdiləşdirmək üçün kukilərdən istifadə edirik. Seçimlərinizi istədiyiniz vaxt dəyişə bilərsiniz. <br/><a href="privacy.html" style="color: var(--burgundy); font-weight: 700; text-decoration: underline; margin-top: 5px; display: inline-block;">Məxfilik Siyasəti</a></p>
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<button onclick="acceptCookies()" style="background: var(--burgundy); color: white; border: none; padding: 16px; border-radius: 14px; font-weight: 800; font-size: 1rem; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 20px rgba(139,26,43,0.2); width: 100%;">Qəbul Edirəm</button>
+<button onclick="rejectCookies()" style="background: #f1f3f6; color: var(--navy); border: none; padding: 16px; border-radius: 14px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.3s; width: 100%;">Rədd Edirəm</button>
+</div>
+</div>
+</div>
+<script>
+    function acceptCookies() {
+      localStorage.setItem('evrika_cookies_accepted', 'true');
+      hideCookieModal();
+    }
+    function rejectCookies() {
+      localStorage.setItem('evrika_cookies_accepted', 'false');
+      hideCookieModal();
+    }
+    function hideCookieModal() {
+      const banner = document.getElementById('premium-cookie-banner');
+      banner.style.opacity = '0';
+      document.getElementById('cookie-modal-content').style.transform = 'scale(0.9)';
+      setTimeout(() => { banner.style.display = 'none'; }, 400);
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!localStorage.getItem('evrika_cookies_accepted')) {
+        setTimeout(() => {
+          const banner = document.getElementById('premium-cookie-banner');
+          banner.style.display = 'flex';
+          // trigger reflow
+          void banner.offsetWidth;
+          banner.style.opacity = '1';
+          document.getElementById('cookie-modal-content').style.transform = 'scale(1)';
+        }, 1500);
+      }
+    });
+  </script>
+<script>
+    document.addEventListener("DOMContentLoaded", async function() {
+        const grid = document.getElementById('home-news-grid');
+        if(!grid) return;
+        try {
+            const API_URL = 'https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1';
+            const API_KEY = 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV';
+            const res = await fetch(`${API_URL}/news?select=*&order=id.desc&limit=3`, {
+                headers: { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY }
+            });
+            if(res.ok) {
+                const data = await res.json();
+                if(!data.length) {
+                    grid.innerHTML = '<div style="text-align:center; width:100%; grid-column:1/-1; opacity:0.5; font-size:1.2rem;">Hələ ki, heç bir xəbər yoxdur.</div>';
+                    return;
+                }
+                grid.innerHTML = data.map(row => {
+                    const n = row.payload;
+                    const dateStr = n.date || "";
+                    const parts = dateStr.split(/[-./]/);
+                    const months = ["Yan", "Fev", "Mar", "Apr", "May", "İyn", "İyl", "Avq", "Sen", "Okt", "Noy", "Dek"];
+                    
+                    let day = "13", month = "Apr";
+                    if(parts.length === 3) {
+                        if(parts[0].length === 4) {
+                            day = parts[2];
+                            month = months[parseInt(parts[1]) - 1] || "Ay";
+                        } else {
+                            day = parts[0];
+                            month = months[parseInt(parts[1]) - 1] || "Ay";
+                        }
+                    }
+                    
+                    return `
+                        <a href="news-detail.html?id=${row.id}" class="news-card">
+                            <div class="card-media">
+                                <img src="${n.img}" alt="${n.title}" loading="lazy">
+                                <div class="date-badge">
+                                    <strong>${day}</strong>
+                                    <span>${month}</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-cat">EVRİKA YENİLİK</div>
+                                <h3 class="card-title">${n.title}</h3>
+                                <p class="card-desc">${n.text}</p>
+                                <div class="card-footer">TAM OXU <i class="fas fa-arrow-right"></i></div>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+            }
+        } catch(e) {}
+    });
+  </script>
+</body>
+</html>

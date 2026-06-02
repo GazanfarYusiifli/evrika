@@ -1,0 +1,330 @@
+TOOLS LIST:
+FOUND INSIGHT TOOL: get_insights
+{
+  "name": "get_insights",
+  "description": "Get performance insights for a campaign, ad set, ad or account.\n\nArgs:\n    object_id: ID of the campaign, ad set, ad or account\n    access_token: Meta API access token (optional - will use cached token if not provided)\n    time_range: Either a preset time range string or a dictionary with \"since\" and \"until\" dates in YYYY-MM-DD format\n               Preset options: today, yesterday, this_month, last_month, this_quarter, maximum, data_maximum, \n               last_3d, last_7d, last_14d, last_28d, last_30d, last_90d, last_week_mon_sun, \n               last_week_sun_sat, last_quarter, last_year, this_week_mon_today, this_week_sun_today, this_year\n               Dictionary example: {\"since\":\"2023-01-01\",\"until\":\"2023-01-31\"}\n    time_breakdown: Optional time dimension to break down metrics by\n               Supported values: \"day\", \"week\", \"month\"\n               - day: Daily breakdown (returns metrics for each day in the range)\n               - week: Weekly breakdown (returns metrics for each week)\n               - month: Monthly breakdown (returns metrics for each month)\n               When specified, returns segmented_metrics array with per-period data plus aggregates\n    breakdown: Optional breakdown dimension. Valid values include:\n               Demographic: age, gender, country, region, dma\n               Platform/Device: device_platform, platform_position, publisher_platform, impression_device\n               Time: hourly_stats_aggregated_by_advertiser_time_zone (hourly breakdown by advertiser timezone)\n               Creative Assets: ad_format_asset, body_asset, call_to_action_asset, description_asset,\n                              image_asset, link_url_asset, title_asset, video_asset, media_type\n               NOTE: media_type collides with the default action_breakdowns=[action_type], so\n               this tool auto-overrides action_breakdowns to [] when you pass media_type.\n    level: Level of aggregation (ad, adset, campaign, account)\n    limit: Maximum number of results to return per page (default: 25)\n    after: Pagination cursor to get the next set of results\n    action_attribution_windows: Optional list of attribution windows (e.g., [\"1d_click\", \"7d_click\", \"1d_view\"])\n    action_breakdowns: Optional list of action_breakdowns (e.g., [], [\"action_type\"], [\"action_target_id\"]).\n        Pass [] to disable Meta's default action_type slicing. Auto-applied to [] when breakdown=media_type\n        and not explicitly set, to avoid Meta's \"(action_type, media_type) is invalid\" error.\n\nReturns:\n    When time_breakdown is NOT specified:\n        Standard Meta Insights API response with aggregated metrics for the entire period\n\n    When time_breakdown IS specified:\n        JSON response with:\n        - object_id: The queried object ID\n        - level: Aggregation level used\n        - time_range: The date range queried {since, until}\n        - time_breakdown: The segmentation type\n        - total_segments: Number of time periods\n        - aggregates: Sum totals for the entire period\n        - segmented_metrics: Array of per-period metrics\n            [{\n                \"period\": \"2025-01\" (month) or \"2025-01-15\" (day/week start),\n                \"period_start\": \"2025-01-01\",\n                \"period_end\": \"2025-01-31\",\n                \"metrics\": { impressions, clicks, spend, ... }\n            }]\n        - execution_time_ms: Total execution time\n\nExample Usage:\n    # Get last 30 days aggregated (default behavior)\n    get_insights(\n        object_id=\"act_123456789\",\n        time_range=\"last_30d\",\n        level=\"account\"\n    )\n\n    # Get monthly breakdown for a full year\n    get_insights(\n        object_id=\"act_123456789\",\n        time_range={\"since\": \"2025-01-01\", \"until\": \"2025-12-31\"},\n        time_breakdown=\"month\",\n        level=\"account\"\n    )\n\n    # Get daily breakdown for last 7 days\n    get_insights(\n        object_id=\"act_123456789\",\n        time_range=\"last_7d\",\n        time_breakdown=\"day\",\n        level=\"campaign\"\n    )\n\n    # Get weekly breakdown with breakdown by device\n    get_insights(\n        object_id=\"act_123456789\",\n        time_range=\"last_90d\",\n        time_breakdown=\"week\",\n        breakdown=\"device_platform\",\n        level=\"account\"\n    )\n\nFor single object (campaign/adset/ad/account). Use bulk_get_insights to query multiple accounts or get campaign/adset/ad-level data across accounts.",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "object_id": {
+        "type": "string",
+        "description": "ID of the campaign, ad set, ad or account"
+      },
+      "access_token": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Meta API access token (optional - will use cached token if not provided)"
+      },
+      "time_range": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "since": {
+                "type": "string"
+              },
+              "until": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "since",
+              "until"
+            ]
+          }
+        ],
+        "default": "maximum",
+        "description": "Time range as preset string or {since, until} object with YYYY-MM-DD dates"
+      },
+      "time_breakdown": {
+        "type": "string",
+        "enum": [
+          "day",
+          "week",
+          "month"
+        ],
+        "description": "Optional time dimension to segment metrics by. Use \"day\" for daily, \"week\" for weekly, or \"month\" for monthly breakdown."
+      },
+      "breakdown": {
+        "type": "string",
+        "default": "",
+        "description": "Optional breakdown dimension (e.g., age, gender, country, device_platform, hourly_stats_aggregated_by_advertiser_time_zone)"
+      },
+      "level": {
+        "type": "string",
+        "default": "ad",
+        "enum": [
+          "ad",
+          "adset",
+          "campaign",
+          "account"
+        ],
+        "description": "Level of aggregation"
+      },
+      "limit": {
+        "type": "integer",
+        "default": 25,
+        "description": "Maximum number of results to return per page"
+      },
+      "after": {
+        "type": "string",
+        "default": "",
+        "description": "Pagination cursor for next page"
+      },
+      "action_attribution_windows": {
+        "anyOf": [
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Optional list of attribution windows"
+      },
+      "action_breakdowns": {
+        "anyOf": [
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Optional list of action_breakdowns. Pass [] to disable the default action_type slicing. Auto-applied to [] for breakdown=media_type when not set."
+      }
+    },
+    "required": [
+      "object_id"
+    ]
+  },
+  "annotations": {
+    "readOnlyHint": true
+  }
+}
+FOUND INSIGHT TOOL: bulk_get_insights
+{
+  "name": "bulk_get_insights",
+  "description": "\u2b50 PREMIUM FEATURE \u2b50\n\nFetches performance insights for multiple ad accounts in parallel.\n\n\u26a0\ufe0f Requires: Premium or Enterprise plan\n\ud83d\udca1 Value: Analyze performance data across all your campaigns at scale\n\nArgs:\n    level: The aggregation level. Supported values: \"account\", \"campaign\", \"adset\", \"ad\"\n        \u26a0\ufe0f  Ad level: responses can be 500KB\u20135MB per account. compact=true is the DEFAULT for ad level.\n            Use account_ids, campaign_ids, adset_ids, and/or ad_name_contains to scope your query.\n    time_range: Time period for insights (default: \"last_7d\")\n        Preset values: last_7d, last_14d, last_30d, last_90d, this_month, last_month, this_year, last_year, lifetime\n        Or an object with \"since\" and \"until\" dates: {\"since\": \"2025-01-01\", \"until\": \"2025-12-31\"}\n    time_breakdown: Optional time dimension to break down metrics by\n        Supported values: \"day\", \"week\", \"month\"\n        When specified, each account result includes segmented_metrics array with per-period data\n    breakdown: Optional dimension to break down metrics by (can significantly increase response size)\n        Demographic: age, gender, country, region, dma\n        Platform/Device: device_platform, platform_position, publisher_platform, impression_device\n        Time: hourly_stats_aggregated_by_advertiser_time_zone (hourly breakdown by advertiser timezone)\n    action_attribution_windows: Optional list of attribution windows for conversion metrics\n        Supported values: 1d_click, 7d_click, 28d_click, 1d_view, 7d_view, 28d_view\n        Default: [\"7d_click\", \"1d_view\"]\n    account_ids: Array of account IDs to filter (optional). If omitted, fetches all accounts.\n    fields: Optional list of Meta Insights API fields to return. Default behavior fetches a sensible set per level.\n        Dual purpose:\n          1. In compact mode (level=campaign with time_breakdown, or level=ad), selects which numeric metrics\n             the compact pivot returns. Available pivot fields: spend, impressions, clicks, reach, conversions,\n             purchase_conversions, ctr, cpc, cpm, frequency, unique_clicks, cost_per_result.\n          2. Passthrough to Meta's Insights API. Pass ANY field Meta supports \u2014 including video milestones\n             (video_p25_watched_actions, video_p50_watched_actions, video_p75_watched_actions,\n             video_p95_watched_actions, video_p100_watched_actions, video_thruplay_watched_actions,\n             video_avg_time_watched_actions, video_play_actions, video_30_sec_watched_actions) and ranking\n             diagnostics (quality_ranking, engagement_rate_ranking, conversion_rate_ranking).\n        When any custom (non-default) field is requested, the response includes Meta's raw rows so unknown\n        fields survive. Required dimension IDs (account_id, campaign_id, adset_id, ad_id, date_start,\n        date_stop, *_name) are always merged in automatically.\n    use_cache: Whether to use cached data (default: true, disabled when time_breakdown is used)\n    limit: Maximum accounts to return per request (default: 20, max: 50)\n    offset: Number of accounts to skip for pagination (default: 0)\n    compact: When true, strips derived metrics (ctr, cpc, cpm, reach, conversion_value) from ad results\n        \u26a1 USE THIS when querying many campaigns to avoid context overflow\n        For campaign/adset level: returns pivoted campaign_id, campaign_name, <metric>_by_period\n        For ad level: DEFAULT is true \u2014 strips low-value derived fields, pass compact=false to get all fields\n        Use \"fields\" parameter to specify which metrics in campaign/adset compact mode (default: spend only)\n        Reduces response size by ~95% (from 500KB to ~5KB for 100 campaigns)\n    campaign_name_contains: Array of strings to filter campaigns by name (case-insensitive)\n        Only campaigns whose name contains ANY of these strings are returned\n        Example: [\"Prospecting\", \"Retargeting\", \"Retention\"]\n    ad_name_contains: Array of strings to filter ads by name (case-insensitive, ad level only)\n        Only ads whose name contains ANY of these strings are returned\n        Example: [\"Video\", \"Static\", \"Carousel\"]\n    campaign_ids: Filter to ads from specific campaigns only (ad level only, server-side)\n        More efficient than ad_name_contains \u2014 filtering happens at Meta API level, not post-fetch\n        Example: [\"6017617490961\", \"6017617490962\"]\n    adset_ids: Filter to ads from specific adsets only (ad level only, server-side)\n        Can be combined with campaign_ids (AND logic: both filters apply)\n        Example: [\"6017617490963\", \"6017617490964\"]\n    after: Pagination cursor for ad-level queries (ad level only)\n        Pass the next_cursor value from a previous response to get the next 500 ads\n        Only meaningful when account_ids contains a single account\n\nReturns:\n    JSON response with:\n    - summary: {total_accounts, successful, failed, cached, total_campaigns (campaign level), total_adsets (adset level), total_ads (ad level), total_periods (time_breakdown), campaigns_matched, campaigns_total (when filtered)}\n    - results[].next_cursor: present when more ads exist for that account; pass as the \"after\" param to fetch the next page\n    - results: Array with per-account insights, each including segmented_metrics when time_breakdown is used\n    - Each insight includes purchase_conversions (count) and purchase_conversion_value (revenue) for purchase-specific CPA/ROAS calculations\n    - conversions = purchase + lead + onsite_conversion.post_save (broad metric)\n    - purchase_conversions = purchase only (matches Ads Manager \"Purchases\" / \"Results\" for purchase-optimized campaigns)\n    - filter_applied: The campaign_name_contains filter used (if specified)\n    - fields_included: The metrics included in compact mode response (when compact=true)\n    - execution_time_ms, time_range, time_breakdown (if specified), breakdown (if specified), level, pagination metadata\n\nExample Usage:\n    # Account-level insights (default)\n    bulk_get_insights(level=\"account\")\n\n    # Campaign-level with monthly breakdown and compact mode (recommended for large accounts)\n    bulk_get_insights(\n        level=\"campaign\",\n        account_ids=[\"act_123456\"],\n        time_range={\"since\": \"2025-08-01\", \"until\": \"2026-02-03\"},\n        time_breakdown=\"month\",\n        compact=true,\n        fields=[\"spend\", \"impressions\", \"clicks\"]\n    )\n\n    # Ad-level scoped to specific campaigns (compact=true is default for ad level)\n    bulk_get_insights(\n        level=\"ad\",\n        account_ids=[\"act_123456\"],\n        time_range=\"last_30d\",\n        campaign_ids=[\"6017617490961\"]\n    )\n\n    # Ad-level pagination \u2014 pass next_cursor from previous response\n    bulk_get_insights(level=\"ad\", account_ids=[\"act_123456\"], time_range=\"last_30d\", after=\"abc123\")",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "level": {
+        "type": "string",
+        "description": "The aggregation level. Supported values: \"account\", \"campaign\", \"adset\", \"ad\". Ad level returns parsed metrics per ad (spend, impressions, clicks, ctr, roas) with hierarchy context (adset_name, campaign_name). Use account_ids and ad_name_contains to scope ad-level queries.",
+        "enum": [
+          "account",
+          "campaign",
+          "adset",
+          "ad"
+        ]
+      },
+      "time_range": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "since": {
+                "type": "string"
+              },
+              "until": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "since",
+              "until"
+            ]
+          }
+        ],
+        "description": "Time period as preset string (last_7d, last_30d, etc.) or {since, until} object"
+      },
+      "date_preset": {
+        "type": "string",
+        "description": "Alias for time_range"
+      },
+      "time_breakdown": {
+        "type": "string",
+        "enum": [
+          "day",
+          "week",
+          "month"
+        ],
+        "description": "Optional time dimension to break down metrics. Returns segmented_metrics per account."
+      },
+      "breakdown": {
+        "type": "string",
+        "description": "Optional breakdown dimension. Values: age, gender, country, region, dma, device_platform, platform_position, publisher_platform, impression_device, hourly_stats_aggregated_by_advertiser_time_zone. Note: Can significantly increase response size."
+      },
+      "action_attribution_windows": {
+        "anyOf": [
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "description": "Attribution windows for conversion metrics. Values: 1d_click, 7d_click, 28d_click, 1d_view, 7d_view, 28d_view. Default: [\"7d_click\", \"1d_view\"]"
+      },
+      "account_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Array of account IDs to filter (optional)"
+      },
+      "fields": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Optional list of Meta Insights API field names to return. Dual purpose: (1) selects which numeric metrics the compact pivot returns when compact=true (spend, impressions, clicks, reach, conversions, purchase_conversions, ctr, cpc, cpm, frequency, unique_clicks, cost_per_result); (2) passthrough to Meta \u2014 pass any field Meta supports, including video milestones (video_p25_watched_actions, video_p50_watched_actions, video_p75_watched_actions, video_p95_watched_actions, video_p100_watched_actions, video_thruplay_watched_actions, video_avg_time_watched_actions, video_play_actions, video_30_sec_watched_actions) and ranking diagnostics (quality_ranking, engagement_rate_ranking, conversion_rate_ranking). Required dimension IDs are merged in automatically; when custom fields are requested, Meta's raw rows are returned so unknown fields survive."
+      },
+      "use_cache": {
+        "type": "boolean",
+        "description": "Whether to use cached data (default: true)"
+      },
+      "limit": {
+        "type": "integer",
+        "description": "Maximum accounts to return per request (default: 20, max: 50)"
+      },
+      "offset": {
+        "type": "integer",
+        "description": "Number of accounts to skip for pagination (default: 0)"
+      },
+      "compact": {
+        "type": "boolean",
+        "description": "For campaign/adset: returns pivoted data (campaign_id, campaign_name, <metric>_by_period). For ad level: strips derived metrics (ctr, cpc, cpm, reach, conversion_value). Ad level defaults to compact=true; pass false to get all fields."
+      },
+      "campaign_name_contains": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Filter to campaigns whose name contains any of these strings (case-insensitive). Example: [\"Prospecting\", \"Retargeting\"]"
+      },
+      "ad_name_contains": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Filter to ads whose name contains any of these strings (case-insensitive, ad level only). Example: [\"Video\", \"Static\", \"Carousel\"]"
+      },
+      "campaign_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Filter to ads from these campaigns only (ad level only). Applied server-side at Meta API level. Example: [\"6017617490961\", \"6017617490962\"]"
+      },
+      "adset_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Filter to ads from these adsets only (ad level only). Applied server-side at Meta API level. Can be combined with campaign_ids. Example: [\"6017617490963\"]"
+      },
+      "after": {
+        "type": "string",
+        "description": "Pagination cursor for ad-level queries. Pass the next_cursor from a previous ad-level response to fetch the next 500 ads. Use with a single account_id."
+      }
+    },
+    "required": [
+      "level"
+    ]
+  },
+  "annotations": {
+    "readOnlyHint": true
+  }
+}
+FOUND INSIGHT TOOL: get_instagram_account_insights
+{
+  "name": "get_instagram_account_insights",
+  "description": "Get organic insights for your Instagram business account(s) \u2014 follower growth, reach, profile views, and website clicks.\n\nIMPORTANT: The instagram_account_id must be the exact ID returned by get_instagram_accounts. Instagram IDs are long numeric strings \u2014 always copy the exact value, do not retype manually.\n\nWorkflow:\n    1. Call get_instagram_accounts(account_id=\"act_XXX\") to get available Instagram accounts and their IDs\n    2. Use the exact instagram_account_id from that response here\n\nArgs:\n    instagram_account_id (optional): Instagram account ID from get_instagram_accounts. If omitted, returns insights for all connected accounts.\n    account_id (optional): Meta Ads account ID (format: act_XXXXXXXXX). Required when using an API token restricted to specific ad accounts; otherwise optional.\n    time_range (optional): Time range. Options: last_7d (default), last_14d, last_30d, last_90d\n    metrics (optional): Array of metric names. Defaults to: reach, follower_count, profile_views, website_clicks. Available metrics: reach, follower_count, website_clicks, profile_views, online_followers, accounts_engaged, total_interactions, likes, comments, shares, saves, replies, follows_and_unfollows, profile_links_taps, views. Do NOT use \"impressions\" \u2014 it is not supported for account-level insights.\n\nReturns:\n    summary: Total accounts, successful, failed\n    results: Array with account_id, account_username, and insights (follower_count, follower_growth, reach, profile_views, website_clicks, engagement_rate)",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "instagram_account_id": {
+        "type": "string",
+        "description": "Exact Instagram account ID from get_instagram_accounts (omit for all connected accounts). Do not retype \u2014 copy the exact numeric ID."
+      },
+      "account_id": {
+        "type": "string",
+        "description": "Meta Ads account ID (format: act_XXXXXXXXX). Required for API tokens restricted to specific ad accounts; otherwise optional."
+      },
+      "time_range": {
+        "type": "string",
+        "description": "Time range: last_7d (default), last_14d, last_30d, last_90d"
+      },
+      "metrics": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Metric names to fetch"
+      }
+    },
+    "required": []
+  },
+  "annotations": {
+    "readOnlyHint": true
+  }
+}
+FOUND INSIGHT TOOL: get_facebook_page_insights
+{
+  "name": "get_facebook_page_insights",
+  "description": "Get page-level insights for your Facebook Page(s) \u2014 page views and post engagements.\n\nArgs:\n    page_id (optional): Facebook Page ID. If omitted, returns insights for all pages you manage.\n    account_id (optional): Meta Ads account ID (format: act_XXXXXXXXX). Required when using an API token restricted to specific ad accounts; otherwise optional.\n    time_range (optional): Time range. Options: last_7d (default), last_14d, last_30d, last_90d\n    metrics (optional): Array of metric names to fetch. Defaults to: page_post_engagements, page_views_total. Note: page_fans, page_impressions, page_fan_adds, page_fan_removes, page_engaged_users, page_video_views are deprecated in Meta API v24.0+.\n\nReturns:\n    summary: Total pages, successful, failed\n    results: Array of page results with page_id, page_name, and insights object",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "page_id": {
+        "type": "string",
+        "description": "Facebook Page ID (omit for all pages)"
+      },
+      "account_id": {
+        "type": "string",
+        "description": "Meta Ads account ID (format: act_XXXXXXXXX). Required for API tokens restricted to specific ad accounts; otherwise optional."
+      },
+      "time_range": {
+        "type": "string",
+        "description": "Time range: last_7d (default), last_14d, last_30d, last_90d"
+      },
+      "metrics": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Metric names to fetch (defaults to page_fans, page_impressions, etc.)"
+      }
+    },
+    "required": []
+  },
+  "annotations": {
+    "readOnlyHint": true
+  }
+}
