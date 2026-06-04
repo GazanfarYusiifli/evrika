@@ -2720,17 +2720,17 @@
 <div class="dyn-form-grid">
 <div class="dyn-input-group">
 <label data-i18n="form-child-name">Övladınızın adı</label>
-<input id="mf_firstName" placeholder="Məs: Əli" required="" type="text"/>
+<input id="mf_firstName" placeholder="Məs: Əli" data-i18n-placeholder="form-ph-name" required="" type="text"/>
 </div>
 <div class="dyn-input-group">
 <label data-i18n="form-child-surname">Övladınızın soyadı</label>
-<input id="mf_lastName" placeholder="Məs: Əliyev" required="" type="text"/>
+<input id="mf_lastName" placeholder="Məs: Əliyev" data-i18n-placeholder="form-ph-surname" required="" type="text"/>
 </div>
 <div class="dyn-input-group">
 <label data-i18n="form-center">Müraciət etmək istədiyiniz Təhsil Mərkəzi</label>
 <div style="position: relative;">
 <select id="branchSelect" onchange="window.updateSector()" required="">
-<option disabled="" selected="" value="">Təhsil Mərkəzi seçin</option>
+<option disabled="" selected="" value="" data-i18n="form-opt-center">Təhsil Mərkəzi seçin</option>
 <option value="nerimanov">Evrika BETL Nərimanov filalı</option>
 <option value="genclik">Evrika BETL Gənclik filalı</option>
 <option value="montessori">Montessori Kids Academy</option>
@@ -2743,7 +2743,7 @@
 <label data-i18n="form-section">Müraciət etmək istədiyiniz bölmə</label>
 <div style="position: relative;">
 <select id="sectorSelect" required="">
-<option disabled="" selected="" value="">Əvvəlcə mərkəz seçin</option>
+<option disabled="" selected="" value="" data-i18n="form-opt-section">Əvvəlcə mərkəz seçin</option>
 </select>
 <i class="fas fa-chevron-down select-arrow"></i>
 </div>
@@ -2752,7 +2752,7 @@
 <label data-i18n="form-class">Müraciət etmək istədiyiniz sinif</label>
 <div style="position: relative;">
 <select id="mf_class" required="">
-<option disabled="" selected="" value="">Sinif seçin</option>
+<option disabled="" selected="" value="" data-i18n="form-opt-class">Sinif seçin</option>
 <option value="Məktəbəqədər">Məktəbəqədər</option>
 <option value="1-ci sinif">1-ci sinif</option>
 <option value="2-ci sinif">2-ci sinif</option>
@@ -2771,7 +2771,7 @@
 </div>
 <div class="dyn-input-group">
 <label data-i18n="form-school">Gəldiyiniz təhsil müəssisəsi</label>
-<input id="mf_previousSchool" placeholder="Məs: 20 nömrəli məktəb" required="" type="text"/>
+<input id="mf_previousSchool" placeholder="Məs: 20 nömrəli məktəb" data-i18n-placeholder="form-ph-school" required="" type="text"/>
 </div>
 <div class="dyn-input-group">
 <label data-i18n="form-phone">Telefon</label>
@@ -2790,7 +2790,7 @@
 </div>
 <div class="dyn-input-group">
 <label data-i18n="form-email">E-mail</label>
-<input id="mf_email" placeholder="nümunə@mail.com" required="" type="email"/>
+<input id="mf_email" placeholder="nümunə@mail.com" data-i18n-placeholder="form-ph-email" required="" type="email"/>
 </div>
 </div>
 <button class="dyn-submit-btn" data-i18n="form-submit" type="submit">
@@ -2810,7 +2810,11 @@
                 defOpt.value = '';
                 defOpt.disabled = true;
                 defOpt.selected = true;
-                defOpt.innerHTML = 'Bölmə seçin';
+                defOpt.setAttribute('data-i18n', 'form-opt-section2');
+                const evrikaLang = localStorage.getItem('evrika-lang') || 'az';
+                defOpt.innerHTML = (window.translations && window.translations[evrikaLang] && window.translations[evrikaLang]['form-opt-section2']) 
+                                   ? window.translations[evrikaLang]['form-opt-section2'] 
+                                   : 'Bölmə seçin';
                 sectorSelect.appendChild(defOpt);
                 
                 if (branch === 'nerimanov') {
