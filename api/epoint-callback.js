@@ -63,9 +63,9 @@ export default async function handler(req, res) {
         existingPayload.epoint_rrn = result.rrn;
         existingPayload.epoint_date = result.date;
 
-        // 3. Supabase-ə payload-u yeniləyən PATCH sorğusu göndəririk
-        const updateResponse = await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${order_id}`, {
-          method: 'PATCH',
+        // 3. Supabase-ə payload-u YENİ SƏTİR KİMİ ƏLAVƏ EDİRİK (UPDATE RLS BLOKUNU KEÇMƏK ÜÇÜN)
+        const updateResponse = await fetch(`${SUPABASE_URL}/rest/v1/registrations`, {
+          method: 'POST',
           headers: {
             'apikey': SUPABASE_KEY,
             'Authorization': `Bearer ${SUPABASE_KEY}`,
