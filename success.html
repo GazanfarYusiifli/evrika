@@ -252,9 +252,9 @@
     <script>
       // Səhifə yüklənəndə DB-ni yeniləyirik
       const urlParams = new URLSearchParams(window.location.search);
-      const regId = urlParams.get('regId');
-      const emailParam = urlParams.get('email');
-      const regName = urlParams.get('name') || '';
+      const regId = urlParams.get('regId') || localStorage.getItem('last_regId');
+      const emailParam = urlParams.get('email') || localStorage.getItem('last_email');
+      const regName = urlParams.get('name') || localStorage.getItem('last_name') || '';
 
       if (regId) {
         document.querySelector('.container p').innerHTML += '<br><br><span style="font-size: 0.9rem; color: #10b981;"><i class="fas fa-spinner fa-spin"></i> Sistem qeydiyyatınızı təsdiqləyir...</span>';
@@ -291,9 +291,10 @@
                     }).catch(console.error);
                 }
 
-                document.querySelector('.container p').innerHTML = 'Təşəkkür edirik. Ödənişiniz sistemdə avtomatik qeydə alındı və xidmətiniz təsdiqləndi. İmtahan giriş kuponunuz <b style="color:#10b981;">' + (emailParam ? emailParam : 'email') + '</b> ünvanınıza göndərilmişdir';
+                const finalEmail = emailParam || currentPayload.email || currentPayload['E-mail'] || 'qeyd etdiyiniz';
+                document.querySelector('.container p').innerHTML = 'Təşəkkür edirik. Ödənişiniz sistemdə avtomatik qeydə alındı və xidmətiniz təsdiqləndi. İmtahan giriş kuponunuz ' + finalEmail + ' ünvanınıza göndərilmişdir.';
                     
-                    if (emailParam) {
+                    if (finalEmail && finalEmail !== 'qeyd etdiyiniz') {
                         fetch('/api/send-email', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },

@@ -616,6 +616,9 @@
                   const epointData = await epointRes.json();
                   
                   if (epointData.redirect_url) {
+                      localStorage.setItem('last_regId', data[0].id);
+                      localStorage.setItem('last_email', email);
+                      localStorage.setItem('last_name', firstName + ' ' + lastName);
                       window.location.href = epointData.redirect_url;
                   } else {
                       alert('Ödəniş sistemində xəta baş verdi: ' + (epointData.message || epointData.error || 'Bilinməyən xəta'));
