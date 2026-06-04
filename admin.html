@@ -1857,9 +1857,9 @@ src="https://www.facebook.com/tr?id=854979317627172&ev=PageView&noscript=1"
         for (let i = 0; i < input.files.length; i++) {
             let file = input.files[i];
 
-            // 1. Check File Size (Max 2MB)
-            if (file.size > 2 * 1024 * 1024) {
-                alert(`Xəta: ${file.name} ölçüsü çox böyükdür (Maksimum 2MB).`);
+            // 1. Check File Size (Max 10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                alert(`Xəta: ${file.name} ölçüsü çox böyükdür (Maksimum 10MB).`);
                 continue;
             }
 
