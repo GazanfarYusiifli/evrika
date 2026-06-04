@@ -20,6 +20,8 @@
     { "source": "/register-lisey2", "destination": "/register-lisey2.html" },
     { "source": "/register-montessori", "destination": "/register-montessori.html" },
     { "source": "/register-eduhome", "destination": "/register-eduhome.html" },
-    { "source": "/register-zumrud", "destination": "/register-zumrud.html" }
+    { "source": "/register-zumrud", "destination": "/register-zumrud.html" },
+    { "source": "/success", "destination": "/success.html" },
+    { "source": "/error", "destination": "/error.html" }
   ]
 }
