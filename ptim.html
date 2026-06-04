@@ -321,6 +321,21 @@
         .step-item:hover { transform: translateX(10px); box-shadow: 0 15px 40px rgba(139,26,43,0.08); }
         .step-num { font-size: 3rem; font-weight: 900; color: rgba(139,26,43,0.1); line-height: 1; transition: 0.3s; }
         .step-item:hover .step-num { color: var(--burgundy); }
+
+        @media (max-width: 768px) {
+          .ptim-hero { padding: 150px 15px 80px; }
+          .ptim-hero h1 { font-size: 2.5rem !important; }
+          .ptim-hero p { font-size: 1rem !important; }
+          .section h2 { font-size: 2.2rem !important; }
+          .ptim-grid-3 { grid-template-columns: 1fr; gap: 20px; }
+          .ptim-grid-2 { grid-template-columns: 1fr; gap: 20px; }
+          .ptim-card { padding: 25px; }
+          .step-item { flex-direction: column; text-align: center; padding: 25px; gap: 15px; }
+          .step-item:hover { transform: translateY(-5px); }
+          .uni-item { max-width: 100%; padding: 20px; }
+          .section { padding: 60px 15px !important; }
+          div[style*="padding: 50px;"] { padding: 25px !important; }
+        }
       </style>
 
       <!-- Hero Section -->
