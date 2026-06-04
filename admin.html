@@ -1894,7 +1894,8 @@ src="https://www.facebook.com/tr?id=854979317627172&ev=PageView&noscript=1"
                 }
             } catch(e) { console.error("BG removal failed, uploading original:", e); }
             
-            const fileName = `uploads/${Date.now()}_${file.name}`;
+            const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+            const fileName = `uploads/${Date.now()}_${i}_${safeName}`;
             const res = await fetch(`https://miwvdhwrmxoetszkxlzy.supabase.co/storage/v1/object/ems-documents/${fileName}`, {
                 method: 'POST',
                 headers: { 'apikey': API_KEY, 'Authorization': 'Bearer '+API_KEY },
@@ -1903,6 +1904,9 @@ src="https://www.facebook.com/tr?id=854979317627172&ev=PageView&noscript=1"
             
             if(res.ok) {
                 uploadedUrls.push(`https://miwvdhwrmxoetszkxlzy.supabase.co/storage/v1/object/public/ems-documents/${fileName}`);
+            } else {
+                console.error("Upload failed for", file.name, await res.text());
+                alert(`Xəta: ${file.name} yüklənə bilmədi.`);
             }
         }
         

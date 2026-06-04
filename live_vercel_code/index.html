@@ -3763,9 +3763,11 @@
             if (res.ok) {
               const data = await res.json();
               if (data.length > 0) {
-                container.innerHTML = data.map(item => `
+                container.innerHTML = data.map(item => {
+                  const firstImg = item.payload.img ? item.payload.img.split(',')[0].trim() : '';
+                  return `
                   <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; overflow: hidden; backdrop-filter: blur(10px); display: flex; flex-direction: column;">
-                    <img src="${item.payload.img}" style="width: 100%; height: 220px; object-fit: cover;" alt="${item.payload.title}">
+                    <img src="${firstImg}" style="width: 100%; height: 220px; object-fit: cover;" alt="${item.payload.title}">
                     <div style="padding: 25px; flex: 1; display: flex; flex-direction: column;">
                       <span style="font-size: 0.8rem; color: #fca5a5; font-weight: 700; margin-bottom: 10px;">${item.payload.date}</span>
                       <h3 style="font-size: 1.3rem; color: white; font-weight: 700; margin-bottom: 15px;">${item.payload.title}</h3>
@@ -3773,7 +3775,7 @@
                       <button onclick="window.location.href='news.html'" style="margin-top: auto; align-self: flex-start; background: rgba(255,255,255,0.1); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.3s;">Ətraflı Oxu <i class="fas fa-arrow-right" style="margin-left: 5px;"></i></button>
                     </div>
                   </div>
-                `).join('');
+                `}).join('');
               }
             }
           } catch(e) { console.error(e); }
