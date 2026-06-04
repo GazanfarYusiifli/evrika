@@ -868,7 +868,7 @@ const translations = {
     "ach-card-title": "Evrika Uğurları",
     "ach-modal-badge": "FƏXRİMİZ",
     "ach-modal-info": "MƏLUMAT",
-    "news-eyebrow": "YENİLİKLƏR",
+    "news-eyebrow": "XƏBƏRLƏR",
     "news-title": "Xəbərlər",
     "news-desc": "Ən son yeniliklər, layihələr və xəbərlərimizlə tanış olun. Təhsil mühitimizdə baş verən ən son hadisələr.",
     "news-loading": "Xəbərlər yüklənir...",

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Kod Yoxlanışı</title>
+    <meta name="description" content="Evrika – gələcəyin liderlərini yetişdirən müasir təhsil ekosistemi.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background: #070d1f; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; text-align: center; }
+        .card { background: rgba(255,255,255,0.03); padding: 40px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.1); max-width: 400px; width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.4); animation: fadeIn 0.5s; }
+        .icon { font-size: 4rem; margin-bottom: 20px; }
+        .success .icon { color: #10b981; }
+        .error .icon { color: #ef4444; }
+        h1 { font-weight: 900; margin-bottom: 10px; font-size: 1.5rem; }
+        p { color: rgba(255,255,255,0.6); font-size: 1rem; line-height: 1.5; margin-bottom: 30px; }
+        .btn { display: inline-block; padding: 12px 25px; border-radius: 12px; background: white; color: #070d1f; font-weight: 800; text-decoration: none; transition: 0.3s; }
+        .btn:hover { transform: scale(1.05); }
+        .loader { border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid white; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+<div class="card" id="status-card">
+    <div class="loader" id="loader"></div>
+    <h1 id="title">Yoxlanılır...</h1>
+    <p id="message">Zəhmət olmasa gözləyin, sistem yoxlanış edir.</p>
+</div>
+
+<script>
+    const API_URL = 'https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1';
+    const API_KEY = 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV';
+    const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+
+    async function verifyTicket() {
+        if(!id) {
+            showError("Keçərsiz QR Kod", "Bu QR kodun tərkibində düzgün məlumat tapılmadı.");
+            return;
+        }
+
+        // Local device lock for immediate feedback
+        if(localStorage.getItem('scanned_' + id)) {
+            showError("İSTİFADƏ EDİLİB", "Bu QR Kod artıq istifadə edilib (Cihaz Yaddaşı).");
+            return;
+        }
+
+        try {
+            // Fetch registration (no cache)
+            const res = await fetch(`${API_URL}/registrations?id=eq.${id}`, { headers: HEADERS, cache: 'no-store' });
+            if(!res.ok) throw new Error("Məlumatı yükləmək mümkün olmadı");
+            const data = await res.json();
+
+            if(data.length === 0) {
+                showError("Tapılmadı", "Sistemdə belə bir imtahan iştirakçısı yoxdur.");
+                return;
+            }
+
+            let payload = data[0].payload;
+            
+            // Check if already scanned in the global log
+            const logRes = await fetch(`${API_URL}/registrations?payload->>is_scan_log=eq.true&payload->>scanned_id=eq.${id}`, { headers: HEADERS, cache: 'no-store' });
+            const logData = await logRes.json();
+
+            if(logData.length > 0) {
+                showError("İSTİFADƏ EDİLİB", "Bu QR Kod artıq sistemdə istifadə edilib.");
+                return;
+            }
+
+            // Insert a new scan log since PATCH is restricted by RLS
+            const insertRes = await fetch(`${API_URL}/registrations`, {
+                method: 'POST',
+                headers: HEADERS,
+                body: JSON.stringify({ payload: { is_scan_log: true, scanned_id: id, scanned_at: new Date().toISOString() } })
+            });
+
+            if(!insertRes.ok) throw new Error("Sistemə yazmaq mümkün olmadı");
+            
+            // Mark as scanned locally
+            localStorage.setItem('scanned_' + id, 'true');
+            
+            showSuccess("TƏSDİQLƏNDİ", `${payload.fullName || 'İştirakçı'} üçün giriş təsdiqləndi! Xoş gəlmisiniz.`);
+
+        } catch(e) {
+            showError("Xəta", "Sistemdə problem yarandı: " + e.message);
+        }
+    }
+
+    function showError(title, message) {
+        const card = document.getElementById('status-card');
+        card.className = "card error";
+        card.innerHTML = `
+            <div class="icon"><i class="fas fa-times-circle"></i></div>
+            <h1>${title}</h1>
+            <p>${message}</p>
+        `;
+    }
+
+    function showSuccess(title, message) {
+        const card = document.getElementById('status-card');
+        card.className = "card success";
+        card.innerHTML = `
+            <div class="icon"><i class="fas fa-check-circle"></i></div>
+            <h1>${title}</h1>
+            <p>${message}</p>
+        `;
+    }
+
+    // Run verification
+    verifyTicket();
+</script>
+
+</body>
+</html>
