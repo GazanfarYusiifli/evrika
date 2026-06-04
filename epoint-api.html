@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Epoint.az API Sənədləşməsi v1.0.3</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #0d1117;
+      --bg2: #161b22;
+      --bg3: #21262d;
+      --border: #30363d;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --accent: #1f6feb;
+      --accent-light: #388bfd;
+      --accent-glow: rgba(31,111,235,0.15);
+      --green: #3fb950;
+      --orange: #d29922;
+      --red: #f85149;
+      --purple: #bc8cff;
+      --cyan: #79c0ff;
+      --code-bg: #0d1117;
+      --sidebar-w: 280px;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      position: fixed; top:0; left:0; right:0; z-index:100;
+      height: 60px;
+      background: rgba(13,17,23,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; padding: 0 24px;
+      gap: 16px;
+    }
+    .topbar-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 800; font-size: 1.15rem; color: var(--text);
+      text-decoration: none;
+    }
+    .topbar-logo span { color: var(--accent-light); }
+    .topbar-badge {
+      background: var(--accent-glow);
+      border: 1px solid var(--accent);
+      color: var(--accent-light);
+      font-size: 0.72rem; font-weight: 600;
+      padding: 2px 8px; border-radius: 20px;
+    }
+    .topbar-right { margin-left: auto; display:flex; gap:12px; align-items:center; }
+    .topbar-btn {
+      background: var(--accent); color:#fff;
+      padding: 7px 16px; border-radius: 8px;
+      font-size: 0.82rem; font-weight: 600;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: 0.2s; display:flex; align-items:center; gap:6px;
+    }
+    .topbar-btn:hover { background: var(--accent-light); }
+    .menu-toggle {
+      display: none; background: none; border: none;
+      color: var(--text); font-size: 1.3rem; cursor: pointer;
+    }
+
+    /* ── LAYOUT ── */
+    .layout {
+      display: flex;
+      padding-top: 60px;
+      min-height: 100vh;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      position: fixed; top: 60px; left: 0; bottom: 0;
+      overflow-y: auto; overflow-x: hidden;
+      background: var(--bg2);
+      border-right: 1px solid var(--border);
+      padding: 20px 0;
+      z-index: 90;
+      transition: transform 0.3s;
+    }
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .sidebar-section-label {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-muted);
+      padding: 14px 20px 6px;
+    }
+    .sidebar a {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 20px 7px 20px;
+      color: var(--text-muted); text-decoration: none;
+      font-size: 0.83rem; font-weight: 500;
+      border-left: 2px solid transparent;
+      transition: all 0.15s;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .sidebar a:hover { color: var(--text); background: var(--bg3); }
+    .sidebar a.active { color: var(--accent-light); border-left-color: var(--accent-light); background: var(--accent-glow); }
+    .sidebar a i { font-size: 0.75rem; width: 14px; text-align:center; flex-shrink:0; }
+
+    /* ── MAIN CONTENT ── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      max-width: calc(100% - var(--sidebar-w));
+      padding: 48px 56px;
+    }
+
+    /* ── HERO ── */
+    .doc-hero {
+      background: linear-gradient(135deg, rgba(31,111,235,0.12) 0%, rgba(56,139,253,0.06) 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 48px 48px;
+      margin-bottom: 48px;
+      position: relative; overflow: hidden;
+    }
+    .doc-hero::before {
+      content: '';
+      position: absolute; top:-60px; right:-60px;
+      width: 280px; height: 280px;
+      background: radial-gradient(circle, rgba(31,111,235,0.2) 0%, transparent 70%);
+    }
+    .doc-hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--accent-glow); border: 1px solid var(--accent);
+      color: var(--accent-light); font-size: 0.78rem; font-weight: 600;
+      padding: 5px 12px; border-radius: 20px; margin-bottom: 16px;
+    }
+    .doc-hero h1 {
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 800; color: var(--text);
+      margin-bottom: 12px; line-height: 1.2;
+    }
+    .doc-hero h1 span { color: var(--accent-light); }
+    .doc-hero p { color: var(--text-muted); font-size: 1rem; max-width: 600px; }
+    .hero-meta {
+      display: flex; gap: 20px; margin-top: 20px; flex-wrap: wrap;
+    }
+    .hero-meta-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.82rem; color: var(--text-muted);
+    }
+    .hero-meta-item i { color: var(--accent-light); }
+
+    /* ── SECTIONS ── */
+    .doc-section {
+      margin-bottom: 64px;
+      scroll-margin-top: 80px;
+    }
+    .section-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 24px; padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: var(--accent-glow); border: 1px solid var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.95rem; color: var(--accent-light); flex-shrink: 0;
+    }
+    .section-header h2 {
+      font-size: 1.35rem; font-weight: 700; color: var(--text);
+    }
+    .section-header .section-tag {
+      margin-left: auto;
+      font-size: 0.7rem; font-weight: 700;
+      padding: 3px 10px; border-radius: 20px;
+      background: rgba(63,185,80,0.12); color: var(--green);
+      border: 1px solid rgba(63,185,80,0.3);
+    }
+
+    /* Sub-section */
+    .doc-subsection {
+      margin-bottom: 40px;
+      scroll-margin-top: 80px;
+    }
+    .doc-subsection h3 {
+      font-size: 1.05rem; font-weight: 700;
+      color: var(--text); margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .doc-subsection h3::before {
+      content: '';
+      width: 3px; height: 16px;
+      background: var(--accent-light);
+      border-radius: 2px; flex-shrink:0;
+    }
+
+    /* ── ENDPOINT CHIP ── */
+    .endpoint {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 16px;
+      margin: 8px 0 18px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--cyan);
+      flex-wrap: wrap;
+    }
+    .method-badge {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.05em;
+      padding: 3px 8px; border-radius: 5px;
+      flex-shrink: 0;
+    }
+    .method-post { background: rgba(63,185,80,0.15); color: var(--green); border: 1px solid rgba(63,185,80,0.3); }
+    .method-get { background: rgba(56,139,253,0.15); color: var(--accent-light); border: 1px solid rgba(56,139,253,0.3); }
+
+    /* ── PARAM TABLE ── */
+    .param-table {
+      width: 100%; border-collapse: collapse;
+      margin: 16px 0 28px;
+      font-size: 0.85rem;
+    }
+    .param-table thead tr {
+      background: var(--bg3);
+      border-bottom: 2px solid var(--border);
+    }
+    .param-table th {
+      padding: 10px 16px; text-align: left;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .param-table td {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .param-table tbody tr:hover td { background: var(--bg3); }
+    .param-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem; color: var(--cyan); font-weight: 500;
+    }
+    .param-req {
+      display: inline-block;
+      font-size: 0.66rem; font-weight: 700;
+      padding: 2px 7px; border-radius: 4px;
+    }
+    .req-required { background: rgba(248,81,73,0.12); color: var(--red); border: 1px solid rgba(248,81,73,0.3); }
+    .req-optional { background: rgba(139,148,158,0.1); color: var(--text-muted); border: 1px solid var(--border); }
+    .type-badge {
+      display: inline-block;
+      font-size: 0.7rem; font-weight: 600;
+      padding: 2px 7px; border-radius: 4px;
+      background: rgba(188,140,255,0.1); color: var(--purple);
+      border: 1px solid rgba(188,140,255,0.25);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── CODE BLOCK ── */
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin: 12px 0 24px;
+      overflow: hidden;
+    }
+    .code-block-header {
+      display: flex; align-items: center;
+      padding: 10px 16px;
+      background: var(--bg3);
+      border-bottom: 1px solid var(--border);
+      gap: 8px;
+    }
+    .code-lang {
+      font-size: 0.72rem; font-weight: 700;
+      color: var(--text-muted); text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .copy-btn {
+      margin-left: auto;
+      background: none; border: 1px solid var(--border);
+      color: var(--text-muted); font-size: 0.72rem; font-weight: 600;
+      padding: 4px 10px; border-radius: 5px;
+      cursor: pointer; transition: 0.15s; display:flex; align-items:center; gap:5px;
+    }
+    .copy-btn:hover { background: var(--bg2); color: var(--text); }
+    .code-block pre {
+      padding: 20px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.83rem;
+      line-height: 1.7;
+      color: var(--text);
+    }
+    .code-block pre::-webkit-scrollbar { height: 4px; }
+    .code-block pre::-webkit-scrollbar-track { background: transparent; }
+    .code-block pre::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    /* Syntax colors */
+    .kw { color: #ff7b72; }
+    .str { color: #a5d6ff; }
+    .var { color: #ffa657; }
+    .fn { color: #d2a8ff; }
+    .cmt { color: #8b949e; font-style: italic; }
+    .num { color: #79c0ff; }
+    .key { color: var(--cyan); }
+
+    /* ── CALLOUT ── */
+    .callout {
+      display: flex; gap: 14px;
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin: 16px 0 24px;
+      font-size: 0.87rem;
+    }
+    .callout.info { background: rgba(31,111,235,0.08); border: 1px solid rgba(31,111,235,0.25); }
+    .callout.warn { background: rgba(210,153,34,0.08); border: 1px solid rgba(210,153,34,0.25); }
+    .callout.tip { background: rgba(63,185,80,0.08); border: 1px solid rgba(63,185,80,0.25); }
+    .callout i { flex-shrink:0; margin-top:2px; }
+    .callout.info i { color: var(--accent-light); }
+    .callout.warn i { color: var(--orange); }
+    .callout.tip i { color: var(--green); }
+    .callout p { color: var(--text-muted); line-height: 1.6; }
+    .callout strong { color: var(--text); }
+
+    /* ── STATUS BADGES ── */
+    .status-list { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0 24px; }
+    .status-badge {
+      display: inline-flex; align-items:center; gap:7px;
+      padding: 7px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 600;
+    }
+    .status-new { background: rgba(56,139,253,0.1); color: var(--accent-light); border: 1px solid rgba(56,139,253,0.25); }
+    .status-success { background: rgba(63,185,80,0.1); color: var(--green); border: 1px solid rgba(63,185,80,0.25); }
+    .status-returned { background: rgba(188,140,255,0.1); color: var(--purple); border: 1px solid rgba(188,140,255,0.25); }
+    .status-error { background: rgba(248,81,73,0.1); color: var(--red); border: 1px solid rgba(248,81,73,0.25); }
+    .status-server { background: rgba(210,153,34,0.1); color: var(--orange); border: 1px solid rgba(210,153,34,0.25); }
+
+    /* ── BANK CODES TABLE ── */
+    .bank-table { width:100%; border-collapse: collapse; font-size:0.83rem; }
+    .bank-table th { padding:10px 14px; text-align:left; background: var(--bg3); color:var(--text-muted); font-size:0.7rem; text-transform:uppercase; letter-spacing:0.07em; border-bottom: 2px solid var(--border); }
+    .bank-table td { padding:9px 14px; border-bottom: 1px solid var(--border); }
+    .bank-table tbody tr:hover td { background: var(--bg3); }
+    .code-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700; font-size: 0.85rem;
+    }
+    .code-000 { color: var(--green); }
+    .code-1xx { color: var(--red); }
+    .code-2xx { color: var(--orange); }
+    .code-3xx { color: var(--purple); }
+
+    /* ── TOC ── */
+    .toc-card {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+      padding: 24px; margin-bottom: 48px;
+    }
+    .toc-card h3 { font-size:0.88rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:16px; }
+    .toc-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap:8px; }
+    .toc-item {
+      display:flex; align-items:center; gap:8px;
+      padding: 8px 12px; border-radius: 8px;
+      text-decoration:none; color: var(--text-muted);
+      font-size: 0.82rem; font-weight: 500;
+      transition: 0.15s; border: 1px solid transparent;
+    }
+    .toc-item:hover { background: var(--bg3); color: var(--text); border-color: var(--border); }
+    .toc-item i { color: var(--accent-light); font-size:0.78rem; width:14px; text-align:center; }
+    .toc-item .toc-pg { margin-left:auto; font-size:0.7rem; color:var(--border); }
+
+    /* ── SCHEMA FLOW ── */
+    .flow-diagram {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+      padding: 28px 24px; margin: 16px 0 28px;
+      display: flex; align-items: center; justify-content: center;
+      flex-wrap: wrap; gap: 8px;
+    }
+    .flow-node {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 10px; padding: 10px 18px;
+      font-size: 0.82rem; font-weight: 600; color: var(--text);
+      text-align: center;
+    }
+    .flow-node.accent { background: var(--accent-glow); border-color: var(--accent); color: var(--accent-light); }
+    .flow-arrow { color: var(--text-muted); font-size: 1rem; }
+
+    /* ── INLINE CODE ── */
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.83em;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 6px;
+      color: var(--cyan);
+    }
+
+    p { margin-bottom: 14px; color: var(--text-muted); }
+    p strong { color: var(--text); }
+
+    ul { padding-left: 20px; margin-bottom: 16px; color: var(--text-muted); }
+    ul li { margin-bottom: 6px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      :root { --sidebar-w: 0px; }
+      .sidebar { transform: translateX(-280px); width: 280px; }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; max-width: 100%; padding: 32px 20px; }
+      .menu-toggle { display: block; }
+      .topbar { padding: 0 16px; }
+    }
+    @media (max-width: 600px) {
+      .doc-hero { padding: 28px 20px; }
+      .main { padding: 24px 16px; }
+      .toc-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Overlay */
+    .sidebar-overlay {
+      display:none; position:fixed; inset:0; z-index:89;
+      background: rgba(0,0,0,0.5);
+    }
+    .sidebar-overlay.open { display:block; }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+  <a href="#" class="topbar-logo">
+    <i class="fas fa-bolt" style="color:var(--accent-light)"></i>
+    <span>Epoint</span>.az
+  </a>
+  <span class="topbar-badge">API v1.0.3</span>
+  <div class="topbar-right">
+    <a href="https://epoint.az" target="_blank" class="topbar-btn">
+      <i class="fas fa-external-link-alt"></i> Epoint.az
+    </a>
+  </div>
+</header>
+
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section-label">Başlanğıc</div>
+    <a href="#intro" id="link-intro"><i class="fas fa-home"></i> Giriş</a>
+    <a href="#toc" id="link-toc"><i class="fas fa-list"></i> Mündəricat</a>
+    <a href="#architecture" id="link-architecture"><i class="fas fa-sitemap"></i> Sistem Arxitekturası</a>
+    <a href="#form-request" id="link-form-request"><i class="fas fa-code"></i> Sorğunun Formalaşdırılması</a>
+
+    <div class="sidebar-section-label">Əsas Metodlar</div>
+    <a href="#data-signature" id="link-data-signature"><i class="fas fa-key"></i> Data & Signature</a>
+    <a href="#send-request" id="link-send-request"><i class="fas fa-paper-plane"></i> Sorğunun Göndərilməsi</a>
+    <a href="#callback" id="link-callback"><i class="fas fa-reply"></i> Callback Funksiyası</a>
+    <a href="#check-status" id="link-check-status"><i class="fas fa-search"></i> Ödəniş Statusu</a>
+
+    <div class="sidebar-section-label">Kart Əməliyyatları</div>
+    <a href="#card-reg" id="link-card-reg"><i class="fas fa-credit-card"></i> Kartın Yadda Saxlanılması</a>
+    <a href="#saved-card-pay" id="link-saved-card-pay"><i class="fas fa-wallet"></i> Saxlanılan Kartla Ödəniş</a>
+    <a href="#card-reg-with-pay" id="link-card-reg-with-pay"><i class="fas fa-plus-circle"></i> Kart Qeydiyyatı + Ödəniş</a>
+
+    <div class="sidebar-section-label">Digər Əməliyyatlar</div>
+    <a href="#refund" id="link-refund"><i class="fas fa-undo"></i> Vəsait Köçürülməsi</a>
+    <a href="#reverse" id="link-reverse"><i class="fas fa-ban"></i> Əməliyyat Ləğvi</a>
+    <a href="#split" id="link-split"><i class="fas fa-code-branch"></i> Bölünmüş Ödəniş</a>
+    <a href="#split-exec" id="link-split-exec"><i class="fas fa-random"></i> Bölünmüş Saxlanılan Kart</a>
+    <a href="#split-reg-pay" id="link-split-reg-pay"><i class="fas fa-layer-group"></i> Bölünmüş Kart + Ödəniş</a>
+
+    <div class="sidebar-section-label">Preauth & Digər</div>
+    <a href="#preauth" id="link-preauth"><i class="fas fa-shield-alt"></i> Preauth Sorğusu</a>
+    <a href="#applepay" id="link-applepay"><i class="fab fa-apple-pay"></i> Apple Pay & Google Pay</a>
+    <a href="#wallets" id="link-wallets"><i class="fas fa-coins"></i> Cüzdanlar</a>
+    <a href="#invoices" id="link-invoices"><i class="fas fa-file-invoice"></i> Hesab-fakturalar</a>
+    <a href="#heartbeat" id="link-heartbeat"><i class="fas fa-heartbeat"></i> Heartbeat API</a>
+    <a href="#bank-codes" id="link-bank-codes"><i class="fas fa-university"></i> Bank Cavab Kodları</a>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- HERO -->
+    <div class="doc-hero" id="intro">
+      <div class="doc-hero-badge"><i class="fas fa-bolt"></i> Rəsmi API Sənədləşməsi</div>
+      <h1>Epoint.az <span>Ödəniş API</span></h1>
+      <p>Saytınıza və mobil tətbiqinizə sürətli, etibarlı onlayn ödəniş həlli inteqrasiya edin. Versiya 1.0.3.</p>
+      <div class="hero-meta">
+        <div class="hero-meta-item"><i class="fas fa-code-branch"></i> v1.0.3</div>
+        <div class="hero-meta-item"><i class="fas fa-globe"></i> epoint.az/api/1/</div>
+        <div class="hero-meta-item"><i class="fas fa-lock"></i> HTTPS / POST</div>
+        <div class="hero-meta-item"><i class="fas fa-language"></i> AZ, EN, RU</div>
+      </div>
+    </div>
+
+    <!-- TOC -->
+    <div class="toc-card" id="toc">
+      <h3><i class="fas fa-list" style="margin-right:8px; color:var(--accent-light)"></i>Mündəricat</h3>
+      <div class="toc-grid">
+        <a href="#architecture" class="toc-item"><i class="fas fa-sitemap"></i> Sistem Arxitekturası <span class="toc-pg">Səh.3</span></a>
+        <a href="#form-request" class="toc-item"><i class="fas fa-code"></i> API Sorğusunun Formalaşdırılması <span class="toc-pg">Səh.5</span></a>
+        <a href="#data-signature" class="toc-item"><i class="fas fa-key"></i> Data & Signature <span class="toc-pg">Səh.5</span></a>
+        <a href="#send-request" class="toc-item"><i class="fas fa-paper-plane"></i> Sorğunun Göndərilməsi <span class="toc-pg">Səh.6</span></a>
+        <a href="#callback" class="toc-item"><i class="fas fa-reply"></i> Callback Funksiyası <span class="toc-pg">Səh.7</span></a>
+        <a href="#check-status" class="toc-item"><i class="fas fa-search"></i> Ödəniş Statusunun Yoxlanılması <span class="toc-pg">Səh.8</span></a>
+        <a href="#card-reg" class="toc-item"><i class="fas fa-credit-card"></i> Kartın Yadda Saxlanılması <span class="toc-pg">Səh.11</span></a>
+        <a href="#saved-card-pay" class="toc-item"><i class="fas fa-wallet"></i> Saxlanılan Kartla Ödəniş <span class="toc-pg">Səh.13</span></a>
+        <a href="#card-reg-with-pay" class="toc-item"><i class="fas fa-plus-circle"></i> Kart + Ödəniş Sorğusu <span class="toc-pg">Səh.14</span></a>
+        <a href="#refund" class="toc-item"><i class="fas fa-undo"></i> Vəsait Köçürülməsi <span class="toc-pg">Səh.16</span></a>
+        <a href="#reverse" class="toc-item"><i class="fas fa-ban"></i> Əməliyyat Ləğvi <span class="toc-pg">Səh.17</span></a>
+        <a href="#split" class="toc-item"><i class="fas fa-code-branch"></i> Bölünmüş Ödəniş <span class="toc-pg">Səh.18</span></a>
+        <a href="#preauth" class="toc-item"><i class="fas fa-shield-alt"></i> Preauth Sorğusu <span class="toc-pg">Səh.23</span></a>
+        <a href="#applepay" class="toc-item"><i class="fab fa-apple-pay"></i> Apple Pay & Google Pay <span class="toc-pg">Səh.27</span></a>
+        <a href="#wallets" class="toc-item"><i class="fas fa-coins"></i> Cüzdanlar <span class="toc-pg">Səh.30</span></a>
+        <a href="#invoices" class="toc-item"><i class="fas fa-file-invoice"></i> Hesab-fakturalar <span class="toc-pg">Səh.34</span></a>
+        <a href="#heartbeat" class="toc-item"><i class="fas fa-heartbeat"></i> Heartbeat API <span class="toc-pg">Səh.37</span></a>
+        <a href="#bank-codes" class="toc-item"><i class="fas fa-university"></i> Bank Cavab Kodları <span class="toc-pg">Səh.38</span></a>
+      </div>
+    </div>
+
+    <!-- ── SECTION: ARCHITECTURE ── -->
+    <div class="doc-section" id="architecture">
+      <div class="section-header">
+        <div class="section-icon"><i class="fas fa-sitemap"></i></div>
+        <h2>Epoint Ödəniş Sisteminin İşləmə Prinsipi</h2>
+        <span class="section-tag">Giriş</span>
+      </div>
+
+      <p>Epoint sistemi ödəniş qəbulunu saytınıza və tətbiqinizə bağlamağa imkan verir. Ödəniş düyməsini saytınıza əlavə etmək üçün Epoint.az saytındaki şəxsi kabinetinizdə öz saytınızın redirect URL-lərini əlavə etməlisiniz.</p>
+
+      <div class="flow-diagram">
+        <div class="flow-node">Client</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node accent">Your App</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node accent">Epoint</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">Bank Service</div>
+        <div class="flow-arrow">/</div>
+        <div class="flow-node">Bank</div>
+      </div>
+
+      <div class="doc-subsection">
+        <h3>Tacir Yaratmaq üçün Tələb Olunan Məlumatlar</h3>
+        <p>Epoint.az saytında tacir yaratmaq üçün bizə aşağıdakı məlumatları təqdim etməlisiniz:</p>
+        <ul>
+          <li>Saytınızın ünvanı</li>
+          <li>Uğurlu ödəniş səhifəsinin URL-i (<code>success_url</code>)</li>
+          <li>Uğursuz ödəniş səhifəsinin URL-i (<code>error_url</code>)</li>
+          <li>Ödəniş nəticəsini göndərmək üçün URL (<code>result_url</code>)</li>
+        </ul>
+        <div class="callout info">
+          <i class="fas fa-info-circle"></i>
+          <p>Bu məlumatlar yoxladıqdan sonra sizə giriş açarları veriləcək: <strong>public_key</strong> (sistemdəki tacir identifikatoru) və <strong>private_key</strong> (API giriş açarı).</p>
+        </div>
+      </div>
+
+      <div class="doc-subsection">
+        <h3>Ödəniş Axını</h3>
+        <ol style="padding-left:20px; color:var(--text-muted); margin-bottom:16px;">
+          <li style="margin-bottom:8px;">Sorğunun yerinə yetirilməsi nəticəsində müştəri bankın ödəniş səhifəsinə yönəldiləcək.</li>
+          <li style="margin-bottom:8px;">Müştəri kart rekvizitlərini doldurur və ödənişi təsdiqləyir.</li>
+          <li style="margin-bottom:8px;">Uğurlu ödənişdə müştəri <code>success_url</code>-ə, əks halda <code>error_url</code>-ə yönləndirilir.</li>
+          <li style="margin-bottom:8px;">Ödənişin təfərrüatları sizin qeyd etdiyiniz <code>result_url</code>-ə göndəriləcək.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- ── SECTION: FORM REQUEST ── -->
+    <div class="doc-section" id="form-request">
+      <div class="section-header">
+        <div class="section-icon"><i class="fas fa-code"></i></div>
+        <h2>API Sorğusunun Formalaşdırılması</h2>
+      </div>
+      <p>Sorğunu formalaşdırmaq üçün <code>data</code> və <code>signature</code> parametrlərini POST metodu ilə aşağıdakı ünvanlara göndərin:</p>
+      <div class="endpoint"><span class="method-badge method-post">POST</span> https://epoint.az/api/1/request</div>
+      <p>Müştərini isə bu ünvana yönəldin:</p>
+      <div class="endpoint"><span class="method-badge method-get">GET</span> https://epoint.az/api/1/checkout</div>
+
+      <div class="doc-subsection">
+        <h3>Parametrlərin İzahı</h3>
+        <ul>
+          <li><strong>data</strong> — <code>base64_encode(json_string)</code> funksiyası ilə kodlaşdırılmış API parametrlərini özündə birləşdirən json sətridir.</li>
+          <li><strong>signature</strong> — <code>base64_encode(sha1(private_key + data + private_key, 1))</code> — hər sorğunun unikal yazısıdır.</li>
+          <li><strong>base64_encode</strong> — MIME base64 formatında kodlaşdırılmış sətir qaytarır.</li>
+          <li><strong>sha1</strong> — 20 simvoldan ibarət hash sətri qaytarır.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ── SECTION: DATA & SIGNATURE ── -->
+    <div class="doc-section" id="data-signature">
+      <div class="section-header">
+        <div class="section-icon"><i class="fas fa-key"></i></div>
+        <h2>Data və Signature Formalaşdırılması</h2>
+      </div>
+
+      <table class="param-table">
+        <thead><tr><th>Parameter</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="param-name">public_key</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td class="desc">Tacirin identifikatoru. Məs: <code>1000000001</code></td></tr>
+          <tr><td class="param-name">amount</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">Number</span></td><td class="desc">Ödəniş məbləği. Məs: <code>100</code>, <code>20.50</code></td></tr>
+          <tr><td class="param-name">currency</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td class="desc">Ödəniş valyutası. Mümkün: <code>AZN</code></td></tr>
+          <tr><td class="param-name">language</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td class="desc">Dil. Mümkün: <code>az</code>, <code>en</code>, <code>ru</code></td></tr>
+          <tr><td class="param-name">order_id</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td class="desc">Unikal əməliyyat ID. Maks. 255 simvol.</td></tr>
+          <tr><td class="param-name">description</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td class="desc">Ödənişin təsviri. Maks. 1000 simvol.</td></tr>
+          <tr><td class="param-name">is_installment</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">Number</span></td><td class="desc"><code>1</code> — taksit, <code>0</code> — standart ödəniş</td></tr>
+          <tr><td class="param-name">success_redirect_url</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td class="desc">Uğurlu ödənişdə yönləndirmə URL-i</td></tr>
+          <tr><td class="param-name">error_redirect_url</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td class="desc">Uğursuz ödənişdə yönləndirmə URL-i</td></tr>
+          <tr><td class="param-name">other_attr</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">Array</span></td><td class="desc">Əlavə ödəmə parametrləri</td></tr>
+        </tbody>
+      </table>
+
+      <div class="doc-subsection">
+        <h3>Nümunə: JSON → Data → Signature</h3>
+        <div class="code-block">
+          <div class="code-block-header"><span class="code-lang">JSON</span><button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Kopyala</button></div>
+          <pre><span class="str">{"public_key":"1000000001", "amount":"30.75", "currency": "AZN", "description":"test payment", "order_id":"1"}</span></pre>
+        </div>
+        <div class="code-block">
+          <div class="code-block-header"><span class="code-lang">BASE64 → data</span><button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Kopyala</button></div>
+          <pre><span class="var">data</span> = <span class="str">eyJwdWJsaWNfa2V5IjoiaTAwMDAwMDAwMSIsImFtb3VudCI6IjMwLjc1IiwiY3VycmVuY3ki0iJBWk4iLCJkZXNjcmlwdGlvbiI6InRlc3QgcGF5bWVudCIsIm9yZGVyX2lkIjoiMSJ9</span></pre>
+        </div>
+        <div class="code-block">
+          <div class="code-block-header"><span class="code-lang">Signature</span><button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Kopyala</button></div>
+          <pre><span class="cmt">// sgn_string = private_key + data + private_key</span>
+<span class="var">sgn_string</span> = <span class="str">d3hjs138sd8kdfhb...{data}...fb092d</span>
+
+<span class="var">signature</span> = <span class="fn">base64_encode</span>(<span class="fn">sha1</span>(sgn_string, <span class="num">1</span>))
+<span class="cmt">// Nəticə: a76GNudqb1ZtV8qF199hctA+cG0=</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION: SEND REQUEST ── -->
+    <div class="doc-section" id="send-request">
+      <div class="section-header">
+        <div class="section-icon"><i class="fas fa-paper-plane"></i></div>
+        <h2>Sorğunun Göndərilməsi</h2>
+      </div>
+
+      <div class="doc-subsection">
+        <h3>HTML Form Metodu</h3>
+        <div class="code-block">
+          <div class="code-block-header"><span class="code-lang">HTML</span><button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Kopyala</button></div>
+          <pre><span class="kw">&lt;form</span> <span class="var">method</span>=<span class="str">"POST"</span> <span class="var">action</span>=<span class="str">"https://epoint.az/api/1/checkout"</span> <span class="var">accept-charset</span>=<span class="str">"utf-8"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;input</span> <span class="var">type</span>=<span class="str">"hidden"</span> <span class="var">name</span>=<span class="str">"data"</span> <span class="var">value</span>=<span class="str">"eyJwdW..."</span><span class="kw">/&gt;</span>
+  <span class="kw">&lt;input</span> <span class="var">type</span>=<span class="str">"hidden"</span> <span class="var">name</span>=<span class="str">"signature"</span> <span class="var">value</span>=<span class="str">"a76GNu..."</span><span class="kw">/&gt;</span>
+<span class="kw">&lt;/form&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="doc-subsection">
+        <h3>PHP cURL Metodu</h3>
+        <div class="code-block">
+          <div class="code-block-header"><span class="code-lang">PHP</span><button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Kopyala</button></div>
+          <pre><span class="var">$postfields</span> = <span class="fn">http_build_query</span>([
+    <span class="str">'data'</span>      => <span class="var">$data</span>,
+    <span class="str">'signature'</span> => <span class="var">$signature</span>
+]);
+
+<span class="var">$ch</span> = <span class="fn">curl_init</span>();
+<span class="fn">curl_setopt</span>(<span class="var">$ch</span>, CURLOPT_URL, <span class="var">$url</span>);
+<span class="fn">curl_setopt</span>(<span class="var">$ch</span>, CURLOPT_POSTFIELDS, <span class="var">$postfields</span>);
+<span class="var">$server_output</span> = <span class="fn">curl_exec</span>(<span class="var">$ch</span>);</pre>
+        </div>
+      </div>
+      <div class="callout info">
+        <i class="fas fa-info-circle"></i>
+        <p>Cavab olaraq <strong>status</strong> (success/error), <strong>transaction</strong> və kart məlumatlarını daxil etmək üçün <strong>redirect_url</strong> dəyərindən ibarət JSON sətri qaytarılacaq.</p>
+      </div>
+    </div>
+
+    <!-- ── SECTION: CALLBACK ── -->
+    <div class="doc-section" id="callback">
+      <div class="section-header">
+        <div class="section-icon"><i class="fas fa-reply"></i></div>
+        <h2>Callback Funksiyasının İcra Edilməsi</h2>
+      </div>
+      <p>Əməliyyat Epoint tərəfindən işləndikdən sonra <code>data</code> və <code>signature</code> parametrləri ilə POST sorğusu serverinizə (<code>result_url</code>) göndəriləcəkdir.</p>
+
+      <div class="doc-subsection">
+        <h3>Sorğunun Həqiqiliyini Yoxlamaq</h3>
+        <div class="code-block">
+          <div class="code-block-header"><span class="code-lang">PHP</span><button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Kopyala</button></div>
+          <pre><span class="cmt">// 1. Epoint-dən alınan data + private_key ilə signature yarat</span>
+<span class="var">$signature</span> = <span class="fn">base64_encode</span>(<span class="fn">sha1</span>(<span class="var">$private_key</span> . <span class="var">$data</span> . <span class="var">$private_key</span>, <span class="num">1</span>));
+
+<span class="cmt">// 2. Alınan signature ilə müqayisə et</span>
+<span class="kw">if</span> (<span class="var">$signature</span> === <span class="var">$received_signature</span>) {
+    <span class="cmt">// Orijinal Epoint cavabı</span>
+}
+
+<span class="cmt">// 3. Data-nı decode et</span>
+<span class="var">$result</span> = <span class="fn">json_decode</span>(<span class="fn">base64_decode</span>(<span class="var">$data</span>));</pre>
+        </div>
+      </div>
+
+      <div class="doc-subsection">
+        <h3>Ödəniş Nəticəsi Parametrləri</h3>
+        <table class="param-table">
+          <thead><tr><th>Parameter</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td class="param-name">order_id</td><td>Tətbiqinizdə unikal əməliyyat ID</td></tr>
+            <tr><td class="param-name">status</td><td>Əməliyyat nəticəsi: <code>success</code> və ya <code>failed</code></td></tr>
+            <tr><td class="param-name">code</td><td>Bankın cavab kodu</td></tr>
+            <tr><td class="param-name">message</td><td>Ödənişin icra statusu haqqında mesaj</td></tr>
+            <tr><td class="param-name">transaction</td><td>Epoint xidmətinin əməliyyatı</td></tr>
+            <tr><td class="param-name">bank_transaction</td><td>Bank ödəniş əməliyyatı</td></tr>
+            <tr><td class="param-name">bank_response</td><td>Bankın cavabı</td></tr>
+            <tr><td class="param-name">operation_code</td><td><code>001</code> — kart qeydiyyatı, <code>100</code> — istifadəçi ödənişi</td></tr>
+            <tr><td class="param-name">rrn</td><td>Retrieval Reference Number — unikal əməliyyat identifikatoru</td></tr>
+            <tr><td class="param-name">card_name</td><td>Ödəniş səhifəsindəki istifadəçi adı</td></tr>
+            <tr><td class="param-name">card_mask</td><td><code>123456******1234</code> formatında kart maskası</td></tr>
+            <tr><td class="param-name">amount</td><td>Ödəniş məbləği</td></tr>
+            <tr><td class="param-name">other_attr</td><td>Əlavə parametrlər</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── SECTION: CHECK STATUS ── -->
+    <div class="doc-section" id="check-status">
+      <div class="section-header">
+        <div class="section-icon"><i class="fas fa-search"></i></div>
+        <h2>Ödəniş Statusunun Yoxlanılması</h2>
+      </div>
+      <div class="endpoint"><span class="method-badge method-post">POST</span> https://epoint.az/api/1/get-status</div>
+
+      <div class="doc-subsection">
+        <h3>Ödəniş Statusları</h3>
+        <div class="status-list">
+          <span class="status-badge status-new"><i class="fas fa-circle"></i> new — Qeydə alınıb</span>
+          <span class="status-badge status-success"><i class="fas fa-check-circle"></i> success — Uğurlu</span>
+          <span class="status-badge status-returned"><i class="fas fa-undo"></i> returned — Geri qaytarılıb</span>
+          <span class="status-badge status-error"><i class="fas fa-times-circle"></i> error — Səhv</span>
+          <span class="status-badge status-server"><i class="fas fa-exclamation-triangle"></i> server_error — Status xətası</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION: CARD REG ── -->
+    <div class="doc-section" id="card-reg">
+      <div class="section-header">
+        <div class="section-icon"><i class="fas fa-credit-card"></i></div>
+        <h2>Kartın Yadda Saxlanılması</h2>
+      </div>
+      <p>Kart məlumatlarını daxil etmədən ödənişləri yerinə yetirmək üçün kartı qeydiyyatdan keçirin.</p>
+      <div class="endpoint"><span class="method-badge method-post">POST</span> https://epoint.az/api/1/card-registration</div>
+      <table class="param-table">
+        <thead><tr><th>Parameter</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="param-name">public_key</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Tacir identifikatoru</td></tr>
+          <tr><td class="param-name">language</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td><code>az</code>, <code>en</code>, <code>ru</code></td></tr>
+          <tr><td class="param-name">refund</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">Number</span></td><td><code>0</code> — ödəniş kartı, <code>1</code> — köçürmə kartı</td></tr>
+          <tr><td class="param-name">description</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Maks. 1000 simvol</td></tr>
+          <tr><td class="param-name">success_redirect_url</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Uğurlu ödənişdə yönləndirmə</td></tr>
+          <tr><td class="param-name">error_redirect_url</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Uğursuz ödənişdə yönləndirmə</td></tr>
+        </tbody>
+      </table>
+      <div class="callout tip">
+        <i class="fas fa-lightbulb"></i>
+        <p>Sorğu cavabında <strong>card_id</strong> — sonrakı ödənişlərdə istifadə olunacaq unikal kart identifikatoru qaytarılır.</p>
+      </div>
+    </div>
+
+    <!-- ── SECTION: SAVED CARD PAY ── -->
+    <div class="doc-section" id="saved-card-pay">
+      <div class="section-header">
+        <div class="section-icon"><i class="fas fa-wallet"></i></div>
+        <h2>Saxlanılan Kartla Ödəniş Sorğusu</h2>
+      </div>
+      <div class="endpoint"><span class="method-badge method-post">POST</span> https://epoint.az/api/1/execute-pay</div>
+      <table class="param-table">
+        <thead><tr><th>Parameter</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="param-name">public_key</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Tacir identifikatoru</td></tr>
+          <tr><td class="param-name">language</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td><code>az</code>, <code>en</code>, <code>ru</code></td></tr>
+          <tr><td class="param-name">card_id</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Saxlanılan kart identifikatoru</td></tr>
+          <tr><td class="param-name">order_id</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Unikal əməliyyat ID. Maks. 255 simvol</td></tr>
+          <tr><td class="param-name">amount</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">Number</span></td><td>Ödəniş məbləği</td></tr>
+          <tr><td class="param-name">currency</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td><code>AZN</code></td></tr>
+          <tr><td class="param-name">description</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Maks. 1000 simvol</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── SECTION: CARD REG WITH PAY ── -->
+    <div class="doc-section" id="card-reg-with-pay">
+      <div class="section-header">
+        <div class="section-icon"><i class="fas fa-plus-circle"></i></div>
+        <h2>İlk Ödənişlə Kart Qeydiyyatı</h2>
+      </div>
+      <p>Bu tip ödənişdə kartın qeydiyyatı ilə birlikdə göstərilən məbləğ ödəniləcəkdir.</p>
+      <div class="endpoint"><span class="method-badge method-post">POST</span> https://epoint.az/api/1/card-registration-with-pay</div>
+      <table class="param-table">
+        <thead><tr><th>Parameter</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="param-name">public_key</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Tacir identifikatoru</td></tr>
+          <tr><td class="param-name">language</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td><code>az</code>, <code>en</code>, <code>ru</code></td></tr>
+          <tr><td class="param-name">order_id</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Unikal ID. Maks. 255 simvol</td></tr>
+          <tr><td class="param-name">amount</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">Number</span></td><td>Ödəniş məbləği</td></tr>
+          <tr><td class="param-name">currency</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td><code>AZN</code></td></tr>
+          <tr><td class="param-name">description</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Maks. 1000 simvol</td></tr>
+          <tr><td class="param-name">success_redirect_url</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Uğurlu yönləndirmə</td></tr>
+          <tr><td class="param-name">error_redirect_url</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Uğursuz yönləndirmə</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── SECTION: REFUND ── -->
+    <div class="doc-section" id="refund">
+      <div class="section-header">
+        <div class="section-icon"><i class="fas fa-undo"></i></div>
+        <h2>Vəsaitlərin Köçürülməsi Sorğusu (Refund)</h2>
+      </div>
+      <div class="endpoint"><span class="method-badge method-post">POST</span> https://epoint.az/api/1/refund-request</div>
+      <table class="param-table">
+        <thead><tr><th>Parameter</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="param-name">public_key</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Tacir identifikatoru</td></tr>
+          <tr><td class="param-name">language</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td><code>az</code>, <code>en</code>, <code>ru</code></td></tr>
+          <tr><td class="param-name">card_id</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Kart identifikatoru</td></tr>
+          <tr><td class="param-name">order_id</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Unikal ID. Maks. 255 simvol</td></tr>
+          <tr><td class="param-name">amount</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">Number</span></td><td>Ödəniş məbləği</td></tr>
+          <tr><td class="param-name">currency</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td><code>AZN</code></td></tr>
+          <tr><td class="param-name">description</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Maks. 1000 simvol</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── SECTION: REVERSE ── -->
+    <div class="doc-section" id="reverse">
+      <div class="section-header">
+        <div class="section-icon"><i class="fas fa-ban"></i></div>
+        <h2>Əməliyyatın Ləğvi Sorğusu (Reverse)</h2>
+      </div>
+      <div class="endpoint"><span class="method-badge method-post">POST</span> https://epoint.az/api/1/reverse</div>
+      <table class="param-table">
+        <thead><tr><th>Parameter</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="param-name">public_key</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Tacir identifikatoru</td></tr>
+          <tr><td class="param-name">language</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td><code>az</code>, <code>en</code>, <code>ru</code></td></tr>
+          <tr><td class="param-name">transaction</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Epoint sistemindəki əməliyyat identifikatoru</td></tr>
+          <tr><td class="param-name">amount</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">Number</span></td><td>Qismən geri qaytarma üçün məbləğ</td></tr>
+          <tr><td class="param-name">currency</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td><code>AZN</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── SECTION: SPLIT ── -->
+    <div class="doc-section" id="split">
+      <div class="section-header">
+        <div class="section-icon"><i class="fas fa-code-branch"></i></div>
+        <h2>Bölünmüş Ödəniş Sorğusu (Split)</h2>
+      </div>
+      <div class="endpoint"><span class="method-badge method-post">POST</span> https://epoint.az/api/1/split-request</div>
+      <table class="param-table">
+        <thead><tr><th>Parameter</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="param-name">public_key</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Tacir identifikatoru</td></tr>
+          <tr><td class="param-name">amount</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">Number</span></td><td>Ödəniş məbləği</td></tr>
+          <tr><td class="param-name">split_user</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Epoint sistemindəki ikinci istifadəçi identifikatoru</td></tr>
+          <tr><td class="param-name">split_amount</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">Number</span></td><td>İkinci istifadəçi üçün məbləğ</td></tr>
+          <tr><td class="param-name">currency</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td><code>AZN</code></td></tr>
+          <tr><td class="param-name">language</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td><code>az</code>, <code>en</code>, <code>ru</code></td></tr>
+          <tr><td class="param-name">order_id</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Unikal ID. Maks. 255 simvol</td></tr>
+          <tr><td class="param-name">description</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Maks. 1000 simvol</td></tr>
+          <tr><td class="param-name">success_redirect_url</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Uğurlu yönləndirmə</td></tr>
+          <tr><td class="param-name">error_redirect_url</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Uğursuz yönləndirmə</td></tr>
+          <tr><td class="param-name">other_attr</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">Array</span></td><td>Əlavə seçimlər</td></tr>
+        </tbody>
+      </table>
+      <div class="callout warn">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p>Qeyd: İkinci istifadəçi üçün ödənilən məbləğ <strong>yalnız onun ödəniş siyahısında</strong> görünəcəkdir.</p>
+      </div>
+    </div>
+
+    <!-- ── SECTION: SPLIT EXEC PAY ── -->
+    <div class="doc-section" id="split-exec">
+      <div class="section-header">
+        <div class="section-icon"><i class="fas fa-random"></i></div>
+        <h2>Saxlanılan Kartla Bölünmüş Ödəniş</h2>
+      </div>
+      <div class="endpoint"><span class="method-badge method-post">POST</span> https://epoint.az/api/1/split-execute-pay</div>
+      <table class="param-table">
+        <thead><tr><th>Parameter</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="param-name">public_key</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Tacir identifikatoru</td></tr>
+          <tr><td class="param-name">language</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td><code>az</code>, <code>en</code>, <code>ru</code></td></tr>
+          <tr><td class="param-name">card_id</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Kart identifikatoru</td></tr>
+          <tr><td class="param-name">order_id</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Unikal ID</td></tr>
+          <tr><td class="param-name">amount</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">Number</span></td><td>Ödəniş məbləği</td></tr>
+          <tr><td class="param-name">split_user</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>İkinci istifadəçi identifikatoru</td></tr>
+          <tr><td class="param-name">split_amount</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">Number</span></td><td>İkinci istifadəçi üçün məbləğ</td></tr>
+          <tr><td class="param-name">currency</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td><code>AZN</code></td></tr>
+          <tr><td class="param-name">description</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Maks. 1000 simvol</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── SECTION: SPLIT REG PAY ── -->
+    <div class="doc-section" id="split-reg-pay">
+      <div class="section-header">
+        <div class="section-icon"><i class="fas fa-layer-group"></i></div>
+        <h2>İlk Bölünmüş Ödənişlə Kart Qeydiyyatı</h2>
+      </div>
+      <div class="endpoint"><span class="method-badge method-post">POST</span> https://epoint.az/api/1/split-card-registration-with-pay</div>
+      <table class="param-table">
+        <thead><tr><th>Parameter</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="param-name">public_key</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Tacir identifikatoru</td></tr>
+          <tr><td class="param-name">language</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td><code>az</code>, <code>en</code>, <code>ru</code></td></tr>
+          <tr><td class="param-name">order_id</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Unikal ID. Maks. 255 simvol</td></tr>
+          <tr><td class="param-name">amount</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">Number</span></td><td>Ödəniş məbləği</td></tr>
+          <tr><td class="param-name">split_user</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>İkinci istifadəçi identifikatoru</td></tr>
+          <tr><td class="param-name">split_amount</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">Number</span></td><td>İkinci istifadəçi üçün məbləğ</td></tr>
+          <tr><td class="param-name">currency</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td><code>AZN</code></td></tr>
+          <tr><td class="param-name">description</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Maks. 1000 simvol</td></tr>
+          <tr><td class="param-name">success_redirect_url</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Uğurlu yönləndirmə</td></tr>
+          <tr><td class="param-name">error_redirect_url</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Uğursuz yönləndirmə</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── SECTION: PREAUTH ── -->
+    <div class="doc-section" id="preauth">
+      <div class="section-header">
+        <div class="section-icon"><i class="fas fa-shield-alt"></i></div>
+        <h2>API Preauth Sorğusunun Formalaşdırılması</h2>
+      </div>
+      <div class="endpoint"><span class="method-badge method-post">POST</span> https://epoint.az/api/1/pre-auth-request</div>
+      <table class="param-table">
+        <thead><tr><th>Parameter</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="param-name">public_key</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Tacir identifikatoru</td></tr>
+          <tr><td class="param-name">amount</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">Number</span></td><td>Ödəniş məbləği</td></tr>
+          <tr><td class="param-name">currency</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td><code>AZN</code></td></tr>
+          <tr><td class="param-name">language</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td><code>az</code>, <code>en</code>, <code>ru</code></td></tr>
+          <tr><td class="param-name">order_id</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Unikal ID. Maks. 255 simvol</td></tr>
+          <tr><td class="param-name">description</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Maks. 1000 simvol</td></tr>
+          <tr><td class="param-name">success_redirect_url</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Uğurlu yönləndirmə</td></tr>
+          <tr><td class="param-name">error_redirect_url</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Uğursuz yönləndirmə</td></tr>
+          <tr><td class="param-name">other_attr</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">Array</span></td><td>Əlavə seçimlər</td></tr>
+        </tbody>
+      </table>
+      <div class="doc-subsection">
+        <h3>Preauth Sorğusunun Tamamlanması</h3>
+        <div class="endpoint"><span class="method-badge method-post">POST</span> https://epoint.az/api/1/pre-auth-complete</div>
+        <table class="param-table">
+          <thead><tr><th>Parameter</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td class="param-name">public_key</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Tacir identifikatoru</td></tr>
+            <tr><td class="param-name">amount</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">Number</span></td><td>Ödəniş məbləği</td></tr>
+            <tr><td class="param-name">transaction</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Epoint-dən əldə etdiyiniz transaction id. (Məs: <code>te001111111</code>)</td></tr>
+          </tbody>
+        </table>
+        <div class="callout warn">
+          <i class="fas fa-exclamation-triangle"></i>
+          <p>Əməliyyat tamamlanmadıqda, o, Epoint balansınıza <strong>əlavə edilməyəcək</strong> — yalnız biznes panelinizdəki gözlənilən balansda görünəcək.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION: APPLE PAY & GOOGLE PAY ── -->
+    <div class="doc-section" id="applepay">
+      <div class="section-header">
+        <div class="section-icon"><i class="fas fa-mobile-alt"></i></div>
+        <h2>Apple Pay &amp; Google Pay</h2>
+      </div>
+
+      <div class="doc-subsection">
+        <h3>Widget URL Yaratmaq</h3>
+        <p>Google Pay (veb) və Apple Pay inteqrasiyası üçün widget URL əldə edin.</p>
+        <div class="endpoint"><span class="method-badge method-post">POST</span> https://epoint.az/api/1/token/widget</div>
+        <table class="param-table">
+          <thead><tr><th>Parameter</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td class="param-name">public_key</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Tacir identifikatoru</td></tr>
+            <tr><td class="param-name">amount</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">Number</span></td><td>Ödəniş məbləği</td></tr>
+            <tr><td class="param-name">order_id</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Unikal ID. Maks. 255 simvol</td></tr>
+            <tr><td class="param-name">description</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Ödənişin təsviri</td></tr>
+          </tbody>
+        </table>
+        <div class="code-block">
+          <div class="code-block-header"><span class="code-lang">PHP (Laravel)</span><button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Kopyala</button></div>
+          <pre><span class="var">$payload</span> = [
+    <span class="str">'public_key'</span>  => <span class="str">'public_key'</span>,
+    <span class="str">'amount'</span>      => <span class="num">2.50</span>,
+    <span class="str">'order_id'</span>    => <span class="str">'order_id_from_your_system'</span>,
+    <span class="str">'description'</span> => <span class="str">'Test payment'</span>,
+];
+
+<span class="var">$data</span>      = <span class="fn">base64_encode</span>(<span class="fn">json_encode</span>(<span class="var">$payload</span>));
+<span class="var">$signature</span> = <span class="fn">base64_encode</span>(<span class="fn">sha1</span>(<span class="var">$private_key</span> . <span class="var">$data</span> . <span class="var">$private_key</span>, <span class="num">1</span>));
+
+<span class="var">$response</span> = Http::<span class="fn">get</span>(<span class="str">"https://epoint.az/api/1/token/widget"</span>, [
+    <span class="str">'data'</span>      => <span class="var">$data</span>,
+    <span class="str">'signature'</span> => <span class="var">$signature</span>
+])-><span class="fn">json</span>();</pre>
+        </div>
+        <div class="code-block">
+          <div class="code-block-header"><span class="code-lang">JavaScript — iframe mesajını qəbul et</span><button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Kopyala</button></div>
+          <pre>window.<span class="fn">addEventListener</span>(<span class="str">'message'</span>, <span class="kw">function</span>(event) {
+    console.<span class="fn">log</span>(event.data); <span class="cmt">// {status: 'success', payment: {...}}</span>
+});</pre>
+        </div>
+      </div>
+
+      <div class="doc-subsection">
+        <h3>Google Pay (Mobil Tətbiqlər)</h3>
+        <div class="callout info">
+          <i class="fas fa-info-circle"></i>
+          <p>Native inteqrasiyanı <strong><a href="https://developers.google.com/pay/api/android/overview" target="_blank" style="color:var(--accent-light)">Google Pay rəsmi sənədləşməsinə</a></strong> uyğun olaraq həyata keçirin, ardından ekran görüntülərini bizə göndərin. Merchant ID veriləcək.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION: WALLETS ── -->
+    <div class="doc-section" id="wallets">
+      <div class="section-header">
+        <div class="section-icon"><i class="fas fa-coins"></i></div>
+        <h2>Cüzdanlar (Wallets)</h2>
+      </div>
+
+      <div class="doc-subsection">
+        <h3>Cüzdan Siyahısı</h3>
+        <div class="endpoint"><span class="method-badge method-post">POST</span> https://epoint.az/api/1/wallet/status</div>
+        <div class="code-block">
+          <div class="code-block-header"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Kopyala</button></div>
+          <pre><span class="kw">const</span> <span class="fn">fetchWallets</span> = <span class="kw">async</span> () => {
+    <span class="kw">const</span> response = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">"https://epoint.az/api/1/wallet/status"</span>, {
+        method: <span class="str">"POST"</span>,
+        headers: { <span class="str">"Content-Type"</span>: <span class="str">"application/json"</span> },
+        body: JSON.<span class="fn">stringify</span>({ public_key: <span class="str">"your_public_key"</span> })
+    });
+    <span class="kw">const</span> wallets = <span class="kw">await</span> response.<span class="fn">json</span>();
+    <span class="fn">renderWalletButtons</span>(wallets);
+};</pre>
+        </div>
+      </div>
+
+      <div class="doc-subsection">
+        <h3>Cüzdan ilə Ödəniş</h3>
+        <div class="endpoint"><span class="method-badge method-post">POST</span> https://epoint.az/api/1/wallet/payment</div>
+        <table class="param-table">
+          <thead><tr><th>Parameter</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td class="param-name">public_key</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Tacir identifikatoru</td></tr>
+            <tr><td class="param-name">wallet_id</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Seçilmiş cüzdan id-si</td></tr>
+            <tr><td class="param-name">amount</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">Number</span></td><td>Ödəniş məbləği</td></tr>
+            <tr><td class="param-name">currency</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td><code>AZN</code></td></tr>
+            <tr><td class="param-name">order_id</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Unikal ID. Maks. 255 simvol</td></tr>
+            <tr><td class="param-name">description</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Maks. 1000 simvol</td></tr>
+            <tr><td class="param-name">language</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td><code>az</code>, <code>en</code>, <code>ru</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── SECTION: INVOICES ── -->
+    <div class="doc-section" id="invoices">
+      <div class="section-header">
+        <div class="section-icon"><i class="fas fa-file-invoice"></i></div>
+        <h2>Hesab-fakturalar (Invoices)</h2>
+      </div>
+      <p>Bütün hesab-faktura sorğuları aşağıdakı əsas ünvana göndərilir:</p>
+      <div class="endpoint"><span class="method-badge method-post">POST</span> https://epoint.az/api/1</div>
+
+      <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:10px; margin-bottom:24px;">
+        <div class="endpoint" style="margin:0; flex-direction:column; align-items:flex-start; gap:5px;"><span class="method-badge method-post" style="font-size:0.6rem">POST</span><span style="font-size:0.78rem">/invoices/create</span></div>
+        <div class="endpoint" style="margin:0; flex-direction:column; align-items:flex-start; gap:5px;"><span class="method-badge method-post" style="font-size:0.6rem">POST</span><span style="font-size:0.78rem">/invoices/update</span></div>
+        <div class="endpoint" style="margin:0; flex-direction:column; align-items:flex-start; gap:5px;"><span class="method-badge method-post" style="font-size:0.6rem">POST</span><span style="font-size:0.78rem">/invoices/view</span></div>
+        <div class="endpoint" style="margin:0; flex-direction:column; align-items:flex-start; gap:5px;"><span class="method-badge method-post" style="font-size:0.6rem">POST</span><span style="font-size:0.78rem">/invoices/list</span></div>
+        <div class="endpoint" style="margin:0; flex-direction:column; align-items:flex-start; gap:5px;"><span class="method-badge method-post" style="font-size:0.6rem">POST</span><span style="font-size:0.78rem">/invoices/send-sms</span></div>
+        <div class="endpoint" style="margin:0; flex-direction:column; align-items:flex-start; gap:5px;"><span class="method-badge method-post" style="font-size:0.6rem">POST</span><span style="font-size:0.78rem">/invoices/send-email</span></div>
+      </div>
+
+      <div class="doc-subsection">
+        <h3>/invoices/create — Hesab-faktura yaradılması</h3>
+        <table class="param-table">
+          <thead><tr><th>Parameter</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td class="param-name">public_key</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">String</span></td><td>Tacir identifikatoru</td></tr>
+            <tr><td class="param-name">sum</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">Number</span></td><td>Ödəniş məbləği</td></tr>
+            <tr><td class="param-name">display</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">Number</span></td><td>Hesab-fakturanı göstər: <code>1</code> / <code>0</code></td></tr>
+            <tr><td class="param-name">save_as_template</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">Number</span></td><td>Şablon kimi saxla: <code>1</code> / <code>0</code></td></tr>
+            <tr><td class="param-name">status_installment</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">Number</span></td><td>Taksit: <code>1</code> / <code>0</code></td></tr>
+            <tr><td class="param-name">name</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Ad</td></tr>
+            <tr><td class="param-name">description</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Ödənişin təsviri</td></tr>
+            <tr><td class="param-name">phone</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Mobil nömrə</td></tr>
+            <tr><td class="param-name">email</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Email</td></tr>
+            <tr><td class="param-name">inn</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>VÖEN</td></tr>
+            <tr><td class="param-name">contract_number</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Müqavilə nömrəsi</td></tr>
+            <tr><td class="param-name">merchant_order_id</td><td><span class="param-req req-optional">Optional</span></td><td><span class="type-badge">String</span></td><td>Sifariş nömrəsi</td></tr>
+            <tr><td class="param-name">period_from</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">Date</span></td><td>Hesab-fakturanın başlama tarixi</td></tr>
+            <tr><td class="param-name">period_to</td><td><span class="param-req req-required">Required</span></td><td><span class="type-badge">Date</span></td><td>Hesab-fakturanın son istifadə tarixi</td></tr>
+          </tbody>
+        </table>
+        <div class="callout tip">
+          <i class="fas fa-lightbulb"></i>
+          <p>Hesab-faktura yaradılması/yenilənməsi üçün <code>invoice_images[]</code> adlı əlavə parametr mövcuddur. Bu parametr <code>jpg</code>, <code>png</code>, <code>jpeg</code>, <code>svg</code>, <code>bmp</code> formatlarını qəbul edir.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION: HEARTBEAT ── -->
+    <div class="doc-section" id="heartbeat">
+      <div class="section-header">
+        <div class="section-icon"><i class="fas fa-heartbeat"></i></div>
+        <h2>Heartbeat API</h2>
+      </div>
+      <p>Xidmətin əlçatanlığını yoxlamaq üçün aşağıdakı ünvana GET sorğusu göndərin:</p>
+      <div class="endpoint"><span class="method-badge method-get">GET</span> https://epoint.az/api/heartbeat</div>
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-lang">JSON Response</span></div>
+        <pre>{
+  <span class="key">"status"</span>: <span class="str">"ok"</span>
+}</pre>
+      </div>
+      <div class="callout tip">
+        <i class="fas fa-lightbulb"></i>
+        <p>Cavab <code>status: "ok"</code> olarsa, xidmət normal işləyir.</p>
+      </div>
+    </div>
+
+    <!-- ── SECTION: BANK CODES ── -->
+    <div class="doc-section" id="bank-codes">
+      <div class="section-header">
+        <div class="section-icon"><i class="fas fa-university"></i></div>
+        <h2>Bank Cavab Kodları</h2>
+      </div>
+
+      <table class="bank-table">
+        <thead><tr><th>Kod</th><th>Təsvir</th></tr></thead>
+        <tbody>
+          <tr><td><span class="code-num code-000">000</span></td><td>Təsdiq edildi</td></tr>
+          <tr><td><span class="code-num code-1xx">100</span></td><td>İmtina (ümumi, şərh yoxdur)</td></tr>
+          <tr><td><span class="code-num code-1xx">101</span></td><td>İmtina — kartın istifadə müddəti bitib</td></tr>
+          <tr><td><span class="code-num code-1xx">102</span></td><td>İmtina — fırıldaqçılıqdan şübhə</td></tr>
+          <tr><td><span class="code-num code-1xx">103</span></td><td>İmtina — qəbul edən ekvayer bank ilə əlaqə saxlasın</td></tr>
+          <tr><td><span class="code-num code-1xx">104</span></td><td>İmtina — məhdudlaşdırılmış kart</td></tr>
+          <tr><td><span class="code-num code-1xx">105</span></td><td>İmtina — qəbul edən bankın təhlükəsizlik şöbəsi ilə əlaqə</td></tr>
+          <tr><td><span class="code-num code-1xx">106</span></td><td>İmtina — icazə verilən PIN cəhtləri keçildi</td></tr>
+          <tr><td><span class="code-num code-1xx">107</span></td><td>İmtina — kart emitentinə müraciət edin</td></tr>
+          <tr><td><span class="code-num code-1xx">108</span></td><td>İmtina — kart emitentinin xüsusi şərtlərinə müraciət</td></tr>
+          <tr><td><span class="code-num code-1xx">109</span></td><td>İmtina — etibarsız tacir</td></tr>
+          <tr><td><span class="code-num code-1xx">110</span></td><td>İmtina — etibarsız məbləğ</td></tr>
+          <tr><td><span class="code-num code-1xx">111</span></td><td>İmtina — etibarsız kart nömrəsi</td></tr>
+          <tr><td><span class="code-num code-1xx">112</span></td><td>İmtina — PIN tələb olunur</td></tr>
+          <tr><td><span class="code-num code-1xx">113</span></td><td>İmtina — qəbuledilməz məbləğ</td></tr>
+          <tr><td><span class="code-num code-1xx">114</span></td><td>İmtina — tələb edilən hesab növü yoxdur</td></tr>
+          <tr><td><span class="code-num code-1xx">115</span></td><td>İmtina — tələb edilən funksiya dəstəklənmir</td></tr>
+          <tr><td><span class="code-num code-1xx">116</span></td><td>İmtina — kifayət qədər vəsait yoxdur</td></tr>
+          <tr><td><span class="code-num code-1xx">117</span></td><td>İmtina — səhv PIN</td></tr>
+          <tr><td><span class="code-num code-1xx">118</span></td><td>İmtina — kart məlumatları yoxdur</td></tr>
+          <tr><td><span class="code-num code-1xx">119</span></td><td>İmtina — kart sahibinə əməliyyat üçün icazə verilmir</td></tr>
+          <tr><td><span class="code-num code-1xx">120</span></td><td>İmtina — terminala əməliyyat üçün icazə verilmir</td></tr>
+          <tr><td><span class="code-num code-1xx">121</span></td><td>İmtina — pul çıxarma limiti keçib</td></tr>
+          <tr><td><span class="code-num code-1xx">122</span></td><td>İmtina — təhlükəsizlik pozuntusu</td></tr>
+          <tr><td><span class="code-num code-1xx">123</span></td><td>İmtina — vəsait çıxarılma tezliyi aşılıb</td></tr>
+          <tr><td><span class="code-num code-1xx">124</span></td><td>İmtina — qanun pozuntusu</td></tr>
+          <tr><td><span class="code-num code-1xx">125</span></td><td>İmtina — etibarsız kart</td></tr>
+          <tr><td><span class="code-num code-1xx">126</span></td><td>İmtina — PIN bloku səhvdir</td></tr>
+          <tr><td><span class="code-num code-1xx">127</span></td><td>İmtina — PIN uzunluğu xətası</td></tr>
+          <tr><td><span class="code-num code-1xx">128</span></td><td>İmtina — PIN sinxronizasiya xətası</td></tr>
+          <tr><td><span class="code-num code-1xx">129</span></td><td>İmtina — saxta kartdan şübhələnilir</td></tr>
+          <tr><td><span class="code-num code-1xx">180</span></td><td>İmtina — kart sahibinin istəyi ilə</td></tr>
+          <tr><td><span class="code-num code-2xx">200</span></td><td>Pick-up (ümumi, şərhsiz)</td></tr>
+          <tr><td><span class="code-num code-2xx">201</span></td><td>Pick-up — kartın istifadə müddəti bitib</td></tr>
+          <tr><td><span class="code-num code-2xx">202</span></td><td>Pick-up — dələduzluqdan şübhə</td></tr>
+          <tr><td><span class="code-num code-2xx">203</span></td><td>Pick-up — qəbul edən bank ekvayer ilə əlaqə saxlasın</td></tr>
+          <tr><td><span class="code-num code-2xx">204</span></td><td>Pick-up — məhdudlaşdırılmış kart</td></tr>
+          <tr><td><span class="code-num code-2xx">205</span></td><td>Pick-up — bankın təhlükəsizlik şöbəsi ilə əlaqə</td></tr>
+          <tr><td><span class="code-num code-2xx">206</span></td><td>Pick-up — icazə verilən PIN cəhtləri keçildi</td></tr>
+          <tr><td><span class="code-num code-2xx">207</span></td><td>Pick-up — xüsusi şərait</td></tr>
+          <tr><td><span class="code-num code-2xx">208</span></td><td>Pick-up — itirilmiş kart</td></tr>
+          <tr><td><span class="code-num code-2xx">209</span></td><td>Pick-up — oğurlanmış kart</td></tr>
+          <tr><td><span class="code-num code-2xx">210</span></td><td>Pick-up — saxta kartdan şübhələnilir</td></tr>
+          <tr><td><span class="code-num code-3xx">300</span></td><td>Fayl əməliyyatı uğurludur</td></tr>
+          <tr><td><span class="code-num code-3xx">301</span></td><td>Fayl əməliyyatı qəbuledici tərəfindən dəstəklənmir</td></tr>
+          <tr><td><span class="code-num code-3xx">302</span></td><td>Faylda qeydi tapmaq mümkün deyil</td></tr>
+          <tr><td><span class="code-num code-3xx">303</span></td><td>Dublikat qeyd, köhnə qeyd dəyişdirildi</td></tr>
+          <tr><td><span class="code-num code-3xx">304</span></td><td>Fayl qeydi sahəsindəki redaktə xətası</td></tr>
+          <tr><td><span class="code-num code-3xx">305</span></td><td>Fayl kilitlənib</td></tr>
+        </tbody>
+      </table>
+
+      <div style="margin-top: 16px; display:flex; gap:12px; flex-wrap:wrap;">
+        <span class="status-badge status-success"><span class="code-num">000</span> Uğurlu</span>
+        <span class="status-badge status-error"><span class="code-num">1xx</span> İmtina</span>
+        <span class="status-badge" style="background:rgba(210,153,34,0.1);color:var(--orange);border:1px solid rgba(210,153,34,0.25)"><span class="code-num">2xx</span> Pick-up</span>
+        <span class="status-badge status-returned"><span class="code-num">3xx</span> Fayl əməliyyatı</span>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div style="border-top: 1px solid var(--border); padding-top: 32px; margin-top: 48px; text-align:center;">
+      <p style="color:var(--text-muted); font-size:0.82rem; margin:0">
+        <i class="fas fa-bolt" style="color:var(--accent-light)"></i>
+        Epoint.az API Sənədləşməsi — v1.0.3 &nbsp;·&nbsp;
+        <a href="https://epoint.az" target="_blank" style="color:var(--accent-light); text-decoration:none">epoint.az</a>
+      </p>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('open');
+  }
+
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.innerHTML = '<i class="fas fa-check"></i> Kopyalandı';
+      btn.style.color = 'var(--green)';
+      setTimeout(() => {
+        btn.innerHTML = '<i class="fas fa-copy"></i> Kopyala';
+        btn.style.color = '';
+      }, 2000);
+    });
+  }
+
+  // Sidebar active link tracking
+  const sections = document.querySelectorAll('.doc-section, .doc-hero, .toc-card');
+  const links = document.querySelectorAll('.sidebar a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const id = entry.target.id;
+        const link = document.getElementById('link-' + id);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-10% 0px -85% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

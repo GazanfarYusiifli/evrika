@@ -1307,7 +1307,12 @@ src="https://www.facebook.com/tr?id=854979317627172&ev=PageView&noscript=1"
         const res = await fetch(`${API_URL}/registrations?select=*&order=id.desc`, { headers: HEADERS });
         if(res.ok) { 
             let fetchedData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id })); 
-            rawData = fetchedData.filter(r => !(r.amount && r.payment_status !== 'Ödənilib') && !r.is_scan_log);
+            rawData = fetchedData.filter(r => {
+                // Əgər ödənişli müraciətdirsə və hələ ödənilməyibsə, CRM-ə düşməsin
+                if ((r.amount || r.epoint_amount || r.epoint_transaction) && r.payment_status !== 'Ödənilib') return false;
+                if (r.is_scan_log) return false;
+                return true;
+            });
             filteredData = [...rawData]; 
             
             // Calculate new apps badge
@@ -1530,6 +1535,7 @@ src="https://www.facebook.com/tr?id=854979317627172&ev=PageView&noscript=1"
         'ŞƏXSİ MƏLUMATLAR': [],
         'ƏLAQƏ VƏ TƏMAS': [],
         'TƏHSİL VƏ İSTİQAMƏT': [],
+        'ÖDƏNİŞ DETALLARI': [],
         'DİGƏR / SİSTEM': [],
         'FAYLLAR': []
       };
@@ -1547,11 +1553,21 @@ src="https://www.facebook.com/tr?id=854979317627172&ev=PageView&noscript=1"
         if (upperKey === 'STATUS') cleanKey = 'Status';
         if (upperKey === 'DATE') cleanKey = 'Tarix';
         if (upperKey === 'NOTE') cleanKey = 'Qeyd';
+        if (upperKey === 'EPOINT_AMOUNT') cleanKey = 'Ödəniş Məbləği';
+        if (upperKey === 'EPOINT_DATE') cleanKey = 'Ödəniş Tarixi';
+        if (upperKey === 'EPOINT_CARD_NUMBER') cleanKey = 'Kartın Son Rəqəmləri';
+        if (upperKey === 'EPOINT_CARD_TYPE') cleanKey = 'Kart Növü / Adı';
+        if (upperKey === 'EPOINT_BANK') cleanKey = 'Bank Adı';
+        if (upperKey === 'EPOINT_CURRENCY') cleanKey = 'Valyuta';
+        if (upperKey === 'EPOINT_TRANSACTION') cleanKey = 'Tranzaksiya ID';
+        if (upperKey === 'EPOINT_RRN') cleanKey = 'RRN Kodu';
         
         const dataPair = { rawKey: key, label: cleanKey.toUpperCase(), value: val };
 
         if (typeof val === 'string' && (val.includes('supabase.co/storage') || val.match(/\.(jpg|jpeg|png|gif|pdf)/i))) {
           groups['FAYLLAR'].push(dataPair);
+        } else if (upperKey.includes('EPOINT') || upperKey === 'AMOUNT' || upperKey === 'PAYMENT_STATUS') {
+          groups['ÖDƏNİŞ DETALLARI'].push(dataPair);
         } else if (upperKey.includes('PHONE') || upperKey.includes('TEL') || upperKey.includes('MAIL') || upperKey === 'ƏLAQƏ') {
           groups['ƏLAQƏ VƏ TƏMAS'].push(dataPair);
         } else if (upperKey.includes('AD') || upperKey.includes('SOYAD') || upperKey.includes('NAME') || upperKey.includes('CANDIDATE') || upperKey.includes('STUDENT')) {
