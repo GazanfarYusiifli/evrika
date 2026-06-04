@@ -280,8 +280,8 @@
                 }
 
                 if (needsUpdate) {
-                    fetch('https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1/registrations?id=eq.' + regId, {
-                      method: 'PATCH',
+                    fetch('https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1/registrations', {
+                      method: 'POST',
                       headers: {
                         'apikey': 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
                         'Authorization': 'Bearer sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
@@ -299,7 +299,7 @@
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
-                                email: emailParam,
+                                email: finalEmail,
                                 name: regName || 'Şagird',
                                 dbId: regId
                             })
