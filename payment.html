@@ -126,9 +126,7 @@
                window.location.href = data.redirect_url;
             }, 1000);
         } else {
-            alert('Xəta baş verdi: ' + (data.message || data.error || 'Server Xətası') + '
-
-Qeyd: Private key quraşdırılmayıbsa bu xəta normaldır.');
+            alert('Xəta baş verdi: ' + (data.message || data.error || 'Server Xətası') + '\\n\\nQeyd: Əməliyyatda xəta oldu.');
             btn.innerHTML = 'YENİDƏN CƏHD ET';
             btn.disabled = false;
         }
