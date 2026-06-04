@@ -268,22 +268,30 @@
         }).then(res => res.json()).then(records => {
             if (records && records.length > 0) {
                 const currentPayload = records[0].payload;
+                let needsUpdate = false;
                 if (!currentPayload.note.includes('EPOINT VASİTƏSİLƏ ÖDƏNİLDİ')) {
                     currentPayload.note += ' | EPOINT VASİTƏSİLƏ ÖDƏNİLDİ.';
+                    needsUpdate = true;
                 }
-                currentPayload.status = "Ödənilib";
-                currentPayload.payment_status = "Ödənilib";
+                if (currentPayload.payment_status !== 'Ödənilib') {
+                    currentPayload.status = "Ödənilib";
+                    currentPayload.payment_status = "Ödənilib";
+                    needsUpdate = true;
+                }
 
-                fetch('https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1/registrations?id=eq.' + regId, {
-                  method: 'PATCH',
-                  headers: {
-                    'apikey': 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
-                    'Authorization': 'Bearer sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({ payload: currentPayload })
-                }).then(() => {
-                    document.querySelector('.container p').innerHTML = 'Təşəkkür edirik. Ödənişiniz sistemdə avtomatik qeydə alındı və xidmətiniz təsdiqləndi.<br><b style="color:#10b981;">Biletiniz və giriş məlumatınız (QR kod) ' + emailParam + ' poçt ünvanına göndərildi!</b>';
+                if (needsUpdate) {
+                    fetch('https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1/registrations?id=eq.' + regId, {
+                      method: 'PATCH',
+                      headers: {
+                        'apikey': 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
+                        'Authorization': 'Bearer sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({ payload: currentPayload })
+                    }).catch(console.error);
+                }
+
+                document.querySelector('.container p').innerHTML = 'Təşəkkür edirik. Ödənişiniz sistemdə avtomatik qeydə alındı və xidmətiniz təsdiqləndi.<br><b style="color:#10b981;">Biletiniz və giriş məlumatınız (QR kod) ' + emailParam + ' poçt ünvanına göndərildi!</b>';
                     
                     if (emailParam) {
                         fetch('/api/send-email', {
