@@ -60,7 +60,7 @@
 
 <div class="pay-card">
   <div class="pay-header">
-    <h4 style="font-weight: 900; font-size: 1.2rem; margin:0; color:#fff;">PAYRIFF SECURE</h4>
+    <h4 style="font-weight: 900; font-size: 1.2rem; margin:0; color:#fff;">EPOINT SECURE</h4>
     <div style="display: flex; gap: 10px;">
       <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" style="height: 22px;" alt="Mastercard">
       <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" style="height: 16px;" alt="Visa">
@@ -71,11 +71,10 @@
     <div id="student-name" style="margin-top: 10px; font-size: 0.85rem; color: #94a3b8; font-weight: 600;"></div>
   </div>
 
-  <div style="text-align:center; margin-bottom: 20px;"><p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">Ödənişiniz tam təhlükəsiz şəkildə Epoint gateway vasitəsilə həyata keçiriləcək. Davam etmək üçün aşağıdakı düyməni sıxın.</p></div>
-    <div class="pay-input-group">
-      <label>CVV</label>
-      <input type="password" class="pay-input" maxlength="3" placeholder="***">
-    </div>
+  <div style="text-align:center; margin-bottom: 20px;">
+    <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">
+      Ödənişiniz tam təhlükəsiz şəkildə Epoint gateway vasitəsilə həyata keçiriləcək. Davam etmək üçün aşağıdakı düyməni sıxın.
+    </p>
   </div>
 
   <button type="button" class="pay-btn" id="paySubmitBtn" onclick="processPayment()">EPOINT İLƏ ÖDƏ</button>
@@ -94,17 +93,6 @@
   if (regName) {
     document.getElementById('student-name').innerText = "Şagird: " + regName;
   }
-
-  // Auto format card number
-  document.getElementById('pay_cardNum').addEventListener('input', function (e) {
-    let value = e.target.value.replace(/\D/g, '');
-    let formatted = '';
-    for(let i=0; i<value.length; i++) {
-        if(i > 0 && i % 4 === 0) { formatted += ' '; }
-        formatted += value[i];
-    }
-    e.target.value = formatted;
-  });
 
   async function processPayment() {
     if (!regId) {

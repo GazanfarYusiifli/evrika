@@ -4,9 +4,8 @@ export default async function handler(req, res) {
   // Sizin Public Key Epoint-dən verilən:
   const PUBLIC_KEY = "i000201608";
   
-  // Epoint-dən Məxfi Açarı (Private Key) aldıqdan sonra buraya yazılacaq
-  // Və ya ən yaxşısı Vercel Environment Variables içərisinə EPOINT_PRIVATE_KEY olaraq əlavə olunacaq
-  const PRIVATE_KEY = process.env.EPOINT_PRIVATE_KEY || "d3hjs138sd8kdfhbcea0be04eafde9e8e2bad2fb092d"; 
+  // Epoint-dən Məxfi Açarı (Private Key)
+  const PRIVATE_KEY = process.env.EPOINT_PRIVATE_KEY || "HNIbtyFLu3PbxXlVykJEwOR1"; 
 
   // Yalnız POST sorğusuna icazə veririk
   if (req.method !== 'POST') {
@@ -24,7 +23,8 @@ export default async function handler(req, res) {
     order_id: order_id || `order_${Date.now()}`,
     description: description || "Evrika Liseyi - Xidmət ödənişi",
     success_redirect_url: `https://evrikaliseyi.edu.az/success?regId=${regId || ''}&email=${email || ''}&name=${encodeURIComponent(name || '')}`,
-    error_redirect_url: "https://evrikaliseyi.edu.az/error"
+    error_redirect_url: "https://evrikaliseyi.edu.az/error",
+    result_url: "https://evrikaliseyi.edu.az/api/epoint-callback"
   };
 
   const json_string = JSON.stringify(orderData);
