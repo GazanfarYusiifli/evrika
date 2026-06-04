@@ -2731,10 +2731,10 @@
 <div style="position: relative;">
 <select id="branchSelect" onchange="window.updateSector()" required="">
 <option disabled="" selected="" value="" data-i18n="form-opt-center">Təhsil Mərkəzi seçin</option>
-<option value="nerimanov">Evrika BETL Nərimanov filalı</option>
-<option value="genclik">Evrika BETL Gənclik filalı</option>
-<option value="montessori">Montessori Kids Academy</option>
-<option value="eduhome">Eduhome Hazırlıq</option>
+<option value="nerimanov" data-i18n="branch-nerimanov">Evrika BETL Nərimanov filialı</option>
+<option value="genclik" data-i18n="branch-genclik">Evrika BETL Gənclik filialı</option>
+<option value="montessori" data-i18n="branch-montessori">Montessori Kids Academy</option>
+<option value="eduhome" data-i18n="branch-eduhome">Eduhome Hazırlıq</option>
 </select>
 <i class="fas fa-chevron-down select-arrow"></i>
 </div>
@@ -2753,18 +2753,18 @@
 <div style="position: relative;">
 <select id="mf_class" required="">
 <option disabled="" selected="" value="" data-i18n="form-opt-class">Sinif seçin</option>
-<option value="Məktəbəqədər">Məktəbəqədər</option>
-<option value="1-ci sinif">1-ci sinif</option>
-<option value="2-ci sinif">2-ci sinif</option>
-<option value="3-cü sinif">3-cü sinif</option>
-<option value="4-cü sinif">4-cü sinif</option>
-<option value="5-ci sinif">5-ci sinif</option>
-<option value="6-cı sinif">6-cı sinif</option>
-<option value="7-ci sinif">7-ci sinif</option>
-<option value="8-ci sinif">8-ci sinif</option>
-<option value="9-cu sinif">9-cu sinif</option>
-<option value="10-cu sinif">10-cu sinif</option>
-<option value="11-ci sinif">11-ci sinif</option>
+<option value="Məktəbəqədər" data-i18n="class-preschool">Məktəbəqədər</option>
+<option value="1-ci sinif" data-i18n="class-1">1-ci sinif</option>
+<option value="2-ci sinif" data-i18n="class-2">2-ci sinif</option>
+<option value="3-cü sinif" data-i18n="class-3">3-cü sinif</option>
+<option value="4-cü sinif" data-i18n="class-4">4-cü sinif</option>
+<option value="5-ci sinif" data-i18n="class-5">5-ci sinif</option>
+<option value="6-cı sinif" data-i18n="class-6">6-cı sinif</option>
+<option value="7-ci sinif" data-i18n="class-7">7-ci sinif</option>
+<option value="8-ci sinif" data-i18n="class-8">8-ci sinif</option>
+<option value="9-cu sinif" data-i18n="class-9">9-cu sinif</option>
+<option value="10-cu sinif" data-i18n="class-10">10-cu sinif</option>
+<option value="11-ci sinif" data-i18n="class-11">11-ci sinif</option>
 </select>
 <i class="fas fa-chevron-down select-arrow"></i>
 </div>
@@ -2818,26 +2818,29 @@
                 sectorSelect.appendChild(defOpt);
                 
                 if (branch === 'nerimanov') {
-                  sectorSelect.innerHTML += '<option value="az">Azərbaycan bölməsi</option>';
-                  sectorSelect.innerHTML += '<option value="rus">Rus bölməsi</option>';
-                  sectorSelect.innerHTML += '<option value="ing">İngilis bölməsi</option>';
+                  sectorSelect.innerHTML += '<option value="az" data-i18n="sector-az">Azərbaycan bölməsi</option>';
+                  sectorSelect.innerHTML += '<option value="rus" data-i18n="sector-ru">Rus bölməsi</option>';
+                  sectorSelect.innerHTML += '<option value="ing" data-i18n="sector-en">İngilis bölməsi</option>';
                 } else if (branch === 'genclik') {
-                  sectorSelect.innerHTML += '<option value="az">Azərbaycan bölməsi</option>';
-                  sectorSelect.innerHTML += '<option value="rus">Rus bölməsi</option>';
-                  sectorSelect.innerHTML += '<option value="ing">İngilis bölməsi</option>';
-                  sectorSelect.innerHTML += '<option value="turk">Türk bölməsi</option>';
-                  sectorSelect.innerHTML += '<option value="montessori">Montessori məktəbi (ibtidai)</option>';
+                  sectorSelect.innerHTML += '<option value="az" data-i18n="sector-az">Azərbaycan bölməsi</option>';
+                  sectorSelect.innerHTML += '<option value="rus" data-i18n="sector-ru">Rus bölməsi</option>';
+                  sectorSelect.innerHTML += '<option value="ing" data-i18n="sector-en">İngilis bölməsi</option>';
+                  sectorSelect.innerHTML += '<option value="turk" data-i18n="sector-tr">Türk bölməsi</option>';
+                  sectorSelect.innerHTML += '<option value="montessori" data-i18n="sector-mont">Montessori məktəbi (ibtidai)</option>';
                 } else if (branch === 'montessori') {
-                  sectorSelect.innerHTML += '<option value="az">Azərbaycan bölməsi</option>';
-                  sectorSelect.innerHTML += '<option value="turk">Türk bölməsi</option>';
-                  sectorSelect.innerHTML += '<option value="rus">Rus bölməsi</option>';
-                  sectorSelect.innerHTML += '<option value="ing">İngilis bölməsi</option>';
+                  sectorSelect.innerHTML += '<option value="az" data-i18n="sector-az">Azərbaycan bölməsi</option>';
+                  sectorSelect.innerHTML += '<option value="turk" data-i18n="sector-tr">Türk bölməsi</option>';
+                  sectorSelect.innerHTML += '<option value="rus" data-i18n="sector-ru">Rus bölməsi</option>';
+                  sectorSelect.innerHTML += '<option value="ing" data-i18n="sector-en">İngilis bölməsi</option>';
                 } else if (branch === 'eduhome') {
-                  sectorSelect.innerHTML += '<option value="sat">SAT hazırlığı</option>';
-                  sectorSelect.innerHTML += '<option value="ielts">IELTS hazırlığı</option>';
-                  sectorSelect.innerHTML += '<option value="toefl">TOEFL hazırlığı</option>';
-                  sectorSelect.innerHTML += '<option value="dim">DİM hazırlığı</option>';
-                  sectorSelect.innerHTML += '<option value="other">Digər</option>';
+                  sectorSelect.innerHTML += '<option value="sat" data-i18n="sector-sat">SAT hazırlığı</option>';
+                  sectorSelect.innerHTML += '<option value="ielts" data-i18n="sector-ielts">IELTS hazırlığı</option>';
+                  sectorSelect.innerHTML += '<option value="toefl" data-i18n="sector-toefl">TOEFL hazırlığı</option>';
+                  sectorSelect.innerHTML += '<option value="dim" data-i18n="sector-dim">DİM hazırlığı</option>';
+                  sectorSelect.innerHTML += '<option value="other" data-i18n="sector-other">Digər</option>';
+                }
+                if(window.updateContent) {
+                  window.updateContent(localStorage.getItem('evrika-lang') || 'az');
                 }
               } catch(e) {
                 console.error(e);
