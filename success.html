@@ -291,7 +291,12 @@
                     }).catch(console.error);
                 }
 
-                const finalEmail = emailParam || currentPayload.email || currentPayload['E-mail'] || 'qeyd etdiyiniz';
+                let extractedEmail = '';
+                if (currentPayload && currentPayload.note) {
+                    const match = currentPayload.note.match(/E-mail:\s*([^\s|]+)/);
+                    if (match && match[1]) extractedEmail = match[1].trim();
+                }
+                const finalEmail = emailParam || extractedEmail || currentPayload.email || currentPayload['E-mail'] || 'qeyd etdiyiniz';
                 document.querySelector('.container p').innerHTML = 'Təşəkkür edirik. Ödənişiniz sistemdə avtomatik qeydə alındı və xidmətiniz təsdiqləndi. İmtahan giriş kuponunuz ' + finalEmail + ' ünvanınıza göndərilmişdir.';
                     
                     if (finalEmail && finalEmail !== 'qeyd etdiyiniz') {
