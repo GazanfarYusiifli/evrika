@@ -591,7 +591,38 @@
                 }
                 
                 var amountNum = (grade === 'Məktəbəqədər') ? '25' : '35';
-                window.location.href = 'payment.html?id=' + data[0].id + '&name=' + encodeURIComponent(firstName + ' ' + lastName) + '&amount=' + amountNum + '&email=' + encodeURIComponent(email);
+                
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ÖDƏNİŞƏ YÖNLƏNDİRİLİR...';
+                
+                try {
+                  const epointRes = await fetch('/api/epoint', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      amount: parseInt(amountNum),
+                      order_id: data[0].id, 
+                      description: "Evrika İmtahan / Qeydiyyat",
+                      regId: data[0].id,
+                      email: email,
+                      name: firstName + ' ' + lastName
+                    })
+                  });
+
+                  const epointData = await epointRes.json();
+                  
+                  if (epointData.redirect_url) {
+                      window.location.href = epointData.redirect_url;
+                  } else {
+                      alert('Ödəniş sistemində xəta baş verdi: ' + (epointData.message || epointData.error || 'Bilinməyən xəta'));
+                      btn.disabled = false;
+                      btn.innerHTML = originalBtnContent;
+                  }
+                } catch(epointErr) {
+                  console.error(epointErr);
+                  alert('Ödəniş xidməti ilə əlaqə qurulmadı. Zəhmət olmasa Vercel serverinizi yoxlayın.');
+                  btn.disabled = false;
+                  btn.innerHTML = originalBtnContent;
+                }
                 
               } catch(e) {
                 alert('Sistem xətası baş verdi. Yenidən cəhd edin.');
