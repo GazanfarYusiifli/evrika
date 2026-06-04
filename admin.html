@@ -974,7 +974,7 @@ src="https://www.facebook.com/tr?id=854979317627172&ev=PageView&noscript=1"
                 <input type="text" id="news-title" placeholder="Xəbər başlığı" required class="admin-input">
                 <div style="display:flex; gap:10px; align-items:center;">
                   <input type="text" id="news-img" placeholder="Şəkil URL-i" required class="admin-input" style="flex:1;">
-                  <label class="btn-view" style="cursor:pointer; padding:18px;"><i class="fas fa-upload"></i><input type="file" hidden accept="image/*" onchange="uploadImage(this, 'news-img')"></label>
+                  <label class="btn-view" style="cursor:pointer; padding:18px;"><i class="fas fa-upload"></i><input type="file" hidden multiple accept="image/*" onchange="uploadImage(this, 'news-img')"></label>
                 </div>
                 <textarea id="news-text" placeholder="Xəbərin ətraflı mətni..." required style="min-height:200px;" class="admin-input"></textarea>
                 <div style="display: flex; gap: 10px;">
@@ -1846,59 +1846,78 @@ src="https://www.facebook.com/tr?id=854979317627172&ev=PageView&noscript=1"
 
     // --- REUSABLE IMAGE UPLOAD WITH AUTO BG REMOVAL ---
     window.uploadImage = async (input, targetId) => {
-        let file = input.files[0]; if(!file) return;
-
-        // 1. Check File Size (Max 2MB)
-        if (file.size > 2 * 1024 * 1024) {
-            alert("Xəta: Fayl ölçüsü çox böyükdür (Maksimum 2MB).");
-            input.value = ""; return;
-        }
+        if(input.files.length === 0) return;
 
         const label = input.parentElement;
         const oldHtml = label.innerHTML;
         label.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
-        // --- BACKGROUND REMOVAL LOGIC (For white backgrounds) ---
-        try {
-            if (targetId === 'partner-logo' || targetId === 'led-img') {
-                const img = new Image();
-                img.src = URL.createObjectURL(file);
-                await new Promise(r => img.onload = r);
-                
-                const canvas = document.createElement('canvas');
-                canvas.width = img.width;
-                canvas.height = img.height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0);
-                
-                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                const data = imageData.data;
-                
-                // Simple Chroma Key for White/Near-White
-                // Also removes edges to improve transparency
-                for (let i = 0; i < data.length; i += 4) {
-                    const avg = (data[i] + data[i+1] + data[i+2]) / 3;
-                    if (avg > 235) { // Threshold for "near white"
-                        data[i+3] = 0; 
-                    }
-                }
-                ctx.putImageData(imageData, 0, 0);
-                
-                const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
-                file = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".png", { type: "image/png" });
+        let uploadedUrls = [];
+
+        for (let i = 0; i < input.files.length; i++) {
+            let file = input.files[i];
+
+            // 1. Check File Size (Max 2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                alert(`Xəta: ${file.name} ölçüsü çox böyükdür (Maksimum 2MB).`);
+                continue;
             }
-        } catch(e) { console.error("BG removal failed, uploading original:", e); }
-        
-        const fileName = `uploads/${Date.now()}_${file.name}`;
-        const res = await fetch(`https://miwvdhwrmxoetszkxlzy.supabase.co/storage/v1/object/ems-documents/${fileName}`, {
-            method: 'POST',
-            headers: { 'apikey': API_KEY, 'Authorization': 'Bearer '+API_KEY },
-            body: file
-        });
-        if(res.ok) {
-            document.getElementById(targetId).value = `https://miwvdhwrmxoetszkxlzy.supabase.co/storage/v1/object/public/ems-documents/${fileName}`;
+
+            // --- BACKGROUND REMOVAL LOGIC (For white backgrounds) ---
+            try {
+                if (targetId === 'partner-logo' || targetId === 'led-img') {
+                    const img = new Image();
+                    img.src = URL.createObjectURL(file);
+                    await new Promise(r => img.onload = r);
+                    
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const data = imageData.data;
+                    
+                    // Simple Chroma Key for White/Near-White
+                    // Also removes edges to improve transparency
+                    for (let j = 0; j < data.length; j += 4) {
+                        const avg = (data[j] + data[j+1] + data[j+2]) / 3;
+                        if (avg > 235) { // Threshold for "near white"
+                            data[j+3] = 0; 
+                        }
+                    }
+                    ctx.putImageData(imageData, 0, 0);
+                    
+                    const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
+                    file = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".png", { type: "image/png" });
+                }
+            } catch(e) { console.error("BG removal failed, uploading original:", e); }
+            
+            const fileName = `uploads/${Date.now()}_${file.name}`;
+            const res = await fetch(`https://miwvdhwrmxoetszkxlzy.supabase.co/storage/v1/object/ems-documents/${fileName}`, {
+                method: 'POST',
+                headers: { 'apikey': API_KEY, 'Authorization': 'Bearer '+API_KEY },
+                body: file
+            });
+            
+            if(res.ok) {
+                uploadedUrls.push(`https://miwvdhwrmxoetszkxlzy.supabase.co/storage/v1/object/public/ems-documents/${fileName}`);
+            }
         }
+        
+        if (uploadedUrls.length > 0) {
+            const targetEl = document.getElementById(targetId);
+            if (input.multiple && targetEl.value) {
+                // If appending to existing multiple selections
+                targetEl.value = targetEl.value + ',' + uploadedUrls.join(',');
+            } else {
+                targetEl.value = uploadedUrls.join(',');
+            }
+        }
+
         label.innerHTML = oldHtml;
+        input.value = "";
     };
 
 
