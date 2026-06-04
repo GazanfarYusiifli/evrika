@@ -4153,11 +4153,11 @@
                             month = months[parseInt(parts[1]) - 1] || "Ay";
                         }
                     }
-                    
+                    const firstImg = (n.img || "").split(',')[0].trim();
                     return `
                         <a href="news-detail.html?id=${row.id}" class="news-card">
                             <div class="card-media">
-                                <img src="${n.img}" alt="${n.title}" loading="lazy">
+                                <img src="${firstImg}" alt="${n.title}" loading="lazy">
                                 <div class="date-badge">
                                     <strong>${day}</strong>
                                     <span>${month}</span>
