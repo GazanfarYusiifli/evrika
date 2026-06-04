@@ -38,24 +38,46 @@ export default async function handler(req, res) {
 
     // Əgər ödəniş uğurludursa Supabase bazasında statusu yeniləyirik
     if (status === 'success') {
-      // Supabase-ə PATCH sorğusu göndəririk
-      const updateResponse = await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${order_id}`, {
-        method: 'PATCH',
+      // 1. Mövcud datanı alırıq
+      const getResponse = await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${order_id}&select=payload`, {
         headers: {
           'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=representation'
-        },
-        body: JSON.stringify({ 
-          status: 'Ödənildi',
-          payment_status: 'Ödənilib'
-        })
+          'Authorization': `Bearer ${SUPABASE_KEY}`
+        }
       });
+      
+      const rows = await getResponse.json();
+      if (rows && rows.length > 0) {
+        let existingPayload = rows[0].payload || {};
+        
+        // 2. Ödəniş detallarını əlavə edirik
+        existingPayload.status = 'Ödənildi';
+        existingPayload.payment_status = 'Ödənilib';
+        existingPayload.epoint_amount = result.amount;
+        existingPayload.epoint_currency = result.currency;
+        existingPayload.epoint_card_number = result.card_number;
+        existingPayload.epoint_card_type = result.card_type;
+        existingPayload.epoint_bank = result.bank;
+        existingPayload.epoint_transaction = result.transaction;
+        existingPayload.epoint_rrn = result.rrn;
+        existingPayload.epoint_date = result.date;
 
-      if (!updateResponse.ok) {
-        console.error("Supabase yenilənmədi:", await updateResponse.text());
-        return res.status(500).json({ message: 'Baza yenilənməsi xətası' });
+        // 3. Supabase-ə payload-u yeniləyən PATCH sorğusu göndəririk
+        const updateResponse = await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${order_id}`, {
+          method: 'PATCH',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+          },
+          body: JSON.stringify({ payload: existingPayload })
+        });
+
+        if (!updateResponse.ok) {
+          console.error("Supabase yenilənmədi:", await updateResponse.text());
+          return res.status(500).json({ message: 'Baza yenilənməsi xətası' });
+        }
       }
     }
 

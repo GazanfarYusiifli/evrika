@@ -729,9 +729,9 @@ src="https://www.facebook.com/tr?id=854979317627172&ev=PageView&noscript=1"
     <!-- Finance Panel -->
     <div id="view-finance" class="content" style="display: none;">
         <div class="stats-grid">
-            <div class="ems-stat-card" style="--accent: var(--success);"><div class="ems-stat-icon"><i class="fas fa-arrow-up"></i></div><div class="stat-lab">Aylıq Gəlir</div><div class="stat-val">45,200 <small style="font-size:1.2rem; opacity:0.4;">AZN</small></div></div>
-            <div class="ems-stat-card" style="--accent: var(--error);"><div class="ems-stat-icon"><i class="fas fa-arrow-down"></i></div><div class="stat-lab">Ümumi Xərclər</div><div class="stat-val">12,800 <small style="font-size:1.2rem; opacity:0.4;">AZN</small></div></div>
-            <div class="ems-stat-card" style="--accent: var(--warning);"><div class="ems-stat-icon"><i class="fas fa-clock"></i></div><div class="stat-lab">Ödəniş Gözləyən</div><div class="stat-val">8,400 <small style="font-size:1.2rem; opacity:0.4;">AZN</small></div></div>
+            <div class="ems-stat-card" style="--accent: var(--success);"><div class="ems-stat-icon"><i class="fas fa-arrow-up"></i></div><div class="stat-lab">Aylıq Gəlir</div><div class="stat-val" id="finance-monthly-income">0 <small style="font-size:1.2rem; opacity:0.4;">AZN</small></div></div>
+            <div class="ems-stat-card" style="--accent: var(--error);"><div class="ems-stat-icon"><i class="fas fa-arrow-down"></i></div><div class="stat-lab">Ümumi Xərclər</div><div class="stat-val">0 <small style="font-size:1.2rem; opacity:0.4;">AZN</small></div></div>
+            <div class="ems-stat-card" style="--accent: var(--warning);"><div class="ems-stat-icon"><i class="fas fa-clock"></i></div><div class="stat-lab">Ödəniş Gözləyən</div><div class="stat-val">0 <small style="font-size:1.2rem; opacity:0.4;">AZN</small></div></div>
         </div>
         <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
             <div class="table-wrapper">
@@ -740,10 +740,8 @@ src="https://www.facebook.com/tr?id=854979317627172&ev=PageView&noscript=1"
                     <button class="btn-view" style="font-size:0.75rem;">Hesabat Yüklə</button>
                 </div>
                 <table>
-                    <thead><tr><th>Şagird</th><th>Təyinat</th><th>Məbləğ</th><th>Tarix</th><th>Status</th></tr></thead>
-                    <tbody>
-                        <tr><td>Nihad Bağırov</td><td>Təhsil haqqı</td><td>450 AZN</td><td>18.04.2026</td><td><span style="color:var(--success); font-weight:700;">Ödənilib</span></td></tr>
-                        <tr><td>Ayan Məmmədova</td><td>Transport</td><td>80 AZN</td><td>17.04.2026</td><td><span style="color:var(--warning); font-weight:700;">Gözlənilir</span></td></tr>
+                    <thead><tr><th>Şagird</th><th>Kart Məlumatı</th><th>Məbləğ</th><th>Tarix</th><th>Status</th></tr></thead>
+                    <tbody id="finance-tbody">
                     </tbody>
                 </table>
             </div>
@@ -1309,7 +1307,7 @@ src="https://www.facebook.com/tr?id=854979317627172&ev=PageView&noscript=1"
         const res = await fetch(`${API_URL}/registrations?select=*&order=id.desc`, { headers: HEADERS });
         if(res.ok) { 
             let fetchedData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id })); 
-            rawData = fetchedData.filter(r => !(r.amount && r.payment_status !== 'Ödənilib'));
+            rawData = fetchedData.filter(r => !(r.amount && r.payment_status !== 'Ödənilib') && !r.is_scan_log);
             filteredData = [...rawData]; 
             
             // Calculate new apps badge
@@ -1325,7 +1323,7 @@ src="https://www.facebook.com/tr?id=854979317627172&ev=PageView&noscript=1"
             }
         }
       } catch(e) {}
-      renderDashboard(); renderApps(); loadUgurlar(); loadVacancies(); loadNews(); loadManagement(); loadMezunlar();
+      renderDashboard(); renderApps(); renderFinance(); loadUgurlar(); loadVacancies(); loadNews(); loadManagement(); loadMezunlar();
     }
 
     window.filterData = () => {
@@ -1453,6 +1451,29 @@ src="https://www.facebook.com/tr?id=854979317627172&ev=PageView&noscript=1"
       }).join('');
     }
 
+    window.renderFinance = () => {
+       const tb = document.getElementById('finance-tbody'); if(!tb) return;
+       const payments = rawData.filter(i => i.epoint_amount || (i.amount && i.payment_status === 'Ödənilib'));
+       tb.innerHTML = payments.map(p => {
+           const fullName = p.fullName || p['Ad Soyad'] || p.name || (p['[2.Şagird] Adı'] ? p['[2.Şagird] Adı'] + ' ' + (p['[2.Şagird] Soyadı']||'') : 'Adsız');
+           const type = p.epoint_card_type ? `${p.epoint_card_type} (***${(p.epoint_card_number||'').slice(-4)})` : 'Bank Kartı';
+           const bank = p.epoint_bank || '-';
+           const amount = p.epoint_amount || p.amount || 0;
+           const date = p.epoint_date ? new Date(p.epoint_date).toLocaleString('az') : new Date(p.submissionDate || Date.now()).toLocaleDateString('az');
+           return `<tr>
+             <td><div style="font-weight:700;">${fullName}</div></td>
+             <td><div style="font-size:0.85rem; font-weight:600;">${type}</div><div style="font-size:0.7rem; color:var(--text-muted);">${bank}</div></td>
+             <td style="font-weight:700;">${amount} AZN</td>
+             <td><div style="font-size:0.85rem; color:var(--text-muted);">${date}</div></td>
+             <td><span style="color:var(--success); font-weight:700; background:rgba(16,185,129,0.1); padding:4px 8px; border-radius:6px;">Ödənilib</span></td>
+           </tr>`;
+       }).join('');
+       
+       const total = payments.reduce((sum, p) => sum + Number(p.epoint_amount || p.amount || 0), 0);
+       const monthlyIncomeEl = document.getElementById('finance-monthly-income');
+       if(monthlyIncomeEl) monthlyIncomeEl.innerHTML = `${total} <small style="font-size:1.2rem; opacity:0.4;">AZN</small>`;
+    };
+
     window.switchTab = (t) => {
       document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
       if(document.getElementById('view-'+t)) document.getElementById('view-'+t).style.display = 'block';
@@ -1460,6 +1481,7 @@ src="https://www.facebook.com/tr?id=854979317627172&ev=PageView&noscript=1"
       document.getElementById('topbar-title').innerText = titles[t] || 'EVRIKA EMS';
       if(t==='vacancies') renderVacancyApps();
       if(t==='dashboard') renderDashboard();
+      if(t==='finance') renderFinance();
       if(t==='mezunlar') loadMezunlar();
       if(t==='ugurlar') loadUgurlar();
       if(t==='leadership') loadManagement();
