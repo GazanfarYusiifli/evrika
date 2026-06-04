@@ -557,6 +557,18 @@ document.addEventListener('keydown', (e) => {
 
 const translations = {
   az: {
+        "reg-student-name": "Şagirdin adı",
+        "reg-student-surname": "Şagirdin soyadı",
+        "reg-sector": "Bölmə",
+        "reg-class": "Sinif",
+        "reg-prev-school": "Əvvəl oxuduğu məktəb (və ya bağça)",
+        "reg-parent-phone": "Valideynin əlaqə nömrəsi",
+        "reg-email": "Mail ünvanı",
+        "reg-form-title": "Müraciət Forması",
+        "reg-title": "Qeydiyyat",
+        "reg-desc": "Məlumatlarınızı daxil edərək onlayn müraciətinizi tamamlayın.",
+        "reg-continue": "DAVAM ET",
+    
     "nav-home": "Ana Səhifə",
     "school-net": "TƏDRİS ŞƏBƏKƏMİZ",
     "school-acad": "Akademik <span style=\"position: relative; color: var(--white); z-index: 1;\">istiqamətlərimiz<span style=\"position: absolute; bottom: 8px; left: 0; width: 100%; height: 18px; background: var(--navy); z-index: -1; opacity: 0.3; border-radius: 4px;\"></span></span>",
@@ -978,6 +990,18 @@ const translations = {
     "lisey-cta-insta-btn": "İnstagram Səhifəmiz"
 },
   en: {
+        "reg-student-name": "Student's First Name",
+        "reg-student-surname": "Student's Last Name",
+        "reg-sector": "Sector",
+        "reg-class": "Grade/Class",
+        "reg-prev-school": "Previous School (or Kindergarten)",
+        "reg-parent-phone": "Parent's Contact Number",
+        "reg-email": "Email Address",
+        "reg-form-title": "Application Form",
+        "reg-title": "Registration",
+        "reg-desc": "Fill in your details to complete your online application.",
+        "reg-continue": "CONTINUE",
+    
     "nav-home": "Home",
     "school-net": "OUR EDUCATION NETWORK",
     "school-acad": "Academic <span style=\"position: relative; color: var(--white); z-index: 1;\">directions<span style=\"position: absolute; bottom: 8px; left: 0; width: 100%; height: 18px; background: var(--navy); z-index: -1; opacity: 0.3; border-radius: 4px;\"></span></span>",
@@ -1489,6 +1513,18 @@ const translations = {
     "lisey-cta-insta-btn": "Our Instagram Page"
 },
   ru: {
+        "reg-student-name": "Имя ученика",
+        "reg-student-surname": "Фамилия ученика",
+        "reg-sector": "Сектор",
+        "reg-class": "Класс",
+        "reg-prev-school": "Предыдущая школа (или детский сад)",
+        "reg-parent-phone": "Контактный номер родителя",
+        "reg-email": "Электронная почта",
+        "reg-form-title": "Форма Заявки",
+        "reg-title": "Регистрация",
+        "reg-desc": "Введите свои данные, чтобы завершить онлайн-заявку.",
+        "reg-continue": "ПРОДОЛЖИТЬ",
+    
     "nav-home": "Главная",
     "school-net": "НАША ОБРАЗОВАТЕЛЬНАЯ СЕТЬ",
     "school-acad": "Академические <span style=\"position: relative; color: var(--white); z-index: 1;\">направления<span style=\"position: absolute; bottom: 8px; left: 0; width: 100%; height: 18px; background: var(--navy); z-index: -1; opacity: 0.3; border-radius: 4px;\"></span></span>",

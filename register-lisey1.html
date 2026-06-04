@@ -294,7 +294,17 @@
         <a href="contact.html">Əlaqə</a>
       </nav>
       <div class="nav-actions">
-        
+
+        <div class="lang-dropdown-wrapper desktop-lang-wrapper" style="position: relative; display: inline-flex; margin-right: 12px; height: 100%;">
+            <button class="lang-toggle-btn" onclick="let menu = this.nextElementSibling; menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';" onblur="let menu = this.nextElementSibling; setTimeout(() => menu.style.display = 'none', 200);" style="background: #1e3a8a; border: none; color: white; padding: 12px 22px; border-radius: 100px; font-weight: 800; font-size: 0.95rem; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; min-width: 80px;" onmouseover="this.style.background='#284baf'" onmouseout="this.style.background='#1e3a8a'">
+               <span class="lang-text">AZ</span> <i class="fas fa-chevron-down" style="margin-left: 10px; font-size: 0.8rem; opacity: 0.9;"></i>
+            </button>
+            <div class="lang-menu" style="position: absolute; top: 115%; left: 50%; transform: translateX(-50%); background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: none; flex-direction: column; overflow: hidden; min-width: 80px; z-index: 100;">
+                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='AZ'); this.parentElement.style.display='none'; if(window.updateContent) window.updateContent('az');" style="padding: 10px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #eee;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">AZ</a>
+                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='EN'); this.parentElement.style.display='none'; if(window.updateContent) window.updateContent('en');" style="padding: 10px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #eee;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">EN</a>
+                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='RU'); this.parentElement.style.display='none'; if(window.updateContent) window.updateContent('ru');" style="padding: 10px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">RU</a>
+            </div>
+        </div>
       </div>
       <div class="mobile-menu-btn" id="mobile-toggle"><i class="fas fa-bars"></i></div>
     </div>
@@ -309,9 +319,9 @@
                <span class="lang-text">AZ</span> <i class="fas fa-chevron-down" style="margin-left: 8px; font-size: 0.75rem; opacity: 0.9;"></i>
             </button>
             <div class="lang-menu" style="position: absolute; top: 115%; left: 0; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: none; flex-direction: column; overflow: hidden; min-width: 90px; z-index: 100;">
-                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='AZ'); this.parentElement.style.display='none';" style="padding: 12px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #eee;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">AZ</a>
-                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='EN'); this.parentElement.style.display='none';" style="padding: 12px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #eee;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">EN</a>
-                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='RU'); this.parentElement.style.display='none';" style="padding: 12px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">RU</a>
+                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='AZ'); this.parentElement.style.display='none'; if(window.updateContent) window.updateContent(this.innerText.toLowerCase());" style="padding: 12px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #eee;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">AZ</a>
+                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='EN'); this.parentElement.style.display='none'; if(window.updateContent) window.updateContent(this.innerText.toLowerCase());" style="padding: 12px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #eee;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">EN</a>
+                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='RU'); this.parentElement.style.display='none'; if(window.updateContent) window.updateContent(this.innerText.toLowerCase());" style="padding: 12px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">RU</a>
             </div>
         </div>
     </div>
@@ -404,34 +414,32 @@
       <div class="brand-eyebrow modern-glow" style="margin-bottom: 24px; color: rgba(255,255,255,0.7); opacity: 1; letter-spacing: 0.6em; text-transform: uppercase; font-weight: 800; font-size: 0.8rem;">
         EVRİKA TƏHSİL EKOSİSTEMİ
       </div>
-      <h1 class="titan-header" style="font-size: clamp(3rem, 6vw, 5.5rem); color: #fff; margin-bottom: 30px; line-height: 1.1; font-weight: 900; letter-spacing: -0.02em;">
-        Qeydiyyat
-      </h1>
+      <h1 class="titan-header" style="font-size: clamp(3rem, 6vw, 5.5rem); color: #fff; margin-bottom: 30px; line-height: 1.1; font-weight: 900; letter-spacing: -0.02em;" data-i18n="reg-title">Qeydiyyat</h1>
       <div style="width: 100px; height: 2px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); margin: 0 auto 30px;"></div>
       <p class="subtitle-pro" style="max-width: 850px; margin: 0 auto; font-size: 1.6rem; color: #fff; line-height: 1.6; font-weight: 700; opacity: 1;">
         EVRİKA Beynəlxalq Elm və Texnologiya Liseyi (Nərimanov filialı)
       </p>
       <p style="max-width: 700px; margin: 15px auto 0; font-size: 1.1rem; color: rgba(255,255,255,0.7); line-height: 1.6;">
-        Məlumatlarınızı daxil edərək onlayn müraciətinizi tamamlayın.
+        <span data-i18n="reg-desc">Məlumatlarınızı daxil edərək onlayn müraciətinizi tamamlayın.</span>
       </p>
     </div>
 
     <div class="form-container">
       <div class="form-header">
-        <h2>Müraciət Forması</h2>
+        <h2 data-i18n="reg-form-title">Müraciət Forması</h2>
       </div>
       <form id="branchContactForm">
           <div class="dyn-form-grid">
             <div class="dyn-input-group">
-              <label>Şagirdin adı</label>
+              <label data-i18n="reg-student-name">Şagirdin adı</label>
               <input type="text" id="mf_firstName" placeholder="Məs: Əli" required>
             </div>
             <div class="dyn-input-group">
-              <label>Şagirdin soyadı</label>
+              <label data-i18n="reg-student-surname">Şagirdin soyadı</label>
               <input type="text" id="mf_lastName" placeholder="Məs: Əliyev" required>
             </div>
             <div class="dyn-input-group">
-              <label>Bölmə</label>
+              <label data-i18n="reg-sector">Bölmə</label>
               <div style="position: relative;">
                 <select id="mf_sector" required>
                   <option value="" disabled selected>Bölmə seçin</option>
@@ -441,7 +449,7 @@
               </div>
             </div>
             <div class="dyn-input-group">
-              <label>Sinif</label>
+              <label data-i18n="reg-class">Sinif</label>
               <div style="position: relative;">
                 <select id="mf_class" required>
                   
@@ -464,15 +472,15 @@
               </div>
             </div>
             <div class="dyn-input-group">
-              <label>Əvvəl oxuduğu məktəb (və ya bağça)</label>
+              <label data-i18n="reg-prev-school">Əvvəl oxuduğu məktəb (və ya bağça)</label>
               <input type="text" id="mf_previousSchool" placeholder="Məs: 20 nömrəli məktəb" required>
             </div>
             <div class="dyn-input-group">
-              <label>Valideynin əlaqə nömrəsi</label>
+              <label data-i18n="reg-parent-phone">Valideynin əlaqə nömrəsi</label>
               <input type="tel" id="mf_phoneNum" placeholder="Məs: 551234567" required>
             </div>
             <div class="dyn-input-group full-width">
-              <label>Mail ünvanı</label>
+              <label data-i18n="reg-email">Mail ünvanı</label>
               <input type="email" id="mf_email" placeholder="Məs: info@evrika.az" required>
             </div>
 
@@ -488,7 +496,7 @@
           </div>
           
           <button type="submit" class="submit-btn" style="margin-top: 35px;">
-            DAVAM ET <i class="fas fa-arrow-right"></i>
+            <span data-i18n="reg-continue">DAVAM ET</span> <i class="fas fa-arrow-right"></i>
           </button>
         </form>
       </div>
