@@ -275,8 +275,11 @@
         }).then(res => res.json()).then(records => {
             if (records && records.length > 0) {
                 const currentPayload = records[0].payload;
-                currentPayload.note += ' | EPOINT VASİTƏSİLƏ ÖDƏNİLDİ.';
+                if (!currentPayload.note.includes('EPOINT VASİTƏSİLƏ ÖDƏNİLDİ')) {
+                    currentPayload.note += ' | EPOINT VASİTƏSİLƏ ÖDƏNİLDİ.';
+                }
                 currentPayload.status = "Ödənilib";
+                currentPayload.payment_status = "Ödənilib";
 
                 fetch('https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1/registrations?id=eq.' + regId, {
                   method: 'PATCH',
