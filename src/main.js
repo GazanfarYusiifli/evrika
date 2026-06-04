@@ -557,6 +557,12 @@ document.addEventListener('keydown', (e) => {
 
 const translations = {
   az: {
+        "reg-school-lisey1": "EVRİKA Beynəlxalq Elm və Texnologiya Liseyi (Nərimanov filialı)",
+        "reg-school-lisey2": "EVRİKA Beynəlxalq Elm və Texnologiya Liseyi (Gənclik filialı)",
+        "reg-school-montessori": "Evrika Montessori Kids Academy",
+        "reg-school-eduhome": "Eduhome Hazırlıq Mərkəzi",
+        "reg-school-zumrud": "Zümrüd<br>Women<br>Club",
+        "reg-submit": "MÜRACİƏTİ TAMAMLA",
         "reg-child-name": "Övladınızın adı",
         "reg-child-surname": "Övladınızın soyadı",
         "reg-child-sector": "Müraciət etmək istədiyi bölmə",
@@ -1042,6 +1048,12 @@ const translations = {
     "lisey-cta-insta-btn": "İnstagram Səhifəmiz"
 },
   en: {
+        "reg-school-lisey1": "EVRIKA International Science and Technology Lyceum (Narimanov Branch)",
+        "reg-school-lisey2": "EVRIKA International Science and Technology Lyceum (Ganjlik Branch)",
+        "reg-school-montessori": "Evrika Montessori Kids Academy",
+        "reg-school-eduhome": "Eduhome Preparation Center",
+        "reg-school-zumrud": "Zumrud<br>Women<br>Club",
+        "reg-submit": "SUBMIT APPLICATION",
         "reg-child-name": "Child's First Name",
         "reg-child-surname": "Child's Last Name",
         "reg-child-sector": "Sector Applied For",
@@ -1617,6 +1629,12 @@ const translations = {
     "lisey-cta-insta-btn": "Our Instagram Page"
 },
   ru: {
+        "reg-school-lisey1": "ЭВРИКА Международный Лицей Науки и Технологий (Нариманов филиал)",
+        "reg-school-lisey2": "ЭВРИКА Международный Лицей Науки и Технологий (Гянджлик филиал)",
+        "reg-school-montessori": "Эврика Монтессори Академия",
+        "reg-school-eduhome": "Eduhome Учебный Центр",
+        "reg-school-zumrud": "Зюмруд<br>Женский<br>Клуб",
+        "reg-submit": "ПОДАТЬ ЗАЯВКУ",
         "reg-child-name": "Имя ребенка",
         "reg-child-surname": "Фамилия ребенка",
         "reg-child-sector": "Сектор",
