@@ -592,7 +592,7 @@ const translations = {
     "about-concept-title": "Evrika Konsepsiyası",
     "about-eyebrow": "BİZİM HEKAYƏMIZ",
     "about-title": "Haqqımızda",
-    "about-desc": "“Evrika Təhsil Ekosistemi — hər bir şagirdin potensialını gələcəyə çevirən inkişaf mühitidir! Evrika Təhsil Ekosistemi — hər bir şagirdin potensialını üzə çıxarmaq üçün qurulmuş ilham mənbəyidir.”",
+    "about-desc": "“Evrika Təhsil Ekosistemi — hər bir şagirdin potensialını gələcəyə çevirən inkişaf mühitidir!”",
     "about-mission-title": "MİSSİYAMIZ",
     "about-mission-desc": "“Milli dəyərlərə sadiq, <span>qlobal düşüncəyə</span> malik, yenilikçi şəxsiyyətlər yetişdirməkdir!”",
     "about-vision-title": "VİZYONUMUZ",
