@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import nodemailer from 'nodemailer';
 
 export default async function handler(req, res) {
   // Yalnız POST sorğusuna icazə veririk
@@ -8,7 +9,7 @@ export default async function handler(req, res) {
 
   const PRIVATE_KEY = process.env.EPOINT_PRIVATE_KEY || "HNIbtyFLu3PbxXlVykJEwOR1"; 
   const SUPABASE_URL = "https://miwvdhwrmxoetszkxlzy.supabase.co";
-  const SUPABASE_KEY = process.env.SUPABASE_ANON_KEY || "sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV"; // Bura öz Supabase anon keyinizi qeyd edin
+  const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || "sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV";
 
   // Epoint tərəfindən göndərilən data və signature parametrlərini alırıq
   const { data, signature } = req.body;
@@ -76,7 +77,54 @@ export default async function handler(req, res) {
 
         if (!updateResponse.ok) {
           console.error("Supabase yenilənmədi:", await updateResponse.text());
-          return res.status(500).json({ message: 'Baza yenilənməsi xətası' });
+        }
+
+        // --- EMAIL GÖNDƏRİLMƏSİ (SERVER TƏRƏFDƏN) ---
+        try {
+            const email = existingPayload.email || existingPayload['E-mail'] || (existingPayload.note && existingPayload.note.match(/E-mail:\s*([^ |]+)/)?.[1]);
+            const name = existingPayload.fullName || existingPayload['Ad Soyad'] || existingPayload['[1.Əlaqə] Valideyn Adı'] || 'Şagird';
+
+            if (email) {
+                const transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                        user: process.env.EMAIL_USER || 'yusifliqezenfer90@gmail.com',
+                        pass: process.env.EMAIL_PASS || 'nnzjppmkbpbhjvow'
+                    }
+                });
+
+                const verifyUrl = encodeURIComponent(`https://evrikaliseyi.edu.az/verify.html?id=${order_id}`);
+                const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${verifyUrl}`;
+
+                const mailOptions = {
+                    from: '"Evrika Portal" <' + (process.env.EMAIL_USER || 'yusifliqezenfer90@gmail.com') + '>',
+                    to: email,
+                    subject: 'İmtahana Giriş Kuponu - Evrika Təhsil Ekosistemi',
+                    html: `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
+                        <div style="background: #8B1A2B; padding: 30px; text-align: center; color: white;">
+                            <h1 style="margin: 0; font-size: 24px;">İmtahana Giriş Kuponu</h1>
+                            <p style="margin: 10px 0 0; opacity: 0.8;">Evrika Beynəlxalq Elm və Texnologiya Liseyi</p>
+                        </div>
+                        <div style="padding: 30px; background: #ffffff;">
+                            <p style="font-size: 16px; color: #333;">Hörmətli <b>${name}</b>,</p>
+                            <p style="font-size: 15px; color: #555; line-height: 1.6;">
+                                Qeydiyyatınız və ödənişiniz uğurla təsdiqlənmişdir. İmtahanda iştirak etmək üçün bu QR kodu imtahan günü nəzarətçiyə təqdim etməyiniz xahiş olunur.
+                            </p>
+                            <div style="text-align: center; margin: 30px 0; padding: 20px; background: #f8fafc; border-radius: 12px; border: 1px dashed #cbd5e1;">
+                                <img src="${qrUrl}" alt="QR Code" style="width: 150px; height: 150px; display: block; margin: 0 auto;">
+                                <div style="margin-top: 15px; font-weight: bold; color: #0f172a; font-size: 14px; letter-spacing: 2px;">
+                                    KOD: EV-${String(order_id).padStart(4, '0')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>`
+                };
+                await transporter.sendMail(mailOptions);
+                console.log("Email uğurla göndərildi: " + email);
+            }
+        } catch (emailErr) {
+            console.error("Email göndərilərkən xəta:", emailErr);
         }
       }
     }
