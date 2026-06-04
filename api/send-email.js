@@ -19,7 +19,8 @@ export default async function handler(req, res) {
     }
   });
 
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=EVRIKA-EXAM-${dbId}`;
+  const verifyUrl = encodeURIComponent(`https://evrikaliseyi.edu.az/verify.html?id=${dbId}`);
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${verifyUrl}`;
   
   const mailOptions = {
     from: '"Evrika Portal" <' + (process.env.EMAIL_USER || 'yusifliqezenfer90@gmail.com') + '>',
