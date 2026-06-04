@@ -561,13 +561,18 @@
               var email = document.getElementById('mf_email').value;
               var previousSchool = document.getElementById('mf_previousSchool').value;
 
-              var note = "Filial: EVRİKA Beynəlxalq<br>Elm və Texnologiya Liseyi<br>(Gənclik filialı) | Bölmə: " + sectorText + " | Sinif: " + grade + " | E-mail: " + email + " | Əvvəlki müəssisə: " + previousSchool;
+              // Test üçün məbləği 0.01 olaraq təyin edirik. Test bitdikdən sonra "var amountNum = (grade === 'Məktəbəqədər') ? '25' : '35';" olaraq geri qaytarın.
+              var amountNum = '0.01'; 
+
+              var note = "Filial: EVRİKA Beynəlxalq<br>Elm və Texnologiya Liseyi<br>(Gənclik filialı) | Bölmə: " + sectorText + " | Sinif: " + grade + " | E-mail: " + email + " | Əvvəlki müəssisə: " + previousSchool + " | Ödəniş Məbləği: " + amountNum + " AZN";
 
               var payloadData = {
                 name: firstName + " " + lastName,
                 phone: "+994" + phoneNum,
                 source: "Qeydiyyat - Lisey 2",
                 status: "Yeni",
+                payment_status: "Ödənilməyib",
+                amount: amountNum + " AZN",
                 note: note,
                 date: new Date().toISOString()
               };
@@ -590,8 +595,7 @@
                     window.currentPayloadData = payloadData;
                 }
                 
-                // Test üçün məbləği 0.01 olaraq təyin edirik. Test bitdikdən sonra "var amountNum = (grade === 'Məktəbəqədər') ? '25' : '35';" olaraq geri qaytarın.
-                var amountNum = '0.01'; 
+                // amountNum artıq yuxarıda təyin edilib
                 
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ÖDƏNİŞƏ YÖNLƏNDİRİLİR...';
                 

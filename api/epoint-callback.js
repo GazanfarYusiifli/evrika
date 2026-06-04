@@ -48,7 +48,8 @@ export default async function handler(req, res) {
           'Prefer': 'return=representation'
         },
         body: JSON.stringify({ 
-          status: 'Ödənildi' 
+          status: 'Ödənildi',
+          payment_status: 'Ödənilib'
         })
       });
 

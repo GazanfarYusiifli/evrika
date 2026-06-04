@@ -22,8 +22,8 @@ export default async function handler(req, res) {
     language: "az",
     order_id: order_id || `order_${Date.now()}`,
     description: description || "Evrika Liseyi - Xidmət ödənişi",
-    success_redirect_url: `https://evrikaliseyi.edu.az/success?regId=${regId || ''}&email=${email || ''}&name=${encodeURIComponent(name || '')}`,
-    error_redirect_url: "https://evrikaliseyi.edu.az/error",
+    success_redirect_url: `https://evrikaliseyi.edu.az/success.html?regId=${regId || ''}&email=${email || ''}&name=${encodeURIComponent(name || '')}`,
+    error_redirect_url: "https://evrikaliseyi.edu.az/error.html",
     result_url: "https://evrikaliseyi.edu.az/api/epoint-callback"
   };
 
