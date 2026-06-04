@@ -590,7 +590,8 @@
                     window.currentPayloadData = payloadData;
                 }
                 
-                var amountNum = (grade === 'Məktəbəqədər') ? '25' : '35';
+                // Test üçün məbləği 0.01 olaraq təyin edirik. Test bitdikdən sonra "var amountNum = (grade === 'Məktəbəqədər') ? '25' : '35';" olaraq geri qaytarın.
+                var amountNum = '0.01'; 
                 
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ÖDƏNİŞƏ YÖNLƏNDİRİLİR...';
                 
@@ -599,7 +600,7 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                      amount: parseInt(amountNum),
+                      amount: parseFloat(amountNum),
                       order_id: data[0].id, 
                       description: "Evrika İmtahan / Qeydiyyat",
                       regId: data[0].id,
