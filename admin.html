@@ -1308,7 +1308,8 @@ src="https://www.facebook.com/tr?id=854979317627172&ev=PageView&noscript=1"
       try {
         const res = await fetch(`${API_URL}/registrations?select=*&order=id.desc`, { headers: HEADERS });
         if(res.ok) { 
-            rawData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id })); 
+            let fetchedData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id })); 
+            rawData = fetchedData.filter(r => !(r.amount && r.payment_status !== 'Ödənilib'));
             filteredData = [...rawData]; 
             
             // Calculate new apps badge
