@@ -291,7 +291,7 @@
                     }).catch(console.error);
                 }
 
-                document.querySelector('.container p').innerHTML = 'Təşəkkür edirik. Ödənişiniz sistemdə avtomatik qeydə alındı və xidmətiniz təsdiqləndi.<br><b style="color:#10b981;">İmtahan giriş kuponunuz (QR kod) ' + (emailParam ? emailParam : 'email') + ' ünvanınıza göndərilmişdir!</b>';
+                document.querySelector('.container p').innerHTML = 'Təşəkkür edirik. Ödənişiniz sistemdə avtomatik qeydə alındı və xidmətiniz təsdiqləndi. İmtahan giriş kuponunuz <b style="color:#10b981;">' + (emailParam ? emailParam : 'email') + '</b> ünvanınıza göndərilmişdir';
                     
                     if (emailParam) {
                         fetch('/api/send-email', {
