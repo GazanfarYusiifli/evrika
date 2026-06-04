@@ -1,29 +1,48 @@
-import os
 import re
 
-def update_footer(file_path):
-    with open(file_path, 'r', encoding='utf-8') as f:
-        content = f.read()
+def fix_footer():
+    # 1. Update main.js
+    with open('/Users/gazanfaryusifli/Downloads/EvrikaProje/src/main.js', 'r', encoding='utf-8') as f:
+        js = f.read()
 
-    # 1. Remove address line
-    address_pattern = r'<div style="display:\s*flex;\s*gap:\s*15px;\s*align-items:\s*center;"><i class="fas fa-map-marker-alt".*?Baku, Azerbaijan</span></div>'
-    content = re.sub(address_pattern, '', content, flags=re.DOTALL)
+    az_add = '''
+    "footer-ejournal": "E- JURNAL",
+    "footer-copyright": "&copy; 2026 Evrika Təhsil Ekosistemi. Bütün hüquqlar qorunur.",
+    "footer-privacy": "Məxfilik Siyasəti",
+    "footer-terms": "İstifadə Şərtləri",'''
 
-    # 2. Update phone to short number
-    phone_pattern = r'<div style="display:\s*flex;\s*gap:\s*15px;\s*align-items:\s*center;"><i class="fas fa-phone-alt".*?\+994-12 525 10 10</span></div>'
-    new_phone = '<div style="display: flex; gap: 15px; align-items: center;"><i class="fas fa-phone-alt" style="color: var(--accent, #8B1A2B);"></i><span style="color: rgba(255,255,255,0.7); font-weight: 800; font-size: 1.2rem; letter-spacing: 0.1em;">*3005</span></div>'
-    content = re.sub(phone_pattern, new_phone, content, flags=re.DOTALL)
+    en_add = '''
+    "footer-ejournal": "E-JOURNAL",
+    "footer-copyright": "&copy; 2026 Evrika Education Ecosystem. All rights reserved.",
+    "footer-privacy": "Privacy Policy",
+    "footer-terms": "Terms of Use",'''
 
-    # 3. Standardize "Akademik Kampuslar" to "Akademik İstiqamətlər"
-    content = content.replace('Akademik Kampuslar', 'Akademik İstiqamətlər')
+    ru_add = '''
+    "footer-ejournal": "Э-ЖУРНАЛ",
+    "footer-copyright": "&copy; 2026 Образовательная Экосистема Эврика. Все права защищены.",
+    "footer-privacy": "Политика конфиденциальности",
+    "footer-terms": "Условия использования",'''
 
-    with open(file_path, 'w', encoding='utf-8') as f:
-        f.write(content)
+    js = js.replace('"footer-nav": "NAVİQASİYA",', '"footer-nav": "NAVİQASİYA",' + az_add)
+    js = js.replace('"footer-nav": "NAVIGATION",', '"footer-nav": "NAVIGATION",' + en_add)
+    js = js.replace('"footer-nav": "НАВИГАЦИЯ",', '"footer-nav": "НАВИГАЦИЯ",' + ru_add)
 
-html_files = [f for f in os.listdir('.') if f.endswith('.html')]
+    with open('/Users/gazanfaryusifli/Downloads/EvrikaProje/src/main.js', 'w', encoding='utf-8') as f:
+        f.write(js)
 
-for html_file in html_files:
-    print(f"Updating {html_file}...")
-    update_footer(html_file)
+    # 2. Update about.html
+    with open('/Users/gazanfaryusifli/Downloads/EvrikaProje/about.html', 'r', encoding='utf-8') as f:
+        html = f.read()
 
-print("Done!")
+    html = html.replace('<h4>E- JURNAL</h4>', '<h4 data-i18n="footer-ejournal">E- JURNAL</h4>')
+    html = html.replace('color: var(--accent, #8B1A2B);">E- JURNAL</h4>', 'color: var(--accent, #8B1A2B);" data-i18n="footer-ejournal">E- JURNAL</h4>')
+    html = html.replace('<p style="color: rgba(255,255,255,0.4); font-size: 0.85rem;">&copy; 2026 Evrika Təhsil Ekosistemi. Bütün hüquqlar qorunur.</p>', '<p style="color: rgba(255,255,255,0.4); font-size: 0.85rem;" data-i18n="footer-copyright">&copy; 2026 Evrika Təhsil Ekosistemi. Bütün hüquqlar qorunur.</p>')
+    html = html.replace('href="privacy.html" style="color: rgba(255,255,255,0.3); text-decoration: none; font-size: 0.85rem; transition: 0.3s;">Məxfilik Siyasəti</a>', 'href="privacy.html" style="color: rgba(255,255,255,0.3); text-decoration: none; font-size: 0.85rem; transition: 0.3s;" data-i18n="footer-privacy">Məxfilik Siyasəti</a>')
+    html = html.replace('href="terms.html" style="color: rgba(255,255,255,0.3); text-decoration: none; font-size: 0.85rem; transition: 0.3s;">İstifadə Şərtləri</a>', 'href="terms.html" style="color: rgba(255,255,255,0.3); text-decoration: none; font-size: 0.85rem; transition: 0.3s;" data-i18n="footer-terms">İstifadə Şərtləri</a>')
+
+    with open('/Users/gazanfaryusifli/Downloads/EvrikaProje/about.html', 'w', encoding='utf-8') as f:
+        f.write(html)
+
+if __name__ == "__main__":
+    fix_footer()
+    print("Fixed footer!")
