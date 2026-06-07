@@ -63,28 +63,29 @@
 
             let payload = data[0].payload;
             
-            // Check if already scanned in the global log
-            const logRes = await fetch(`${API_URL}/registrations?payload->>is_scan_log=eq.true&payload->>scanned_id=eq.${id}`, { headers: HEADERS, cache: 'no-store' });
-            const logData = await logRes.json();
-
-            if(logData.length > 0) {
+            // Check if already scanned
+            if (payload.status === "QR İstifadə Edilib") {
                 showError("İSTİFADƏ EDİLİB", "Bu QR Kod artıq sistemdə istifadə edilib.");
                 return;
             }
 
-            // Insert a new scan log since PATCH is restricted by RLS
-            const insertRes = await fetch(`${API_URL}/registrations`, {
-                method: 'POST',
+            // Update existing row directly using PATCH (now allowed by RLS)
+            payload.status = "QR İstifadə Edilib";
+            if(!payload.note) payload.note = "";
+            payload.note += " | QR KOD OXUDULDU: " + new Date().toLocaleString();
+
+            const updateRes = await fetch(`${API_URL}/registrations?id=eq.${id}`, {
+                method: 'PATCH',
                 headers: HEADERS,
-                body: JSON.stringify({ payload: { is_scan_log: true, scanned_id: id, scanned_at: new Date().toISOString() } })
+                body: JSON.stringify({ payload })
             });
 
-            if(!insertRes.ok) throw new Error("Sistemə yazmaq mümkün olmadı");
+            if(!updateRes.ok) throw new Error("Sistemə yazmaq mümkün olmadı");
             
             // Mark as scanned locally
             localStorage.setItem('scanned_' + id, 'true');
             
-            showSuccess("TƏSDİQLƏNDİ", `${payload.fullName || 'İştirakçı'} üçün giriş təsdiqləndi! Xoş gəlmisiniz.`);
+            showSuccess("TƏSDİQLƏNDİ", `${payload.name || payload.fullName || 'İştirakçı'} üçün giriş təsdiqləndi! Xoş gəlmisiniz.`);
 
         } catch(e) {
             showError("Xəta", "Sistemdə problem yarandı: " + e.message);
