@@ -1354,7 +1354,7 @@ fbq('track', 'PageView');
         
         let s = getGranularSource(item);
         const MAP = { 
-          'lisey1':'Lisey 1', 'lisey2':'Lisey 2', 'montessori':'Montessori', 
+          'lisey1':'Nərimanov filialı', 'lisey2':'Gənclik filialı', 'montessori':'Montessori', 
           'eduhome':'Eduhome', 'zumrud':'Zümrüd', 'contact':'Əlaqə', 
           'career':'Karyera', 'whatsapp':'WhatsApp', 'instagram':'Instagram', 'email':'Email' 
         };
@@ -1363,7 +1363,7 @@ fbq('track', 'PageView');
         let matchesSource = true;
         if (source !== 'all') {
           if (source === 'Vebsayt') {
-            matchesSource = ['Lisey 1', 'Lisey 2', 'Montessori', 'Eduhome', 'Zümrüd', 'Əlaqə', 'Email'].includes(sourceLabel);
+            matchesSource = ['Nərimanov filialı', 'Gənclik filialı', 'Montessori', 'Eduhome', 'Zümrüd', 'Əlaqə', 'Email'].includes(sourceLabel);
           } else if (source === 'Karyera') {
             matchesSource = sourceLabel === 'Karyera';
           }
@@ -1396,7 +1396,7 @@ fbq('track', 'PageView');
         
         const s = getGranularSource(item);
         const MAP = { 
-          'lisey1':'Lisey 1', 'lisey2':'Lisey 2', 'montessori':'Montessori', 
+          'lisey1':'Nərimanov filialı', 'lisey2':'Gənclik filialı', 'montessori':'Montessori', 
           'eduhome':'Eduhome', 'zumrud':'Zümrüd', 'contact':'Əlaqə', 
           'career':'Karyera', 'whatsapp':'WhatsApp', 'instagram':'Instagram', 'email':'Email' 
         };
@@ -1427,7 +1427,7 @@ fbq('track', 'PageView');
         if (typeof statusMap !== 'undefined' && !statusMap[st]) st = 'Yeni';
         const s = getGranularSource(item);
         const MAP = { 
-          'lisey1':'Lisey 1', 'lisey2':'Lisey 2', 'montessori':'Montessori', 
+          'lisey1':'Nərimanov filialı', 'lisey2':'Gənclik filialı', 'montessori':'Montessori', 
           'eduhome':'Eduhome', 'zumrud':'Zümrüd', 'contact':'Əlaqə', 
           'career':'Karyera', 'whatsapp':'WhatsApp', 'instagram':'Instagram', 'email':'Email' 
         };
@@ -1657,16 +1657,19 @@ fbq('track', 'PageView');
       if (item._db_id_) {
           const verifyUrl = encodeURIComponent(`https://evrikaliseyi.edu.az/verify.html?id=${item._db_id_}`);
           const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${verifyUrl}`;
+          const isScanned = item.status === 'QR İstifadə Edilib';
           html += `
           <div class="detail-group">
             <div class="detail-group-header">İMTƏHANA GİRİŞ (QR KOD)</div>
-            <div style="display:flex; align-items:center; gap:20px; padding:20px; background:rgba(255,255,255,0.02); border-radius:12px; border:1px solid var(--border);">
-              <div style="background:white; padding:10px; border-radius:10px;">
+            <div style="display:flex; align-items:center; gap:20px; padding:20px; background:rgba(255,255,255,0.02); border-radius:12px; border:1px solid var(--border); position: relative;">
+              ${isScanned ? '<div style="position:absolute; top:20px; right:20px; background:var(--error); color:white; padding:5px 10px; border-radius:8px; font-weight:900; font-size:0.8rem; letter-spacing:1px; animation: badgePulse 2s infinite;"><i class="fas fa-exclamation-triangle"></i> QR ARTIQ İSTİFADƏ EDİLİB!</div>' : ''}
+              <div style="background:white; padding:10px; border-radius:10px; opacity:${isScanned ? '0.3' : '1'};">
                 <img src="${qrUrl}" alt="QR" style="width:100px; height:100px; display:block;">
               </div>
               <div>
                 <div style="font-weight:900; font-size:1.2rem; margin-bottom:5px; color:white; letter-spacing:1px;">KOD: EV-${String(item._db_id_).padStart(4,'0')}</div>
-                <div style="color:var(--text-muted); font-size:0.9rem;">Ödəniş Statusu: <span style="color:${item.payment_status === 'Ödənilib' ? '#10b981' : '#ef4444'}; font-weight:800; background:${item.payment_status === 'Ödənilib' ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)'}; padding:4px 8px; border-radius:6px; margin-left:5px;">${item.payment_status || 'Ödənilməyib'}</span></div>
+                <div style="color:var(--text-muted); font-size:0.9rem; margin-bottom: 5px;">Ödəniş Statusu: <span style="color:${item.payment_status === 'Ödənilib' ? '#10b981' : '#ef4444'}; font-weight:800; background:${item.payment_status === 'Ödənilib' ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)'}; padding:4px 8px; border-radius:6px; margin-left:5px;">${item.payment_status || 'Ödənilməyib'}</span></div>
+                ${isScanned ? '<div style="color:#ef4444; font-weight:900; font-size:0.9rem;"><i class="fas fa-check-double"></i> Bu kodla giriş edilib</div>' : ''}
               </div>
             </div>
           </div>
@@ -2433,8 +2436,8 @@ fbq('track', 'PageView');
     function updateCharts() {
       const sourceCounts = {};
       const SOURCE_MAP = {
-        'lisey1': 'EVRİKA Lisey 1 (Qeydiyyat)',
-        'lisey2': 'EVRİKA Lisey 2 (Qeydiyyat)',
+        'lisey1': 'EVRİKA Nərimanov filialı (Qeydiyyat)',
+        'lisey2': 'EVRİKA Gənclik filialı (Qeydiyyat)',
         'montessori': 'Montessori Academy (Qeydiyyat)',
         'eduhome': 'Eduhome Hazırlıq (Qeydiyyat)',
         'zumrud': 'Zümrüd Women Club (Qeydiyyat)',
