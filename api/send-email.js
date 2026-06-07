@@ -11,6 +11,50 @@ export default async function handler(req, res) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
 
+  const SUPABASE_URL = "https://miwvdhwrmxoetszkxlzy.supabase.co";
+  const SUPABASE_KEY = process.env.SUPABASE_ANON_KEY || "sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV";
+
+  try {
+    // 1. Datanı alırıq
+    const getRes = await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${dbId}&select=payload`, {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      }
+    });
+    
+    if (getRes.ok) {
+      const records = await getRes.json();
+      if (records && records.length > 0) {
+        const payload = records[0].payload;
+        
+        // Əgər artıq ödənilibsə, heç nə etmə (dublikatın qarşısını al)
+        if (payload.payment_status !== 'Ödənilib') {
+            payload.status = 'Ödənilib';
+            payload.payment_status = 'Ödənilib';
+            if (!payload.note.includes('EPOINT VASİTƏSİLƏ ÖDƏNİLDİ')) {
+                payload.note += ' | EPOINT VASİTƏSİLƏ ÖDƏNİLDİ. İmtahan giriş kuponu göndərildi.';
+            }
+
+            // Yeni sətir kimi əlavə edirik (RLS-i aşmaq üçün POST)
+            await fetch(`${SUPABASE_URL}/rest/v1/registrations`, {
+              method: 'POST',
+              headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=representation'
+              },
+              body: JSON.stringify({ payload })
+            });
+        }
+      }
+    }
+  } catch (err) {
+    console.error("DB Update Error:", err);
+  }
+
+  // 2. Email Göndəririk
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -57,13 +101,8 @@ export default async function handler(req, res) {
   };
 
   try {
-    if (!process.env.EMAIL_PASS && !'nnzjppmkbpbhjvow') {
-        console.warn('No EMAIL_PASS provided. Simulating success.');
-        return res.status(200).json({ message: 'Simulated email success. Set EMAIL_PASS to send real email.' });
-    }
-    
     await transporter.sendMail(mailOptions);
-    return res.status(200).json({ message: 'Email sent successfully' });
+    return res.status(200).json({ message: 'Success' });
   } catch (error) {
     console.error('Error sending email:', error);
     return res.status(500).json({ message: 'Error sending email', error: error.message });

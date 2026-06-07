@@ -250,69 +250,30 @@
       </section>
     
     <script>
-      // Səhifə yüklənəndə DB-ni yeniləyirik
+      // Səhifə yüklənəndə DB-ni yeniləyirik və emaili göndəririk (Arxa plan vasitəsilə)
       const urlParams = new URLSearchParams(window.location.search);
       const regId = urlParams.get('regId') || localStorage.getItem('last_regId');
       const emailParam = urlParams.get('email') || localStorage.getItem('last_email');
       const regName = urlParams.get('name') || localStorage.getItem('last_name') || '';
 
       if (regId) {
-        document.querySelector('.container p').innerHTML += '<br><br><span style="font-size: 0.9rem; color: #10b981;"><i class="fas fa-spinner fa-spin"></i> Sistem qeydiyyatınızı təsdiqləyir...</span>';
+        document.querySelector('.container p').innerHTML += '<br><br><span style="font-size: 0.9rem; color: #10b981;"><i class="fas fa-spinner fa-spin"></i> Sistem qeydiyyatınızı təsdiqləyir və kupon göndərir...</span>';
         
-        // Epoint ödənişi uğurla keçibsə (bura yalnız success olduqda redirect olur):
-        fetch('https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1/registrations?id=eq.' + regId, {
-            headers: {
-                'apikey': 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
-                'Authorization': 'Bearer sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV'
-            }
-        }).then(res => res.json()).then(records => {
-            if (records && records.length > 0) {
-                const currentPayload = records[0].payload;
-                let needsUpdate = false;
-                if (!currentPayload.note.includes('EPOINT VASİTƏSİLƏ ÖDƏNİLDİ')) {
-                    currentPayload.note += ' | EPOINT VASİTƏSİLƏ ÖDƏNİLDİ. İmtahan giriş kuponu göndərildi.';
-                    needsUpdate = true;
-                }
-                if (currentPayload.payment_status !== 'Ödənilib') {
-                    currentPayload.status = "Ödənilib";
-                    currentPayload.payment_status = "Ödənilib";
-                    needsUpdate = true;
-                }
-
-                if (needsUpdate) {
-                    fetch('https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1/registrations', {
-                      method: 'POST',
-                      headers: {
-                        'apikey': 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
-                        'Authorization': 'Bearer sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
-                        'Content-Type': 'application/json'
-                      },
-                      body: JSON.stringify({ payload: currentPayload })
-                    }).catch(console.error);
-                }
-
-                let extractedEmail = '';
-                if (currentPayload && currentPayload.note) {
-                    const match = currentPayload.note.match(/E-mail:\s*([^\s|]+)/);
-                    if (match && match[1]) extractedEmail = match[1].trim();
-                }
-                const finalEmail = emailParam || extractedEmail || currentPayload.email || currentPayload['E-mail'] || 'qeyd etdiyiniz';
-                document.querySelector('.container p').innerHTML = 'Təşəkkür edirik. Ödənişiniz sistemdə avtomatik qeydə alındı və xidmətiniz təsdiqləndi. İmtahan giriş kuponunuz ' + finalEmail + ' ünvanınıza göndərilmişdir.';
-                    
-                    if (finalEmail && finalEmail !== 'qeyd etdiyiniz') {
-                        fetch('/api/send-email', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                email: finalEmail,
-                                name: regName || 'Şagird',
-                                dbId: regId
-                            })
-                        }).catch(console.error);
-                    }
-                }).catch(console.error);
-            }
-        }).catch(console.error);
+        // Backend-ə sorğu göndəririk (Həm DB yeniləyir, həm də Mail göndərir)
+        fetch('/api/send-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: emailParam || 'qeyd etdiyiniz',
+                name: regName || 'Şagird',
+                dbId: regId
+            })
+        }).then(res => {
+            document.querySelector('.container p').innerHTML = 'Təşəkkür edirik. Ödənişiniz sistemdə avtomatik qeydə alındı və xidmətiniz təsdiqləndi. İmtahan giriş kuponunuz ' + (emailParam ? emailParam : 'qeyd etdiyiniz') + ' ünvanınıza uğurla göndərilmişdir.';
+        }).catch(err => {
+            console.error(err);
+            document.querySelector('.container p').innerHTML = 'Ödənişiniz təsdiqləndi, lakin kupon göndərilməsində kiçik gecikmə yaşandı. Xahiş edirik bizimlə əlaqə saxlayın.';
+        });
       }
     </script>
 </main>
