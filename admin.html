@@ -737,7 +737,16 @@ fbq('track', 'PageView');
                     <button class="btn-view" style="font-size:0.75rem;">Hesabat Yüklə</button>
                 </div>
                 <table>
-                    <thead><tr><th>Şagird</th><th>Kart Məlumatı</th><th>Məbləğ</th><th>Tarix</th><th>Status</th></tr></thead>
+                    <thead>
+                      <tr>
+                        <th>Kart Sahibi / Təsvir</th>
+                        <th>Kart Nömrəsi / Növü</th>
+                        <th>Məbləğ / Komissiya</th>
+                        <th>RRN / Tarix</th>
+                        <th>İcra / Operator</th>
+                        <th>Qəbz</th>
+                      </tr>
+                    </thead>
                     <tbody id="finance-tbody">
                     </tbody>
                 </table>
@@ -1415,6 +1424,7 @@ fbq('track', 'PageView');
       const tb = document.getElementById('crm-tbody'); if(!tb) return;
       tb.innerHTML = filteredData.map((item, i) => {
         let st = item.status || 'Yeni';
+        if (typeof statusMap !== 'undefined' && !statusMap[st]) st = 'Yeni';
         const s = getGranularSource(item);
         const MAP = { 
           'lisey1':'Lisey 1', 'lisey2':'Lisey 2', 'montessori':'Montessori', 
@@ -1426,7 +1436,7 @@ fbq('track', 'PageView');
         // Robust name extraction
         const fullName = item.fullName || item['Ad Soyad'] || item.name || 
                         item['[1.Əlaqə] Valideyn Adı'] || 
-                        item['[2.Şagird] Adı'] + ' ' + (item['[2.Şagird] Soyadı'] || '') ||
+                        (item['[2.Şagird] Adı'] ? item['[2.Şagird] Adı'] + ' ' + (item['[2.Şagird] Soyadı'] || '') : null) ||
                         'Adsız';
         
         // Robust phone extraction
@@ -1458,16 +1468,53 @@ fbq('track', 'PageView');
        const payments = rawData.filter(i => i.epoint_amount || (i.amount && i.payment_status === 'Ödənilib'));
        tb.innerHTML = payments.map(p => {
            const fullName = p.fullName || p['Ad Soyad'] || p.name || (p['[2.Şagird] Adı'] ? p['[2.Şagird] Adı'] + ' ' + (p['[2.Şagird] Soyadı']||'') : 'Adsız');
-           const type = p.epoint_card_type ? `${p.epoint_card_type} (***${(p.epoint_card_number||'').slice(-4)})` : 'Bank Kartı';
-           const bank = p.epoint_bank || '-';
+           const description = p.description || 'Təhsil Ödənişi';
+           
+           const cardBrand = (p.epoint_card_type || 'BANK KARTI').toUpperCase();
+           let brandIcon = 'fas fa-credit-card';
+           if(cardBrand.includes('VISA')) brandIcon = 'fab fa-cc-visa';
+           else if(cardBrand.includes('MASTER')) brandIcon = 'fab fa-cc-mastercard';
+           
+           const cardLast4 = p.epoint_card_number ? p.epoint_card_number : '**** **** **** ****'; // Dinamik olaraq API-dən gəlir
+           const payMethod = p.epoint_bank || 'Epoint Onlayn Ödəniş';
+           const rrn = p.epoint_transaction || '---';
+           const executedBy = p.executed_by || 'API';
+           const operator = p.operator || 'Evrika Sistemi';
+           const paySource = p.payment_source || 'Vebsayt';
+           
            const amount = p.epoint_amount || p.amount || 0;
-           const date = p.epoint_date ? new Date(p.epoint_date).toLocaleString('az') : new Date(p.submissionDate || Date.now()).toLocaleDateString('az');
+           const commission = p.epoint_commission || '0.00';
+           const date = p.epoint_date ? new Date(p.epoint_date).toLocaleString('az') : new Date(p.submissionDate || Date.now()).toLocaleString('az');
+           
            return `<tr>
-             <td><div style="font-weight:700;">${fullName}</div></td>
-             <td><div style="font-size:0.85rem; font-weight:600;">${type}</div><div style="font-size:0.7rem; color:var(--text-muted);">${bank}</div></td>
-             <td style="font-weight:700;">${amount} AZN</td>
-             <td><div style="font-size:0.85rem; color:var(--text-muted);">${date}</div></td>
-             <td><span style="color:var(--success); font-weight:700; background:rgba(16,185,129,0.1); padding:4px 8px; border-radius:6px;">Ödənilib</span></td>
+             <td>
+               <div style="font-weight:800; font-size:0.9rem; color:white;">${fullName}</div>
+               <div style="font-size:0.7rem; color:var(--text-muted); opacity:0.8; margin-top:3px;">${description}</div>
+             </td>
+             <td>
+               <div style="display:flex; align-items:center; gap:12px;">
+                 <i class="${brandIcon}" style="font-size:1.8rem; color:var(--text-muted); opacity:0.8;"></i>
+                 <div>
+                   <div style="font-size:0.85rem; font-weight:800; letter-spacing:1px; font-family:monospace;">${cardLast4}</div>
+                   <div style="font-size:0.65rem; color:var(--text-muted); text-transform:uppercase; margin-top:2px;">${cardBrand} | ${payMethod}</div>
+                 </div>
+               </div>
+             </td>
+             <td>
+               <div style="font-weight:900; font-size:1rem; color:var(--success);">${amount} <span style="font-size:0.75rem;">₼</span></div>
+               <div style="font-size:0.65rem; color:var(--text-muted); margin-top:3px;">Komissiya: <span style="color:var(--warning); font-weight:700;">${commission} ₼</span></div>
+             </td>
+             <td>
+               <div style="font-size:0.8rem; font-weight:700; color:white; font-family:monospace;">RRN: ${rrn}</div>
+               <div style="font-size:0.7rem; font-weight:600; color:var(--text-muted); margin-top:3px;">${date}</div>
+             </td>
+             <td>
+               <div style="font-size:0.75rem; font-weight:800; color:white; text-transform:uppercase;">İcra: ${executedBy}</div>
+               <div style="font-size:0.65rem; color:var(--text-muted); margin-top:3px;">Op: ${operator} | ${paySource}</div>
+             </td>
+             <td>
+               <button class="btn-view" style="padding:10px 15px; font-size:0.7rem; background:rgba(59,130,246,0.1); color:var(--royal-blue); border-color:rgba(59,130,246,0.2);"><i class="fas fa-file-download" style="margin-right:5px;"></i> Qəbz</button>
+             </td>
            </tr>`;
        }).join('');
        
@@ -1482,6 +1529,7 @@ fbq('track', 'PageView');
       const titles = { 'dashboard':'Dashboard', 'apps':'Müraciətlər', 'kanban':'Kanban Board', 'tasks':'Tapşırıqlar', 'employees':'Əməkdaşlar', 'vacancies':'Vakansiyalar', 'finance':'Maliyyə Paneli', 'ugurlar':'Uğurlar & Məzun', 'news':'Xəbərlər', 'leadership':'Rəhbərlik', 'settings':'Sistem Ayarları', 'parents':'Valideynlərimiz' };
       document.getElementById('topbar-title').innerText = titles[t] || 'EVRIKA EMS';
       if(t==='vacancies') renderVacancyApps();
+      if(t==='apps') renderApps();
       if(t==='dashboard') renderDashboard();
       if(t==='finance') renderFinance();
       if(t==='mezunlar') loadMezunlar();
