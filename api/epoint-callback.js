@@ -52,7 +52,7 @@ export default async function handler(req, res) {
         let existingPayload = rows[0].payload || {};
         
         // 2. Ödəniş detallarını əlavə edirik
-        existingPayload.status = 'Ödənildi';
+        existingPayload.status = 'Yeni';
         existingPayload.payment_status = 'Ödənilib';
         existingPayload.epoint_amount = result.amount;
         existingPayload.epoint_currency = result.currency;
@@ -63,9 +63,9 @@ export default async function handler(req, res) {
         existingPayload.epoint_rrn = result.rrn;
         existingPayload.epoint_date = result.date;
 
-        // 3. Supabase-ə payload-u YENİ SƏTİR KİMİ ƏLAVƏ EDİRİK (UPDATE RLS BLOKUNU KEÇMƏK ÜÇÜN)
-        const updateResponse = await fetch(`${SUPABASE_URL}/rest/v1/registrations`, {
-          method: 'POST',
+        // 3. Supabase-də mövcud sətiri YENİLƏYİRİK (UPDATE / PATCH)
+        const updateResponse = await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${order_id}`, {
+          method: 'PATCH',
           headers: {
             'apikey': SUPABASE_KEY,
             'Authorization': `Bearer ${SUPABASE_KEY}`,
