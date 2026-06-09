@@ -1,86 +1,94 @@
 import re
 
-with open('lisey2.html', 'r', encoding='utf-8') as f:
-    content = f.read()
+with open('victory.html', 'r', encoding='utf-8') as f:
+    html = f.read()
 
-# 1. Move the bento grid completely outside of the about-wrap.
-# The grid starts at '<div class="montessori-bento-grid"' and ends at '</div>\n          </div>\n          <div class="about-img-side'
-start_grid = content.find('<div class="montessori-bento-grid"')
-end_grid = content.find('</div>\n          </div>\n          <div class="about-img-side')
+# 1. CSS modifications for all yellow sections to use dark blue
+html = html.replace('#facc15', '#0e1b41')
+html = html.replace('#eab308', '#0e1b41')
+html = html.replace('#about { background-color: #0e1b41 !important; color: #000 !important; }', '#about { background-color: #0e1b41 !important; color: #fff !important; }')
+html = html.replace('#about .sec-eyebrow { color: #000 !important;', '#about .sec-eyebrow { color: #fff !important;')
+html = html.replace('#about .sec-h2, #about .sec-h2 em { color: #000 !important; }', '#about .sec-h2, #about .sec-h2 em { color: #fff !important; }')
+html = html.replace('#about p { color: #333 !important; }', '#about p { color: #fff !important; }')
+html = html.replace('#about h4 { color: #000 !important; }', '#about h4 { color: #fff !important; }')
+html = html.replace('#about .pills .pill i { color: #000 !important; }', '#about .pills .pill i { color: #fff !important; }')
+html = html.replace('#about .pill { background: #fff !important; color: #000 !important; border: none !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }', '#about .pill { background: rgba(255,255,255,0.1) !important; color: #fff !important; border: 1px solid rgba(255,255,255,0.2) !important; }')
 
-if start_grid != -1 and end_grid != -1:
-    grid_content = content[start_grid:end_grid+6] # include the closing </div> of the grid
-    
-    # We remove it from the current location
-    content_without_grid = content[:start_grid] + content[end_grid+6:]
-    
-    # We want to place the grid right after the .about-wrap div finishes
-    # The .about-wrap closes right after the about-img-side.
-    # We can search for the end of about-wrap.
-    # It looks like:
-    # <div class="about-img-side reveal-left">
-    #   <div class="img-placeholder" ...>
-    #      <img ...>
-    #   </div>
-    # </div>
-    # </div> (closing of about-wrap)
-    
-    # Let's find:
-    about_img_str = '<div class="about-img-side reveal-left">'
-    idx_img_start = content_without_grid.find(about_img_str)
-    
-    if idx_img_start != -1:
-        # Find the end of this about-wrap block. It has 3 nested divs inside it roughly.
-        # Actually it's simple: Just search for '</div>\n        </div>\n      </div>\n    </section>' or similar.
-        # It's at the end of the section.
-        end_of_section = content_without_grid.find('</section>', idx_img_start)
-        
-        # Insert the grid just before </section> inside the container.
-        # Wait, the section ends right after the container.
-        # Let's insert it just before '      </div>\n    </section>'
-        container_end = content_without_grid.rfind('</div>', idx_img_start, end_of_section)
-        
-        # Wait, let's just do a simpler replace.
-        # Update the grid CSS first:
-        grid_content = grid_content.replace('grid-template-columns: 1fr;', 'grid-template-columns: 1fr;') # We'll handle @media
-        # The CSS has:
-        # @media(min-width: 992px) {
-        #   .montessori-bento-grid {
-        #     grid-template-columns: 1fr;
-        #   }
-        # }
-        # Let's change it to:
-        grid_content = grid_content.replace('grid-template-columns: 1fr;', 'grid-template-columns: repeat(3, 1fr);')
-        
-        # To be safe, find the exact insertion point. Let's look at the HTML structure around about-img-side
-        # It goes:
-        #           <div class="about-img-side reveal-left">
-        #             <div class="img-placeholder" ...>
-        #                <img src="assets/montessori-approach.jpg" ...>
-        #             </div>
-        #           </div>
-        #         </div>
-        #       </div>
-        #     </section>
-        
-        insertion_target = '</div>\n        </div>\n      </div>\n    </section>'
-        if insertion_target in content_without_grid:
-            # We want to insert it inside the container.
-            # </div> (closes about-wrap)
-            # --> INSERT GRID HERE <--
-            # </div> (closes container)
-            # </section>
-            
-            replacement = '</div>\n        </div>\n' + grid_content + '\n      </div>\n    </section>'
-            final_content = content_without_grid.replace(insertion_target, replacement)
-            
-            with open('lisey2.html', 'w', encoding='utf-8') as f:
-                f.write(final_content)
-            print("Successfully moved grid to full width and made it 3 columns.")
-        else:
-            print("Could not find insertion target.")
-    else:
-        print("Could not find about-img-side.")
-else:
-    print("Could not find start/end of grid.")
+# Ustunlukler styling
+html = html.replace('#ustunlukler { background-color: #0e1b41 !important; }', '#ustunlukler { background-color: #0e1b41 !important; color: #fff !important; }')
+html = html.replace('#ustunlukler .sec-eyebrow { color: #000 !important;', '#ustunlukler .sec-eyebrow { color: #fff !important;')
+html = html.replace('#ustunlukler .sec-h2, #ustunlukler .sec-h2 em { color: #000 !important; }', '#ustunlukler .sec-h2, #ustunlukler .sec-h2 em { color: #fff !important; }')
+html = html.replace('#ustunlukler .prog-title { color: #000 !important; }', '#ustunlukler .prog-title { color: #0e1b41 !important; }') # The boxes are white
+html = html.replace('#ustunlukler .prog-desc { color: #333 !important; }', '#ustunlukler .prog-desc { color: #333 !important; }')
+html = html.replace('#ustunlukler .prog-ico { background: #0e1b41 !important; color: #000 !important;', '#ustunlukler .prog-ico { background: #0e1b41 !important; color: #fff !important;')
 
+# Sosial Media styling
+html = html.replace('#sosial-media { background: #0e1b41 !important; }', '#sosial-media { background: #0e1b41 !important; color: #fff !important; }')
+html = html.replace('#sosial-media .sec-eyebrow { color: #000 !important;', '#sosial-media .sec-eyebrow { color: #fff !important;')
+html = html.replace('#sosial-media .sec-h2, #sosial-media .sec-h2 em { color: #000 !important; }', '#sosial-media .sec-h2, #sosial-media .sec-h2 em { color: #fff !important; }')
+html = html.replace('#sosial-media a { color: #333 !important; }', '#sosial-media a { color: #fff !important; }')
+html = html.replace('#sosial-media .btn-primary { background: #000 !important; color: #fff !important; }', '#sosial-media .btn-primary { background: #1d3557 !important; color: #fff !important; border-color: #1d3557 !important; }')
+
+# xidmetler icon text color
+html = html.replace('#xidmetler .prog-ico { background: #0e1b41 !important; color: #000 !important; border: none !important; }', '#xidmetler .prog-ico { background: #0e1b41 !important; color: #fff !important; border: none !important; }')
+
+# 2. Replacing the grid
+old_grid = r'<section class="section prog-bg" id="xidmetler">.*?<div class="prog-grid">.*?</div>\s*</div>\s*</section>'
+
+new_grid = """<section class="section prog-bg" id="xidmetler">
+  <div class="container">
+    <div style="text-align:center" class="reveal">
+      <span class="sec-eyebrow">Xidmətlərimiz</span>
+      <h2 class="sec-h2" style="text-align:center">Akademik <em>Hazırlıq Proqramları</em></h2>
+    </div>
+    <div class="prog-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; background: transparent; padding-top: 20px;">
+      <div class="prog-item reveal" style="border-radius: 20px;">
+        <div class="prog-ico"><i class="fas fa-check-circle"></i></div>
+        <div class="prog-n">01 · HAZIRLIQ</div>
+        <div class="prog-title">SAT Hazırlığı</div>
+      </div>
+      <div class="prog-item reveal" style="border-radius: 20px;">
+        <div class="prog-ico"><i class="fas fa-check-circle"></i></div>
+        <div class="prog-n">02 · HAZIRLIQ</div>
+        <div class="prog-title">SAT + Attestat Proqramı</div>
+      </div>
+      <div class="prog-item reveal" style="border-radius: 20px;">
+        <div class="prog-ico"><i class="fas fa-check-circle"></i></div>
+        <div class="prog-n">03 · DİL HAZIRLIĞI</div>
+        <div class="prog-title">IELTS Hazırlığı</div>
+      </div>
+      <div class="prog-item reveal" style="border-radius: 20px;">
+        <div class="prog-ico"><i class="fas fa-check-circle"></i></div>
+        <div class="prog-n">04 · DİL HAZIRLIĞI</div>
+        <div class="prog-title">TOEFL Hazırlığı</div>
+      </div>
+      <div class="prog-item reveal" style="border-radius: 20px;">
+        <div class="prog-ico"><i class="fas fa-check-circle"></i></div>
+        <div class="prog-n">05 · PROQRAM</div>
+        <div class="prog-title">Foundation Proqramları</div>
+      </div>
+      <div class="prog-item reveal" style="border-radius: 20px;">
+        <div class="prog-ico"><i class="fas fa-check-circle"></i></div>
+        <div class="prog-n">06 · PROQRAM</div>
+        <div class="prog-title">Beynəlxalq universitetlərə qəbul üçün akademik ingilis dili hazırlığı</div>
+      </div>
+      <div class="prog-item reveal" style="border-radius: 20px;">
+        <div class="prog-ico"><i class="fas fa-check-circle"></i></div>
+        <div class="prog-n">07 · PROQRAM</div>
+        <div class="prog-title">Pearson və A-Level istiqamətləri üzrə hazırlıq proqramları</div>
+      </div>
+      <div class="prog-item reveal" style="border-radius: 20px;">
+        <div class="prog-ico"><i class="fas fa-check-circle"></i></div>
+        <div class="prog-n">08 · PROQRAM</div>
+        <div class="prog-title">Çin universitetlərinə qəbul üçün beynəlxalq CSCA hazırlıq proqramları</div>
+      </div>
+    </div>
+  </div>
+</section>"""
+
+html = re.sub(old_grid, new_grid, html, flags=re.DOTALL)
+
+with open('victory.html', 'w', encoding='utf-8') as f:
+    f.write(html)
+
+print("Grid replaced!")
