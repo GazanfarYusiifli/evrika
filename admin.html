@@ -772,8 +772,9 @@ fbq('track', 'PageView');
                         <th>Kart Sahibi / Təsvir</th>
                         <th>Kart Nömrəsi / Növü</th>
                         <th>Məbləğ / Komissiya</th>
-                        <th>RRN / Tarix</th>
+                        <th>Tranzaksiya ID / Tarix</th>
                         <th>Sistem İcrası</th>
+                        <th>Əməliyyatlar</th>
                       </tr>
                     </thead>
                     <tbody id="finance-history-tbody">
@@ -1516,7 +1517,7 @@ fbq('track', 'PageView');
             
             const cardLast4 = p.epoint_card_number ? p.epoint_card_number : '**** **** **** ****';
             const payMethod = p.epoint_bank || 'Epoint Onlayn Ödəniş';
-            const rrn = p.epoint_transaction || '---';
+            const txId = p.epoint_transaction || p.epoint_rrn || '---';
             const executedBy = p.executed_by || 'API';
             const amount = p.epoint_amount || p.amount || 0;
             const commission = p.epoint_commission || (Number(amount)*0.02).toFixed(2);
@@ -1541,12 +1542,15 @@ fbq('track', 'PageView');
                 <div style="font-size:0.65rem; color:var(--text-muted); margin-top:3px;">Komissiya: <span style="color:var(--warning); font-weight:700;">${commission} ₼</span></div>
               </td>
               <td>
-                <div style="font-size:0.8rem; font-weight:700; color:white; font-family:monospace;">RRN: ${rrn}</div>
+                <div style="font-size:0.8rem; font-weight:700; color:white; font-family:monospace;">ID: ${txId}</div>
                 <div style="font-size:0.7rem; font-weight:600; color:var(--text-muted); margin-top:3px;">${date}</div>
               </td>
-              <td>
+                           <td>
                 <div style="font-size:0.75rem; font-weight:800; color:white; text-transform:uppercase;">EPOINT MÜHƏRRİKİ</div>
                 <div style="font-size:0.65rem; color:var(--success); margin-top:3px;"><i class="fas fa-check-circle"></i> Uğurlu</div>
+              </td>
+              <td>
+                <button class="btn-view" style="padding:10px 15px; font-size:0.7rem; background:rgba(59,130,246,0.1); color:var(--royal-blue); border-color:rgba(59,130,246,0.2);" onclick="openFinanceDetails('${p.id || p.order_id || p.epoint_transaction}')"><i class="fas fa-eye" style="margin-right:5px;"></i> Detallar</button>
               </td>
             </tr>`;
         }).join('');
@@ -1594,6 +1598,25 @@ fbq('track', 'PageView');
       if(t==='popup') loadPopups();
       if(t==='settings') loadExamFee();
       if(t==='parents') loadParents();
+    };
+
+    
+    window.openFinanceDetails = (order_id) => {
+        // find index in filteredData
+        const idx = filteredData.findIndex(i => (i.id == order_id || i.order_id == order_id || (i.epoint_transaction && i.epoint_transaction == order_id)));
+        if(idx >= 0) {
+            viewDetails(idx);
+        } else {
+            // fallback to rawData
+            const rIdx = rawData.findIndex(i => (i.id == order_id || i.order_id == order_id || (i.epoint_transaction && i.epoint_transaction == order_id)));
+            if(rIdx >= 0) {
+                // temporarily put it in filteredData to view
+                filteredData.push(rawData[rIdx]);
+                viewDetails(filteredData.length - 1);
+            } else {
+                alert('Detallar tapılmadı');
+            }
+        }
     };
 
     window.viewDetails = (idx) => {
@@ -1654,8 +1677,8 @@ fbq('track', 'PageView');
         if (upperKey === 'NOTE') cleanKey = 'Qeyd';
         if (upperKey === 'EPOINT_AMOUNT') cleanKey = 'Ödəniş Məbləği';
         if (upperKey === 'EPOINT_DATE') cleanKey = 'Ödəniş Tarixi';
-        if (upperKey === 'EPOINT_CARD_NUMBER') cleanKey = 'Kartın Son Rəqəmləri';
-        if (upperKey === 'EPOINT_CARD_TYPE') cleanKey = 'Kart Növü / Adı';
+        if (upperKey === 'EPOINT_CARD_NUMBER') cleanKey = 'Ödəyici Kartı (Maska)';
+        if (upperKey === 'EPOINT_CARD_TYPE') cleanKey = 'Kartın Növü';
         if (upperKey === 'EPOINT_BANK') cleanKey = 'Bank Adı';
         if (upperKey === 'EPOINT_CURRENCY') cleanKey = 'Valyuta';
         if (upperKey === 'EPOINT_TRANSACTION') cleanKey = 'Tranzaksiya ID';
