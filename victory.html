@@ -9,14 +9,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    :root { --accent:#3B82F6; --accent-light:#93C5FD; --accent-glow:rgba(59,130,246,0.25); --navy:#020617; --navy-mid:#0f172a; --text:#f8fafc; --text-muted:#94a3b8; --surface:rgba(255,255,255,0.03); --border:rgba(255,255,255,0.08); }
+    :root { --accent:#0e1b41; --accent-light:#1d3557; --accent-glow:rgba(14,27,65,0.25); --navy:#020617; --navy-mid:#0f172a; --text:#f8fafc; --text-muted:#94a3b8; --surface:rgba(255,255,255,0.03); --border:rgba(255,255,255,0.08); }
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;} html{scroll-behavior:smooth;} 
     body{font-family:'Inter',sans-serif;background:var(--navy);color:var(--text);overflow-x:hidden; position: relative;}
     
     /* Modern Background Elements */
     .bg-orb { position: fixed; border-radius: 50%; filter: blur(120px); z-index: -1; opacity: 0.15; pointer-events: none; }
     .orb-gold { width: 500px; height: 500px; background: var(--accent); top: -100px; right: -100px; }
-    .orb-yellow { width: 400px; height: 400px; background: #2563EB; bottom: -100px; left: -100px; animation-delay: -5s; }
+    .orb-yellow { width: 400px; height: 400px; background: #0e1b41; bottom: -100px; left: -100px; animation-delay: -5s; }
     @keyframes orbFloat { from { transform: translate(0,0) rotate(0deg); } to { transform: translate(100px, 50px) rotate(30deg); } }
     
     /* Scroll Indicator */
@@ -25,14 +25,14 @@
     @media(max-width: 1200px) { .scroll-indicator { display: none; } }
     .hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;padding-top:72px;}
     .hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,rgba(40,35,0,0.92) 0%,rgba(90,80,0,0.8) 50%,rgba(20,18,0,0.95) 100%),url('https://files.cdn-files-a.com/uploads/10086696/2000_695ef25fe482e.jpg') center/cover no-repeat;}
-    .hero-mesh{position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 10% 50%,rgba(59,130,246,0.15) 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 90% 20%,rgba(59,130,246,0.08) 0%,transparent 50%);}
+    .hero-mesh{position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 10% 50%,rgba(14,27,65,0.15) 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 90% 20%,rgba(14,27,65,0.08) 0%,transparent 50%);}
     .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);background-size:80px 80px;}
     .hero-inner{position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:0 48px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
-    .hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.35);color:var(--accent-light);padding:6px 16px;border-radius:999px;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.15em;margin-bottom:28px;}
+    .hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(14,27,65,0.12);border:1px solid rgba(14,27,65,0.35);color:var(--accent-light);padding:6px 16px;border-radius:999px;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.15em;margin-bottom:28px;}
     .hero-h1{font-size:clamp(2.5rem,5vw,4rem);font-weight:900;line-height:1.0;letter-spacing:-0.04em;color:#fff;margin-bottom:24px;} .hero-h1 .accent{color:var(--accent-light);}
     .hero-p{font-size:1.05rem;color:var(--text-muted);line-height:1.8;max-width:520px;margin-bottom:44px;}
     .hero-btns{display:flex;gap:16px;flex-wrap:wrap;}
-    .btn-primary{background:var(--accent);color:#fff;padding:15px 36px;border-radius:12px;text-decoration:none;font-weight:800;font-size:.95rem;border:2px solid var(--accent);transition:all .3s;display:inline-flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(59,130,246,0.35);} .btn-primary:hover{transform:translateY(-3px);box-shadow:0 16px 48px rgba(59,130,246,0.5);}
+    .btn-primary{background:var(--accent);color:#fff;padding:15px 36px;border-radius:12px;text-decoration:none;font-weight:800;font-size:.95rem;border:2px solid var(--accent);transition:all .3s;display:inline-flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(14,27,65,0.35);} .btn-primary:hover{transform:translateY(-3px);box-shadow:0 16px 48px rgba(14,27,65,0.5);}
     .btn-glass{background:rgba(255,255,255,0.06);color:#fff;padding:15px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:.95rem;border:1.5px solid rgba(255,255,255,0.15);transition:all .3s;display:inline-flex;align-items:center;gap:10px;} .btn-glass:hover{background:rgba(255,255,255,0.12);}
     
     /* Noise Texture Overlay */
@@ -42,7 +42,7 @@
     .hero-school-label{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.2em;color:var(--accent-light);margin-bottom:12px;}
     .hero-facts{display:flex;flex-direction:column;gap:14px;margin-top:28px;}
     .hero-fact{display:flex;align-items:center;gap:14px;padding:14px 18px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:14px;}
-    .hero-fact-icon{width:38px;height:38px;border-radius:10px;background:rgba(59,130,246,0.2);border:1px solid rgba(59,130,246,0.3);display:flex;align-items:center;justify-content:center;color:var(--accent-light);font-size:.9rem;flex-shrink:0;}
+    .hero-fact-icon{width:38px;height:38px;border-radius:10px;background:rgba(14,27,65,0.2);border:1px solid rgba(14,27,65,0.3);display:flex;align-items:center;justify-content:center;color:var(--accent-light);font-size:.9rem;flex-shrink:0;}
     .hero-fact-text strong{display:block;font-size:.9rem;font-weight:700;color:#fff;} .hero-fact-text span{font-size:.78rem;color:var(--text-muted);}
     .stats-band-inner{max-width:1280px;margin:0 auto;padding:0 48px;display:grid;grid-template-columns:repeat(4,1fr);}
     .stat-box{padding:44px 32px;text-align:center;border-right:1px solid var(--border);border-bottom:1px solid var(--border);position:relative;overflow:hidden;transition:background .3s;} .stat-box:hover{background:var(--surface);} .stat-box:nth-child(4n){border-right:none;}
@@ -54,38 +54,38 @@
     .sec-h2{font-size:clamp(2rem,4vw,3rem);font-weight:900;color:#fff;letter-spacing:-0.03em;line-height:1.1;margin-bottom:16px;} .sec-h2 em{color:var(--accent-light);font-style:normal;}
     .about-wrap{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
     .about-img-side{position:relative;} .about-img-side img{width:100%;height:540px;object-fit:cover;border-radius:28px;box-shadow:0 40px 120px rgba(0,0,0,0.6);}
-    .about-float{position:absolute;bottom:-20px;right:-20px;background:var(--accent);color:#fff;padding:24px 30px;border-radius:22px;box-shadow:0 20px 60px rgba(59,130,246,0.5);}
+    .about-float{position:absolute;bottom:-20px;right:-20px;background:var(--accent);color:#fff;padding:24px 30px;border-radius:22px;box-shadow:0 20px 60px rgba(14,27,65,0.5);}
     .about-float .num{font-size:2.5rem;font-weight:900;line-height:1;display:block;} .about-float .lbl{font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;opacity:.85;margin-top:4px;}
-    .about-glow{position:absolute;top:-30px;left:-30px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,0.25) 0%,transparent 70%);pointer-events:none;}
+    .about-glow{position:absolute;top:-30px;left:-30px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(14,27,65,0.25) 0%,transparent 70%);pointer-events:none;}
     .about-text-side p{font-size:1rem;color:var(--text-muted);line-height:1.9;margin-bottom:18px;} .about-text-side p strong{color:rgba(255,255,255,0.9);font-weight:700;}
-    .pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:32px;} .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);font-size:.85rem;font-weight:600;color:rgba(255,255,255,0.8);transition:all .3s;} .pill:hover{background:rgba(59,130,246,0.15);border-color:rgba(59,130,246,0.4);color:#fff;} .pill i{color:var(--accent-light);font-size:.8rem;}
+    .pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:32px;} .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);font-size:.85rem;font-weight:600;color:rgba(255,255,255,0.8);transition:all .3s;} .pill:hover{background:rgba(14,27,65,0.15);border-color:rgba(14,27,65,0.4);color:#fff;} .pill i{color:var(--accent-light);font-size:.8rem;}
     .prog-bg{background:var(--navy-mid);}
     .prog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:24px;overflow:hidden;margin-top:64px;}
     .prog-item{background:var(--navy-mid);padding:40px 36px;transition:background .3s;position:relative;overflow:hidden;} .prog-item::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent-light));transform:scaleX(0);transform-origin:left;transition:transform .4s;} .prog-item:hover{background:rgba(255,255,255,0.03);} .prog-item:hover::before{transform:scaleX(1);}
-    .prog-ico{width:52px;height:52px;border-radius:14px;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.3);display:flex;align-items:center;justify-content:center;color:var(--accent-light);font-size:1.2rem;margin-bottom:24px;transition:all .3s;} .prog-item:hover .prog-ico{background:rgba(59,130,246,0.25);transform:scale(1.08);}
+    .prog-ico{width:52px;height:52px;border-radius:14px;background:rgba(14,27,65,0.12);border:1px solid rgba(14,27,65,0.3);display:flex;align-items:center;justify-content:center;color:var(--accent-light);font-size:1.2rem;margin-bottom:24px;transition:all .3s;} .prog-item:hover .prog-ico{background:rgba(14,27,65,0.25);transform:scale(1.08);}
     .prog-n{font-size:.72rem;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.15em;margin-bottom:10px;}
     .prog-title{font-size:1.05rem;font-weight:800;color:#fff;margin-bottom:12px;line-height:1.3;} .prog-desc{font-size:.875rem;color:var(--text-muted);line-height:1.75;margin-bottom:20px;}
-    .prog-chips{display:flex;flex-wrap:wrap;gap:6px;} .chip{padding:4px 12px;border-radius:999px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.25);color:var(--accent-light);font-size:.72rem;font-weight:700;}
+    .prog-chips{display:flex;flex-wrap:wrap;gap:6px;} .chip{padding:4px 12px;border-radius:999px;background:rgba(14,27,65,0.1);border:1px solid rgba(14,27,65,0.25);color:var(--accent-light);font-size:.72rem;font-weight:700;}
     .countries-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:64px;}
-    .country-card{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:20px;padding:28px;text-align:center;transition:all .4s;cursor:default;} .country-card:hover{background:rgba(59,130,246,0.08);border-color:rgba(59,130,246,0.3);transform:translateY(-6px);}
+    .country-card{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:20px;padding:28px;text-align:center;transition:all .4s;cursor:default;} .country-card:hover{background:rgba(14,27,65,0.08);border-color:rgba(14,27,65,0.3);transform:translateY(-6px);}
     .flag{font-size:2.2rem;display:block;margin-bottom:12px;} .c-name{font-size:.9rem;font-weight:800;color:#fff;margin-bottom:4px;} .c-uni{font-size:.75rem;color:var(--text-muted);}
     .infra-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-top:64px;}
     .infra-card{position:relative;height:300px;border-radius:24px;overflow:hidden;cursor:pointer;} .infra-card img{width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.16,1,.3,1);filter:brightness(.6);} .infra-card:hover img{transform:scale(1.08);filter:brightness(.45);}
     .infra-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(20,18,0,0.95) 0%,transparent 60%);}
     .infra-top{position:absolute;top:20px;right:20px;width:42px;height:42px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.95rem;}
     .infra-bot{position:absolute;bottom:24px;left:24px;} .infra-bot h4{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:4px;} .infra-bot p{font-size:.82rem;color:rgba(255,255,255,0.6);}
-    .reg-section{background:linear-gradient(135deg,var(--navy-mid) 0%,#292500 100%);position:relative;overflow:hidden;} .reg-section::before{content:'';position:absolute;top:-300px;right:-300px;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,0.15) 0%,transparent 65%);}
+    .reg-section{background:linear-gradient(135deg,var(--navy-mid) 0%,#292500 100%);position:relative;overflow:hidden;} .reg-section::before{content:'';position:absolute;top:-300px;right:-300px;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(14,27,65,0.15) 0%,transparent 65%);}
     .reg-wrap{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;position:relative;z-index:1;}
     .reg-info h2{font-size:clamp(2.2rem,4vw,3.2rem);font-weight:900;color:#fff;line-height:1.1;letter-spacing:-0.03em;margin-bottom:24px;} .reg-info h2 em{color:var(--accent-light);font-style:normal;} .reg-info p{font-size:1rem;color:var(--text-muted);line-height:1.8;margin-bottom:40px;}
-    .reg-perks{display:flex;flex-direction:column;gap:14px;} .reg-perk{display:flex;align-items:center;gap:14px;padding:14px 20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:14px;font-size:.9rem;color:rgba(255,255,255,0.8);font-weight:500;transition:all .3s;} .reg-perk:hover{background:rgba(59,130,246,0.1);border-color:rgba(59,130,246,0.3);} .reg-perk i{width:34px;height:34px;border-radius:8px;background:rgba(59,130,246,0.15);color:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
+    .reg-perks{display:flex;flex-direction:column;gap:14px;} .reg-perk{display:flex;align-items:center;gap:14px;padding:14px 20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:14px;font-size:.9rem;color:rgba(255,255,255,0.8);font-weight:500;transition:all .3s;} .reg-perk:hover{background:rgba(14,27,65,0.1);border-color:rgba(14,27,65,0.3);} .reg-perk i{width:34px;height:34px;border-radius:8px;background:rgba(14,27,65,0.15);color:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
     .reg-form-box{background:rgba(255,255,255,0.04);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.1);border-radius:28px;padding:48px;box-shadow:0 40px 120px rgba(0,0,0,0.4);}
     .reg-form-box h3{font-size:1.4rem;font-weight:800;color:#fff;margin-bottom:32px;}
     .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;} .fgroup{margin-bottom:18px;} .fgroup label{display:block;font-size:.75rem;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;}
     .fgroup input,.fgroup select,.fgroup textarea{width:100%;padding:14px 18px;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.12);border-radius:12px;color:#fff;font-family:'Inter',sans-serif;font-size:.9rem;outline:none;transition:all .3s;}
     .fgroup input::placeholder,.fgroup textarea::placeholder{color:rgba(255,255,255,0.3);} .fgroup select option{background:#1f1c00;}
-    .fgroup input:focus,.fgroup select:focus,.fgroup textarea:focus{border-color:rgba(59,130,246,0.6);background:rgba(255,255,255,0.09);box-shadow:0 0 0 4px rgba(59,130,246,0.12);}
+    .fgroup input:focus,.fgroup select:focus,.fgroup textarea:focus{border-color:rgba(14,27,65,0.6);background:rgba(255,255,255,0.09);box-shadow:0 0 0 4px rgba(14,27,65,0.12);}
     .fgroup textarea{min-height:100px;resize:vertical;}
-    .submit-btn{width:100%;padding:17px;border:none;background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;border-radius:12px;font-family:'Inter',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 32px rgba(59,130,246,0.4);} .submit-btn:hover{transform:translateY(-2px);box-shadow:0 16px 48px rgba(59,130,246,0.55);}
+    .submit-btn{width:100%;padding:17px;border:none;background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;border-radius:12px;font-family:'Inter',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 8px 32px rgba(14,27,65,0.4);} .submit-btn:hover{transform:translateY(-2px);box-shadow:0 16px 48px rgba(14,27,65,0.55);}
     .form-note{text-align:center;font-size:.75rem;color:rgba(255,255,255,0.3);margin-top:14px;}
     .ft{background:#030609;padding:40px 48px;text-align:center;border-top:1px solid var(--border);} .ft p{font-size:.85rem;color:rgba(255,255,255,0.3);} .ft a{color:var(--accent-light);text-decoration:none;}
     .reveal{opacity:0;transform:translateY(36px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);} .reveal.in{opacity:1;transform:none;}
@@ -671,457 +671,8 @@
 
 </head>
 <body>
-  <div class="bg-orb orb-gold"></div>
-  <div class="bg-orb orb-yellow"></div>
-  <div class="scroll-indicator"><div class="scroll-progress" id="scroll-bar"></div></div>
-
-    <!-- Ultra-Modern Floating Navbar -->
-    <!-- Ultra-Modern Floating Navbar -->
-  <header class="navbar modern-floating-nav">
-    <div class="nav-glass-container">
-      <a href="index.html" class="logo" style="display:flex;align-items:center;padding:0;background:none;"><img src="./assets/loqoYeni.PNG" alt="Evrika" style="height:125px;width:125px;object-fit:contain;display:block;"></a>
-      <nav class="nav-links">
-        <a href="index.html">Ana Səhifə</a>
-        <div class="nav-item-has-dropdown">
-          <a href="about.html">Haqqımızda</a>
-          <div class="nav-dropdown">
-            <a href="about.html" class="dropdown-item">
-              <div class="item-icon"><i class="fas fa-info-circle"></i></div>
-              <div class="dropdown-item-text">
-                <span class="dropdown-item-title">Haqqımızda</span>
-                <span class="dropdown-item-desc">Bizim hekayəmiz</span>
-              </div>
-            </a>
-            <a href="alumni.html" class="dropdown-item">
-              <div class="item-icon"><i class="fas fa-user-graduate"></i></div>
-              <div class="dropdown-item-text">
-                <span class="dropdown-item-title">Məzunlar</span>
-                <span class="dropdown-item-desc">Fəxrlərimiz</span>
-              </div>
-            </a>
-            <a href="achievements.html" class="dropdown-item">
-              <div class="item-icon"><i class="fas fa-trophy"></i></div>
-              <div class="dropdown-item-text">
-                <span class="dropdown-item-title">Uğurlar</span>
-                <span class="dropdown-item-desc">Nailiyyətlərimiz</span>
-              </div>
-            </a>
-            <a href="news.html" class="dropdown-item">
-              <div class="item-icon"><i class="fas fa-newspaper"></i></div>
-              <div class="dropdown-item-text">
-                <span class="dropdown-item-title">Xəbərlər</span>
-                <span class="dropdown-item-desc">Ən son xəbərlər</span>
-              </div>
-            </a>
-          </div>
-        </div>
-        <div class="nav-item-has-dropdown">
-          <a href="schools.html">Akademik İstiqamətlər</a>
-          <div class="nav-dropdown">
-            <a href="lisey.html" class="dropdown-item">
-              <div class="item-icon"><i class="fas fa-microscope"></i></div>
-              <div class="dropdown-item-text">
-                <span class="dropdown-item-title">Evrika BETL Nərimanov</span>
-                <span class="dropdown-item-desc">Elm və Texnologiya Mərkəzi</span>
-              </div>
-            </a>
-            <a href="lisey2.html" class="dropdown-item">
-              <div class="item-icon"><i class="fas fa-atom"></i></div>
-              <div class="dropdown-item-text">
-                <span class="dropdown-item-title">Evrika BETL Gənclik</span>
-                <span class="dropdown-item-desc">Beynəlxalq Təhsil Müəssisəsi</span>
-              </div>
-            </a>
-            <a href="montessori.html" class="dropdown-item">
-              <div class="item-icon"><i class="fas fa-child"></i></div>
-              <div class="dropdown-item-text">
-                <span class="dropdown-item-title">Montessori Kids Academy</span>
-                <span class="dropdown-item-desc">Bağça və Erkən İnkişaf</span>
-              </div>
-            </a>
-            <a href="victory.html" class="dropdown-item">
-              <div class="item-icon"><i class="fas fa-graduation-cap"></i></div>
-              <div class="dropdown-item-text">
-                <span class="dropdown-item-title">Victory Colleges</span>
-                <span class="dropdown-item-desc">Xaricdə Təhsil və Hazırlıq</span>
-              </div>
-            </a>
-            <a href="zumrud.html" class="dropdown-item">
-              <div class="item-icon"><i class="fas fa-swimmer"></i></div>
-              <div class="dropdown-item-text">
-                <span class="dropdown-item-title">Zümrüd İdman Mərkəzi</span>
-                <span class="dropdown-item-desc">Sağlam Həyat və Fəaliyyət</span>
-              </div>
-            </a>
-          </div>
-        </div>
-        
-              
+  
       
-        <div class="nav-item-has-dropdown">
-          <a href="vacancy.html">Vakansiya &amp; Təcrübə</a>
-          <div class="nav-dropdown">
-            <a href="vacancy.html" class="dropdown-item">
-              <div class="item-icon"><i class="fas fa-briefcase"></i></div>
-              <div class="dropdown-item-text">
-                <span class="dropdown-item-title">Karyera və Vakansiyalar</span>
-                <span class="dropdown-item-desc">Açıq iş elanları</span>
-              </div>
-            </a>
-            <a href="ptim.html" class="dropdown-item">
-              <div class="item-icon"><i class="fas fa-chalkboard-teacher"></i></div>
-              <div class="dropdown-item-text">
-                <span class="dropdown-item-title">Pedaqoji Təcrübə və İnkişaf Mərkəzi</span>
-                <span class="dropdown-item-desc">PTİM</span>
-              </div>
-            </a>
-
-            
-          </div>
-        </div>
-        <a href="jurnal.html">Evrika Jurnalı</a>
-        <a href="contact.html">Əlaqə</a>
-      </nav>
-      <div class="nav-actions">
-                <div class="lang-dropdown-wrapper desktop-lang-wrapper" style="position: relative; display: inline-flex; margin-right: 12px; height: 100%;">
-            <button class="lang-toggle-btn" onclick="let menu = this.nextElementSibling; menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';" onblur="let menu = this.nextElementSibling; setTimeout(() => menu.style.display = 'none', 200);" style="background: #1e3a8a; border: none; color: white; padding: 12px 22px; border-radius: 100px; font-weight: 800; font-size: 0.95rem; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; min-width: 80px;" onmouseover="this.style.background='#284baf'" onmouseout="this.style.background='#1e3a8a'">
-               <span class="lang-text">AZ</span> <i class="fas fa-chevron-down" style="margin-left: 10px; font-size: 0.8rem; opacity: 0.9;"></i>
-            </button>
-            <div class="lang-menu" style="position: absolute; top: 115%; left: 50%; transform: translateX(-50%); background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: none; flex-direction: column; overflow: hidden; min-width: 80px; z-index: 100;">
-                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='AZ'); this.parentElement.style.display='none';" style="padding: 10px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #eee;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">AZ</a>
-                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='EN'); this.parentElement.style.display='none';" style="padding: 10px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #eee;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">EN</a>
-                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='RU'); this.parentElement.style.display='none';" style="padding: 10px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">RU</a>
-            </div>
-        </div>
-        <a href="register-victory.html" class="btn btn-primary nav-btn">Qeydiyyat</a>
-      </div>
-      <div class="mobile-menu-btn" id="mobile-toggle"><i class="fas fa-bars"></i></div>
-    </div>
-  </header>
-
-  <!-- Mobile Navigation Overlay (Neo-Glass) -->
-  <div class="mobile-nav-overlay" id="mobile-nav">
-        <div class="close-mobile" id="mobile-close"><i class="fas fa-times"></i></div>
-    <div class="mobile-lang-wrapper" style="position: absolute; top: 25px; left: 25px; z-index: 10001;">
-        <div class="lang-dropdown-wrapper" style="position: relative; display: inline-block;">
-            <button class="lang-toggle-btn" onclick="let menu = this.nextElementSibling; menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';" onblur="let menu = this.nextElementSibling; setTimeout(() => menu.style.display = 'none', 200);" style="background: #1e3a8a; border: none; color: white; padding: 12px 20px; border-radius: 100px; font-weight: 800; font-size: 0.95rem; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; min-width: 70px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);" onmouseover="this.style.background='#284baf'" onmouseout="this.style.background='#1e3a8a'">
-               <span class="lang-text">AZ</span> <i class="fas fa-chevron-down" style="margin-left: 8px; font-size: 0.75rem; opacity: 0.9;"></i>
-            </button>
-            <div class="lang-menu" style="position: absolute; top: 115%; left: 0; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: none; flex-direction: column; overflow: hidden; min-width: 90px; z-index: 100;">
-                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='AZ'); this.parentElement.style.display='none';" style="padding: 12px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #eee;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">AZ</a>
-                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='EN'); this.parentElement.style.display='none';" style="padding: 12px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #eee;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">EN</a>
-                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='RU'); this.parentElement.style.display='none';" style="padding: 12px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">RU</a>
-            </div>
-        </div>
-    </div>
-    <div class="mobile-nav-links">
-      <a href="index.html" data-i18n="nav-home">Ana Səhifə</a>
-            <div class="mobile-accordion" id="mob-acc-about">
-        <div class="mobile-accordion-trigger" onclick="toggleMobileAcc('mob-acc-about')">
-          Haqqımızda
-          <i class="fas fa-chevron-right acc-arrow"></i>
-        </div>
-        <div class="mobile-accordion-body">
-          <a href="about.html">
-            <div class="acc-icon"><i class="fas fa-info-circle"></i></div>
-            <div class="acc-text"><span class="acc-title">Haqqımızda</span><span class="acc-desc">Bizim hekayəmiz</span></div>
-          </a>
-          <a href="alumni.html">
-            <div class="acc-icon"><i class="fas fa-user-graduate"></i></div>
-            <div class="acc-text"><span class="acc-title">Məzunlar</span><span class="acc-desc">Fəxrlərimiz</span></div>
-          </a>
-          <a href="achievements.html">
-            <div class="acc-icon"><i class="fas fa-trophy"></i></div>
-            <div class="acc-text"><span class="acc-title">Uğurlar</span><span class="acc-desc">Nailiyyətlərimiz</span></div>
-          </a>
-          <a href="news.html">
-            <div class="acc-icon"><i class="fas fa-newspaper"></i></div>
-            <div class="acc-text"><span class="acc-title">Xəbərlər</span><span class="acc-desc">Ən son xəbərlər</span></div>
-          </a>
-        </div>
-      </div>
-      <div class="mobile-accordion" id="mob-acc-academic">
-        <div class="mobile-accordion-trigger" onclick="toggleMobileAcc('mob-acc-academic')">
-          Akademik İstiqamətlər
-          <i class="fas fa-chevron-right acc-arrow"></i>
-        </div>
-        <div class="mobile-accordion-body">
-          <a href="lisey.html">
-            <div class="acc-icon"><i class="fas fa-microscope"></i></div>
-            <div class="acc-text"><span class="acc-title">Evrika BETL Nərimanov</span><span class="acc-desc">Elm və Texnologiya Mərkəzi</span></div>
-          </a>
-          <a href="lisey2.html">
-            <div class="acc-icon"><i class="fas fa-atom"></i></div>
-            <div class="acc-text"><span class="acc-title">Evrika BETL Gənclik</span><span class="acc-desc">Beynəlxalq Təhsil Kampusu</span></div>
-          </a>
-          <a href="montessori.html">
-            <div class="acc-icon"><i class="fas fa-child"></i></div>
-            <div class="acc-text"><span class="acc-title">Montessori Kids Academy</span><span class="acc-desc">Bağça və Erkən İnkişaf</span></div>
-          </a>
-          <a href="victory.html">
-            <div class="acc-icon"><i class="fas fa-graduation-cap"></i></div>
-            <div class="acc-text"><span class="acc-title">Victory Colleges</span><span class="acc-desc">Xaricdə Təhsil və Hazırlıq</span></div>
-          </a>
-          <a href="zumrud.html">
-            <div class="acc-icon"><i class="fas fa-swimmer"></i></div>
-            <div class="acc-text"><span class="acc-title">Zümrüd İdman Mərkəzi</span><span class="acc-desc">Sağlam Həyat və Fəaliyyət</span></div>
-          </a>
-        </div>
-      </div>
-      
-            
-      
-      <div class="mobile-accordion" id="mob-acc-vacancy">
-        <div class="mobile-accordion-trigger" onclick="toggleMobileAcc('mob-acc-vacancy')">
-          Vakansiya &amp; Təcrübə
-          <i class="fas fa-chevron-right acc-arrow"></i>
-        </div>
-        <div class="mobile-accordion-body">
-          <a href="vacancy.html">
-            <div class="acc-icon"><i class="fas fa-briefcase"></i></div>
-            <div class="acc-text"><span class="acc-title">Karyera və Vakansiyalar</span><span class="acc-desc">Açıq iş elanları</span></div>
-          </a>
-          <a href="ptim.html">
-            <div class="acc-icon"><i class="fas fa-chalkboard-teacher"></i></div>
-            <div class="acc-text"><span class="acc-title">Pedaqoji Təcrübə və İnkişaf Mərkəzi</span><span class="acc-desc">PTİM</span></div>
-          </a>
-          
-        </div>
-      </div>
-      <a href="jurnal.html">Evrika Jurnalı</a>
-      <a href="contact.html" data-i18n="nav-contact">Əlaqə</a>
-      <a href="schools.html" style="color: var(--accent, #eab308);" data-i18n="nav-register">Qeydiyyat</a>
-    </div>
-  </div>
-
-
-
-  <!-- Mobile Navigation Overlay (Neo-Glass) -->
-  <div class="mobile-nav-overlay" id="mobile-nav">
-        <div class="close-mobile" id="mobile-close"><i class="fas fa-times"></i></div>
-    <div class="mobile-lang-wrapper" style="position: absolute; top: 25px; left: 25px; z-index: 10001;">
-        <div class="lang-dropdown-wrapper" style="position: relative; display: inline-block;">
-            <button class="lang-toggle-btn" onclick="let menu = this.nextElementSibling; menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';" onblur="let menu = this.nextElementSibling; setTimeout(() => menu.style.display = 'none', 200);" style="background: #1e3a8a; border: none; color: white; padding: 12px 20px; border-radius: 100px; font-weight: 800; font-size: 0.95rem; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; min-width: 70px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);" onmouseover="this.style.background='#284baf'" onmouseout="this.style.background='#1e3a8a'">
-               <span class="lang-text">AZ</span> <i class="fas fa-chevron-down" style="margin-left: 8px; font-size: 0.75rem; opacity: 0.9;"></i>
-            </button>
-            <div class="lang-menu" style="position: absolute; top: 115%; left: 0; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: none; flex-direction: column; overflow: hidden; min-width: 90px; z-index: 100;">
-                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='AZ'); this.parentElement.style.display='none';" style="padding: 12px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #eee;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">AZ</a>
-                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='EN'); this.parentElement.style.display='none';" style="padding: 12px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center; border-bottom: 1px solid #eee;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">EN</a>
-                <a href="#" onmousedown="event.preventDefault(); document.querySelectorAll('.lang-text').forEach(e=>e.innerText='RU'); this.parentElement.style.display='none';" style="padding: 12px 20px; color: #333; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-align: center;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='white'">RU</a>
-            </div>
-        </div>
-    </div>
-    <div class="mobile-nav-links">
-      <a href="index.html" data-i18n="nav-home">Ana Səhifə</a>
-            <div class="mobile-accordion" id="mob-acc-about">
-        <div class="mobile-accordion-trigger" onclick="toggleMobileAcc('mob-acc-about')">
-          Haqqımızda
-          <i class="fas fa-chevron-right acc-arrow"></i>
-        </div>
-        <div class="mobile-accordion-body">
-          <a href="about.html">
-            <div class="acc-icon"><i class="fas fa-info-circle"></i></div>
-            <div class="acc-text"><span class="acc-title">Haqqımızda</span><span class="acc-desc">Bizim hekayəmiz</span></div>
-          </a>
-          <a href="alumni.html">
-            <div class="acc-icon"><i class="fas fa-user-graduate"></i></div>
-            <div class="acc-text"><span class="acc-title">Məzunlar</span><span class="acc-desc">Fəxrlərimiz</span></div>
-          </a>
-          <a href="achievements.html">
-            <div class="acc-icon"><i class="fas fa-trophy"></i></div>
-            <div class="acc-text"><span class="acc-title">Uğurlar</span><span class="acc-desc">Nailiyyətlərimiz</span></div>
-          </a>
-        </div>
-      </div>
-      <a href="schools.html" data-i18n="nav-academic">Akademik İstiqamətlər</a>
-      
-            
-      
-      <div class="mobile-accordion" id="mob-acc-vacancy">
-        <div class="mobile-accordion-trigger" onclick="toggleMobileAcc('mob-acc-vacancy')">
-          Vakansiya &amp; Təcrübə
-          <i class="fas fa-chevron-right acc-arrow"></i>
-        </div>
-        <div class="mobile-accordion-body">
-          <a href="vacancy.html">
-            <div class="acc-icon"><i class="fas fa-briefcase"></i></div>
-            <div class="acc-text"><span class="acc-title">Karyera və Vakansiyalar</span><span class="acc-desc">Açıq iş elanları</span></div>
-          </a>
-          <a href="ptim.html">
-            <div class="acc-icon"><i class="fas fa-chalkboard-teacher"></i></div>
-            <div class="acc-text"><span class="acc-title">Pedaqoji Təcrübə və İnkişaf Mərkəzi</span><span class="acc-desc">PTİM</span></div>
-          </a>
-          
-        </div>
-      </div>
-      <a href="jurnal.html">Evrika Jurnalı</a>
-      <a href="contact.html" data-i18n="nav-contact">Əlaqə</a>
-      <a href="register-victory.html" style="color: var(--accent, #eab308);" data-i18n="nav-register">Qeydiyyat</a>
-    </div>
-  </div>
-
-    
-
-
-
-<section class="hero">
-  <div class="hero-bg"></div><div class="hero-mesh"></div><div class="hero-grid"></div>
-  <div class="hero-inner">
-    <div>
-      <div class="hero-tag"><i class="fas fa-graduation-cap"></i> Akademik Mərkəz · Evrika Ekosistemi</div>
-      <h1 class="hero-h1">Victory Colleges<br>Hazırlıq<br><span class="accent">Mərkəzi</span></h1>
-      <p class="hero-p">Akademik inkişaf, beynəlxalq imtahanlara hazırlıq və hədəfə yönəlmiş abituriyent hazırlığı mərkəzi. Gələcək uğurunuza bizimlə addım atın.</p>
-      <div class="hero-btns">
-        <a href="register-victory.html" class="btn-primary"><i class="fas fa-pen-to-square"></i> Qeydiyyatdan Keç</a>
-        <a href="#about" class="btn-glass"><i class="fas fa-play-circle"></i> Haqqımızda</a>
-      </div>
-    </div>
-    <div class="hero-card reveal-right">
-      <div class="hero-num-big">04</div>
-      <div class="hero-school-label">Victory Colleges · Akademik Dəstək Mərkəzi</div>
-      <div style="font-size:1.4rem;font-weight:900;color:#fff;margin-bottom:6px;line-height:1.2;">Dünya<br>Universitetlərinə<br>Açılan Qapı</div>
-      <div class="hero-facts">
-        <div class="hero-fact"><div class="hero-fact-icon"><i class="fas fa-language"></i></div><div class="hero-fact-text"><strong>IELTS / TOEFL / SAT</strong><span>İntensiv dil və test hazırlığı</span></div></div>
-        <div class="hero-fact"><div class="hero-fact-icon"><i class="fas fa-file-alt"></i></div><div class="hero-fact-text"><strong>Sənəd Hazırlığı</strong><span>SOP, CV, tövsiyə məktubu</span></div></div>
-        <div class="hero-fact"><div class="hero-fact-icon"><i class="fas fa-award"></i></div><div class="hero-fact-text"><strong>Təqaüd Proqramları</strong><span>Fulbright, Chevening, DAAD</span></div></div>
-        <div class="hero-fact"><div class="hero-fact-icon"><i class="fas fa-passport"></i></div><div class="hero-fact-text"><strong>Visa Dəstəyi</strong><span>Tam proses boyunca yanınızda</span></div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<section class="section" id="about">
-  <div class="container">
-    <div class="about-wrap">
-      <div class="about-img-side reveal-left">
-        <div class="about-glow"></div>
-        <img src="./assets/1000720061.jpg" alt="Victory Colleges">
-        
-      </div>
-      <div class="about-text-side reveal-right">
-        <span class="sec-eyebrow">Haqqımızda</span>
-        <h2 class="sec-h2">Victory Colleges <em>Hazırlıq Mərkəzi</em></h2><br>
-        <p>Victory Colleges Təhsil Mərkəzi şagirdlərin akademik inkişafını dəstəkləmək və onları gələcək təhsil uğurlarına hazırlamaq məqsədi ilə fəaliyyət göstərən müasir təhsil mərkəzidir.</p>
-        <p>Mərkəzimizdə tədris prosesi peşəkar müəllim heyəti, müasir metodika və hər şagirdə fərdi yanaşma prinsipi əsasında təşkil olunur. Məqsədimiz şagirdlərin məktəb proqramını daha yaxşı mənimsəməsi və imtahanlarda yüksək nəticələr əldə etməsidir.</p>
-        <p>Victory Colleges-da hər bir şagirdin inkişafı izlənilir və onun potensialına uyğun tədris proqramı tətbiq olunur.</p>
-        
-        <div style="margin-top: 30px;">
-          <h4 style="color: var(--accent-light); margin-bottom: 15px; font-size: 1.1rem; font-weight: 800;">Hazırlıq Proqramlarımız:</h4>
-          <div class="pills">
-            <div class="pill"><i class="fas fa-child"></i> 3-4 yaş erkən inkişaf</div>
-            <div class="pill"><i class="fas fa-shapes"></i> 5-6 yaş məktəbəqədər hazırlıq</div>
-            <div class="pill"><i class="fas fa-book"></i> 1-4-cü sinif ibtidai sinif hazırlığı</div>
-            <div class="pill"><i class="fas fa-flask"></i> 5-8-ci sinif orta məktəb hazırlığı</div>
-            <div class="pill"><i class="fas fa-file-signature"></i> 9-cu sinif buraxılış imtahanı hazırlığı</div>
-            <div class="pill"><i class="fas fa-university"></i> 10-11-ci siniflər universitetlərə hazırlıq</div>
-            <div class="pill"><i class="fas fa-globe"></i> Beynəlxalq imtahanlara hazırlıq (SAT, İELTS, TOEFL, YÖS)</div>
-            <div class="pill"><i class="fas fa-language"></i> Xarici dili hazırlığı (İngilis, Rus, Alman, Çin, Fransız dili)</div>
-            <div class="pill"><i class="fas fa-robot"></i> STEAM (Robototexnika, Micro:bit, Arduino)</div>
-            <div class="pill"><i class="fas fa-chess"></i> Şahmat</div>
-            <div class="pill"><i class="fas fa-brain"></i> Məntiq</div>
-            <div class="pill"><i class="fas fa-sun"></i> Yay məktəbi proqramı</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<section class="section prog-bg" id="xidmetler">
-  <div class="container">
-    <div style="text-align:center" class="reveal"><span class="sec-eyebrow">Xidmətlərimiz</span><h2 class="sec-h2" style="text-align:center">Akademik <em>Hazırlıq</em></h2></div>
-    <div class="prog-grid">
-      <div class="prog-item reveal"><div class="prog-ico"><i class="fas fa-globe-americas"></i></div><div class="prog-n">01 · XARİCDƏ TƏHSİL</div><div class="prog-title">Xaricdə təhsil</div><div class="prog-desc">SAT, IELTS, TOEFL və YÖS hazırlığı ilə beynəlxalq universitetlərə qəbul imkanı.</div></div>
-      <div class="prog-item reveal"><div class="prog-ico"><i class="fas fa-robot"></i></div><div class="prog-n">02 · TEXNOLOGİYA</div><div class="prog-title">STEAM və Kodlama</div><div class="prog-desc">Robototexnika, Arduino, Micro:bit və kodlama ilə analitik düşüncə inkişafı.</div></div>
-      <div class="prog-item reveal"><div class="prog-ico"><i class="fas fa-language"></i></div><div class="prog-n">03 · DİL HAZIRLIĞI</div><div class="prog-title">Xarici dillər</div><div class="prog-desc">İngilis, Rus, Alman, Fransız və Çin dilləri.</div></div>
-      <div class="prog-item reveal"><div class="prog-ico"><i class="fas fa-graduation-cap"></i></div><div class="prog-n">04 · İMTAHAN HAZIRLIĞI</div><div class="prog-title">İmtahan hazırlığı</div><div class="prog-desc">9-cu sinif buraxılış və 10-11-ci sinif universitet hazırlığı.</div></div>
-      <div class="prog-item reveal"><div class="prog-ico"><i class="fas fa-shapes"></i></div><div class="prog-n">05 · DİGƏR</div><div class="prog-title">Digər proqramlar</div><div class="prog-desc">Erkən inkişaf, məktəbəqədər, ibtidai və orta məktəb hazırlığı, yay məktəbi.</div></div>
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="container">
-    <div class="about-wrap" style="flex-direction: row-reverse;">
-      <div class="about-img-side reveal-right">
-        <div class="about-glow"></div>
-        <img src="./assets/1000720090.jpg" alt="Evrika Abituriyent">
-        <div class="about-float" style="background: #fff; color: #000;"><span class="num" style="color: var(--accent, #eab308);">Dövlət</span><span class="lbl">Attestatı</span></div>
-      </div>
-      <div class="about-text-side reveal-left">
-        <span class="sec-eyebrow">Abituriyent Məktəbi</span>
-        <h2 class="sec-h2">Evrika <em>Abituriyent Məktəbi</em></h2><br>
-        <p>Evrika Abituriyent Məktəbi şagirdlərə ənənəvi məktəb modelindən fərqli olaraq daha məqsədyönlü və effektiv təhsil imkanı təqdim edir.</p>
-        <p>Burada əsas məqsəd şagirdlərin vaxtını daha səmərəli istifadə etməsi və birbaşa hədəfə yönəlmiş hazırlıq keçməsidir. Təhsil prosesi yekunlaşdıqdan sonra şagirdlər Təhsil Nazirliyinin təsdiqlədiyi rəsmi attestatla təmin olunurlar.</p>
-        
-        <div style="margin-top: 30px;">
-          <h4 style="color: var(--accent-light); margin-bottom: 15px; font-size: 1.1rem; font-weight: 800;">9-10-11-ci siniflər üçün istiqamətlər:</h4>
-          <ul style="list-style: none; display: grid; gap: 12px;">
-            <li style="display: flex; align-items: center; gap: 10px; color: #fff; font-weight: 600;"><i class="fas fa-check-circle" style="color: var(--accent, #eab308);"></i> BURAXILIŞ + BLOK</li>
-            <li style="display: flex; align-items: center; gap: 10px; color: #fff; font-weight: 600;"><i class="fas fa-check-circle" style="color: var(--accent, #eab308);"></i> BURAXILIŞ + SAT, IELTS, TOEFL</li>
-            <li style="display: flex; align-items: center; gap: 10px; color: #fff; font-weight: 600;"><i class="fas fa-check-circle" style="color: var(--accent, #eab308);"></i> BURAXILIŞ + YÖS</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="section prog-bg" id="ustunlukler">
-  <div class="container">
-    <div style="text-align:center" class="reveal"><span class="sec-eyebrow">Sistemin Üstünlükləri</span><h2 class="sec-h2" style="text-align:center">Niyə məhz <em>Evrika Abituriyent?</em></h2></div>
-    <div class="prog-grid">
-      <div class="prog-item reveal"><div class="prog-ico"><i class="fas fa-clock"></i></div><div class="prog-title">Vaxta qənaət</div><div class="prog-desc">Artıq uzun və yorucu məktəb saatlarına ehtiyac yoxdur.</div></div>
-      <div class="prog-item reveal"><div class="prog-ico"><i class="fas fa-bullseye"></i></div><div class="prog-title">Məqsədyönlü hazırlıq</div><div class="prog-desc">Yalnız lazım olan fənlər üzrə dərslər.</div></div>
-      <div class="prog-item reveal"><div class="prog-ico"><i class="fas fa-chart-line"></i></div><div class="prog-title">Yüksək nəticə</div><div class="prog-desc">Abituriyent proqramına uyğun intensiv tədris.</div></div>
-      <div class="prog-item reveal"><div class="prog-ico"><i class="fas fa-user-check"></i></div><div class="prog-title">Fərdi yanaşma</div><div class="prog-desc">Hər şagirdin səviyyəsinə uyğun planlama.</div></div>
-      <div class="prog-item reveal"><div class="prog-ico"><i class="fas fa-graduation-cap"></i></div><div class="prog-title">Rəsmi Attestat</div><div class="prog-desc">Təhsil Nazirliyinin təsdiqlədiyi rəsmi sənəd.</div></div>
-      <div class="prog-item reveal"><div class="prog-ico"><i class="fas fa-school"></i></div><div class="prog-title">Rahat mühit</div><div class="prog-desc">Effektiv və müasir öyrənmə mühiti.</div></div>
-    </div>
-  </div>
-</section>
-
-<section class="section" id="registration" style="padding: 100px 0;">
-  <div class="container">
-    <div class="reveal" style="background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.1); border-radius: 36px; padding: 80px 48px; text-align: center; position: relative; overflow: hidden; box-shadow: 0 40px 100px rgba(0,0,0,0.5); backdrop-filter: blur(24px);">
-      <div style="position: absolute; top: -50%; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, var(--accent-glow, rgba(59,130,246,0.25)) 0%, transparent 60%); pointer-events: none;"></div>
-      
-      <h2 style="font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 900; line-height: 1.1; margin-bottom: 24px; color: #fff; position: relative; z-index: 2;">
-        Gələcəyi hədəfləyən<br><em style="color: var(--accent-light); font-style: normal;">Məkan: Victory Colleges</em>
-      </h2>
-      <p style="font-size: 1.15rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 40px; position: relative; z-index: 2; line-height: 1.8;">
-        Xaricdə təhsil planınızı bizimlə qurun. İlkin konsultasiya üçün qeydiyyatdan keçin.
-      </p>
-      
-      <div style="display: flex; justify-content: center; position: relative; z-index: 2;">
-        <a href="register-victory.html" class="submit-btn" style="text-decoration: none; display: inline-flex; width: auto !important; padding: 20px 48px; font-size: 1.15rem; border-radius: 100px;">
-          Qeydiyyatdan Keç <i class="fas fa-arrow-right" style="margin-left: 10px;"></i>
-        </a>
-      </div>
-      
-      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 48px; position: relative; z-index: 2;">
-        <div style="display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.7); font-size: 0.9rem; font-weight: 500;"><i class="fas fa-check-circle" style="color: var(--accent-light);"></i> Ekspert Rəyi</div>
-        <div style="display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.7); font-size: 0.9rem; font-weight: 500;"><i class="fas fa-shield-alt" style="color: var(--accent-light);"></i> Etibarlı Sənədləşmə</div>
-        <div style="display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.7); font-size: 0.9rem; font-weight: 500;"><i class="fas fa-graduation-cap" style="color: var(--accent-light);"></i> Qəbul Zəmanəti</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── INSTAGRAM POSTS SECTION ── -->
-<section class="section" id="sosial-media" style="padding-bottom: 80px;">
-  <div class="container">
-    <div style="text-align:center;margin-bottom:60px;" class="reveal">
-      <div style="display: flex; justify-content: center; width: 100%;">
-        <span class="sec-eyebrow"><i class="fab fa-instagram"></i> Sosial Media</span>
-      </div>
-      <h2 class="sec-h2" style="text-align:center;">Bizi İnstagramda <em>İzləyin</em></h2>
-      <a href="https://www.instagram.com/eduhome_az?utm_source=qr" target="_blank" style="color:var(--text-muted);font-size:1.1rem;margin-top:16px;text-decoration:none;display:inline-block;">
-        @eduhome_az
-      </a>
-    </div>
     
     
 <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
