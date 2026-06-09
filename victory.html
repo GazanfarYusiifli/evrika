@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    :root { --accent:#0e1b41; --accent-light:#fef08a; --accent-glow:rgba(14,27,65,0.25); --navy:#0a0a05; --navy-mid:#141200; --text:#e8eaf2; --text-muted:#a3a39e; --surface:rgba(255,255,255,0.03); --border:rgba(255,255,255,0.08); }
+    :root { --accent:#0e1b41; --accent-light:#3b82f6; --accent-glow:rgba(14,27,65,0.25); --navy:#020617; --navy-mid:#0f172a; --text:#e8eaf2; --text-muted:#a3a39e; --surface:rgba(255,255,255,0.03); --border:rgba(255,255,255,0.08); }
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;} html{scroll-behavior:smooth;} 
     body{font-family:'Inter',sans-serif;background:var(--navy);color:var(--text);overflow-x:hidden; position: relative;}
     
@@ -24,7 +24,7 @@
     .scroll-progress { width: 100%; height: 0%; background: var(--accent); transition: height 0.1s linear; }
     @media(max-width: 1200px) { .scroll-indicator { display: none; } }
     .hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;padding-top:72px;}
-    .hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,rgba(40,35,0,0.92) 0%,rgba(90,80,0,0.8) 50%,rgba(20,18,0,0.95) 100%),url('https://files.cdn-files-a.com/uploads/10086696/2000_695ef25fe482e.jpg') center/cover no-repeat;}
+    .hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,rgba(14,27,65,0.95) 0%,rgba(20,40,100,0.8) 50%,rgba(2,6,23,0.98) 100%),url('https://files.cdn-files-a.com/uploads/10086696/2000_695ef25fe482e.jpg') center/cover no-repeat;}
     .hero-mesh{position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 10% 50%,rgba(14,27,65,0.15) 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 90% 20%,rgba(14,27,65,0.08) 0%,transparent 50%);}
     .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);background-size:80px 80px;}
     .hero-inner{position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:0 48px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
@@ -74,7 +74,7 @@
     .infra-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(20,18,0,0.95) 0%,transparent 60%);}
     .infra-top{position:absolute;top:20px;right:20px;width:42px;height:42px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.95rem;}
     .infra-bot{position:absolute;bottom:24px;left:24px;} .infra-bot h4{font-size:1.1rem;font-weight:800;color:#fff;margin-bottom:4px;} .infra-bot p{font-size:.82rem;color:rgba(255,255,255,0.6);}
-    .reg-section{background:linear-gradient(135deg,var(--navy-mid) 0%,#292500 100%);position:relative;overflow:hidden;} .reg-section::before{content:'';position:absolute;top:-300px;right:-300px;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(14,27,65,0.15) 0%,transparent 65%);}
+    .reg-section{background:linear-gradient(135deg,var(--navy-mid) 0%,rgba(14,27,65,0.8) 100%);position:relative;overflow:hidden;} .reg-section::before{content:'';position:absolute;top:-300px;right:-300px;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(14,27,65,0.15) 0%,transparent 65%);}
     .reg-wrap{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;position:relative;z-index:1;}
     .reg-info h2{font-size:clamp(2.2rem,4vw,3.2rem);font-weight:900;color:#fff;line-height:1.1;letter-spacing:-0.03em;margin-bottom:24px;} .reg-info h2 em{color:var(--accent-light);font-style:normal;} .reg-info p{font-size:1rem;color:var(--text-muted);line-height:1.8;margin-bottom:40px;}
     .reg-perks{display:flex;flex-direction:column;gap:14px;} .reg-perk{display:flex;align-items:center;gap:14px;padding:14px 20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:14px;font-size:.9rem;color:rgba(255,255,255,0.8);font-weight:500;transition:all .3s;} .reg-perk:hover{background:rgba(14,27,65,0.1);border-color:rgba(14,27,65,0.3);} .reg-perk i{width:34px;height:34px;border-radius:8px;background:rgba(14,27,65,0.15);color:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;}
@@ -981,10 +981,9 @@
       <div class="hero-school-label">Victory Colleges by Evrika · Akademik Dəstək Mərkəzi</div>
       <div style="font-size:1.4rem;font-weight:900;color:#fff;margin-bottom:6px;line-height:1.2;">Dünya<br>Universitetlərinə<br>Açılan Qapı</div>
       <div class="hero-facts">
-        <div class="hero-fact"><div class="hero-fact-icon"><i class="fas fa-language"></i></div><div class="hero-fact-text"><strong>IELTS / TOEFL / SAT</strong><span>İntensiv dil və test hazırlığı</span></div></div>
-        <div class="hero-fact"><div class="hero-fact-icon"><i class="fas fa-file-alt"></i></div><div class="hero-fact-text"><strong>Sənəd Hazırlığı</strong><span>SOP, CV, tövsiyə məktubu</span></div></div>
-        <div class="hero-fact"><div class="hero-fact-icon"><i class="fas fa-award"></i></div><div class="hero-fact-text"><strong>Təqaüd Proqramları</strong><span>Fulbright, Chevening, DAAD</span></div></div>
-        <div class="hero-fact"><div class="hero-fact-icon"><i class="fas fa-passport"></i></div><div class="hero-fact-text"><strong>Visa Dəstəyi</strong><span>Tam proses boyunca yanınızda</span></div></div>
+        <div class="hero-fact"><div class="hero-fact-icon"><i class="fas fa-users"></i></div><div class="hero-fact-text"><strong>500+ tələbə</strong><span>6 il təcrübə</span></div></div>
+        <div class="hero-fact"><div class="hero-fact-icon"><i class="fas fa-star"></i></div><div class="hero-fact-text"><strong>73% tələbəmiz</strong><span>1400+ SAT əldə edib</span></div></div>
+        <div class="hero-fact"><div class="hero-fact-icon"><i class="fas fa-globe-americas"></i></div><div class="hero-fact-text"><strong>63 ölkədə</strong><span>tələbələrimiz var</span></div></div>
       </div>
     </div>
   </div>
@@ -1091,7 +1090,7 @@
       </div>
       <div class="about-text-side reveal-left">
         <span class="sec-eyebrow">Beynəlxalq Standartlar</span>
-        <h2 class="sec-h2">Foundation <em>Proqramı</em></h2><br>
+        <h2 class="sec-h2">Foundation <em style="color: #3b82f6; font-style: normal;">Proqramı</em></h2><br>
         <p>Victory Colleges by Evrika tələbələrə beynəlxalq standartlara uyğun Foundation proqramı təqdim edir. Bu proqram vasitəsilə tələbələr xarici universitetlərə hazırlıq keçərək birbaşa bakalavr təhsilinə başlamaq imkanı əldə edirlər.</p>
         <p>Foundation proqramının əsas üstünlüyü ondan ibarətdir ki, tələbələr xaricdə yüksək məbləğdə vəsait xərcləmədən hazırlıq mərhələsini Azərbaycanda tamamlaya və daha sonra universitet təhsilinə davam edə bilirlər.</p>
         <p>Proqram beynəlxalq Level 3 kvalifikasiyası əsasında qurulur və tələbələrin akademik, dil və peşəkar bacarıqlarını inkişaf etdirməyə yönəlib.</p>
