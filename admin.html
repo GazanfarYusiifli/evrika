@@ -724,17 +724,47 @@ fbq('track', 'PageView');
 
 
     <!-- Finance Panel -->
-    <div id="view-finance" class="content" style="display: none;">
-        <div class="stats-grid">
-            <div class="ems-stat-card" style="--accent: var(--success);"><div class="ems-stat-icon"><i class="fas fa-arrow-up"></i></div><div class="stat-lab">Aylıq Gəlir</div><div class="stat-val" id="finance-monthly-income">0 <small style="font-size:1.2rem; opacity:0.4;">AZN</small></div></div>
-            <div class="ems-stat-card" style="--accent: var(--error);"><div class="ems-stat-icon"><i class="fas fa-arrow-down"></i></div><div class="stat-lab">Ümumi Xərclər</div><div class="stat-val">0 <small style="font-size:1.2rem; opacity:0.4;">AZN</small></div></div>
-            <div class="ems-stat-card" style="--accent: var(--warning);"><div class="ems-stat-icon"><i class="fas fa-clock"></i></div><div class="stat-lab">Ödəniş Gözləyən</div><div class="stat-val">0 <small style="font-size:1.2rem; opacity:0.4;">AZN</small></div></div>
+        <div id="view-finance" class="content" style="display: none;">
+        <div style="display: flex; gap: 15px; margin-bottom: 25px;">
+            <button id="btn-tab-report" class="btn-view" onclick="switchFinanceTab('report')" style="background: var(--accent); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.3s;"><i class="fas fa-chart-pie" style="margin-right: 8px;"></i> Hesabatlıq</button>
+            <button id="btn-tab-history" class="btn-view" onclick="switchFinanceTab('history')" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 12px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.3s;"><i class="fas fa-list-ul" style="margin-right: 8px;"></i> Ödəniş Tarixçəsi</button>
         </div>
-        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
+
+        <div id="finance-view-report">
+            <div class="stats-grid">
+                <div class="ems-stat-card" style="--accent: var(--success);"><div class="ems-stat-icon"><i class="fas fa-arrow-up"></i></div><div class="stat-lab">Ümumi Epoint Gəliri</div><div class="stat-val" id="finance-monthly-income">0 <small style="font-size:1.2rem; opacity:0.4;">AZN</small></div></div>
+                <div class="ems-stat-card" style="--accent: var(--warning);"><div class="ems-stat-icon"><i class="fas fa-percent"></i></div><div class="stat-lab">Ümumi Komissiya</div><div class="stat-val" id="finance-commission">0 <small style="font-size:1.2rem; opacity:0.4;">AZN</small></div></div>
+                <div class="ems-stat-card" style="--accent: var(--royal-blue);"><div class="ems-stat-icon"><i class="fas fa-credit-card"></i></div><div class="stat-lab">Uğurlu Tranzaksiya</div><div class="stat-val" id="finance-tx-count">0</div></div>
+            </div>
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
+                <div class="table-wrapper">
+                    <div style="padding:25px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                        <h3 style="font-weight:800;">Son Uğurlu Ödənişlər</h3>
+                    </div>
+                    <table>
+                        <thead>
+                          <tr>
+                            <th>Müştəri</th>
+                            <th>Məbləğ</th>
+                            <th>Tarix</th>
+                          </tr>
+                        </thead>
+                        <tbody id="finance-short-tbody">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="stat-card">
+                    <h3 style="margin-bottom:20px; font-weight:800;">Epoint Gəlir Dinamikası</h3>
+                    <canvas id="financeChart" style="max-height: 250px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div id="finance-view-history" style="display: none;">
             <div class="table-wrapper">
                 <div style="padding:25px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
-                    <h3 style="font-weight:800;">Son Ödənişlər</h3>
-                    <button class="btn-view" style="font-size:0.75rem;">Hesabat Yüklə</button>
+                    <h3 style="font-weight:800;">Epoint Ödəniş Tarixçəsi</h3>
+                    <button class="btn-view" style="font-size:0.75rem; background: var(--success); color: white; border: none;" onclick="alert('Excel export funksiyası hazırlanır')"><i class="fas fa-file-excel" style="margin-right:5px;"></i> Excel Yüklə</button>
                 </div>
                 <table>
                     <thead>
@@ -743,25 +773,16 @@ fbq('track', 'PageView');
                         <th>Kart Nömrəsi / Növü</th>
                         <th>Məbləğ / Komissiya</th>
                         <th>RRN / Tarix</th>
-                        <th>İcra / Operator</th>
-                        <th>Qəbz</th>
+                        <th>Sistem İcrası</th>
                       </tr>
                     </thead>
-                    <tbody id="finance-tbody">
+                    <tbody id="finance-history-tbody">
                     </tbody>
                 </table>
-            </div>
-            <div class="stat-card">
-                <h3 style="margin-bottom:20px; font-weight:800;">Xərc Kateqoriyaları</h3>
-                <canvas id="financeChart" style="max-height: 250px;"></canvas>
-                <div style="margin-top:20px;">
-                    <button class="btn-view" style="width:100%; justify-content:center; background:var(--error); border:none; margin-top:10px;"><i class="fas fa-minus-circle"></i> Yeni Xərc</button>
-                </div>
             </div>
         </div>
     </div>
 
-    
     <!-- Exam Results & Reviews Panel -->
     <div id="view-exam-results" class="content" style="display: none;">
         <div class="stats-grid">
@@ -1463,64 +1484,97 @@ fbq('track', 'PageView');
       }).join('');
     }
 
-    window.renderFinance = () => {
-       const tb = document.getElementById('finance-tbody'); if(!tb) return;
-       const payments = rawData.filter(i => i.epoint_amount || (i.amount && i.payment_status === 'Ödənilib'));
-       tb.innerHTML = payments.map(p => {
-           const fullName = p.fullName || p['Ad Soyad'] || p.name || (p['[2.Şagird] Adı'] ? p['[2.Şagird] Adı'] + ' ' + (p['[2.Şagird] Soyadı']||'') : 'Adsız');
-           const description = p.description || 'Təhsil Ödənişi';
-           
-           const cardBrand = (p.epoint_card_type || 'BANK KARTI').toUpperCase();
-           let brandIcon = 'fas fa-credit-card';
-           if(cardBrand.includes('VISA')) brandIcon = 'fab fa-cc-visa';
-           else if(cardBrand.includes('MASTER')) brandIcon = 'fab fa-cc-mastercard';
-           
-           const cardLast4 = p.epoint_card_number ? p.epoint_card_number : '**** **** **** ****'; // Dinamik olaraq API-dən gəlir
-           const payMethod = p.epoint_bank || 'Epoint Onlayn Ödəniş';
-           const rrn = p.epoint_transaction || '---';
-           const executedBy = p.executed_by || 'API';
-           const operator = p.operator || 'Evrika Sistemi';
-           const paySource = p.payment_source || 'Vebsayt';
-           
-           const amount = p.epoint_amount || p.amount || 0;
-           const commission = p.epoint_commission || '0.00';
-           const date = p.epoint_date ? new Date(p.epoint_date).toLocaleString('az') : new Date(p.submissionDate || Date.now()).toLocaleString('az');
-           
-           return `<tr>
-             <td>
-               <div style="font-weight:800; font-size:0.9rem; color:white;">${fullName}</div>
-               <div style="font-size:0.7rem; color:var(--text-muted); opacity:0.8; margin-top:3px;">${description}</div>
-             </td>
-             <td>
-               <div style="display:flex; align-items:center; gap:12px;">
-                 <i class="${brandIcon}" style="font-size:1.8rem; color:var(--text-muted); opacity:0.8;"></i>
-                 <div>
-                   <div style="font-size:0.85rem; font-weight:800; letter-spacing:1px; font-family:monospace;">${cardLast4}</div>
-                   <div style="font-size:0.65rem; color:var(--text-muted); text-transform:uppercase; margin-top:2px;">${cardBrand} | ${payMethod}</div>
-                 </div>
-               </div>
-             </td>
-             <td>
-               <div style="font-weight:900; font-size:1rem; color:var(--success);">${amount} <span style="font-size:0.75rem;">₼</span></div>
-               <div style="font-size:0.65rem; color:var(--text-muted); margin-top:3px;">Komissiya: <span style="color:var(--warning); font-weight:700;">${commission} ₼</span></div>
-             </td>
-             <td>
-               <div style="font-size:0.8rem; font-weight:700; color:white; font-family:monospace;">RRN: ${rrn}</div>
-               <div style="font-size:0.7rem; font-weight:600; color:var(--text-muted); margin-top:3px;">${date}</div>
-             </td>
-             <td>
-               <div style="font-size:0.75rem; font-weight:800; color:white; text-transform:uppercase;">İcra: ${executedBy}</div>
-               <div style="font-size:0.65rem; color:var(--text-muted); margin-top:3px;">Op: ${operator} | ${paySource}</div>
-             </td>
-             <td>
-               <button class="btn-view" style="padding:10px 15px; font-size:0.7rem; background:rgba(59,130,246,0.1); color:var(--royal-blue); border-color:rgba(59,130,246,0.2);"><i class="fas fa-file-download" style="margin-right:5px;"></i> Qəbz</button>
-             </td>
-           </tr>`;
-       }).join('');
-       
-       const total = payments.reduce((sum, p) => sum + Number(p.epoint_amount || p.amount || 0), 0);
-       const monthlyIncomeEl = document.getElementById('finance-monthly-income');
-       if(monthlyIncomeEl) monthlyIncomeEl.innerHTML = `${total} <small style="font-size:1.2rem; opacity:0.4;">AZN</small>`;
+    
+    window.switchFinanceTab = (tab) => {
+        document.getElementById('finance-view-report').style.display = tab === 'report' ? 'block' : 'none';
+        document.getElementById('finance-view-history').style.display = tab === 'history' ? 'block' : 'none';
+        
+        document.getElementById('btn-tab-report').style.background = tab === 'report' ? 'var(--accent)' : 'rgba(255,255,255,0.05)';
+        document.getElementById('btn-tab-report').style.border = tab === 'report' ? 'none' : '1px solid rgba(255,255,255,0.1)';
+        
+        document.getElementById('btn-tab-history').style.background = tab === 'history' ? 'var(--accent)' : 'rgba(255,255,255,0.05)';
+        document.getElementById('btn-tab-history').style.border = tab === 'history' ? 'none' : '1px solid rgba(255,255,255,0.1)';
+    };
+
+        window.renderFinance = () => {
+        const historyTb = document.getElementById('finance-history-tbody');
+        const shortTb = document.getElementById('finance-short-tbody');
+        
+        if(!historyTb || !shortTb) return;
+        
+        const payments = rawData.filter(i => i.epoint_amount || (i.amount && i.payment_status === 'Ödənilib'))
+                                .sort((a,b) => new Date(b.epoint_date || b.submissionDate || 0) - new Date(a.epoint_date || a.submissionDate || 0));
+        
+        const historyHtml = payments.map(p => {
+            const fullName = p.fullName || p['Ad Soyad'] || p.name || (p['[2.Şagird] Adı'] ? p['[2.Şagird] Adı'] + ' ' + (p['[2.Şagird] Soyadı']||'') : 'Adsız');
+            const description = p.description || 'Təhsil Ödənişi';
+            
+            const cardBrand = (p.epoint_card_type || 'BANK KARTI').toUpperCase();
+            let brandIcon = 'fas fa-credit-card';
+            if(cardBrand.includes('VISA')) brandIcon = 'fab fa-cc-visa';
+            else if(cardBrand.includes('MASTER')) brandIcon = 'fab fa-cc-mastercard';
+            
+            const cardLast4 = p.epoint_card_number ? p.epoint_card_number : '**** **** **** ****';
+            const payMethod = p.epoint_bank || 'Epoint Onlayn Ödəniş';
+            const rrn = p.epoint_transaction || '---';
+            const executedBy = p.executed_by || 'API';
+            const amount = p.epoint_amount || p.amount || 0;
+            const commission = p.epoint_commission || (Number(amount)*0.02).toFixed(2);
+            const date = p.epoint_date ? new Date(p.epoint_date).toLocaleString('az') : new Date(p.submissionDate || Date.now()).toLocaleString('az');
+            
+            return `<tr>
+              <td>
+                <div style="font-weight:800; font-size:0.9rem; color:white;">${fullName}</div>
+                <div style="font-size:0.7rem; color:var(--text-muted); opacity:0.8; margin-top:3px;">${description}</div>
+              </td>
+              <td>
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <i class="${brandIcon}" style="font-size:1.8rem; color:var(--text-muted); opacity:0.8;"></i>
+                  <div>
+                    <div style="font-size:0.85rem; font-weight:800; letter-spacing:1px; font-family:monospace;">${cardLast4}</div>
+                    <div style="font-size:0.65rem; color:var(--text-muted); text-transform:uppercase; margin-top:2px;">${cardBrand} | ${payMethod}</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div style="font-weight:900; font-size:1rem; color:var(--success);">${amount} <span style="font-size:0.75rem;">₼</span></div>
+                <div style="font-size:0.65rem; color:var(--text-muted); margin-top:3px;">Komissiya: <span style="color:var(--warning); font-weight:700;">${commission} ₼</span></div>
+              </td>
+              <td>
+                <div style="font-size:0.8rem; font-weight:700; color:white; font-family:monospace;">RRN: ${rrn}</div>
+                <div style="font-size:0.7rem; font-weight:600; color:var(--text-muted); margin-top:3px;">${date}</div>
+              </td>
+              <td>
+                <div style="font-size:0.75rem; font-weight:800; color:white; text-transform:uppercase;">EPOINT MÜHƏRRİKİ</div>
+                <div style="font-size:0.65rem; color:var(--success); margin-top:3px;"><i class="fas fa-check-circle"></i> Uğurlu</div>
+              </td>
+            </tr>`;
+        }).join('');
+        
+        const shortHtml = payments.slice(0, 5).map(p => {
+            const fullName = p.fullName || p['Ad Soyad'] || p.name || 'Adsız';
+            const amount = p.epoint_amount || p.amount || 0;
+            const date = p.epoint_date ? new Date(p.epoint_date).toLocaleString('az') : new Date(p.submissionDate || Date.now()).toLocaleString('az');
+            return `<tr>
+              <td><div style="font-weight:700; color:white;">${fullName}</div></td>
+              <td><div style="color:var(--success); font-weight:800;">${amount} ₼</div></td>
+              <td><div style="color:var(--text-muted); font-size:0.8rem;">${date}</div></td>
+            </tr>`;
+        }).join('');
+        
+        historyTb.innerHTML = historyHtml;
+        shortTb.innerHTML = shortHtml;
+        
+        const total = payments.reduce((sum, p) => sum + Number(p.epoint_amount || p.amount || 0), 0);
+        const totalCommission = payments.reduce((sum, p) => sum + Number(p.epoint_commission || (Number(p.epoint_amount||p.amount||0)*0.02)), 0);
+        
+        const monthlyIncomeEl = document.getElementById('finance-monthly-income');
+        const commEl = document.getElementById('finance-commission');
+        const txEl = document.getElementById('finance-tx-count');
+        
+        if(monthlyIncomeEl) monthlyIncomeEl.innerHTML = `${total.toFixed(2)} <small style="font-size:1.2rem; opacity:0.4;">AZN</small>`;
+        if(commEl) commEl.innerHTML = `${totalCommission.toFixed(2)} <small style="font-size:1.2rem; opacity:0.4;">AZN</small>`;
+        if(txEl) txEl.innerHTML = `${payments.length} <small style="font-size:0.8rem; font-weight:normal; opacity:0.6;">Ədəd</small>`;
     };
 
     window.switchTab = (t) => {
