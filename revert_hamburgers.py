@@ -1,7 +1,7 @@
 import os
 import re
 
-files_to_check = ['montessori.html', 'eduhome.html', 'zumrud.html']
+files_to_check = ['montessori.html', 'victory.html', 'zumrud.html']
 
 for file in files_to_check:
     with open(file, 'r', encoding='utf-8') as f:

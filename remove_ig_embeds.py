@@ -1,7 +1,7 @@
 import re
 import os
 
-files = ['lisey.html', 'lisey2.html', 'montessori.html', 'eduhome.html']
+files = ['lisey.html', 'lisey2.html', 'montessori.html', 'victory.html']
 
 for file in files:
     with open(file, 'r', encoding='utf-8') as f:

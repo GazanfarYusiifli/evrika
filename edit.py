@@ -64,7 +64,7 @@ html_content = """
                     <li style="margin-bottom: 15px; display: flex; align-items: center; color: var(--navy); font-weight: 600;"><i class="fas fa-map-marker-alt" style="color: #0284c7; margin-right: 12px;"></i> ÜNVAN: </li>
                     <li style="margin-bottom: 15px; display: flex; align-items: center; color: var(--navy); font-weight: 600;"><i class="fas fa-phone-alt" style="color: #0284c7; margin-right: 12px;"></i> ƏLAQƏ TELEFONU: </li>
                   </ul>
-                  <a href="eduhome.html" class="btn btn-primary btn-xl" style="width: 100%; justify-content: center; background: #0284c7; border-color: #0284c7;">Ətraflı Bax</a>
+                  <a href="victory.html" class="btn btn-primary btn-xl" style="width: 100%; justify-content: center; background: #0284c7; border-color: #0284c7;">Ətraflı Bax</a>
                </div>
                <div style="height: 100%; min-height: 500px; background: url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=1200') no-repeat center center / cover;"></div>
             </div>

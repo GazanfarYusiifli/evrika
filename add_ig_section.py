@@ -35,7 +35,7 @@ targets = {
         'url': 'https://www.instagram.com/evrikamontessorikids?igsh=d3hmdjQxdzJlM3g5&utm_source=qr',
         'handle': '@evrikamontessorikids'
     },
-    'eduhome.html': {
+    'victory.html': {
         'url': 'https://www.instagram.com/eduhome_az?utm_source=qr',
         'handle': '@eduhome_az'
     }

@@ -1,6 +1,6 @@
 import re
 
-with open('eduhome.html', 'r', encoding='utf-8') as f:
+with open('victory.html', 'r', encoding='utf-8') as f:
     content = f.read()
 
 # Remove stats-band
@@ -20,6 +20,6 @@ if about_float_str in content:
 else:
     print("Could not find 10+ İl Təcrübə.")
 
-with open('eduhome.html', 'w', encoding='utf-8') as f:
+with open('victory.html', 'w', encoding='utf-8') as f:
     f.write(content)
 

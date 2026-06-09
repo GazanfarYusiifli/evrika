@@ -50,7 +50,7 @@ wa_snippet = """    <script>
     </script>
 </body>"""
 
-targets = ['register-montessori.html', 'register-eduhome.html', 'register-zumrud.html']
+targets = ['register-montessori.html', 'register-victory.html', 'register-zumrud.html']
 
 for target in targets:
     if not os.path.exists(target): continue

@@ -24,8 +24,8 @@ def update_cards():
 
     # 4. Eduhome Add Qeydiyyat Button
     content = content.replace(
-        '<div class="hub-action">\n                  <a href="eduhome.html" class="btn btn-primary btn-xl" style="background: #0284c7; border-color: #0284c7; box-shadow: 0 10px 30px rgba(2, 132, 199, 0.2); padding: 16px 40px;">Ətraflı Kəşf Et</a>\n                </div>',
-        '<div class="hub-action" style="gap: 16px;">\n                  <a href="eduhome.html" class="btn btn-primary btn-xl" style="background: #0284c7; border-color: #0284c7; box-shadow: 0 10px 30px rgba(2, 132, 199, 0.2); padding: 16px 40px;">Ətraflı Kəşf Et</a>\n                  <a href="register.html" class="btn btn-primary btn-xl" style="padding: 16px 40px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); background: #ffffff; color: var(--navy); border: 2px solid rgba(0,0,0,0.1);">Qeydiyyat <i class="fas fa-arrow-right" style="margin-left: 8px;"></i></a>\n                </div>'
+        '<div class="hub-action">\n                  <a href="victory.html" class="btn btn-primary btn-xl" style="background: #0284c7; border-color: #0284c7; box-shadow: 0 10px 30px rgba(2, 132, 199, 0.2); padding: 16px 40px;">Ətraflı Kəşf Et</a>\n                </div>',
+        '<div class="hub-action" style="gap: 16px;">\n                  <a href="victory.html" class="btn btn-primary btn-xl" style="background: #0284c7; border-color: #0284c7; box-shadow: 0 10px 30px rgba(2, 132, 199, 0.2); padding: 16px 40px;">Ətraflı Kəşf Et</a>\n                  <a href="register.html" class="btn btn-primary btn-xl" style="padding: 16px 40px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); background: #ffffff; color: var(--navy); border: 2px solid rgba(0,0,0,0.1);">Qeydiyyat <i class="fas fa-arrow-right" style="margin-left: 8px;"></i></a>\n                </div>'
     )
 
     # 5. Zumrud Add Qeydiyyat Button

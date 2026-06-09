@@ -19,7 +19,7 @@ wa = wa_match.group(1) if wa_match else "    </body>"
 # Fix active states in register headers based on page name if needed? 
 # Actually, wait, no active color is forced.
 
-targets = ['register-lisey1.html', 'register-montessori.html', 'register-eduhome.html', 'register-zumrud.html']
+targets = ['register-lisey1.html', 'register-montessori.html', 'register-victory.html', 'register-zumrud.html']
 
 for target in targets:
     if not os.path.exists(target): continue

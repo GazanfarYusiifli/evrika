@@ -4,12 +4,12 @@ import os
 base_url = "https://evrika-phi.vercel.app/"
 pages = [
     "index.html", "about.html", "contact.html", "schools.html", "lisey.html", 
-    "lisey2.html", "montessori.html", "eduhome.html", "zumrud.html", "news.html", 
+    "lisey2.html", "montessori.html", "victory.html", "zumrud.html", "news.html", 
     "news-detail.html", "alumni.html", "achievements.html", "vacancy.html", 
     "crm.html", "management.html", "mission.html", "privacy.html", "terms.html", 
     "cookies.html", "payment.html", "branches.html", "ptim.html", "pthim.html",
     "jurnal.html", "register-lisey1.html", "register-lisey2.html", 
-    "register-montessori.html", "register-eduhome.html", "register-zumrud.html"
+    "register-montessori.html", "register-victory.html", "register-zumrud.html"
 ]
 
 for page in pages:

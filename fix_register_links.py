@@ -3,7 +3,7 @@ import os
 
 targets = [
     ('zumrud.html', 'register-zumrud.html'),
-    ('eduhome.html', 'register-eduhome.html'),
+    ('victory.html', 'register-victory.html'),
     ('montessori.html', 'register-montessori.html'),
     ('lisey.html', 'register-lisey1.html')
 ]

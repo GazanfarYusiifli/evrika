@@ -11,6 +11,6 @@ def extract_media(filepath):
         print(f"{filepath}: NOT FOUND")
 
 extract_media("montessori.html")
-extract_media("eduhome.html")
+extract_media("victory.html")
 extract_media("zumrud.html")
 extract_media("lisey2.html")

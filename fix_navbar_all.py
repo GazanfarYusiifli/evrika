@@ -18,7 +18,7 @@ master_mobilenav = mobilenav_match.group(1)
 # List of files to update
 targets = [
     ('zumrud.html', 'register-zumrud.html'),
-    ('eduhome.html', 'register-eduhome.html'),
+    ('victory.html', 'register-victory.html'),
     ('montessori.html', 'register-montessori.html') # Just in case it was missed
 ]
 

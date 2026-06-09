@@ -1,7 +1,7 @@
 import glob
 import re
 
-files = ['lisey.html', 'lisey2.html', 'montessori.html', 'eduhome.html', 'zumrud.html']
+files = ['lisey.html', 'lisey2.html', 'montessori.html', 'victory.html', 'zumrud.html']
 
 for filepath in files:
     with open(filepath, 'r', encoding='utf-8') as f:

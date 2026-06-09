@@ -1296,7 +1296,7 @@ fbq('track', 'PageView');
         if (allText.includes('liseyi 1') || allText.includes('lisey 1')) s = 'lisey1';
         else if (allText.includes('liseyi 2') || allText.includes('lisey 2')) s = 'lisey2';
         else if (allText.includes('montessori')) s = 'montessori';
-        else if (allText.includes('eduhome')) s = 'eduhome';
+        else if (allText.includes('victory') || allText.includes('eduhome')) s = 'victory';
         else if (allText.includes('zümrüd') || allText.includes('zumrud')) s = 'zumrud';
         else if (allText.includes('əlaqə') || allText.includes('contact')) s = 'contact';
         else if (allText.includes('whatsapp')) s = 'whatsapp';
@@ -1355,7 +1355,7 @@ fbq('track', 'PageView');
         let s = getGranularSource(item);
         const MAP = { 
           'lisey1':'Nərimanov filialı', 'lisey2':'Gənclik filialı', 'montessori':'Montessori', 
-          'eduhome':'Eduhome', 'zumrud':'Zümrüd', 'contact':'Əlaqə', 
+          'victory':'Victory', 'zumrud':'Zümrüd', 'contact':'Əlaqə', 
           'career':'Karyera', 'whatsapp':'WhatsApp', 'instagram':'Instagram', 'email':'Email' 
         };
         const sourceLabel = MAP[s] || s || 'Email';
@@ -1363,7 +1363,7 @@ fbq('track', 'PageView');
         let matchesSource = true;
         if (source !== 'all') {
           if (source === 'Vebsayt') {
-            matchesSource = ['Nərimanov filialı', 'Gənclik filialı', 'Montessori', 'Eduhome', 'Zümrüd', 'Əlaqə', 'Email'].includes(sourceLabel);
+            matchesSource = ['Nərimanov filialı', 'Gənclik filialı', 'Montessori', 'Victory', 'Zümrüd', 'Əlaqə', 'Email'].includes(sourceLabel);
           } else if (source === 'Karyera') {
             matchesSource = sourceLabel === 'Karyera';
           }
@@ -1397,7 +1397,7 @@ fbq('track', 'PageView');
         const s = getGranularSource(item);
         const MAP = { 
           'lisey1':'Nərimanov filialı', 'lisey2':'Gənclik filialı', 'montessori':'Montessori', 
-          'eduhome':'Eduhome', 'zumrud':'Zümrüd', 'contact':'Əlaqə', 
+          'victory':'Victory', 'zumrud':'Zümrüd', 'contact':'Əlaqə', 
           'career':'Karyera', 'whatsapp':'WhatsApp', 'instagram':'Instagram', 'email':'Email' 
         };
         const sourceLabel = MAP[s] || s || 'Email';
@@ -1428,7 +1428,7 @@ fbq('track', 'PageView');
         const s = getGranularSource(item);
         const MAP = { 
           'lisey1':'Nərimanov filialı', 'lisey2':'Gənclik filialı', 'montessori':'Montessori', 
-          'eduhome':'Eduhome', 'zumrud':'Zümrüd', 'contact':'Əlaqə', 
+          'victory':'Victory', 'zumrud':'Zümrüd', 'contact':'Əlaqə', 
           'career':'Karyera', 'whatsapp':'WhatsApp', 'instagram':'Instagram', 'email':'Email' 
         };
         const sourceLabel = MAP[s] || s || 'Email';
@@ -2439,7 +2439,7 @@ fbq('track', 'PageView');
         'lisey1': 'EVRİKA Nərimanov filialı (Qeydiyyat)',
         'lisey2': 'EVRİKA Gənclik filialı (Qeydiyyat)',
         'montessori': 'Montessori Academy (Qeydiyyat)',
-        'eduhome': 'Eduhome Hazırlıq (Qeydiyyat)',
+        'victory': 'Victory Colleges (Qeydiyyat)',
         'zumrud': 'Zümrüd Women Club (Qeydiyyat)',
         'career': 'Karyera və Vakansiyalar',
         'contact': 'Bizimlə Əlaqə (Səhifədən)',
@@ -2452,7 +2452,7 @@ fbq('track', 'PageView');
       };
 
       // Categories to always show in the list
-      const PRIMARY_KEYS = ['lisey1', 'lisey2', 'montessori', 'eduhome', 'zumrud', 'contact', 'career', 'whatsapp', 'instagram', 'linkedin', 'facebook', 'email'];
+      const PRIMARY_KEYS = ['lisey1', 'lisey2', 'montessori', 'victory', 'zumrud', 'contact', 'career', 'whatsapp', 'instagram', 'linkedin', 'facebook', 'email'];
       PRIMARY_KEYS.forEach(k => sourceCounts[SOURCE_MAP[k]] = 0);
 
       rawData.forEach(item => {

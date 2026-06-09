@@ -11,7 +11,7 @@ user_html = """
 </div>
 """
 
-with open('eduhome.html', 'r', encoding='utf-8') as f:
+with open('victory.html', 'r', encoding='utf-8') as f:
     content = f.read()
 
 # I will insert user_html right before the first <script async src="//www.instagram.com/embed.js"></script>
@@ -26,9 +26,9 @@ if script_idx != -1:
     new_content = new_content.replace('min-width:326px;', 'min-width:320px;')
     new_content = new_content.replace('border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px;', 'border-radius:16px; box-shadow:0 20px 40px rgba(0,0,0,0.3); margin: 0;')
     
-    with open('eduhome.html', 'w', encoding='utf-8') as f:
+    with open('victory.html', 'w', encoding='utf-8') as f:
         f.write(new_content)
-    print("Added and styled instagram embeds to eduhome.html")
+    print("Added and styled instagram embeds to victory.html")
 else:
-    print("Could not find script tag in eduhome.html")
+    print("Could not find script tag in victory.html")
 

@@ -13,7 +13,7 @@ master_mobilenav = mobilenav_match.group(1)
 
 targets = [
     ('zumrud.html', 'register-zumrud.html'),
-    ('eduhome.html', 'register-eduhome.html')
+    ('victory.html', 'register-victory.html')
 ]
 
 for fname, reg_link in targets:

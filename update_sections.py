@@ -52,7 +52,7 @@ files_data = {
         "desc": "Zümrüd İdman Mərkəzi — Gələcəyin çempionları burada yetişir.",
          "extra": '\n                <div style="display: flex; gap: 15px; align-items: center;"><i class="fas fa-envelope" style="color: var(--accent);"></i><span style="color: rgba(255,255,255,0.7);">info@evrikaliseyi.edu.az</span></div>'
     },
-    "eduhome.html": {
+    "victory.html": {
         "desc": "Eduhome Təhsil Mərkəzi — Qlobal təhsilə açılan qapı.",
          "extra": '\n                <div style="display: flex; gap: 15px; align-items: center;"><i class="fas fa-envelope" style="color: var(--accent);"></i><span style="color: rgba(255,255,255,0.7);">info@evrikaliseyi.edu.az</span></div>'
     }

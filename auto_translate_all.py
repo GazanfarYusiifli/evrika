@@ -32,9 +32,9 @@ print(f"Loaded existing translations: {len(existing_az)} keys")
 
 public_pages = [
     'index.html', 'about.html', 'lisey.html', 'lisey2.html', 'montessori.html', 
-    'eduhome.html', 'zumrud.html', 'vacancy.html', 'ptim.html', 'contact.html', 
+    'victory.html', 'zumrud.html', 'vacancy.html', 'ptim.html', 'contact.html', 
     'news.html', 'news-detail.html', 'alumni.html', 'achievements.html', 'schools.html',
-    'privacy.html', 'terms.html', 'cookies.html', 'register-eduhome.html', 
+    'privacy.html', 'terms.html', 'cookies.html', 'register-victory.html', 
     'register-lisey1.html', 'register-lisey2.html', 'register-montessori.html', 'register-zumrud.html'
 ]
 

@@ -31,7 +31,7 @@ def update_file(filename, old_subtitle, new_subtitle_html, main_color_hex, brigh
 
 # eduhome: yellow/gold 
 # --accent:#eab308; rgb(234, 179, 8)
-update_file("register-eduhome.html", "Eduhome Center", "Eduhome<br>Təhsil<br>Mərkəzi", "#eab308", "#fef08a", "#a17902", "234, 179, 8", "#0a0a05")
+update_file("register-victory.html", "Eduhome Center", "Eduhome<br>Təhsil<br>Mərkəzi", "#eab308", "#fef08a", "#a17902", "234, 179, 8", "#0a0a05")
 
 # zumrud: green
 # --accent:#16a34a; rgb(22, 163, 74)

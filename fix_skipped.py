@@ -21,7 +21,7 @@ footer_apps_html = """
 </div>
 """
 
-skipped = ["register-montessori.html", "register-lisey1.html", "branches.html", "pthim.html", "mission.html", "ptim.html", "admin.html", "payment.html", "cookies.html", "register-eduhome.html", "crm.html", "register-zumrud.html", "test_translate.html", "verify.html", "register-lisey2.html"]
+skipped = ["register-montessori.html", "register-lisey1.html", "branches.html", "pthim.html", "mission.html", "ptim.html", "admin.html", "payment.html", "cookies.html", "register-victory.html", "crm.html", "register-zumrud.html", "test_translate.html", "verify.html", "register-lisey2.html"]
 
 for file_path in skipped:
     try:

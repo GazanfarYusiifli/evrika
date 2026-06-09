@@ -1,6 +1,6 @@
 import re
 
-filepath = '/Users/gazanfaryusifli/Downloads/Evrika/eduhome.html'
+filepath = '/Users/gazanfaryusifli/Downloads/Evrika/victory.html'
 with open(filepath, 'r', encoding='utf-8') as f:
     content = f.read()
 

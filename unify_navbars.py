@@ -20,13 +20,13 @@ block2 = block2_match.group(1).strip()
 # New CSS to inject
 new_css = "/* --- NAVBAR STYLES (eduhome-style) --- */\n" + block1 + "\n\n" + block2 + "\n"
 
-files = ['montessori.html', 'eduhome.html', 'zumrud.html']
+files = ['montessori.html', 'victory.html', 'zumrud.html']
 for file in files:
     with open(file, 'r', encoding='utf-8') as f:
         content = f.read()
     
     # We want to replace from /* --- Modernized Neo-Glass Floating Navigation --- */ up to the first </style>
-    # Note: montessori.html, eduhome.html, zumrud.html use /* --- Modernized Neo-Glass Floating Navigation --- */
+    # Note: montessori.html, victory.html, zumrud.html use /* --- Modernized Neo-Glass Floating Navigation --- */
     
     new_content = re.sub(
         r'/\* --- Modernized Neo-Glass Floating Navigation --- \*/.*?(?=\n</style>)',

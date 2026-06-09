@@ -4,7 +4,7 @@ const files = [
   'register-lisey1.html',
   'register-lisey2.html',
   'register-montessori.html',
-  'register-eduhome.html',
+  'register-victory.html',
   'register-zumrud.html'
 ];
 
