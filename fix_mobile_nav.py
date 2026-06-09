@@ -1,24 +1,31 @@
-import re
 import os
+import re
 
-with open('register-lisey2.html', 'r', encoding='utf-8') as f:
-    master = f.read()
+html_files = [f for f in os.listdir('.') if f.endswith('.html')]
 
-mobile_nav_match = re.search(r'(<!-- Mobile Navigation Overlay \(Neo-Glass\) -->.*?</div>\s*</div>)', master, re.DOTALL)
-mobile_nav = mobile_nav_match.group(1) if mobile_nav_match else ""
-
-targets = ['register-montessori.html', 'register-victory.html', 'register-zumrud.html']
-
-for target in targets:
-    if not os.path.exists(target): continue
-    with open(target, 'r', encoding='utf-8') as f:
+for file in html_files:
+    with open(file, 'r', encoding='utf-8') as f:
         content = f.read()
+    
+    changed = False
+    
+    if 'Eduhome Hazırlıq' in content:
+        content = content.replace('Eduhome Hazırlıq', 'Victory Colleges by Evrika')
+        changed = True
+        
+    if 'Eduhome' in content and 'Victory Colleges' not in content:
+        # Just blind replace Eduhome with Victory Colleges in nav blocks if missed
+        pass
+        
+    # Let's do a regex to catch any remaining "Eduhome Hazırlıq" or "Eduhome" text in the menu
+    menu_regex = r'<span class="mobile-item-title".*?>Eduhome(?: Hazırlıq)?</span>'
+    if re.search(menu_regex, content):
+        content = re.sub(menu_regex, r'<span class="mobile-item-title" data-i18n="nav-eduhome">Victory Colleges by Evrika</span>', content)
+        changed = True
+        
+    if changed:
+        with open(file, 'w', encoding='utf-8') as f:
+            f.write(content)
+        print(f"Updated nav in {file}")
 
-    if 'id="mobile-nav"' not in content:
-        # Insert after </header>
-        content = content.replace('</header>', '</header>\n\n  ' + mobile_nav)
-
-    with open(target, 'w', encoding='utf-8') as f:
-        f.write(content)
-
-print("Fixed mobile nav")
+print("Mobile navbar replacements done.")
