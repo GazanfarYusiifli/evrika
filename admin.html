@@ -492,6 +492,7 @@ fbq('track', 'PageView');
       </div>
       <div class="sb-group-title" data-module="crm">İMTAHAN</div>
       <div class="sb-link" data-module="crm" onclick="switchTab('exam-results')"><i class="fas fa-file-signature"></i> <span>Nəticələr & Rəylər</span></div>
+      <div class="sb-link" data-module="crm" onclick="switchTab('kupon')"><i class="fas fa-ticket-alt"></i> <span>Kupon Alanlar</span></div>
 
       <div class="sb-group-title" data-module="hr">HR PANEL</div>
 
@@ -499,7 +500,6 @@ fbq('track', 'PageView');
 
       <div class="sb-group-title" data-module="finance">FİNANS & SİSTEM</div>
       <div class="sb-link" data-module="finance" onclick="switchTab('finance')"><i class="fas fa-wallet"></i> <span>Maliyyə Paneli</span></div>
-      <div class="sb-link" data-module="finance" onclick="switchTab('kupon')"><i class="fas fa-ticket-alt"></i> <span>Kupon Alanlar</span></div>
       
       <div class="sb-group-title" data-module="site">SAYT İDARƏETMƏ</div>
       <div class="sb-link" data-module="site" onclick="switchTab('ugurlar')"><i class="fas fa-medal"></i> <span>Uğurlar</span></div>
@@ -757,6 +757,20 @@ fbq('track', 'PageView');
                 <div class="stat-card">
                     <h3 style="margin-bottom:20px; font-weight:800;">Epoint Gəlir Dinamikası</h3>
                     <canvas id="financeChart" style="max-height: 250px;"></canvas>
+                </div>
+            </div>
+
+            <!-- Epoint API Integration Widget -->
+            <div class="stat-card" style="margin-top: 30px; border-left: 4px solid var(--success);">
+                <h3 style="margin-bottom:20px; font-weight:800; display:flex; justify-content:space-between; align-items:center;">
+                    <span><i class="fas fa-plug" style="color:var(--success); margin-right:10px;"></i> Epoint Canlı Nəzarət</span>
+                    <span style="font-size:0.7rem; background:rgba(16,185,129,0.1); color:var(--success); padding:5px 12px; border-radius:20px; text-transform:uppercase;">API Bağlantısı Aktivdir</span>
+                </h3>
+                <div style="display:flex; gap:15px; margin-bottom:20px;">
+                    <input type="text" id="epoint-check-id" placeholder="Epoint Tranzaksiya ID (Məs: 123456789)" class="admin-input" style="flex:1;">
+                    <button class="btn-view" onclick="checkEpointStatus()" style="background:var(--success); border:none; padding:15px 30px;"><i class="fas fa-search" style="margin-right:5px;"></i> Yoxla</button>
+                </div>
+                <div id="epoint-result" style="background:rgba(255,255,255,0.02); padding:20px; border-radius:12px; border:1px solid var(--border); display:none;">
                 </div>
             </div>
         </div>
@@ -1633,6 +1647,52 @@ fbq('track', 'PageView');
         }).join('');
     };
 
+    window.checkEpointStatus = async () => {
+        const txId = document.getElementById('epoint-check-id').value.trim();
+        if(!txId) return alert("Tranzaksiya ID daxil edin");
+        
+        const pub = "i000201608";
+        const pvt = "HNIbtyFLu3PbxXlVykJEwOR1";
+        
+        const dataObj = { public_key: pub, transaction: txId };
+        const dataJson = JSON.stringify(dataObj);
+        const dataB64 = btoa(unescape(encodeURIComponent(dataJson)));
+        
+        const signString = pvt + dataB64 + pvt;
+        
+        const msgBuffer = new TextEncoder().encode(signString);
+        const hashBuffer = await crypto.subtle.digest('SHA-1', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const signatureStr = btoa(String.fromCharCode.apply(null, hashArray));
+        
+        document.getElementById('epoint-result').style.display = 'block';
+        document.getElementById('epoint-result').innerHTML = '<div style="color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Gözləyin...</div>';
+        
+        try {
+            const formData = new URLSearchParams();
+            formData.append('data', dataB64);
+            formData.append('signature', signatureStr);
+            
+            const res = await fetch("https://epoint.az/api/1/get-status", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: formData.toString()
+            });
+            const result = await res.json();
+            
+            let color = 'white';
+            if(result.status === 'success') color = 'var(--success)';
+            else if(result.status === 'error') color = 'var(--error)';
+            
+            document.getElementById('epoint-result').innerHTML = `
+                <div style="font-size:1.1rem; font-weight:800; color:${color}; margin-bottom:10px;">STATUS: ${result.status ? result.status.toUpperCase() : 'BİLİNMİR'}</div>
+                <div style="font-size:0.85rem; color:var(--text-muted); white-space:pre-wrap; background:rgba(0,0,0,0.2); padding:15px; border-radius:8px;">${JSON.stringify(result, null, 2)}</div>
+            `;
+        } catch(e) {
+            document.getElementById('epoint-result').innerHTML = `<div style="color:var(--error); font-weight:800;">Xəta: ${e.message}</div>`;
+        }
+    };
+
     window.switchTab = (t) => {
       document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
       if(document.getElementById('view-'+t)) document.getElementById('view-'+t).style.display = 'block';
@@ -1784,7 +1844,10 @@ fbq('track', 'PageView');
         `;
       }
 
-      if (item._db_id_) {
+      const srcStr = (getGranularSource(item) + ' ' + JSON.stringify(item)).toLowerCase();
+      const isQrBranch = srcStr.includes('nərimanov') || srcStr.includes('gənclik') || srcStr.includes('lisey1') || srcStr.includes('lisey2') || srcStr.includes('lisey 1') || srcStr.includes('lisey 2');
+      
+      if (item._db_id_ && isQrBranch) {
           const verifyUrl = encodeURIComponent(`https://evrikaliseyi.edu.az/verify.html?id=${item._db_id_}`);
           const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${verifyUrl}`;
           const isScanned = item.status === 'QR İstifadə Edilib';
@@ -2675,7 +2738,7 @@ fbq('track', 'PageView');
         const res = await fetch(`${API_URL}/registrations?id=eq.${dbId}`, {
           method: 'PATCH',
           headers: HEADERS,
-          body: JSON.stringify({ payload: updatedPayload, status: newStatus })
+          body: JSON.stringify({ payload: updatedPayload })
         });
         if (res.ok) {
            item.status = newStatus;
