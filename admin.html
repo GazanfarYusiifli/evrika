@@ -926,10 +926,14 @@ fbq('track', 'PageView');
                         <button class="btn-view" style="background:var(--burgundy); color:white; border:none; padding:10px 20px; font-weight:bold;" onclick="saveExamReviews()">Yadda Saxla</button>
                         <span style="margin-left:15px;"><i class="fas fa-info-circle"></i> Bütün rəylər yazıldıqda göndərmək aktivləşəcək.</span>
                     </div>
-                    <button id="exam-send-btn" class="btn-view" disabled style="background: var(--text-muted); color: rgba(255,255,255,0.5); border: none; padding: 15px 30px; font-size: 0.9rem; cursor: not-allowed;" onclick="sendExamResult()">
-                        <i class="fas fa-file-pdf"></i> Nəticəni Valideynə Göndər (PDF)
-                    </button>
-                </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button id="exam-send-wa-btn" class="btn-view exam-send-btn" disabled style="background: var(--text-muted); color: rgba(255,255,255,0.5); border: none; padding: 15px 20px; font-size: 0.9rem; cursor: not-allowed;" onclick="sendExamResult('wa')">
+                            <i class="fab fa-whatsapp"></i> WhatsApp ilə Göndər
+                        </button>
+                        <button id="exam-send-mail-btn" class="btn-view exam-send-btn" disabled style="background: var(--text-muted); color: rgba(255,255,255,0.5); border: none; padding: 15px 20px; font-size: 0.9rem; cursor: not-allowed;" onclick="sendExamResult('mail')">
+                            <i class="fas fa-envelope"></i> E-mail ilə Göndər
+                        </button>
+                    </div>
             </div>
         </div>
     </div>
@@ -1843,17 +1847,21 @@ fbq('track', 'PageView');
         document.getElementById('status-eng').innerText = e ? 'Yazılıb' : 'Gözləyir';
         document.getElementById('status-eng').style.background = e ? 'var(--success)' : 'var(--warning)';
         
-        const btn = document.getElementById('exam-send-btn');
+        const btns = document.querySelectorAll('.exam-send-btn');
         if (p && m && e) {
-            btn.disabled = false;
-            btn.style.background = 'var(--success)';
-            btn.style.color = 'white';
-            btn.style.cursor = 'pointer';
+            btns.forEach(btn => {
+                btn.disabled = false;
+                btn.style.background = 'var(--success)';
+                btn.style.color = 'white';
+                btn.style.cursor = 'pointer';
+            });
         } else {
-            btn.disabled = true;
-            btn.style.background = 'var(--text-muted)';
-            btn.style.color = 'rgba(255,255,255,0.5)';
-            btn.style.cursor = 'not-allowed';
+            btns.forEach(btn => {
+                btn.disabled = true;
+                btn.style.background = 'var(--text-muted)';
+                btn.style.color = 'rgba(255,255,255,0.5)';
+                btn.style.cursor = 'not-allowed';
+            });
         }
     };
 
@@ -1893,12 +1901,16 @@ fbq('track', 'PageView');
         } catch(e) { console.error(e); btn.innerText = origText; }
     };
 
-    window.sendExamResult = () => {
+    window.sendExamResult = (type) => {
         const dbId = document.getElementById('exam-current-student-id').value;
         const item = rawData.find(r => r._db_id_ == dbId);
         if(!item) return;
         
-        alert('PDF generasiyası başladılır... Fayl endirildikdən sonra valideynə WhatsApp ilə göndərə bilərsiniz.');
+        const targetBtnId = type === 'wa' ? 'exam-send-wa-btn' : 'exam-send-mail-btn';
+        const btn = document.getElementById(targetBtnId);
+        const origHtml = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Hazırlanır...';
+        btn.disabled = true;
         
         const fullName = item['[2.Şagird] Adı'] ? (item['[2.Şagird] Adı'] + ' ' + (item['[2.Şagird] Soyadı']||'')) : (item.fullName || item.name || 'Adsız Şagird');
         const className = item.class_name || item['Neçənci sinif üçün imtahan verəcək?'] || 'Qeyd edilməyib';
@@ -1954,28 +1966,30 @@ fbq('track', 'PageView');
                      if(match) studentEmail = match[1];
                  }
 
-                 if (phone) {
+                 if (type === 'wa' && phone) {
                      const cleanPhone = phone.replace(/[^0-9]/g, '');
-                     const text = encodeURIComponent(`Salam! ${fullName} adlı şagirdin qəbul imtahanı nəticələri və müəllim rəyləri hazırdır. Zəhmət olmasa sizə göndərdiyimiz PDF faylına baxın.`);
+                     const text = encodeURIComponent(`Salam, hörmətli valideyn. Övladınızın imtahan nəticəsi:`);
                      window.open(`https://wa.me/${cleanPhone}?text=${text}`, '_blank');
                  }
 
-                 if (studentEmail) {
+                 if (type === 'mail' && studentEmail) {
                      const mailSubject = encodeURIComponent(`EVRİKA İmtahan Nəticəsi: ${fullName}`);
-                     const mailBody = encodeURIComponent(`Salam,
-
-${fullName} adlı şagirdin imtahan nəticələri hazırlanıb.
-Zəhmət olmasa kompüterinizə endirilən PDF faylını bu mailə əlavə (attach) edərək valideynə göndərin.
-
-Hörmətlə,
-EVRİKA Liseyi`);
-                     setTimeout(() => {
-                         window.open(`mailto:${studentEmail}?subject=${mailSubject}&body=${mailBody}`, '_blank');
-                     }, 500);
+                     const mailBody = encodeURIComponent(`Salam, hörmətli valideyn. Övladınızın imtahan nəticəsi:`);
+                     window.open(`mailto:${studentEmail}?subject=${mailSubject}&body=${mailBody}`, '_blank');
                  }
+                 
+                 btn.innerHTML = '<i class="fas fa-check"></i> Göndərildi';
+                 btn.style.background = '#3B82F6';
+                 setTimeout(() => {
+                     btn.innerHTML = origHtml;
+                     btn.disabled = false;
+                     btn.style.background = 'var(--success)';
+                 }, 3000);
              });
         } else {
              alert('html2pdf kitabxanası yüklənməyib.');
+             btn.innerHTML = origHtml;
+             btn.disabled = false;
         }
     };
 
