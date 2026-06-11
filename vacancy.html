@@ -34,8 +34,9 @@
               <input type="tel" id="cv-phone" placeholder="+994" required style="width:100%; padding:18px; border-radius:15px; border:2px solid #f1f3f6; outline:none; font-family:inherit; font-weight:500;">
             </div>
             <div class="form-group">
-              <label style="color:var(--navy); font-weight:800; font-size:0.75rem; text-transform:uppercase; margin-bottom:10px; display:block; letter-spacing:0.1em;">CV / LinkedIn Linki</label>
-              <input type="url" id="cv-link" placeholder="https://linkedin.com/in/..." required style="width:100%; padding:18px; border-radius:15px; border:2px solid #f1f3f6; outline:none; font-family:inherit; font-weight:500;">
+              <label style="color:var(--navy); font-weight:800; font-size:0.75rem; text-transform:uppercase; margin-bottom:10px; display:block; letter-spacing:0.1em;">CV / Fayl (PDF, JPG, PNG)</label>
+              <input type="file" id="cv-file" accept=".pdf,image/*" required style="width:100%; padding:15px; border-radius:15px; border:2px solid #f1f3f6; outline:none; font-family:inherit; font-weight:500; background:white;">
+              <small style="color:var(--text-muted); font-size:0.75rem; margin-top:5px; display:block;">Maksimum ölçü: 2 MB.</small>
             </div>
             <button type="submit" id="cv-submit-btn" class="btn btn-primary" style="width:100%; justify-content:center; padding:22px !important; background:var(--burgundy) !important; font-size:1.1rem; border-radius:18px; box-shadow:0 20px 40px rgba(139,26,43,0.25);">Müraciəti Tamamla <i class="fas fa-paper-plane" style="margin-left:12px;"></i></button>
           </form>
@@ -499,21 +500,44 @@
         document.getElementById('cv-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = document.getElementById('cv-submit-btn');
+            const fileInput = document.getElementById('cv-file');
+            
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert('Zəhmət olmasa CV faylını seçin.');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            if (file.size > 2 * 1024 * 1024) {
+                alert('Faylın ölçüsü 2 MB-dan çox olmamalıdır.');
+                return;
+            }
+
             const originalHtml = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Göndərilir...';
             btn.disabled = true;
 
-            const payload = {
-                fullName: document.getElementById('cv-name').value,
-                phone: document.getElementById('cv-phone').value,
-                cv_link: document.getElementById('cv-link').value,
-                position: document.getElementById('modal-vac-title').innerText,
-                source: 'Karyera',
-                submissionDate: new Date().toISOString(),
-                status: 'Yeni'
-            };
+            const toBase64 = f => new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(f);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
 
             try {
+                const base64File = await toBase64(file);
+
+                const payload = {
+                    fullName: document.getElementById('cv-name').value,
+                    phone: document.getElementById('cv-phone').value,
+                    cv_file_base64: base64File,
+                    cv_file_name: file.name,
+                    position: document.getElementById('modal-vac-title').innerText,
+                    source: 'Karyera',
+                    submissionDate: new Date().toISOString(),
+                    status: 'Yeni'
+                };
+
                 const res = await fetch('https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1/registrations', {
                     method: 'POST',
                     headers: {

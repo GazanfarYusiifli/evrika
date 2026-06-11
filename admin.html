@@ -7,6 +7,7 @@
     <meta name="description" content="Evrika – gələcəyin liderlərini yetişdirən müasir təhsil ekosistemi.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
       :root {
@@ -513,8 +514,6 @@ fbq('track', 'PageView');
       <div class="sb-link" data-module="finance" onclick="switchTab('settings')"><i class="fas fa-cog"></i> <span>Sistem Ayarları</span></div>
 
       <!-- General Actions -->
-      <div class="sb-group-title">SİSTEM</div>
-      <div class="sb-link" onclick="switchTab('mcp')"><i class="fas fa-server"></i> <span>MCP İnteqrasiyaları</span></div>
       <div class="sb-link" style="color:var(--royal-blue);" onclick="window.open('index.html', '_blank')"><i class="fas fa-external-link-alt"></i> <span>Sayta Bax</span></div>
       <div class="sb-link" style="color:var(--burgundy);" onclick="window.location.reload()"><i class="fas fa-sign-out-alt"></i> <span>HUB-a Qayıt</span></div>
     </div>
@@ -865,9 +864,9 @@ fbq('track', 'PageView');
     <!-- Exam Results & Reviews Panel -->
     <div id="view-exam-results" class="content" style="display: none;">
         <div class="stats-grid">
-            <div class="ems-stat-card" style="--accent: var(--royal-blue);"><div class="ems-stat-icon"><i class="fas fa-user-graduate"></i></div><div class="stat-lab">İmtahan Verənlər</div><div class="stat-val">24</div></div>
-            <div class="ems-stat-card" style="--accent: var(--warning);"><div class="ems-stat-icon"><i class="fas fa-clock"></i></div><div class="stat-lab">Rəy Gözləyən</div><div class="stat-val">8</div></div>
-            <div class="ems-stat-card" style="--accent: var(--success);"><div class="ems-stat-icon"><i class="fas fa-check-double"></i></div><div class="stat-lab">Tamamlanmış</div><div class="stat-val">16</div></div>
+            <div class="ems-stat-card" style="--accent: var(--royal-blue);"><div class="ems-stat-icon"><i class="fas fa-user-graduate"></i></div><div class="stat-lab">İmtahan Verənlər</div><div class="stat-val" id="exam-stat-total">0</div></div>
+            <div class="ems-stat-card" style="--accent: var(--warning);"><div class="ems-stat-icon"><i class="fas fa-clock"></i></div><div class="stat-lab">Rəy Gözləyən</div><div class="stat-val" id="exam-stat-waiting">0</div></div>
+            <div class="ems-stat-card" style="--accent: var(--success);"><div class="ems-stat-icon"><i class="fas fa-check-double"></i></div><div class="stat-lab">Tamamlanmış</div><div class="stat-val" id="exam-stat-done">0</div></div>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 30px;">
@@ -879,9 +878,6 @@ fbq('track', 'PageView');
                 <table>
                     <thead><tr><th>Şagird</th><th>Sinif</th><th>Status</th></tr></thead>
                     <tbody id="exam-students-list">
-                        <tr onclick="loadExamStudent(1)" style="cursor:pointer;"><td>Əli Məmmədov</td><td>5-ci sinif</td><td><span style="color:var(--warning); font-weight:700;">Gözləyir</span></td></tr>
-                        <tr onclick="loadExamStudent(2)" style="cursor:pointer;"><td>Aylin Quliyeva</td><td>6-cı sinif</td><td><span style="color:var(--success); font-weight:700;">Tamamlanıb</span></td></tr>
-                        <tr onclick="loadExamStudent(3)" style="cursor:pointer;"><td>Nicat Səfərov</td><td>8-ci sinif</td><td><span style="color:var(--warning); font-weight:700;">Gözləyir</span></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -894,6 +890,7 @@ fbq('track', 'PageView');
                 </h3>
 
                 <div style="flex:1; display:flex; flex-direction:column; gap:20px; overflow-y:auto; padding-right:10px;">
+                    <input type="hidden" id="exam-current-student-id">
                     
                     <!-- Subject 1: Psixoloq -->
                     <div style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 16px; border: 1px solid var(--border);">
@@ -901,7 +898,7 @@ fbq('track', 'PageView');
                             <h4 style="color:var(--royal-blue); font-weight:800; font-size:0.9rem;"><i class="fas fa-brain"></i> Psixoloq Rəyi</h4>
                             <span id="status-psy" style="font-size:0.7rem; padding:3px 8px; border-radius:10px; background:var(--warning); color:white; font-weight:700;">Gözləyir</span>
                         </div>
-                        <textarea class="admin-input exam-review-input" data-subject="psy" placeholder="Psixoloji dəyərləndirməni bura yazın..." style="height:80px; resize:vertical;"></textarea>
+                        <textarea class="admin-input exam-review-input" id="review-psy" placeholder="Psixoloji dəyərləndirməni bura yazın..." style="height:80px; resize:vertical;" oninput="checkExamStatus()"></textarea>
                     </div>
 
                     <!-- Subject 2: Riyaziyyat -->
@@ -910,7 +907,7 @@ fbq('track', 'PageView');
                             <h4 style="color:var(--royal-blue); font-weight:800; font-size:0.9rem;"><i class="fas fa-square-root-alt"></i> Riyaziyyat Rəyi</h4>
                             <span id="status-math" style="font-size:0.7rem; padding:3px 8px; border-radius:10px; background:var(--warning); color:white; font-weight:700;">Gözləyir</span>
                         </div>
-                        <textarea class="admin-input exam-review-input" data-subject="math" placeholder="Riyazi biliklərin yoxlanması nəticələri..." style="height:80px; resize:vertical;"></textarea>
+                        <textarea class="admin-input exam-review-input" id="review-math" placeholder="Riyazi biliklərin yoxlanması nəticələri..." style="height:80px; resize:vertical;" oninput="checkExamStatus()"></textarea>
                     </div>
 
                     <!-- Subject 3: İngilis Dili -->
@@ -919,17 +916,18 @@ fbq('track', 'PageView');
                             <h4 style="color:var(--royal-blue); font-weight:800; font-size:0.9rem;"><i class="fas fa-language"></i> İngilis Dili Rəyi</h4>
                             <span id="status-eng" style="font-size:0.7rem; padding:3px 8px; border-radius:10px; background:var(--warning); color:white; font-weight:700;">Gözləyir</span>
                         </div>
-                        <textarea class="admin-input exam-review-input" data-subject="eng" placeholder="İngilis dili səviyyəsi haqqında..." style="height:80px; resize:vertical;"></textarea>
+                        <textarea class="admin-input exam-review-input" id="review-eng" placeholder="İngilis dili səviyyəsi haqqında..." style="height:80px; resize:vertical;" oninput="checkExamStatus()"></textarea>
                     </div>
 
                 </div>
 
                 <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
                     <div style="font-size: 0.8rem; color: var(--text-muted);">
-                        <i class="fas fa-info-circle"></i> Bütün müəllimlər rəy yazdıqdan sonra göndərmək aktivləşəcək.
+                        <button class="btn-view" style="background:var(--burgundy); color:white; border:none; padding:10px 20px; font-weight:bold;" onclick="saveExamReviews()">Yadda Saxla</button>
+                        <span style="margin-left:15px;"><i class="fas fa-info-circle"></i> Bütün rəylər yazıldıqda göndərmək aktivləşəcək.</span>
                     </div>
                     <button id="exam-send-btn" class="btn-view" disabled style="background: var(--text-muted); color: rgba(255,255,255,0.5); border: none; padding: 15px 30px; font-size: 0.9rem; cursor: not-allowed;" onclick="sendExamResult()">
-                        <i class="fas fa-paper-plane"></i> Nəticəni Valideynə Göndər (PDF)
+                        <i class="fas fa-file-pdf"></i> Nəticəni Valideynə Göndər (PDF)
                     </button>
                 </div>
             </div>
@@ -1785,15 +1783,199 @@ fbq('track', 'PageView');
         document.getElementById('epoint-total-commission').innerText = (totalAmount * 0.02).toFixed(2) + ' ₼';
     };
 
+    window.renderExamResults = () => {
+        const tb = document.getElementById('exam-students-list');
+        if(!tb) return;
+        // Check for payment_status and also it should probably have exam details
+        const examStudents = rawData.filter(i => i.payment_status === 'Ödənilib' && (i.amount || i.epoint_amount));
+        
+        let doneCount = 0;
+        
+        tb.innerHTML = examStudents.map(p => {
+            const fullName = p['[2.Şagird] Adı'] ? (p['[2.Şagird] Adı'] + ' ' + (p['[2.Şagird] Soyadı']||'')) : (p.fullName || p.name || 'Adsız Şagird');
+            const className = p.class_name || p['Neçənci sinif üçün imtahan verəcək?'] || 'Qeyd edilməyib';
+            const rev = p.exam_reviews || {};
+            const isDone = rev.psy && rev.math && rev.eng;
+            if (isDone) doneCount++;
+            
+            return `<tr onclick="loadExamStudent('${p._db_id_}')" style="cursor:pointer;">
+                <td>${fullName}</td>
+                <td>${className}</td>
+                <td><span style="color:var(--${isDone ? 'success' : 'warning'}); font-weight:700;">${isDone ? 'Tamamlanıb' : 'Gözləyir'}</span></td>
+            </tr>`;
+        }).join('');
+        
+        document.getElementById('exam-stat-total').innerText = examStudents.length;
+        document.getElementById('exam-stat-done').innerText = doneCount;
+        document.getElementById('exam-stat-waiting').innerText = examStudents.length - doneCount;
+    };
+
+    window.loadExamStudent = (dbId) => {
+        const item = rawData.find(r => r._db_id_ == dbId);
+        if(!item) return;
+        const panel = document.getElementById('exam-review-panel');
+        panel.style.opacity = '1';
+        panel.style.pointerEvents = 'all';
+        
+        const fullName = item['[2.Şagird] Adı'] ? (item['[2.Şagird] Adı'] + ' ' + (item['[2.Şagird] Soyadı']||'')) : (item.fullName || item.name || 'Adsız Şagird');
+        document.getElementById('exam-student-name').innerText = fullName;
+        document.getElementById('exam-current-student-id').value = dbId;
+        
+        const rev = item.exam_reviews || {};
+        document.getElementById('review-psy').value = rev.psy || '';
+        document.getElementById('review-math').value = rev.math || '';
+        document.getElementById('review-eng').value = rev.eng || '';
+        
+        window.checkExamStatus();
+    };
+
+    window.checkExamStatus = () => {
+        const p = document.getElementById('review-psy').value.trim();
+        const m = document.getElementById('review-math').value.trim();
+        const e = document.getElementById('review-eng').value.trim();
+        
+        document.getElementById('status-psy').innerText = p ? 'Yazılıb' : 'Gözləyir';
+        document.getElementById('status-psy').style.background = p ? 'var(--success)' : 'var(--warning)';
+        
+        document.getElementById('status-math').innerText = m ? 'Yazılıb' : 'Gözləyir';
+        document.getElementById('status-math').style.background = m ? 'var(--success)' : 'var(--warning)';
+        
+        document.getElementById('status-eng').innerText = e ? 'Yazılıb' : 'Gözləyir';
+        document.getElementById('status-eng').style.background = e ? 'var(--success)' : 'var(--warning)';
+        
+        const btn = document.getElementById('exam-send-btn');
+        if (p && m && e) {
+            btn.disabled = false;
+            btn.style.background = 'var(--success)';
+            btn.style.color = 'white';
+            btn.style.cursor = 'pointer';
+        } else {
+            btn.disabled = true;
+            btn.style.background = 'var(--text-muted)';
+            btn.style.color = 'rgba(255,255,255,0.5)';
+            btn.style.cursor = 'not-allowed';
+        }
+    };
+
+    window.saveExamReviews = async () => {
+        const dbId = document.getElementById('exam-current-student-id').value;
+        const item = rawData.find(r => r._db_id_ == dbId);
+        if(!item) return;
+        
+        const rev = {
+            psy: document.getElementById('review-psy').value.trim(),
+            math: document.getElementById('review-math').value.trim(),
+            eng: document.getElementById('review-eng').value.trim()
+        };
+        
+        item.exam_reviews = rev;
+        const updatedPayload = { ...item };
+        delete updatedPayload._db_id_;
+        
+        const btn = document.querySelector('button[onclick="saveExamReviews()"]');
+        const origText = btn.innerText;
+        btn.innerText = 'Saxlanılır...';
+        
+        try {
+            const res = await fetch(`${API_URL}/registrations?id=eq.${dbId}`, {
+                method: 'PATCH',
+                headers: HEADERS,
+                body: JSON.stringify({ payload: updatedPayload })
+            });
+            if(res.ok) {
+                btn.innerText = 'Uğurlu ✓';
+                setTimeout(() => btn.innerText = origText, 2000);
+                renderExamResults();
+            } else {
+                alert('Xəta baş verdi');
+                btn.innerText = origText;
+            }
+        } catch(e) { console.error(e); btn.innerText = origText; }
+    };
+
+    window.sendExamResult = () => {
+        const dbId = document.getElementById('exam-current-student-id').value;
+        const item = rawData.find(r => r._db_id_ == dbId);
+        if(!item) return;
+        
+        alert('PDF generasiyası başladılır... Fayl endirildikdən sonra valideynə WhatsApp ilə göndərə bilərsiniz.');
+        
+        const fullName = item['[2.Şagird] Adı'] ? (item['[2.Şagird] Adı'] + ' ' + (item['[2.Şagird] Soyadı']||'')) : (item.fullName || item.name || 'Adsız Şagird');
+        const className = item.class_name || item['Neçənci sinif üçün imtahan verəcək?'] || 'Qeyd edilməyib';
+        const rev = item.exam_reviews || {};
+        
+        const html = `
+            <div style="padding:40px; font-family:sans-serif; color:#1e293b; max-width:800px; margin:auto;">
+                <div style="text-align:center; margin-bottom:30px; border-bottom:3px solid #9c1c31; padding-bottom:20px;">
+                    <h1 style="color:#9c1c31; margin:0; font-size:28px;">EVRİKA LİSEYİ</h1>
+                    <p style="margin:5px 0 0 0; font-size:14px; color:#64748b;">Mükəmməl təhsilin ünvanı</p>
+                </div>
+                <h2 style="text-align:center; margin-bottom:40px; font-size:22px;">Qəbul İmtahanı - Nəticə və Rəylər</h2>
+                <div style="background:#f8fafc; padding:20px; border-radius:10px; margin-bottom:30px;">
+                    <p style="margin:0 0 10px 0; font-size:16px;"><strong>Şagird:</strong> ${fullName}</p>
+                    <p style="margin:0; font-size:16px;"><strong>Sinif:</strong> ${className}</p>
+                </div>
+                
+                <div style="margin-bottom:25px;">
+                    <h3 style="color:#0f172a; border-bottom:1px solid #e2e8f0; padding-bottom:8px; font-size:18px;">Psixoloji Dəyərləndirmə</h3>
+                    <p style="white-space:pre-wrap; font-size:15px; line-height:1.6; color:#334155;">${rev.psy}</p>
+                </div>
+                
+                <div style="margin-bottom:25px;">
+                    <h3 style="color:#0f172a; border-bottom:1px solid #e2e8f0; padding-bottom:8px; font-size:18px;">Riyaziyyat Üzrə Nəticələr</h3>
+                    <p style="white-space:pre-wrap; font-size:15px; line-height:1.6; color:#334155;">${rev.math}</p>
+                </div>
+                
+                <div style="margin-bottom:25px;">
+                    <h3 style="color:#0f172a; border-bottom:1px solid #e2e8f0; padding-bottom:8px; font-size:18px;">İngilis Dili Üzrə Nəticələr</h3>
+                    <p style="white-space:pre-wrap; font-size:15px; line-height:1.6; color:#334155;">${rev.eng}</p>
+                </div>
+                
+                <div style="margin-top:50px; padding-top:20px; border-top:1px dashed #cbd5e1; text-align:center; font-size:12px; color:#94a3b8;">
+                    Bu sənəd sistem tərəfindən avtomatik generasiya olunmuşdur.
+                </div>
+            </div>
+        `;
+        
+        const opt = {
+          margin:       0.5,
+          filename:     `${fullName}-Neticeler.pdf`,
+          image:        { type: 'jpeg', quality: 0.98 },
+          html2canvas:  { scale: 2, useCORS: true },
+          jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+        
+        if (window.html2pdf) {
+             html2pdf().set(opt).from(html).save().then(() => {
+                 const phone = item.phone || item['[1.Valideyn] Əlaqə nömrəsi'] || '';
+                 if (phone) {
+                     const cleanPhone = phone.replace(/[^0-9]/g, '');
+                     const text = encodeURIComponent(`Salam! ${fullName} adlı şagirdin qəbul imtahanı nəticələri və müəllim rəyləri hazırdır. Zəhmət olmasa sizə göndərdiyimiz PDF faylına baxın.`);
+                     window.open(`https://wa.me/${cleanPhone}?text=${text}`, '_blank');
+                 }
+             });
+        } else {
+             alert('html2pdf kitabxanası yüklənməyib.');
+        }
+    };
+
     window.switchTab = (t) => {
       document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
       if(document.getElementById('view-'+t)) document.getElementById('view-'+t).style.display = 'block';
-      const titles = { 'dashboard':'Dashboard', 'apps':'Müraciətlər', 'kanban':'Kanban Board', 'tasks':'Tapşırıqlar', 'employees':'Əməkdaşlar', 'vacancies':'Vakansiyalar', 'finance':'Maliyyə Paneli', 'epoint-reports':'Epoint Hesabatları', 'kupon':'Kupon Alanlar', 'ugurlar':'Uğurlar & Məzun', 'news':'Xəbərlər', 'leadership':'Rəhbərlik', 'settings':'Sistem Ayarları', 'parents':'Valideynlərimiz' };
+      const titles = { 'dashboard':'Dashboard', 'apps':'Müraciətlər', 'exam-results':'Nəticələr & Rəylər', 'kanban':'Kanban Board', 'tasks':'Tapşırıqlar', 'employees':'Əməkdaşlar', 'vacancies':'Vakansiyalar', 'finance':'Maliyyə Paneli', 'epoint-reports':'Epoint Hesabatları', 'kupon':'Kupon Alanlar', 'ugurlar':'Uğurlar & Məzun', 'news':'Xəbərlər', 'leadership':'Rəhbərlik', 'settings':'Sistem Ayarları', 'parents':'Valideynlərimiz' };
       document.getElementById('topbar-title').innerText = titles[t] || 'EVRIKA EMS';
+      
+      // Handle the active class for sidebar links
+      document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
+      const activeLink = document.querySelector(`.sb-link[onclick="switchTab('${t}')"]`);
+      if (activeLink) activeLink.classList.add('active');
+
       if(t==='vacancies') renderVacancyApps();
       if(t==='apps') renderApps();
       if(t==='dashboard') renderDashboard();
       if(t==='finance') renderFinance();
+      if(t==='epoint-reports') renderEpointReports();
+      if(t==='exam-results') renderExamResults();
       if(t==='epoint-reports') renderEpointReports();
       if(t==='kupon') renderKupon();
       if(t==='mezunlar') loadMezunlar();
@@ -1892,7 +2074,9 @@ fbq('track', 'PageView');
         
         const dataPair = { rawKey: key, label: cleanKey.toUpperCase(), value: val };
 
-        if (typeof val === 'string' && (val.includes('supabase.co/storage') || val.match(/\.(jpg|jpeg|png|gif|pdf)/i))) {
+        if (upperKey === 'CV_FILE_BASE64') {
+          groups['FAYLLAR'].push({ rawKey: key, label: 'Bax / Yüklə (' + (item.cv_file_name || 'Fayl') + ')', value: val, isBase64: true });
+        } else if (typeof val === 'string' && (val.includes('supabase.co/storage') || val.match(/\.(jpg|jpeg|png|gif|pdf)/i))) {
           groups['FAYLLAR'].push(dataPair);
         } else if (upperKey.includes('EPOINT') || upperKey === 'AMOUNT' || upperKey === 'PAYMENT_STATUS') {
           groups['ÖDƏNİŞ DETALLARI'].push(dataPair);
@@ -1917,6 +2101,15 @@ fbq('track', 'PageView');
             <div class="detail-grid-v2">
               ${items.map(pair => {
                 if (title === 'FAYLLAR') {
+                  if (pair.isBase64) {
+                      const isImg = pair.value.startsWith('data:image/');
+                      return `
+                        <div class="detail-image-card" onclick="window.open('${pair.value}', '_blank')">
+                          ${isImg ? `<img src="${pair.value}" alt="${pair.label}">` : `<div style="height:100%; display:flex; align-items:center; justify-content:center; color:white;"><i class="fas fa-file-pdf fa-2x"></i></div>`}
+                          <div class="detail-image-label">${pair.label}</div>
+                        </div>
+                      `;
+                  }
                   const isImg = !pair.value.toLowerCase().endsWith('.pdf');
                   return `
                     <div class="detail-image-card" onclick="window.open('${pair.value}', '_blank')">
@@ -2897,7 +3090,7 @@ fbq('track', 'PageView');
       } catch (e) {
         statusEl.innerText = "Xəta baş verdi!";
         statusEl.style.color = "var(--error)";
-        statusEl.style.opacity = "1";
+                statusEl.style.opacity = "1";
         setTimeout(() => statusEl.style.opacity = "0", 3000);
       }
     }
@@ -3006,82 +3199,6 @@ fbq('track', 'PageView');
             }
         }
     </script>
-
-<script>
-    // Exam Review Logic
-    function loadExamStudent(id) {
-        const panel = document.getElementById('exam-review-panel');
-        panel.style.opacity = '1';
-        panel.style.pointerEvents = 'auto';
-        
-        const nameMap = {1: 'Əli Məmmədov', 2: 'Aylin Quliyeva', 3: 'Nicat Səfərov'};
-        document.getElementById('exam-student-name').innerText = nameMap[id] + " (ID: " + id + ")";
-        
-        // Clear or load existing data (Simulation)
-        document.querySelectorAll('.exam-review-input').forEach(input => {
-            input.value = (id === 2) ? 'Simulyasiya edilmiş rəy mətni...' : '';
-            checkReviewStatus(input);
-        });
-        checkAllReviews();
-    }
-
-    document.querySelectorAll('.exam-review-input').forEach(input => {
-        input.addEventListener('input', function() {
-            checkReviewStatus(this);
-            checkAllReviews();
-        });
-    });
-
-    function checkReviewStatus(input) {
-        const subject = input.getAttribute('data-subject');
-        const badge = document.getElementById('status-' + subject);
-        if(input.value.trim().length > 5) {
-            badge.innerText = 'Yazılıb';
-            badge.style.background = 'var(--success)';
-        } else {
-            badge.innerText = 'Gözləyir';
-            badge.style.background = 'var(--warning)';
-        }
-    }
-
-    function checkAllReviews() {
-        let allFilled = true;
-        document.querySelectorAll('.exam-review-input').forEach(input => {
-            if(input.value.trim().length <= 5) allFilled = false;
-        });
-
-        const btn = document.getElementById('exam-send-btn');
-        if(allFilled) {
-            btn.disabled = false;
-            btn.style.background = 'var(--success)';
-            btn.style.color = 'white';
-            btn.style.cursor = 'pointer';
-        } else {
-            btn.disabled = true;
-            btn.style.background = 'var(--text-muted)';
-            btn.style.color = 'rgba(255,255,255,0.5)';
-            btn.style.cursor = 'not-allowed';
-        }
-    }
-
-    function sendExamResult() {
-        const btn = document.getElementById('exam-send-btn');
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Göndərilir...';
-        btn.disabled = true;
-        
-        // Simulate PDF generation & Email/WhatsApp sending
-        setTimeout(() => {
-            btn.innerHTML = '<i class="fas fa-check"></i> Göndərildi!';
-            btn.style.background = '#3B82F6';
-            alert('Nəticələr PDF formatında valideynin E-poçt və WhatsApp nömrəsinə uğurla göndərildi!');
-            
-            setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Nəticəni Valideynə Göndər (PDF)';
-                btn.disabled = false;
-                btn.style.background = 'var(--success)';
-            }, 3000);
-        }, 2000);
-    }
 
 // ----------------------------------------------------
 // NEWS MANAGEMENT
