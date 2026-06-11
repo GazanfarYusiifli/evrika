@@ -1918,7 +1918,8 @@ fbq('track', 'PageView');
         
         const html = `
             <div style="padding:40px; font-family:sans-serif; color:#1e293b; max-width:800px; margin:auto;">
-                <div style="text-align:center; margin-bottom:30px; border-bottom:3px solid #9c1c31; padding-bottom:20px;">
+                <div style="text-align:center; margin-bottom:30px; border-bottom:3px solid #9c1c31; padding-bottom:20px; position:relative;">
+                    <img src="assets/loqoYeni.PNG" style="position:absolute; top:0; left:0; height:60px;" alt="Evrika Loqo">
                     <h1 style="color:#9c1c31; margin:0; font-size:28px;">EVRİKA LİSEYİ</h1>
                     <p style="margin:5px 0 0 0; font-size:14px; color:#64748b;">Mükəmməl təhsilin ünvanı</p>
                 </div>
@@ -1929,18 +1930,18 @@ fbq('track', 'PageView');
                 </div>
                 
                 <div style="margin-bottom:25px;">
-                    <h3 style="color:#0f172a; border-bottom:1px solid #e2e8f0; padding-bottom:8px; font-size:18px;">Psixoloji Dəyərləndirmə</h3>
-                    <p style="white-space:pre-wrap; font-size:15px; line-height:1.6; color:#334155;">${rev.psy}</p>
+                    <h3 style="color:#0f172a; border-bottom:1px solid #e2e8f0; padding-bottom:8px; font-size:18px;">Psixoloq Rəyi</h3>
+                    <p style="white-space:pre-wrap; font-size:15px; line-height:1.6; color:#334155;">${rev.psy || 'Rəy yoxdur'}</p>
                 </div>
                 
                 <div style="margin-bottom:25px;">
-                    <h3 style="color:#0f172a; border-bottom:1px solid #e2e8f0; padding-bottom:8px; font-size:18px;">Riyaziyyat Üzrə Nəticələr</h3>
-                    <p style="white-space:pre-wrap; font-size:15px; line-height:1.6; color:#334155;">${rev.math}</p>
+                    <h3 style="color:#0f172a; border-bottom:1px solid #e2e8f0; padding-bottom:8px; font-size:18px;">Riyaziyyat Rəyi</h3>
+                    <p style="white-space:pre-wrap; font-size:15px; line-height:1.6; color:#334155;">${rev.math || 'Rəy yoxdur'}</p>
                 </div>
                 
                 <div style="margin-bottom:25px;">
-                    <h3 style="color:#0f172a; border-bottom:1px solid #e2e8f0; padding-bottom:8px; font-size:18px;">İngilis Dili Üzrə Nəticələr</h3>
-                    <p style="white-space:pre-wrap; font-size:15px; line-height:1.6; color:#334155;">${rev.eng}</p>
+                    <h3 style="color:#0f172a; border-bottom:1px solid #e2e8f0; padding-bottom:8px; font-size:18px;">İngilis Dili Rəyi</h3>
+                    <p style="white-space:pre-wrap; font-size:15px; line-height:1.6; color:#334155;">${rev.eng || 'Rəy yoxdur'}</p>
                 </div>
                 
                 <div style="margin-top:50px; padding-top:20px; border-top:1px dashed #cbd5e1; text-align:center; font-size:12px; color:#94a3b8;">
