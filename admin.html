@@ -1948,10 +1948,30 @@ fbq('track', 'PageView');
         if (window.html2pdf) {
              html2pdf().set(opt).from(html).save().then(() => {
                  const phone = item.phone || item['[1.Valideyn] Əlaqə nömrəsi'] || '';
+                 let studentEmail = item.email || '';
+                 if(!studentEmail && item.note) {
+                     const match = item.note.match(/E-mail:\s*([^\s|<]+)/i);
+                     if(match) studentEmail = match[1];
+                 }
+
                  if (phone) {
                      const cleanPhone = phone.replace(/[^0-9]/g, '');
                      const text = encodeURIComponent(`Salam! ${fullName} adlı şagirdin qəbul imtahanı nəticələri və müəllim rəyləri hazırdır. Zəhmət olmasa sizə göndərdiyimiz PDF faylına baxın.`);
                      window.open(`https://wa.me/${cleanPhone}?text=${text}`, '_blank');
+                 }
+
+                 if (studentEmail) {
+                     const mailSubject = encodeURIComponent(`EVRİKA İmtahan Nəticəsi: ${fullName}`);
+                     const mailBody = encodeURIComponent(`Salam,
+
+${fullName} adlı şagirdin imtahan nəticələri hazırlanıb.
+Zəhmət olmasa kompüterinizə endirilən PDF faylını bu mailə əlavə (attach) edərək valideynə göndərin.
+
+Hörmətlə,
+EVRİKA Liseyi`);
+                     setTimeout(() => {
+                         window.open(`mailto:${studentEmail}?subject=${mailSubject}&body=${mailBody}`, '_blank');
+                     }, 500);
                  }
              });
         } else {
