@@ -775,6 +775,29 @@ fbq('track', 'PageView');
                 </div>
             </div>
         </div>
+        <div id="finance-view-history" style="display: none;">
+            <div class="table-wrapper">
+                <div style="padding:25px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                    <h3 style="font-weight:800;">Epoint Ödəniş Tarixçəsi</h3>
+                    <button class="btn-view" style="font-size:0.75rem; background: var(--success); color: white; border: none;" onclick="alert('Excel export funksiyası hazırlanır')"><i class="fas fa-file-excel" style="margin-right:5px;"></i> Excel Yüklə</button>
+                </div>
+                <table>
+                    <thead>
+                      <tr>
+                        <th>Kart Sahibi / Təsvir</th>
+                        <th>Kart Nömrəsi / Növü</th>
+                        <th>Məbləğ / Komissiya</th>
+                        <th>Tranzaksiya ID / Tarix</th>
+                        <th>Sistem İcrası</th>
+                        <th>Əməliyyatlar</th>
+                      </tr>
+                    </thead>
+                    <tbody id="finance-history-tbody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
     <!-- Epoint Reports View -->
     <div id="view-epoint-reports" class="content" style="display: none;">
@@ -815,30 +838,6 @@ fbq('track', 'PageView');
            </table>
          </div>
       </div>
-    </div>
-
-        <div id="finance-view-history" style="display: none;">
-            <div class="table-wrapper">
-                <div style="padding:25px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
-                    <h3 style="font-weight:800;">Epoint Ödəniş Tarixçəsi</h3>
-                    <button class="btn-view" style="font-size:0.75rem; background: var(--success); color: white; border: none;" onclick="alert('Excel export funksiyası hazırlanır')"><i class="fas fa-file-excel" style="margin-right:5px;"></i> Excel Yüklə</button>
-                </div>
-                <table>
-                    <thead>
-                      <tr>
-                        <th>Kart Sahibi / Təsvir</th>
-                        <th>Kart Nömrəsi / Növü</th>
-                        <th>Məbləğ / Komissiya</th>
-                        <th>Tranzaksiya ID / Tarix</th>
-                        <th>Sistem İcrası</th>
-                        <th>Əməliyyatlar</th>
-                      </tr>
-                    </thead>
-                    <tbody id="finance-history-tbody">
-                    </tbody>
-                </table>
-            </div>
-        </div>
     </div>
 
     <!-- Kuponlar View -->
