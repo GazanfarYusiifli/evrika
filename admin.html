@@ -767,7 +767,7 @@ fbq('track', 'PageView');
                     <span style="font-size:0.7rem; background:rgba(16,185,129,0.1); color:var(--success); padding:5px 12px; border-radius:20px; text-transform:uppercase;">API Bağlantısı Aktivdir</span>
                 </h3>
                 <div style="display:flex; gap:15px; margin-bottom:20px;">
-                    <input type="text" id="epoint-check-id" placeholder="Epoint Tranzaksiya ID (Məs: 123456789)" class="admin-input" style="flex:1;">
+                    <input type="text" id="epoint-check-id" placeholder="Sifariş № daxil edin (Məs: 27)" class="admin-input" style="flex:1;">
                     <button class="btn-view" onclick="checkEpointStatus()" style="background:var(--success); border:none; padding:15px 30px;"><i class="fas fa-search" style="margin-right:5px;"></i> Yoxla</button>
                 </div>
                 <div id="epoint-result" style="background:rgba(255,255,255,0.02); padding:20px; border-radius:12px; border:1px solid var(--border); display:none;">
@@ -1692,7 +1692,7 @@ fbq('track', 'PageView');
 
     window.checkEpointStatus = async () => {
         const txId = document.getElementById('epoint-check-id').value.trim();
-        if(!txId) return alert("Tranzaksiya ID daxil edin");
+        if(!txId) return alert("Sifariş № daxil edin");
         
         const pub = "i000201608";
         const pvt = "HNIbtyFLu3PbxXlVykJEwOR1";
