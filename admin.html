@@ -2133,7 +2133,15 @@ fbq('track', 'PageView');
         if (upperKey === 'EPOINT_BANK') cleanKey = 'Bank Adı';
         if (upperKey === 'EPOINT_CURRENCY') cleanKey = 'Valyuta';
         if (upperKey === 'EPOINT_TRANSACTION') cleanKey = 'Tranzaksiya ID';
-        if (upperKey === 'EPOINT_RRN') cleanKey = 'RRN Kodu';
+        if (upperKey === 'EPOINT_RRN' || upperKey === 'RRN') cleanKey = 'RRN Kodu';
+        if (upperKey === 'APPROVAL_CODE') cleanKey = 'Təsdiq Kodu';
+        if (upperKey === 'CARD_NUMBER') cleanKey = 'Kart Nömrəsi (Maska)';
+        if (upperKey === 'CARDNAME') cleanKey = 'Kart Sahibi';
+        if (upperKey === 'RESULT_CODE') cleanKey = 'Nəticə Kodu';
+        if (upperKey === '3DSECURE') cleanKey = '3D Təhlükəsizlik';
+        if (upperKey === 'RESULT_PS') cleanKey = 'Ödəniş Statusu (Epoint)';
+        if (upperKey === 'RESULT') cleanKey = 'Əməliyyat Nəticəsi';
+        if (upperKey === 'PAYMENT_STATUS') cleanKey = 'Daxili Ödəniş Statusu';
         
         const dataPair = { rawKey: key, label: cleanKey.toUpperCase(), value: val };
 
@@ -2141,7 +2149,7 @@ fbq('track', 'PageView');
           groups['FAYLLAR'].push({ rawKey: key, label: 'Bax / Yüklə (' + (item.cv_file_name || 'Fayl') + ')', value: val, isBase64: true });
         } else if (typeof val === 'string' && (val.includes('supabase.co/storage') || val.match(/\.(jpg|jpeg|png|gif|pdf)/i))) {
           groups['FAYLLAR'].push(dataPair);
-        } else if (upperKey.includes('EPOINT') || upperKey === 'AMOUNT' || upperKey === 'PAYMENT_STATUS') {
+        } else if (upperKey.includes('EPOINT') || upperKey === 'AMOUNT' || upperKey.includes('PAYMENT') || ['RRN', 'APPROVAL_CODE', 'CARD_NUMBER', 'CARDNAME', 'RESULT_CODE', '3DSECURE', 'RESULT_PS', 'RESULT'].includes(upperKey)) {
           groups['ÖDƏNİŞ DETALLARI'].push(dataPair);
         } else if (upperKey.includes('PHONE') || upperKey.includes('TEL') || upperKey.includes('MAIL') || upperKey === 'ƏLAQƏ') {
           groups['ƏLAQƏ VƏ TƏMAS'].push(dataPair);
