@@ -500,6 +500,7 @@ fbq('track', 'PageView');
 
       <div class="sb-group-title" data-module="finance">FİNANS & SİSTEM</div>
       <div class="sb-link" data-module="finance" onclick="switchTab('finance')"><i class="fas fa-wallet"></i> <span>Maliyyə Paneli</span></div>
+      <div class="sb-link" data-module="finance" onclick="switchTab('epoint-reports')"><i class="fas fa-file-invoice-dollar"></i> <span>Epoint Hesabatları</span></div>
       
       <div class="sb-group-title" data-module="site">SAYT İDARƏETMƏ</div>
       <div class="sb-link" data-module="site" onclick="switchTab('ugurlar')"><i class="fas fa-medal"></i> <span>Uğurlar</span></div>
@@ -774,6 +775,47 @@ fbq('track', 'PageView');
                 </div>
             </div>
         </div>
+
+    <!-- Epoint Reports View -->
+    <div id="view-epoint-reports" class="content" style="display: none;">
+      <div class="stat-card">
+         <h3 style="font-weight: 800; font-size: 1.2rem; margin-bottom: 25px; display:flex; justify-content:space-between; align-items:center;">
+             <span><i class="fas fa-file-invoice-dollar" style="color:var(--success); margin-right: 10px;"></i> Epoint Hesabatları (CRM Sinxronizasiyası)</span>
+             <button class="btn-view" onclick="renderEpointReports()" style="background:var(--accent); border:none; padding:8px 15px; font-size:0.8rem;"><i class="fas fa-sync-alt" style="margin-right:5px;"></i> Yenilə</button>
+         </h3>
+         
+         <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 25px;">
+             <div class="stat-card" style="background:rgba(16,185,129,0.05); border:1px solid rgba(16,185,129,0.2);">
+                 <div style="font-size:0.8rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Ümumi Uğurlu Ödəniş</div>
+                 <div id="epoint-total-amount" style="font-size:1.8rem; font-weight:900; color:var(--success); margin-top:10px;">0 ₼</div>
+             </div>
+             <div class="stat-card" style="background:rgba(59,130,246,0.05); border:1px solid rgba(59,130,246,0.2);">
+                 <div style="font-size:0.8rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Tranzaksiya Sayı</div>
+                 <div id="epoint-total-count" style="font-size:1.8rem; font-weight:900; color:var(--accent); margin-top:10px;">0</div>
+             </div>
+             <div class="stat-card" style="background:rgba(245,158,11,0.05); border:1px solid rgba(245,158,11,0.2);">
+                 <div style="font-size:0.8rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Epoint Komissiyası (~2%)</div>
+                 <div id="epoint-total-commission" style="font-size:1.8rem; font-weight:900; color:var(--warning); margin-top:10px;">0 ₼</div>
+             </div>
+         </div>
+
+         <div class="table-wrapper">
+           <table style="width: 100%; border-collapse: collapse;">
+             <thead style="background: rgba(255,255,255,0.02);">
+               <tr>
+                 <th style="padding: 15px 20px; color: var(--text-muted); font-size: 0.7rem; border-bottom: 1px solid var(--glass-border);">SİFARİŞ № / TR ID</th>
+                 <th style="padding: 15px 20px; color: var(--text-muted); font-size: 0.7rem; border-bottom: 1px solid var(--glass-border);">KART SAHİBİ / MƏQƏD</th>
+                 <th style="padding: 15px 20px; color: var(--text-muted); font-size: 0.7rem; border-bottom: 1px solid var(--glass-border);">MƏBLƏĞ</th>
+                 <th style="padding: 15px 20px; color: var(--text-muted); font-size: 0.7rem; border-bottom: 1px solid var(--glass-border);">TARİX</th>
+                 <th style="padding: 15px 20px; color: var(--text-muted); font-size: 0.7rem; border-bottom: 1px solid var(--glass-border);">STATUS</th>
+               </tr>
+             </thead>
+             <tbody id="epoint-reports-tbody">
+             </tbody>
+           </table>
+         </div>
+      </div>
+    </div>
 
         <div id="finance-view-history" style="display: none;">
             <div class="table-wrapper">
@@ -1693,15 +1735,67 @@ fbq('track', 'PageView');
         }
     };
 
+    window.renderEpointReports = () => {
+        const tb = document.getElementById('epoint-reports-tbody');
+        if(!tb) return;
+        
+        const txs = rawData.filter(i => i.epoint_transaction || i.epoint_amount || i.payment_status)
+                           .sort((a,b) => new Date(b.epoint_date || b.submissionDate || 0) - new Date(a.epoint_date || a.submissionDate || 0));
+                           
+        let totalAmount = 0;
+        let totalCount = 0;
+        
+        tb.innerHTML = txs.map((p, idx) => {
+            const fullName = p.fullName || p['Ad Soyad'] || p.name || (p['[2.Şagird] Adı'] ? p['[2.Şagird] Adı'] + ' ' + (p['[2.Şagird] Soyadı']||'') : 'Adsız');
+            const amount = parseFloat(p.epoint_amount || p.amount || 0);
+            const isSuccess = p.payment_status === 'Ödənilib';
+            
+            if (isSuccess) {
+                totalAmount += amount;
+                totalCount++;
+            }
+            
+            const date = p.epoint_date ? new Date(p.epoint_date).toLocaleString('az') : new Date(p.submissionDate || Date.now()).toLocaleString('az');
+            const txId = p.epoint_transaction || '---';
+            const orderId = p.order_id || p.id || '---';
+            
+            return `<tr>
+              <td>
+                 <div style="font-weight:800; color:white; font-size:0.9rem; font-family:monospace;">Sifariş №: ${orderId}</div>
+                 <div style="font-size:0.7rem; color:var(--text-muted); margin-top:3px; font-family:monospace;">TR: ${txId}</div>
+              </td>
+              <td>
+                 <div style="font-weight:800; color:white; font-size:0.9rem;">${fullName}</div>
+                 <div style="font-size:0.7rem; color:var(--text-muted); margin-top:3px;">${p.description || 'Sınaq / Təhsil Ödənişi'}</div>
+              </td>
+              <td>
+                 <div style="color:${isSuccess ? 'var(--success)' : 'var(--text-muted)'}; font-weight:800; font-size:1rem;">${amount.toFixed(2)} ₼</div>
+                 ${isSuccess ? `<div style="font-size:0.65rem; color:var(--warning); margin-top:3px;">- ${(amount*0.02).toFixed(2)} ₼ (Epoint)</div>` : ''}
+              </td>
+              <td><div style="color:var(--text-muted); font-size:0.8rem; font-weight:600;">${date}</div></td>
+              <td>
+                 <span style="padding:5px 10px; border-radius:6px; font-size:0.75rem; font-weight:800; ${isSuccess ? 'background:rgba(16,185,129,0.1); color:var(--success);' : 'background:rgba(239,68,68,0.1); color:var(--error);'}">
+                    ${isSuccess ? '<i class="fas fa-check-circle"></i> ÖDƏNİLİB' : '<i class="fas fa-times-circle"></i> UĞURSUZ'}
+                 </span>
+              </td>
+            </tr>`;
+        }).join('');
+        
+        document.getElementById('epoint-total-amount').innerText = totalAmount.toFixed(2) + ' ₼';
+        document.getElementById('epoint-total-count').innerText = totalCount;
+        document.getElementById('epoint-total-commission').innerText = (totalAmount * 0.02).toFixed(2) + ' ₼';
+    };
+
     window.switchTab = (t) => {
       document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
       if(document.getElementById('view-'+t)) document.getElementById('view-'+t).style.display = 'block';
-      const titles = { 'dashboard':'Dashboard', 'apps':'Müraciətlər', 'kanban':'Kanban Board', 'tasks':'Tapşırıqlar', 'employees':'Əməkdaşlar', 'vacancies':'Vakansiyalar', 'finance':'Maliyyə Paneli', 'kupon':'Kupon Alanlar', 'ugurlar':'Uğurlar & Məzun', 'news':'Xəbərlər', 'leadership':'Rəhbərlik', 'settings':'Sistem Ayarları', 'parents':'Valideynlərimiz' };
+      const titles = { 'dashboard':'Dashboard', 'apps':'Müraciətlər', 'kanban':'Kanban Board', 'tasks':'Tapşırıqlar', 'employees':'Əməkdaşlar', 'vacancies':'Vakansiyalar', 'finance':'Maliyyə Paneli', 'epoint-reports':'Epoint Hesabatları', 'kupon':'Kupon Alanlar', 'ugurlar':'Uğurlar & Məzun', 'news':'Xəbərlər', 'leadership':'Rəhbərlik', 'settings':'Sistem Ayarları', 'parents':'Valideynlərimiz' };
       document.getElementById('topbar-title').innerText = titles[t] || 'EVRIKA EMS';
       if(t==='vacancies') renderVacancyApps();
       if(t==='apps') renderApps();
       if(t==='dashboard') renderDashboard();
       if(t==='finance') renderFinance();
+      if(t==='epoint-reports') renderEpointReports();
       if(t==='kupon') renderKupon();
       if(t==='mezunlar') loadMezunlar();
       if(t==='ugurlar') loadUgurlar();
