@@ -1959,33 +1959,61 @@ fbq('track', 'PageView');
         };
         
         if (window.html2pdf) {
-             html2pdf().set(opt).from(html).save().then(() => {
-                 const phone = item.phone || item['[1.Valideyn] Əlaqə nömrəsi'] || '';
-                 let studentEmail = item.email || '';
-                 if(!studentEmail && item.note) {
-                     const match = item.note.match(/E-mail:\s*([^\s|<]+)/i);
-                     if(match) studentEmail = match[1];
-                 }
+             const worker = html2pdf().set(opt).from(html);
+             
+             worker.save().then(() => {
+                 worker.output('blob').then(async (pdfBlob) => {
+                     let fileUrl = '';
+                     try {
+                         const fileName = `neticeler/${dbId}-${Date.now()}.pdf`;
+                         const uploadUrl = `https://miwvdhwrmxoetszkxlzy.supabase.co/storage/v1/object/ems-documents/${fileName}`;
+                         
+                         const uploadRes = await fetch(uploadUrl, {
+                             method: 'POST',
+                             headers: {
+                                 'apikey': API_KEY,
+                                 'Authorization': 'Bearer ' + API_KEY,
+                                 'Content-Type': 'application/pdf'
+                             },
+                             body: pdfBlob
+                         });
+                         
+                         if (uploadRes.ok) {
+                             fileUrl = `https://miwvdhwrmxoetszkxlzy.supabase.co/storage/v1/object/public/ems-documents/${fileName}`;
+                         }
+                     } catch(err) {
+                         console.error("PDF upload error:", err);
+                     }
+                     
+                     const phone = item.phone || item['[1.Valideyn] Əlaqə nömrəsi'] || '';
+                     let studentEmail = item.email || '';
+                     if(!studentEmail && item.note) {
+                         const match = item.note.match(/E-mail:\s*([^\s|<]+)/i);
+                         if(match) studentEmail = match[1];
+                     }
 
-                 if (type === 'wa' && phone) {
-                     const cleanPhone = phone.replace(/[^0-9]/g, '');
-                     const text = encodeURIComponent(`Salam, hörmətli valideyn. Övladınızın imtahan nəticəsi:`);
-                     window.open(`https://wa.me/${cleanPhone}?text=${text}`, '_blank');
-                 }
+                     const msgText = `Salam, hörmətli valideyn. Övladınızın imtahan nəticəsi:${fileUrl ? ' ' + fileUrl : ''}`;
 
-                 if (type === 'mail' && studentEmail) {
-                     const mailSubject = encodeURIComponent(`EVRİKA İmtahan Nəticəsi: ${fullName}`);
-                     const mailBody = encodeURIComponent(`Salam, hörmətli valideyn. Övladınızın imtahan nəticəsi:`);
-                     window.open(`mailto:${studentEmail}?subject=${mailSubject}&body=${mailBody}`, '_blank');
-                 }
-                 
-                 btn.innerHTML = '<i class="fas fa-check"></i> Göndərildi';
-                 btn.style.background = '#3B82F6';
-                 setTimeout(() => {
-                     btn.innerHTML = origHtml;
-                     btn.disabled = false;
-                     btn.style.background = 'var(--success)';
-                 }, 3000);
+                     if (type === 'wa' && phone) {
+                         const cleanPhone = phone.replace(/[^0-9]/g, '');
+                         const text = encodeURIComponent(msgText);
+                         window.open(`https://wa.me/${cleanPhone}?text=${text}`, '_blank');
+                     }
+
+                     if (type === 'mail' && studentEmail) {
+                         const mailSubject = encodeURIComponent(`EVRİKA İmtahan Nəticəsi: ${fullName}`);
+                         const mailBody = encodeURIComponent(msgText);
+                         window.open(`mailto:${studentEmail}?subject=${mailSubject}&body=${mailBody}`, '_blank');
+                     }
+                     
+                     btn.innerHTML = '<i class="fas fa-check"></i> Göndərildi';
+                     btn.style.background = '#3B82F6';
+                     setTimeout(() => {
+                         btn.innerHTML = origHtml;
+                         btn.disabled = false;
+                         btn.style.background = 'var(--success)';
+                     }, 3000);
+                 });
              });
         } else {
              alert('html2pdf kitabxanası yüklənməyib.');
