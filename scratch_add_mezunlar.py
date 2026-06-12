@@ -16,7 +16,7 @@ headers = {
 
 # The images are in assets/mezunlar/
 # Path should be relative for the web page: 'assets/mezunlar/filename'
-dir_path = "/Users/gazanfaryusifli/Downloads/Evrika/assets/mezunlar"
+dir_path = "/Users/gazanfaryusifli/Downloads/EvrikaProje/assets/mezunlar"
 images = [f for f in os.listdir(dir_path) if f.startswith("mezun_")]
 images.sort(key=natural_sort_key, reverse=True) # Reverse so mezun_1 gets inserted last, and thus gets highest ID (if ordered desc)
 

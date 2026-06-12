@@ -1,0 +1,26 @@
+async function initParentTestimonials() {
+          const API_URL = 'https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1';
+          const API_KEY = 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV';
+          const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY };
+          
+          const wrapper = document.getElementById('parent-testimonials-wrapper');
+          if (!wrapper) return;
+
+          try {
+            const res = await fetch(`${API_URL}/parent_testimonials?select=*&order=id.desc`, { headers: HEADERS });
+            if (res.ok) {
+              const data = await res.json();
+              if (data.length > 0) {
+                let instagramCount = 0;
+                wrapper.innerHTML = data.map((item, idx) => {
+                  const p = item.payload;
+                  const isVideo = p.type === 'video';
+                  const isDark = idx % 2 !== 0;
+                  
+                  // Extract YouTube or Instagram ID for the cover if it's a video
+                  let coverImg = p.thumbnail_url || p.avatar || 'https://via.placeholder.com/400';
+                  if (isVideo && p.media_url) {
+                      const ytMatch = p.media_url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/);
+                      if (ytMatch && ytMatch[1]) {
+                          coverImg = `https://img.youtube.com/vi/${ytMatch[1]}/maxresdefault.jpg`;
+                      }

@@ -1,0 +1,51 @@
+const grid = document.getElementById('home-news-grid');
+        if(!grid) return;
+        try {
+            const API_URL = 'https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1';
+            const API_KEY = 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV';
+            const res = await fetch(`${API_URL}/news?select=*&order=id.desc&limit=3`, {
+                headers: { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY }
+            });
+            if(res.ok) {
+                const data = await res.json();
+                if(!data.length) {
+                    grid.innerHTML = '<div style="text-align:center; width:100%; grid-column:1/-1; opacity:0.5; font-size:1.2rem;">Hələ ki, heç bir xəbər yoxdur.</div>';
+                    return;
+                }
+                grid.innerHTML = data.map(row => {
+                    const n = row.payload;
+                    const dateStr = n.date || "";
+                    const parts = dateStr.split(/[-./]/);
+                    const months = ["Yan", "Fev", "Mar", "Apr", "May", "İyn", "İyl", "Avq", "Sen", "Okt", "Noy", "Dek"];
+                    
+                    let day = "13", month = "Apr";
+                    if(parts.length === 3) {
+                        if(parts[0].length === 4) {
+                            day = parts[2];
+                            month = months[parseInt(parts[1]) - 1] || "Ay";
+                        } else {
+                            day = parts[0];
+                            month = months[parseInt(parts[1]) - 1] || "Ay";
+                        }
+                    }
+                    
+                    return `
+                        <a href="news-detail.html?id=${row.id}" class="news-card">
+                            <div class="card-media">
+                                <img src="${n.img}" alt="${n.title}" loading="lazy">
+                                <div class="date-badge">
+                                    <strong>${day}</strong>
+                                    <span>${month}</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-cat">EVRİKA YENİLİK</div>
+                                <h3 class="card-title">${n.title}</h3>
+                                <p class="card-desc">${n.text}</p>
+                                <div class="card-footer">TAM OXU <i class="fas fa-arrow-right"></i></div>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+            }
+        } catch(e) {}
