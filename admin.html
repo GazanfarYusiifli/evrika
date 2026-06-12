@@ -1444,7 +1444,7 @@ fbq('track', 'PageView');
             }
         }
       } catch(e) {}
-      renderDashboard(); renderApps(); renderFinance(); loadUgurlar(); loadVacancies(); loadNews(); loadManagement(); loadMezunlar();
+      renderDashboard(); renderApps(); renderFinance(); renderVacancyApps(); loadUgurlar(); loadVacancies(); loadNews(); loadManagement(); loadMezunlar();
     }
 
     window.filterData = () => {
@@ -2307,7 +2307,8 @@ fbq('track', 'PageView');
 
     window.renderVacancyApps = () => {
        const tb = document.getElementById('vac-apps-tbody'); if(!tb) return;
-       const apps = rawData.filter(i => i.source === 'Karyera');
+       const apps = rawData.filter(i => i.source === 'Karyera' || i.position);
+       if(document.getElementById('vac-app-count')) document.getElementById('vac-app-count').innerText = apps.length + ' Müraciət';
        tb.innerHTML = apps.map(a => `<tr><td>${a.fullName || 'Adsız'}</td><td>${a.phone || '-'}</td><td>${a.position || '-'}</td><td>${a.submissionDate || '-'}</td><td>${a.status || 'Yeni'}</td><td><button onclick="viewDetails(${rawData.indexOf(a)})" class="btn-view">Bax</button></td></tr>`).join('');
     };
 
@@ -2377,7 +2378,7 @@ fbq('track', 'PageView');
     window.loadVacancies = async () => {
       const res = await fetch(`${API_URL}/vacancies?select=*&order=id.desc`, { headers: HEADERS });
       if(res.ok) vacanciesData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id }));
-      const tb = document.getElementById('vac-tbody'); if(tb) tb.innerHTML = vacanciesData.map(v => `<tr><td>${v.title}</td><td>${v.location}</td><td>${v.time}</td><td><button class="btn-danger">Sil</button></td></tr>`).join('');
+      const tb = document.getElementById('vac-tbody'); if(tb) tb.innerHTML = vacanciesData.map(v => `<tr><td>${v.title}</td><td>${v.location}</td><td>${v.time}</td><td><button class="btn-danger" onclick="deleteVacancy('${v._db_id_}')">Sil</button></td></tr>`).join('');
       renderDashboard();
     }
 
