@@ -62,6 +62,13 @@ export default async function handler(req, res) {
         existingPayload.epoint_transaction = result.transaction;
         existingPayload.epoint_rrn = result.rrn;
         existingPayload.epoint_date = result.date;
+        
+        // Yenilər (Kart sahibinin adı və bank detalları)
+        existingPayload.epoint_card_name = result.cardname || result.card_name || result.name || "Bilinmir";
+        existingPayload.epoint_approval_code = result.approval_code || result.approvalCode || "";
+        existingPayload.epoint_result_code = result.result_code || result.resultCode || "";
+        existingPayload.epoint_3dsecure = result.secure || result['3dsecure'] || result['3DSECURE'] || result['3DSecure'] || "";
+        existingPayload.epoint_bank_response = result.bank_response || result.bankResponse || "";
 
         // 3. Supabase-ə payload-u YENİ SƏTİR KİMİ ƏLAVƏ EDİRİK (UPDATE RLS BLOKUNU KEÇMƏK ÜÇÜN)
         const updateResponse = await fetch(`${SUPABASE_URL}/rest/v1/registrations`, {
