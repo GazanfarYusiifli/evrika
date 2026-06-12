@@ -32,6 +32,44 @@ export default async function handler(req, res) {
         if (payload.payment_status !== 'Ödənilib') {
             payload.status = 'Ödənilib';
             payload.payment_status = 'Ödənilib';
+            
+            // 1.5. Epoint-dən statusu yoxla və məlumatları çək
+            try {
+                const crypto = require('crypto');
+                const PUB_KEY = "i000201608";
+                const PVT_KEY = process.env.EPOINT_PRIVATE_KEY || "HNIbtyFLu3PbxXlVykJEwOR1";
+                const dataObj = { public_key: PUB_KEY, transaction: dbId };
+                const dataJson = JSON.stringify(dataObj);
+                const dataB64 = Buffer.from(dataJson).toString('base64');
+                const shasum = crypto.createHash('sha1');
+                shasum.update(PVT_KEY + dataB64 + PVT_KEY);
+                const signatureStr = shasum.digest('base64');
+
+                const epointRes = await fetch("https://epoint.az/api/1/get-status", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: new URLSearchParams({ data: dataB64, signature: signatureStr }).toString()
+                });
+                
+                if (epointRes.ok) {
+                    const epointData = await epointRes.json();
+                    if (epointData.status === 'success') {
+                        payload.epoint_amount = epointData.amount;
+                        payload.epoint_currency = epointData.currency;
+                        payload.epoint_card_number = epointData.card_number;
+                        payload.epoint_card_name = epointData.cardname || epointData.card_name || epointData.name || "Bilinmir";
+                        payload.epoint_approval_code = epointData.approval_code || epointData.approvalCode || "";
+                        payload.epoint_result_code = epointData.result_code || epointData.resultCode || "";
+                        payload.epoint_3dsecure = epointData.secure || epointData['3dsecure'] || epointData['3DSECURE'] || "";
+                        payload.epoint_bank_response = epointData.bank_response || epointData.bankResponse || "";
+                        payload.epoint_transaction = epointData.transaction;
+                        payload.epoint_rrn = epointData.rrn;
+                    }
+                }
+            } catch (epointErr) {
+                console.error("send-email.js-də Epoint API xətası:", epointErr);
+            }
+
             if (!payload.note.includes('EPOINT VASİTƏSİLƏ ÖDƏNİLDİ')) {
                 payload.note += ' | EPOINT VASİTƏSİLƏ ÖDƏNİLDİ. İmtahan giriş kuponu göndərildi.';
             }
