@@ -1,8 +1,10 @@
 import './style.css';
 import { inject } from '@vercel/analytics';
+import { injectSpeedInsights } from '@vercel/speed-insights';
 
-// Initialize Vercel Analytics
+// Initialize Vercel Analytics and Speed Insights
 inject();
+injectSpeedInsights();
 
 // --- System Core ---
 const DOM = {

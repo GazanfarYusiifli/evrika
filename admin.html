@@ -494,6 +494,7 @@ fbq('track', 'PageView');
       <div class="sb-group-title" data-module="crm">CRM & ANALİTİKA</div>
       <div class="sb-link" data-module="crm" onclick="switchTab('dashboard')"><i class="fas fa-th-large"></i> <span>Dashboard</span></div>
       <div class="sb-link" data-module="crm" onclick="switchTab('analytics')"><i class="fas fa-chart-line"></i> <span>Analitika</span></div>
+      <div class="sb-link" data-module="crm" onclick="switchTab('speed')"><i class="fas fa-tachometer-alt"></i> <span>Sayt Sürəti</span></div>
       <div class="sb-link" data-module="crm" onclick="switchTab('apps')" style="display:flex; justify-content:space-between; align-items:center;">
         <div><i class="fas fa-user-graduate"></i> <span>Müraciətlər</span></div>
         <span id="new-apps-badge" style="display:none; background:var(--error); color:white; padding:2px 8px; border-radius:12px; font-size:0.7rem; font-weight:800; animation: badgePulse 2s infinite;">0</span>
@@ -710,6 +711,27 @@ fbq('track', 'PageView');
          <h3 style="font-size:1.5rem; font-weight:800; color:white; margin-bottom:15px;">Vercel Analitika Aktividir</h3>
          <p style="color:rgba(255,255,255,0.6); font-size:1.05rem; line-height:1.6; margin-bottom:30px;">
             Vercel Web Analytics saytınıza uğurla əlavə edildi. Təhlükəsizlik səbəbindən (Vercel iframe bloklayır) analitika qrafiklərinə və ziyarətçi statistikalara birbaşa Vercel platforması üzərindən baxa bilərsiniz.
+         </p>
+         <a href="https://vercel.com" target="_blank" class="btn btn-primary" style="display:inline-flex; align-items:center; gap:10px; background:white; color:black; font-weight:800; padding:15px 30px; border-radius:12px; text-decoration:none;">
+            <svg viewBox="0 0 76 65" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:20px;"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="currentColor"/></svg>
+            Vercel Dashboard-a Keç
+         </a>
+      </div>
+    </div>
+
+    <div id="view-speed" class="content" style="display: none;">
+      <div class="section-header">
+        <h2 style="font-size:1.8rem; font-weight:900; color:var(--white);">Sayt Sürəti <span style="font-size:0.9rem; font-weight:600; color:var(--text-muted); background:rgba(255,255,255,0.05); padding:4px 8px; border-radius:6px; margin-left:10px;">Vercel Speed Insights</span></h2>
+        <p style="color:var(--text-muted); margin-top:5px;">Real istifadəçilərin sayt performansını necə təcrübə etdiyini izləyin</p>
+      </div>
+      
+      <div style="background:rgba(255,255,255,0.02); border:1px solid var(--glass-border); border-radius:24px; padding:40px; text-align:center; max-width:800px; margin:0 auto; margin-top:30px;">
+         <div style="width:80px; height:80px; background:rgba(16, 185, 129, 0.1); color:#10B981; border-radius:20px; display:flex; align-items:center; justify-content:center; font-size:2.5rem; margin:0 auto 20px;">
+            <i class="fas fa-bolt"></i>
+         </div>
+         <h3 style="font-size:1.5rem; font-weight:800; color:white; margin-bottom:15px;">Vercel Speed Insights Aktividir</h3>
+         <p style="color:rgba(255,255,255,0.6); font-size:1.05rem; line-height:1.6; margin-bottom:30px;">
+            Vercel Speed Insights saytınıza uğurla əlavə edildi. Təhlükəsizlik səbəbindən Speed qrafiklərinə və Core Web Vitals nəticələrinə birbaşa Vercel platforması üzərindən baxa bilərsiniz.
          </p>
          <a href="https://vercel.com" target="_blank" class="btn btn-primary" style="display:inline-flex; align-items:center; gap:10px; background:white; color:black; font-weight:800; padding:15px 30px; border-radius:12px; text-decoration:none;">
             <svg viewBox="0 0 76 65" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:20px;"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="currentColor"/></svg>
@@ -2118,7 +2140,7 @@ fbq('track', 'PageView');
     window.switchTab = (t) => {
       document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
       if(document.getElementById('view-'+t)) document.getElementById('view-'+t).style.display = 'block';
-      const titles = { 'dashboard':'Dashboard', 'analytics':'Sayt Analitikası', 'apps':'Müraciətlər', 'exam-results':'Nəticələr & Rəylər', 'kanban':'Kanban Board', 'tasks':'Tapşırıqlar', 'employees':'Əməkdaşlar', 'hr-panel':'Vakansiyalar', 'finance':'Maliyyə Paneli', 'epoint-reports':'Epoint Hesabatları', 'kupon':'Kupon Alanlar', 'ugurlar':'Uğurlar & Məzun', 'news':'Xəbərlər', 'leadership':'Rəhbərlik', 'settings':'Sistem Ayarları', 'parents':'Valideynlərimiz' };
+      const titles = { 'dashboard':'Dashboard', 'analytics':'Sayt Analitikası', 'speed':'Sayt Sürəti', 'apps':'Müraciətlər', 'exam-results':'Nəticələr & Rəylər', 'kanban':'Kanban Board', 'tasks':'Tapşırıqlar', 'employees':'Əməkdaşlar', 'hr-panel':'Vakansiyalar', 'finance':'Maliyyə Paneli', 'epoint-reports':'Epoint Hesabatları', 'kupon':'Kupon Alanlar', 'ugurlar':'Uğurlar & Məzun', 'news':'Xəbərlər', 'leadership':'Rəhbərlik', 'settings':'Sistem Ayarları', 'parents':'Valideynlərimiz' };
       document.getElementById('topbar-title').innerText = titles[t] || 'EVRIKA EMS';
       
       // Handle the active class for sidebar links
