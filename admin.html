@@ -1321,6 +1321,11 @@ fbq('track', 'PageView');
   </div>
 
   <script>
+    window.onerror = function(msg, url, line, col, err) {
+        alert("SİSTEM XƏTASI: " + msg + " \nSətir: " + line);
+        return false;
+    };
+
     const MODULE_PASSORDS = { 'crm':'crm123', 'hr':'hr123', 'finance':'fin123', 'site':'site123', 'exam':'exam123' };
     let currentModuleKey = '';
 
