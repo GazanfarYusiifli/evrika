@@ -4,29 +4,6 @@ import { inject } from '@vercel/analytics';
 // Initialize Vercel Analytics
 inject();
 
-// Custom EVRIKA Analytics Tracker
-setTimeout(async () => {
-    try {
-        const SUBG_ID = 'miwvdhwrmxoetszkxlzy';
-        const API_KEY = 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV';
-        const DB_URL = `https://${SUBG_ID}.supabase.co/rest/v1/page_views`;
-        if(!window.location.pathname.includes('admin.html')) {
-            await fetch(DB_URL, {
-                method: 'POST',
-                headers: {
-                    'apikey': API_KEY,
-                    'Authorization': `Bearer ${API_KEY}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    path: window.location.pathname || '/',
-                    user_agent: navigator.userAgent
-                })
-            });
-        }
-    } catch(e) {}
-}, 2000);
-
 // --- System Core ---
 const DOM = {
   navbar: document.querySelector('.navbar'),
