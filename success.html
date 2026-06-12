@@ -255,6 +255,7 @@
       const regId = urlParams.get('regId') || localStorage.getItem('last_regId');
       const emailParam = urlParams.get('email') || localStorage.getItem('last_email');
       const regName = urlParams.get('name') || localStorage.getItem('last_name') || '';
+      const txHash = localStorage.getItem('last_epoint_transaction') || '';
 
       if (regId) {
         document.querySelector('.container p').innerHTML += '<br><br><span style="font-size: 0.9rem; color: #10b981;"><i class="fas fa-spinner fa-spin"></i> Sistem qeydiyyatınızı təsdiqləyir və kupon göndərir...</span>';
@@ -266,7 +267,8 @@
             body: JSON.stringify({
                 email: emailParam || 'qeyd etdiyiniz',
                 name: regName || 'Şagird',
-                dbId: regId
+                dbId: regId,
+                transactionId: txHash
             })
         }).then(res => {
             document.querySelector('.container p').innerHTML = 'Təşəkkür edirik. Ödənişiniz sistemdə avtomatik qeydə alındı və xidmətiniz təsdiqləndi. İmtahan giriş kuponunuz ' + (emailParam ? emailParam : 'qeyd etdiyiniz') + ' ünvanınıza uğurla göndərilmişdir.';

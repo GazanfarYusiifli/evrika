@@ -619,6 +619,7 @@
                       localStorage.setItem('last_regId', data[0].id);
                       localStorage.setItem('last_email', email);
                       localStorage.setItem('last_name', firstName + ' ' + lastName);
+                      localStorage.setItem('last_epoint_transaction', epointData.transaction);
                       window.location.href = epointData.redirect_url;
                   } else {
                       alert('Ödəniş sistemində xəta baş verdi: ' + (epointData.message || epointData.error || 'Bilinməyən xəta'));

@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Only POST requests allowed' });
   }
 
-  const { email, name, dbId } = req.body;
+  const { email, name, dbId, transactionId } = req.body;
 
   if (!email || !dbId) {
     return res.status(400).json({ message: 'Missing required fields' });
@@ -38,7 +38,8 @@ export default async function handler(req, res) {
             try {
                 const PUB_KEY = "i000201608";
                 const PVT_KEY = process.env.EPOINT_PRIVATE_KEY || "HNIbtyFLu3PbxXlVykJEwOR1";
-                const dataObj = { public_key: PUB_KEY, transaction: String(dbId) };
+                const targetTransaction = transactionId || String(dbId);
+                const dataObj = { public_key: PUB_KEY, transaction: targetTransaction };
                 const dataJson = JSON.stringify(dataObj);
                 const dataB64 = Buffer.from(dataJson).toString('base64');
                 const shasum = crypto.createHash('sha1');
