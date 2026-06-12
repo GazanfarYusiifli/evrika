@@ -57,6 +57,7 @@ export default async function handler(req, res) {
         // 2. Ödəniş detallarını əlavə edirik
         existingPayload.status = 'Yeni';
         existingPayload.payment_status = 'Ödənilib';
+        existingPayload.order_id = "EV-" + String(dbId).padStart(4, '0');
         existingPayload.epoint_amount = result.amount;
         existingPayload.epoint_currency = result.currency;
         existingPayload.epoint_card_number = result.card_number;

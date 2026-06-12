@@ -33,6 +33,7 @@ export default async function handler(req, res) {
         if (payload.payment_status !== 'Ödənilib') {
             payload.status = 'Ödənilib';
             payload.payment_status = 'Ödənilib';
+            payload.order_id = "EV-" + String(dbId).padStart(4, '0');
             
             // 1.5. Epoint-dən statusu yoxla və məlumatları çək
             try {
