@@ -1583,8 +1583,9 @@ fbq('track', 'PageView');
         
         if(!historyTb || !shortTb) return;
         
-        const payments = rawData.filter(i => i.epoint_amount || (i.amount && i.payment_status === 'Ödənilib'))
-                                .sort((a,b) => new Date(b.epoint_date || b.submissionDate || 0) - new Date(a.epoint_date || a.submissionDate || 0));
+        const payments = data.map(item => ({ ...item.payload, _id: item.id }))
+                             .filter(p => p.epoint_amount || (p.amount && p.payment_status === 'Ödənilib'))
+                             .sort((a,b) => new Date(b.epoint_date || b.submissionDate || 0) - new Date(a.epoint_date || a.submissionDate || 0));
         
         const historyHtml = payments.map(p => {
             const fullName = p.fullName || p['Ad Soyad'] || p.name || (p['[2.Şagird] Adı'] ? p['[2.Şagird] Adı'] + ' ' + (p['[2.Şagird] Soyadı']||'') : 'Adsız');
@@ -1623,7 +1624,7 @@ fbq('track', 'PageView');
                 <div style="font-size:0.65rem; color:var(--text-muted); margin-top:3px;">Komissiya: <span style="color:var(--warning); font-weight:700;">${commission} ₼</span></div>
               </td>
               <td>
-                <div style="font-size:0.8rem; font-weight:700; color:white; font-family:monospace;">Sifariş №: ${p.order_id || p.id || item.id || '---'}</div>
+                <div style="font-size:0.8rem; font-weight:700; color:white; font-family:monospace;">Sifariş №: EV-${String(p.order_id || p._id || '').padStart(4, '0')}</div>
                 <div style="font-size:0.75rem; font-weight:600; color:var(--text-muted); margin-top:2px;">TR ID: ${txId}</div>
                 <div style="font-size:0.65rem; font-weight:600; color:var(--text-muted); margin-top:2px;">${date}</div>
               </td>
@@ -1632,7 +1633,7 @@ fbq('track', 'PageView');
                 <div style="font-size:0.65rem; color:var(--success); margin-top:3px;"><i class="fas fa-check-circle"></i> Uğurlu</div>
               </td>
               <td>
-                <button class="btn-view" style="padding:10px 15px; font-size:0.7rem; background:rgba(59,130,246,0.1); color:var(--royal-blue); border-color:rgba(59,130,246,0.2);" onclick="openFinanceDetails('${item.id || p.id || p.order_id || p.epoint_transaction}')"><i class="fas fa-eye" style="margin-right:5px;"></i> Detallar</button>
+                <button class="btn-view" style="padding:10px 15px; font-size:0.7rem; background:rgba(59,130,246,0.1); color:var(--royal-blue); border-color:rgba(59,130,246,0.2);" onclick="openFinanceDetails('${p._id || p.order_id || p.epoint_transaction}')"><i class="fas fa-eye" style="margin-right:5px;"></i> Detallar</button>
               </td>
             </tr>`;
         }).join('');

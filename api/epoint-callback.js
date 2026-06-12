@@ -37,10 +37,13 @@ export default async function handler(req, res) {
 
     console.log(`Epoint əməliyyatı: Sifariş ${order_id}, Status: ${status}`);
 
+    // order_id 'EV-0010' kimi gələ bilər, yalnız rəqəmi çıxarırıq
+    const dbId = parseInt(String(order_id).replace(/\D/g, ''), 10) || order_id;
+
     // Əgər ödəniş uğurludursa Supabase bazasında statusu yeniləyirik
     if (status === 'success') {
       // 1. Mövcud datanı alırıq
-      const getResponse = await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${order_id}&select=payload`, {
+      const getResponse = await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${dbId}&select=payload`, {
         headers: {
           'apikey': SUPABASE_KEY,
           'Authorization': `Bearer ${SUPABASE_KEY}`

@@ -109,9 +109,9 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            amount: parseInt(amountParam),
-            order_id: regId, 
-            description: "Tələbə: " + (regName || "Bilinmir") + " | Sifariş №: " + regId,
+            amount: parseFloat(amountParam),
+            order_id: "EV-" + String(regId).padStart(4, '0'),
+            description: "Evrika Təhsil Ekosistemi - Xidmət ödənişi | Sifariş №: EV-" + String(regId).padStart(4, '0'),
             regId: regId,
             email: emailParam,
             name: regName

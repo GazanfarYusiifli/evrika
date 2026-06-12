@@ -605,8 +605,8 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                       amount: parseFloat(amountNum),
-                      order_id: data[0].id, 
-                      description: "Şagird: " + firstName + " " + lastName + " | Sinif: " + grade + " | Tel: +994" + phoneNum + " | Sifariş №: " + data[0].id,
+                      order_id: "EV-" + String(data[0].id).padStart(4, '0'), 
+                      description: "Şagird: " + firstName + " " + lastName + " | Sinif: " + grade + " | Tel: +994" + phoneNum + " | Sifariş №: EV-" + String(data[0].id).padStart(4, '0'),
                       regId: data[0].id,
                       email: email,
                       name: firstName + ' ' + lastName
