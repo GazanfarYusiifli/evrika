@@ -699,22 +699,44 @@ fbq('track', 'PageView');
 
     <div id="view-analytics" class="content" style="display: none;">
       <div class="section-header">
-        <h2 style="font-size:1.8rem; font-weight:900; color:var(--white);">Sayt Analitikası <span style="font-size:0.9rem; font-weight:600; color:var(--text-muted); background:rgba(255,255,255,0.05); padding:4px 8px; border-radius:6px; margin-left:10px;">Vercel Web Analytics</span></h2>
-        <p style="color:var(--text-muted); margin-top:5px;">Ziyarətçilərin saytı necə istifadə etdiyinə baxın</p>
+        <h2 style="font-size:1.8rem; font-weight:900; color:var(--white);">Sayt Analitikası <span style="font-size:0.9rem; font-weight:600; color:var(--text-muted); background:rgba(255,255,255,0.05); padding:4px 8px; border-radius:6px; margin-left:10px;">Gündəlik Baxış</span></h2>
+        <button class="btn btn-primary" onclick="loadAnalyticsData()" style="font-size:0.85rem;"><i class="fas fa-sync-alt"></i> Yenilə</button>
       </div>
       
-      <div style="background:rgba(255,255,255,0.02); border:1px solid var(--glass-border); border-radius:24px; padding:40px; text-align:center; max-width:800px; margin:0 auto; margin-top:30px;">
-         <div style="width:80px; height:80px; background:rgba(59,130,246,0.1); color:#3B82F6; border-radius:20px; display:flex; align-items:center; justify-content:center; font-size:2.5rem; margin:0 auto 20px;">
-            <i class="fas fa-chart-pie"></i>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
+         <div class="admin-card">
+            <h3 style="color:var(--text-muted); font-size:0.9rem; margin-bottom:10px;">Bugünkü Ziyarətlər</h3>
+            <div id="analytics-today" style="font-size:2rem; font-weight:900; color:white;">0</div>
          </div>
-         <h3 style="font-size:1.5rem; font-weight:800; color:white; margin-bottom:15px;">Vercel Analitika Aktividir</h3>
-         <p style="color:rgba(255,255,255,0.6); font-size:1.05rem; line-height:1.6; margin-bottom:30px;">
-            Vercel Web Analytics saytınıza uğurla əlavə edildi. Təhlükəsizlik səbəbindən (Vercel iframe bloklayır) analitika qrafiklərinə və ziyarətçi statistikalara birbaşa Vercel platforması üzərindən baxa bilərsiniz.
-         </p>
-         <a href="https://vercel.com" target="_blank" class="btn btn-primary" style="display:inline-flex; align-items:center; gap:10px; background:white; color:black; font-weight:800; padding:15px 30px; border-radius:12px; text-decoration:none;">
-            <svg viewBox="0 0 76 65" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:20px;"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="currentColor"/></svg>
-            Vercel Dashboard-a Keç
-         </a>
+         <div class="admin-card">
+            <h3 style="color:var(--text-muted); font-size:0.9rem; margin-bottom:10px;">Son 7 Gün</h3>
+            <div id="analytics-week" style="font-size:2rem; font-weight:900; color:white;">0</div>
+         </div>
+         <div class="admin-card">
+            <h3 style="color:var(--text-muted); font-size:0.9rem; margin-bottom:10px;">Ümumi Ziyarətlər</h3>
+            <div id="analytics-total" style="font-size:2rem; font-weight:900; color:white;">0</div>
+         </div>
+      </div>
+
+      <div class="admin-card" style="padding: 30px;">
+         <h3 style="font-size:1.2rem; font-weight:800; margin-bottom:20px; color:white;">Ziyarətçi Qrafiki (Son 7 Gün)</h3>
+         <canvas id="analyticsChart" style="width:100%; height:300px;"></canvas>
+      </div>
+      
+      <div class="admin-card" style="padding: 30px; margin-top: 30px;">
+         <h3 style="font-size:1.2rem; font-weight:800; margin-bottom:20px; color:white;">Səhifələr üzrə baxış</h3>
+         <div style="overflow-x:auto;">
+             <table style="width:100%; border-collapse:collapse; color:white;">
+                 <thead>
+                     <tr style="border-bottom:1px solid rgba(255,255,255,0.1); text-align:left; color:rgba(255,255,255,0.5); font-size:0.8rem;">
+                         <th style="padding:15px;">SƏHİFƏ</th>
+                         <th style="padding:15px; text-align:right;">BAXIŞ SAYI</th>
+                     </tr>
+                 </thead>
+                 <tbody id="analytics-pages-body">
+                 </tbody>
+             </table>
+         </div>
       </div>
     </div>
 
@@ -2118,7 +2140,7 @@ fbq('track', 'PageView');
     window.switchTab = (t) => {
       document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
       if(document.getElementById('view-'+t)) document.getElementById('view-'+t).style.display = 'block';
-      const titles = { 'dashboard':'Dashboard', 'apps':'Müraciətlər', 'exam-results':'Nəticələr & Rəylər', 'kanban':'Kanban Board', 'tasks':'Tapşırıqlar', 'employees':'Əməkdaşlar', 'hr-panel':'Vakansiyalar', 'finance':'Maliyyə Paneli', 'epoint-reports':'Epoint Hesabatları', 'kupon':'Kupon Alanlar', 'ugurlar':'Uğurlar & Məzun', 'news':'Xəbərlər', 'leadership':'Rəhbərlik', 'settings':'Sistem Ayarları', 'parents':'Valideynlərimiz' };
+      const titles = { 'dashboard':'Dashboard', 'analytics':'Sayt Analitikası', 'apps':'Müraciətlər', 'exam-results':'Nəticələr & Rəylər', 'kanban':'Kanban Board', 'tasks':'Tapşırıqlar', 'employees':'Əməkdaşlar', 'hr-panel':'Vakansiyalar', 'finance':'Maliyyə Paneli', 'epoint-reports':'Epoint Hesabatları', 'kupon':'Kupon Alanlar', 'ugurlar':'Uğurlar & Məzun', 'news':'Xəbərlər', 'leadership':'Rəhbərlik', 'settings':'Sistem Ayarları', 'parents':'Valideynlərimiz' };
       document.getElementById('topbar-title').innerText = titles[t] || 'EVRIKA EMS';
       
       // Handle the active class for sidebar links
@@ -2129,6 +2151,7 @@ fbq('track', 'PageView');
       if(t==='hr-panel') renderVacancyApps();
       if(t==='apps') renderApps();
       if(t==='dashboard') renderDashboard();
+      if(t==='analytics') loadAnalyticsData();
       if(t==='finance') renderFinance();
       if(t==='epoint-reports') renderEpointReports();
       if(t==='exam-results') renderExamResults();
@@ -3401,6 +3424,97 @@ fbq('track', 'PageView');
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        }
+
+        let analyticsChartInstance = null;
+        async function loadAnalyticsData() {
+            try {
+                document.getElementById('analytics-today').innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                document.getElementById('analytics-week').innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                document.getElementById('analytics-total').innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                
+                const res = await fetch(`https://${SUBG_ID}.supabase.co/rest/v1/page_views?select=*`, {
+                    headers: { 'apikey': API_KEY, 'Authorization': `Bearer ${API_KEY}` }
+                });
+                const data = await res.json();
+                
+                const now = new Date();
+                const todayStr = now.toISOString().split('T')[0];
+                const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                
+                let todayViews = 0;
+                let weekViews = 0;
+                const pathCounts = {};
+                const dateCounts = {};
+                
+                // Initialize last 7 days for the chart
+                for(let i=6; i>=0; i--) {
+                    const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+                    dateCounts[d.toISOString().split('T')[0]] = 0;
+                }
+
+                data.forEach(item => {
+                    const createdDate = new Date(item.created_at);
+                    const dateStr = item.created_at.split('T')[0];
+                    
+                    if(dateStr === todayStr) todayViews++;
+                    if(createdDate >= weekAgo) weekViews++;
+                    if(dateCounts[dateStr] !== undefined) dateCounts[dateStr]++;
+                    
+                    const p = item.path || '/';
+                    pathCounts[p] = (pathCounts[p] || 0) + 1;
+                });
+
+                document.getElementById('analytics-today').innerText = todayViews;
+                document.getElementById('analytics-week').innerText = weekViews;
+                document.getElementById('analytics-total').innerText = data.length;
+                
+                // Render Table
+                const tbody = document.getElementById('analytics-pages-body');
+                tbody.innerHTML = '';
+                const sortedPaths = Object.entries(pathCounts).sort((a,b) => b[1] - a[1]);
+                sortedPaths.forEach(([path, count]) => {
+                    tbody.innerHTML += `
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                            <td style="padding:15px; font-weight:700;">${path}</td>
+                            <td style="padding:15px; text-align:right; font-weight:800; color:#3B82F6;">${count}</td>
+                        </tr>
+                    `;
+                });
+
+                // Render Chart
+                const ctx = document.getElementById('analyticsChart').getContext('2d');
+                if(analyticsChartInstance) analyticsChartInstance.destroy();
+                
+                analyticsChartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: Object.keys(dateCounts),
+                        datasets: [{
+                            label: 'Gündəlik Baxış',
+                            data: Object.values(dateCounts),
+                            borderColor: '#3B82F6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(255,255,255,0.5)', stepSize: 1 } },
+                            x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.5)' } }
+                        }
+                    }
+                });
+
+            } catch (err) {
+                console.error('Analytics Error:', err);
+                alert('Analitika məlumatlarını yükləmək mümkün olmadı.');
+            }
         }
     </script>
 </body>
