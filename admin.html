@@ -1321,7 +1321,7 @@ fbq('track', 'PageView');
   </div>
 
   <script>
-    const MODULE_PASSORDS = { 'crm':'crm123', 'hr':'hr123', 'finance':'fin123', 'site':'site123' };
+    const MODULE_PASSORDS = { 'crm':'crm123', 'hr':'hr123', 'finance':'fin123', 'site':'site123', 'exam':'exam123' };
     let currentModuleKey = '';
 
     window.unlockModule = (mk) => {
@@ -1335,7 +1335,8 @@ fbq('track', 'PageView');
             'crm': { name: 'CRM & ANALİTİKA', icon: 'fa-layer-group', color: '#ef4444' },
             'hr': { name: 'HR PANEL', icon: 'fa-user-tie', color: '#3b82f6' },
             'finance': { name: 'FİNANS PANEL', icon: 'fa-chart-line', color: '#10b981' },
-            'site': { name: 'SAYT İDARƏETMƏ', icon: 'fa-magic', color: '#f59e0b' }
+            'site': { name: 'SAYT İDARƏETMƏ', icon: 'fa-magic', color: '#f59e0b' },
+            'exam': { name: 'İMTAHAN PANELİ', icon: 'fa-file-signature', color: '#8b5cf6' }
         };
 
         const c = config[mk];
