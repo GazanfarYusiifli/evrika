@@ -2218,8 +2218,8 @@ fbq('track', 'PageView');
         const dataPair = { rawKey: key, label: cleanKey.toUpperCase(), value: val };
 
         if (upperKey === 'CV_FILE_BASE64') {
-          groups['FAYLLAR'].push({ rawKey: key, label: 'Bax / Yüklə (' + (item.cv_file_name || 'Fayl') + ')', value: val, isBase64: true });
-        } else if (typeof val === 'string' && (val.includes('supabase.co/storage') || val.match(/\.(jpg|jpeg|png|gif|pdf)/i))) {
+          groups['FAYLLAR'].push({ rawKey: key, label: 'Bax / Yüklə (' + (item.cv_file_name || 'Fayl') + ')', value: val, isBase64: true, filename: item.cv_file_name || 'cv_file' });
+        } else if (typeof val === 'string' && upperKey !== 'CV_FILE_NAME' && (val.includes('supabase.co/storage') || val.match(/\.(jpg|jpeg|png|gif|pdf)/i))) {
           groups['FAYLLAR'].push(dataPair);
         } else if (upperKey.includes('EPOINT') || upperKey === 'AMOUNT' || upperKey.includes('PAYMENT') || ['RRN', 'APPROVAL_CODE', 'CARD_NUMBER', 'CARDNAME', 'RESULT_CODE', '3DSECURE', 'RESULT_PS', 'RESULT'].includes(upperKey)) {
           // Eğer isFinance false ise, bəzi spesifik bank detallarını CRM-də gizlədirik
@@ -2254,7 +2254,7 @@ fbq('track', 'PageView');
                   if (pair.isBase64) {
                       const isImg = pair.value.startsWith('data:image/');
                       return `
-                        <div class="detail-image-card" onclick="window.open('${pair.value}', '_blank')">
+                        <div class="detail-image-card" onclick="downloadBase64('${pair.value}', '${pair.filename}')">
                           ${isImg ? `<img src="${pair.value}" alt="${pair.label}">` : `<div style="height:100%; display:flex; align-items:center; justify-content:center; color:white;"><i class="fas fa-file-pdf fa-2x"></i></div>`}
                           <div class="detail-image-label">${pair.label}</div>
                         </div>
@@ -3371,6 +3371,14 @@ fbq('track', 'PageView');
                 console.error("Meta Graph API error:", e);
                 document.getElementById('meta-campaign-tbody').innerHTML = `<tr><td colspan="5" style="padding: 15px; color: #EF4444; text-align: center;">Məlumatı çəkmək mümkün olmadı. Access Token və Ad Account ID-nin düzgünlüyünü yoxlayın.</td></tr>`;
             }
+        }
+        function downloadBase64(base64Data, filename) {
+            const link = document.createElement('a');
+            link.href = base64Data;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     </script>
 </body>
