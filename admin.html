@@ -1595,7 +1595,12 @@ fbq('track', 'PageView');
             if(cardBrand.includes('VISA')) brandIcon = 'fab fa-cc-visa';
             else if(cardBrand.includes('MASTER')) brandIcon = 'fab fa-cc-mastercard';
             
-            const cardLast4 = p.epoint_card_number ? p.epoint_card_number : '**** **** **** ****';
+            let cardNum = p.epoint_card_number;
+            if(!cardNum && p.epoint_bank_response) {
+               const match = String(p.epoint_bank_response).match(/CARD_NUMBER:\s*(\S+)/i);
+               if(match) cardNum = match[1];
+            }
+            const cardLast4 = cardNum ? cardNum : '**** **** **** ****';
             const payMethod = p.epoint_bank || 'Epoint Onlayn Ödəniş';
             const txId = p.epoint_transaction || p.epoint_rrn || '---';
             const executedBy = p.executed_by || 'API';
@@ -1686,7 +1691,7 @@ fbq('track', 'PageView');
               </td>
               <td><div style="font-weight:600; font-size:0.85rem;">${phone}</div></td>
               <td><div style="color:var(--text-muted); font-size:0.8rem; font-weight:600;">${date}</div></td>
-              <td><button class="btn-view" style="padding:10px 15px; font-size:0.75rem;" onclick="openFinanceDetails('${p.id || p.order_id || p.epoint_transaction}')"><i class="fas fa-eye" style="margin-right:5px;"></i> Detallar</button></td>
+              <td><button class="btn-view" style="padding:10px 15px; font-size:0.75rem;" onclick="openFinanceDetails('${p._db_id_ || p.order_id || p.epoint_transaction}')"><i class="fas fa-eye" style="margin-right:5px;"></i> Detallar</button></td>
             </tr>`;
         }).join('');
     };
@@ -2069,12 +2074,12 @@ fbq('track', 'PageView');
     
     window.openFinanceDetails = (order_id) => {
         // find index in filteredData
-        const idx = filteredData.findIndex(i => (i.id == order_id || i.order_id == order_id || (i.epoint_transaction && i.epoint_transaction == order_id)));
+        const idx = filteredData.findIndex(i => (i._db_id_ == order_id || i.order_id == order_id || (i.epoint_transaction && i.epoint_transaction == order_id)));
         if(idx >= 0) {
             viewDetails(idx, true);
         } else {
             // fallback to rawData
-            const rIdx = rawData.findIndex(i => (i.id == order_id || i.order_id == order_id || (i.epoint_transaction && i.epoint_transaction == order_id)));
+            const rIdx = rawData.findIndex(i => (i._db_id_ == order_id || i.order_id == order_id || (i.epoint_transaction && i.epoint_transaction == order_id)));
             if(rIdx >= 0) {
                 // temporarily put it in filteredData to view
                 filteredData.push(rawData[rIdx]);

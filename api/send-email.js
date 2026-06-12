@@ -57,10 +57,10 @@ export default async function handler(req, res) {
                     if (epointData.status === 'success') {
                         payload.epoint_amount = epointData.amount;
                         payload.epoint_currency = epointData.currency;
-                        payload.epoint_card_number = epointData.card_number;
-                        payload.epoint_card_name = epointData.cardname || epointData.card_name || epointData.name || "Bilinmir";
-                        payload.epoint_approval_code = epointData.approval_code || epointData.approvalCode || "";
-                        payload.epoint_result_code = epointData.result_code || epointData.resultCode || "";
+                        payload.epoint_card_number = epointData.card_number || epointData.CARD_NUMBER || epointData.cardnumber || "";
+                        payload.epoint_card_name = epointData.cardname || epointData.CARDNAME || epointData.card_name || epointData.name || "Bilinmir";
+                        payload.epoint_approval_code = epointData.approval_code || epointData.APPROVAL_CODE || epointData.approvalCode || "";
+                        payload.epoint_result_code = epointData.result_code || epointData.RESULT_CODE || epointData.resultCode || "";
                         payload.epoint_3dsecure = epointData.secure || epointData['3dsecure'] || epointData['3DSECURE'] || "";
                         payload.epoint_bank_response = epointData.bank_response || epointData.bankResponse || "";
                         payload.epoint_transaction = epointData.transaction;
