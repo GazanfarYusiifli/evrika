@@ -12,6 +12,21 @@
     "vite": "^8.0.4"
   },
   "dependencies": {
-    "nodemailer": "^8.0.10"
-  }
+    "jsdom": "^29.1.1",
+    "nodemailer": "^8.0.10",
+    "puppeteer": "^25.1.0"
+  },
+  "description": "",
+  "main": "fix_reg.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GazanfarYusiifli/evrika.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GazanfarYusiifli/evrika/issues"
+  },
+  "homepage": "https://github.com/GazanfarYusiifli/evrika#readme"
 }
