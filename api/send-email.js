@@ -76,9 +76,9 @@ export default async function handler(req, res) {
                 payload.note += ' | EPOINT VASİTƏSİLƏ ÖDƏNİLDİ. İmtahan giriş kuponu göndərildi.';
             }
 
-            // Yeni sətir kimi əlavə edirik (RLS-i aşmaq üçün POST)
-            await fetch(`${SUPABASE_URL}/rest/v1/registrations`, {
-              method: 'POST',
+            // Mövcud sətiri yeniləyirik
+            await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${dbId}`, {
+              method: 'PATCH',
               headers: {
                 'apikey': SUPABASE_KEY,
                 'Authorization': `Bearer ${SUPABASE_KEY}`,

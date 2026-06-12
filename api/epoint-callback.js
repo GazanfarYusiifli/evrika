@@ -74,9 +74,9 @@ export default async function handler(req, res) {
         existingPayload.epoint_3dsecure = result.secure || result['3dsecure'] || result['3DSECURE'] || result['3DSecure'] || "";
         existingPayload.epoint_bank_response = result.bank_response || result.bankResponse || "";
 
-        // 3. Supabase-ə payload-u YENİ SƏTİR KİMİ ƏLAVƏ EDİRİK (UPDATE RLS BLOKUNU KEÇMƏK ÜÇÜN)
-        const updateResponse = await fetch(`${SUPABASE_URL}/rest/v1/registrations`, {
-          method: 'POST',
+        // 3. Mövcud sətiri yeniləyirik
+        const updateResponse = await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${dbId}`, {
+          method: 'PATCH',
           headers: {
             'apikey': SUPABASE_KEY,
             'Authorization': `Bearer ${SUPABASE_KEY}`,
