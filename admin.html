@@ -1583,8 +1583,7 @@ fbq('track', 'PageView');
         
         if(!historyTb || !shortTb) return;
         
-        const payments = data.map(item => ({ ...item.payload, _id: item.id }))
-                             .filter(p => p.epoint_amount || (p.amount && p.payment_status === 'Ödənilib'))
+        const payments = rawData.filter(p => p.epoint_amount || (p.amount && p.payment_status === 'Ödənilib'))
                              .sort((a,b) => new Date(b.epoint_date || b.submissionDate || 0) - new Date(a.epoint_date || a.submissionDate || 0));
         
         const historyHtml = payments.map(p => {
@@ -1624,7 +1623,7 @@ fbq('track', 'PageView');
                 <div style="font-size:0.65rem; color:var(--text-muted); margin-top:3px;">Komissiya: <span style="color:var(--warning); font-weight:700;">${commission} ₼</span></div>
               </td>
               <td>
-                <div style="font-size:0.8rem; font-weight:700; color:white; font-family:monospace;">Sifariş №: EV-${String(p.order_id || p._id || '').padStart(4, '0')}</div>
+                <div style="font-size:0.8rem; font-weight:700; color:white; font-family:monospace;">Sifariş №: EV-${String(p.order_id || p._db_id_ || '').padStart(4, '0')}</div>
                 <div style="font-size:0.75rem; font-weight:600; color:var(--text-muted); margin-top:2px;">TR ID: ${txId}</div>
                 <div style="font-size:0.65rem; font-weight:600; color:var(--text-muted); margin-top:2px;">${date}</div>
               </td>
@@ -1633,7 +1632,7 @@ fbq('track', 'PageView');
                 <div style="font-size:0.65rem; color:var(--success); margin-top:3px;"><i class="fas fa-check-circle"></i> Uğurlu</div>
               </td>
               <td>
-                <button class="btn-view" style="padding:10px 15px; font-size:0.7rem; background:rgba(59,130,246,0.1); color:var(--royal-blue); border-color:rgba(59,130,246,0.2);" onclick="openFinanceDetails('${p._id || p.order_id || p.epoint_transaction}')"><i class="fas fa-eye" style="margin-right:5px;"></i> Detallar</button>
+                <button class="btn-view" style="padding:10px 15px; font-size:0.7rem; background:rgba(59,130,246,0.1); color:var(--royal-blue); border-color:rgba(59,130,246,0.2);" onclick="openFinanceDetails('${p._db_id_ || p.order_id || p.epoint_transaction}')"><i class="fas fa-eye" style="margin-right:5px;"></i> Detallar</button>
               </td>
             </tr>`;
         }).join('');
@@ -1652,8 +1651,8 @@ fbq('track', 'PageView');
         historyTb.innerHTML = historyHtml;
         shortTb.innerHTML = shortHtml;
         
-        const total = payments.reduce((sum, p) => sum + Number(p.epoint_amount || p.amount || 0), 0);
-        const totalCommission = payments.reduce((sum, p) => sum + Number(p.epoint_commission || (Number(p.epoint_amount||p.amount||0)*0.02)), 0);
+        const total = payments.reduce((sum, p) => sum + (parseFloat(String(p.epoint_amount || p.amount || 0).replace(/[^0-9.]/g, '')) || 0), 0);
+        const totalCommission = payments.reduce((sum, p) => sum + (parseFloat(String(p.epoint_commission).replace(/[^0-9.]/g, '')) || (parseFloat(String(p.epoint_amount || p.amount || 0).replace(/[^0-9.]/g, '')) || 0) * 0.02), 0);
         
         const monthlyIncomeEl = document.getElementById('finance-monthly-income');
         const commEl = document.getElementById('finance-commission');
@@ -1699,7 +1698,20 @@ fbq('track', 'PageView');
         const pub = "i000201608";
         const pvt = "HNIbtyFLu3PbxXlVykJEwOR1";
         
-        const dataObj = { public_key: pub, transaction: txId };
+        let txHash = txId;
+        if (txId.startsWith('EV-') || !isNaN(txId)) {
+            const parsedId = String(txId).replace('EV-', '').padStart(4, '0');
+            const foundItem = rawData.find(r => r.order_id === 'EV-' + parsedId || String(r._db_id_).padStart(4, '0') === parsedId || String(r._db_id_) === txId);
+            if (foundItem && foundItem.epoint_transaction) {
+                txHash = foundItem.epoint_transaction;
+            } else {
+                document.getElementById('epoint-result').style.display = 'block';
+                document.getElementById('epoint-result').innerHTML = `<div style="color:var(--error); font-weight:800; padding:10px; background:rgba(239,68,68,0.1); border-radius:8px;"><i class="fas fa-exclamation-triangle"></i> Bu sifariş (Sifariş № ${txId}) üçün Epoint tranzaksiya şifrəsi (Hash) tapılmadı. Ödəniş səhifəsi açılmamış və ya yarımçıq qalmış ola bilər.</div>`;
+                return;
+            }
+        }
+
+        const dataObj = { public_key: pub, transaction: txHash };
         const dataJson = JSON.stringify(dataObj);
         const dataB64 = btoa(unescape(encodeURIComponent(dataJson)));
         
@@ -1750,7 +1762,7 @@ fbq('track', 'PageView');
         
         tb.innerHTML = txs.map((p, idx) => {
             const fullName = p.fullName || p['Ad Soyad'] || p.name || (p['[2.Şagird] Adı'] ? p['[2.Şagird] Adı'] + ' ' + (p['[2.Şagird] Soyadı']||'') : 'Adsız');
-            const amount = parseFloat(p.epoint_amount || p.amount || 0);
+            const amount = parseFloat(String(p.epoint_amount || p.amount || 0).replace(/[^0-9.]/g, '')) || 0;
             const isSuccess = p.payment_status === 'Ödənilib';
             
             if (isSuccess) {
@@ -1760,11 +1772,11 @@ fbq('track', 'PageView');
             
             const date = p.epoint_date ? new Date(p.epoint_date).toLocaleString('az') : new Date(p.submissionDate || Date.now()).toLocaleString('az');
             const txId = p.epoint_transaction || '---';
-            const orderId = p.order_id || p.id || '---';
+            const orderId = p.order_id || p._db_id_ || '---';
             
             return `<tr>
               <td>
-                 <div style="font-weight:800; color:white; font-size:0.9rem; font-family:monospace;">Sifariş №: ${orderId}</div>
+                 <div style="font-weight:800; color:white; font-size:0.9rem; font-family:monospace;">Sifariş №: EV-${String(orderId).replace('EV-', '').padStart(4, '0')}</div>
                  <div style="font-size:0.7rem; color:var(--text-muted); margin-top:3px; font-family:monospace;">TR: ${txId}</div>
               </td>
               <td>
