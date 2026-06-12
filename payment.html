@@ -111,7 +111,7 @@
           body: JSON.stringify({
             amount: parseInt(amountParam),
             order_id: regId, 
-            description: "Evrika İmtahan / Qeydiyyat",
+            description: "Tələbə: " + (regName || "Bilinmir") + " | Sifariş №: " + regId,
             regId: regId,
             email: emailParam,
             name: regName
