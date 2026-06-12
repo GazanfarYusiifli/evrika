@@ -784,9 +784,9 @@ fbq('track', 'PageView');
                     <thead>
                       <tr>
                         <th>Kart Sahibi / Təsvir</th>
-                        <th>Kart Nömrəsi / Növü</th>
+                        <th>Kartın Sonu / Növü</th>
                         <th>Məbləğ / Komissiya</th>
-                        <th>Tranzaksiya ID / Tarix</th>
+                        <th>RRN / Tarix</th>
                         <th>Sistem İcrası</th>
                         <th>Əməliyyatlar</th>
                       </tr>
@@ -1624,7 +1624,7 @@ fbq('track', 'PageView');
               </td>
               <td>
                 <div style="font-size:0.8rem; font-weight:700; color:white; font-family:monospace;">Sifariş №: EV-${String(p.order_id || p._db_id_ || '').padStart(4, '0')}</div>
-                <div style="font-size:0.75rem; font-weight:600; color:var(--text-muted); margin-top:2px;">TR ID: ${txId}</div>
+                <div style="font-size:0.75rem; font-weight:600; color:var(--text-muted); margin-top:2px;">RRN: ${p.epoint_rrn || txId}</div>
                 <div style="font-size:0.65rem; font-weight:600; color:var(--text-muted); margin-top:2px;">${date}</div>
               </td>
                            <td>
@@ -1772,12 +1772,13 @@ fbq('track', 'PageView');
             
             const date = p.epoint_date ? new Date(p.epoint_date).toLocaleString('az') : new Date(p.submissionDate || Date.now()).toLocaleString('az');
             const txId = p.epoint_transaction || '---';
+            const rrnCode = p.epoint_rrn || p.rrn || txId;
             const orderId = p.order_id || p._db_id_ || '---';
             
             return `<tr>
               <td>
                  <div style="font-weight:800; color:white; font-size:0.9rem; font-family:monospace;">Sifariş №: EV-${String(orderId).replace('EV-', '').padStart(4, '0')}</div>
-                 <div style="font-size:0.7rem; color:var(--text-muted); margin-top:3px; font-family:monospace;">TR: ${txId}</div>
+                 <div style="font-size:0.7rem; color:var(--text-muted); margin-top:3px; font-family:monospace;">RRN: ${rrnCode}</div>
               </td>
               <td>
                  <div style="font-weight:800; color:white; font-size:0.9rem;">${fullName}</div>
@@ -2070,21 +2071,21 @@ fbq('track', 'PageView');
         // find index in filteredData
         const idx = filteredData.findIndex(i => (i.id == order_id || i.order_id == order_id || (i.epoint_transaction && i.epoint_transaction == order_id)));
         if(idx >= 0) {
-            viewDetails(idx);
+            viewDetails(idx, true);
         } else {
             // fallback to rawData
             const rIdx = rawData.findIndex(i => (i.id == order_id || i.order_id == order_id || (i.epoint_transaction && i.epoint_transaction == order_id)));
             if(rIdx >= 0) {
                 // temporarily put it in filteredData to view
                 filteredData.push(rawData[rIdx]);
-                viewDetails(filteredData.length - 1);
+                viewDetails(filteredData.length - 1, true);
             } else {
                 alert('Detallar tapılmadı');
             }
         }
     };
 
-    window.viewDetails = (idx) => {
+    window.viewDetails = (idx, isFinance = false) => {
       let originalItem = filteredData[idx];
       if ((originalItem.status || '').toLowerCase() === 'yeni') {
           updateStatus(idx, 'Baxılıb');
@@ -2164,7 +2165,14 @@ fbq('track', 'PageView');
         } else if (typeof val === 'string' && (val.includes('supabase.co/storage') || val.match(/\.(jpg|jpeg|png|gif|pdf)/i))) {
           groups['FAYLLAR'].push(dataPair);
         } else if (upperKey.includes('EPOINT') || upperKey === 'AMOUNT' || upperKey.includes('PAYMENT') || ['RRN', 'APPROVAL_CODE', 'CARD_NUMBER', 'CARDNAME', 'RESULT_CODE', '3DSECURE', 'RESULT_PS', 'RESULT'].includes(upperKey)) {
-          groups['ÖDƏNİŞ DETALLARI'].push(dataPair);
+          // Eğer isFinance false ise, bəzi spesifik bank detallarını CRM-də gizlədirik
+          if (!isFinance && (upperKey.includes('EPOINT') || ['RRN', 'APPROVAL_CODE', 'CARD_NUMBER', 'CARDNAME', 'RESULT_CODE', '3DSECURE', 'RESULT_PS', 'RESULT'].includes(upperKey))) {
+             if (upperKey === 'EPOINT_AMOUNT' || upperKey === 'PAYMENT_STATUS' || upperKey === 'EPOINT_CARD_NUMBER' || upperKey === 'EPOINT_CARD_TYPE') {
+                groups['ÖDƏNİŞ DETALLARI'].push(dataPair);
+             }
+          } else {
+             groups['ÖDƏNİŞ DETALLARI'].push(dataPair);
+          }
         } else if (upperKey.includes('PHONE') || upperKey.includes('TEL') || upperKey.includes('MAIL') || upperKey === 'ƏLAQƏ') {
           groups['ƏLAQƏ VƏ TƏMAS'].push(dataPair);
         } else if (upperKey.includes('AD') || upperKey.includes('SOYAD') || upperKey.includes('NAME') || upperKey.includes('CANDIDATE') || upperKey.includes('STUDENT')) {
