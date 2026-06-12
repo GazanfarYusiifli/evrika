@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import crypto from 'crypto';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -35,10 +36,9 @@ export default async function handler(req, res) {
             
             // 1.5. Epoint-dən statusu yoxla və məlumatları çək
             try {
-                const crypto = require('crypto');
                 const PUB_KEY = "i000201608";
                 const PVT_KEY = process.env.EPOINT_PRIVATE_KEY || "HNIbtyFLu3PbxXlVykJEwOR1";
-                const dataObj = { public_key: PUB_KEY, transaction: dbId };
+                const dataObj = { public_key: PUB_KEY, transaction: String(dbId) };
                 const dataJson = JSON.stringify(dataObj);
                 const dataB64 = Buffer.from(dataJson).toString('base64');
                 const shasum = crypto.createHash('sha1');
