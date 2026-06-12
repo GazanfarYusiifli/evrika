@@ -503,8 +503,7 @@ fbq('track', 'PageView');
       <div class="sb-link" data-module="exam" onclick="switchTab('kupon')"><i class="fas fa-ticket-alt"></i> <span>Kupon Alanlar</span></div>
 
       <div class="sb-group-title" data-module="hr">HR PANEL</div>
-
-      <div class="sb-link" data-module="hr" onclick="switchTab('vacancies')"><i class="fas fa-briefcase"></i> <span>Vakansiyalar</span></div>
+      <div class="sb-link" data-module="hr" onclick="switchTab('hr-panel')"><i class="fas fa-briefcase"></i> <span>Vakansiyalar</span></div>
 
       <div class="sb-group-title" data-module="finance">FİNANS & SİSTEM</div>
       <div class="sb-link" data-module="finance" onclick="switchTab('finance')"><i class="fas fa-wallet"></i> <span>Maliyyə Paneli</span></div>
@@ -1051,7 +1050,7 @@ fbq('track', 'PageView');
     </div>
 
 
-    <div id="view-vacancies" class="content" style="display: none;">
+    <div id="view-hr-panel" class="content" style="display: none;">
         <div class="stat-card" style="margin-bottom:30px; background: rgba(255,255,255,0.02);">
             <h3 style="margin-bottom:25px; font-weight: 900;">Yeni Vakansiya Əlavə Et</h3>
             <form onsubmit="addVacancy(event)" style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
@@ -1386,7 +1385,7 @@ fbq('track', 'PageView');
             document.getElementById('hub-login-overlay').style.display='none';
             document.getElementById('ems-hub').style.display='none';
             document.getElementById('main-sidebar').style.display='flex';
-            const startTabs = { 'crm':'dashboard', 'hr':'vacancies', 'finance':'finance', 'site':'ugurlar', 'exam':'exam-results' };
+            const startTabs = { 'crm':'dashboard', 'hr':'hr-panel', 'finance':'finance', 'site':'ugurlar', 'exam':'exam-results' };
             switchTab(startTabs[mk]);
             loadData();
             loadManagement();
@@ -2097,7 +2096,7 @@ fbq('track', 'PageView');
     window.switchTab = (t) => {
       document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
       if(document.getElementById('view-'+t)) document.getElementById('view-'+t).style.display = 'block';
-      const titles = { 'dashboard':'Dashboard', 'apps':'Müraciətlər', 'exam-results':'Nəticələr & Rəylər', 'kanban':'Kanban Board', 'tasks':'Tapşırıqlar', 'employees':'Əməkdaşlar', 'vacancies':'Vakansiyalar', 'finance':'Maliyyə Paneli', 'epoint-reports':'Epoint Hesabatları', 'kupon':'Kupon Alanlar', 'ugurlar':'Uğurlar & Məzun', 'news':'Xəbərlər', 'leadership':'Rəhbərlik', 'settings':'Sistem Ayarları', 'parents':'Valideynlərimiz' };
+      const titles = { 'dashboard':'Dashboard', 'apps':'Müraciətlər', 'exam-results':'Nəticələr & Rəylər', 'kanban':'Kanban Board', 'tasks':'Tapşırıqlar', 'employees':'Əməkdaşlar', 'hr-panel':'Vakansiyalar', 'finance':'Maliyyə Paneli', 'epoint-reports':'Epoint Hesabatları', 'kupon':'Kupon Alanlar', 'ugurlar':'Uğurlar & Məzun', 'news':'Xəbərlər', 'leadership':'Rəhbərlik', 'settings':'Sistem Ayarları', 'parents':'Valideynlərimiz' };
       document.getElementById('topbar-title').innerText = titles[t] || 'EVRIKA EMS';
       
       // Handle the active class for sidebar links
@@ -2105,7 +2104,7 @@ fbq('track', 'PageView');
       const activeLink = document.querySelector(`.sb-link[onclick="switchTab('${t}')"]`);
       if (activeLink) activeLink.classList.add('active');
 
-      if(t==='vacancies') renderVacancyApps();
+      if(t==='hr-panel') renderVacancyApps();
       if(t==='apps') renderApps();
       if(t==='dashboard') renderDashboard();
       if(t==='finance') renderFinance();
