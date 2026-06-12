@@ -2374,7 +2374,39 @@ fbq('track', 'PageView');
         await fetch(`${API_URL}/ugurlar?id=eq.${id}`, { method: 'DELETE', headers: HEADERS });
         loadUgurlar();
     };
-    
+    window.deleteVacancy = async (id) => {
+        if(!confirm('Bu vakansiya silinsin?')) return;
+        await fetch(`${API_URL}/vacancies?id=eq.${id}`, { method: 'DELETE', headers: HEADERS });
+        loadVacancies();
+    };
+
+    window.addVacancy = async (e) => {
+        e.preventDefault();
+        const payload = {
+            title: document.getElementById('vac-title').value,
+            location: document.getElementById('vac-dept').value,
+            time: document.getElementById('vac-type').value,
+            desc: document.getElementById('vac-desc').value,
+            responsibilities: document.getElementById('vac-resp').value,
+            requirements: document.getElementById('vac-reqs').value,
+            status: 'Aktiv'
+        };
+        const btn = e.target.querySelector('button');
+        const origText = btn.innerText;
+        btn.innerText = "Gözləyin..."; btn.disabled = true;
+        try {
+            await fetch(`${API_URL}/vacancies`, {
+                method: 'POST',
+                headers: HEADERS,
+                body: JSON.stringify({ payload })
+            });
+            e.target.reset();
+            loadVacancies();
+        } finally {
+            btn.innerText = origText; btn.disabled = false;
+        }
+    };
+
     window.loadVacancies = async () => {
       const res = await fetch(`${API_URL}/vacancies?select=*&order=id.desc`, { headers: HEADERS });
       if(res.ok) vacanciesData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id }));
