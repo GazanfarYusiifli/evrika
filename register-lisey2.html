@@ -561,8 +561,8 @@
               var email = document.getElementById('mf_email').value;
               var previousSchool = document.getElementById('mf_previousSchool').value;
 
-              // Test üçün məbləği 0.01 olaraq təyin edirik. Test bitdikdən sonra "var amountNum = (grade === 'Məktəbəqədər') ? '25' : '35';" olaraq geri qaytarın.
-              var amountNum = '0.01'; 
+              // Həqiqi qiymətlərə keçid
+              var amountNum = (grade === 'Məktəbəqədər' || grade === 'Məktəbəqədər (5-6 yaş)') ? '25' : '35';
 
               var note = "Filial: EVRİKA Beynəlxalq<br>Elm və Texnologiya Liseyi<br>(Gənclik filialı) | Bölmə: " + sectorText + " | Sinif: " + grade + " | E-mail: " + email + " | Əvvəlki müəssisə: " + previousSchool + " | Ödəniş Məbləği: " + amountNum + " AZN";
 
