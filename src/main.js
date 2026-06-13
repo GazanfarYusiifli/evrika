@@ -400,7 +400,7 @@ window.submitToSupabase = async (formData, btn, originalText) => {
 };
 
 window.showPaymentModal = (crmForm, dbId) => {
-    const amount = crmForm['[3.Təhsil] Qeydiyyat Səviyyəsi'] === 'Məktəbəqədər (5-6 yaş)' ? '20' : '30';
+    const amount = crmForm['[3.Təhsil] Qeydiyyat Səviyyəsi'] === 'Məktəbəqədər (5-6 yaş)' ? '25' : '35';
     const email = crmForm.email || 'Email qeyd olunmayıb';
     const phone = crmForm.phone || crmForm.tel || crmForm['[1.Əlaqə] Əlaqə Nömrəsi'] || 'Nömrə qeyd olunmayıb';
 
