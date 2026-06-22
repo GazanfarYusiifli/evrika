@@ -1448,6 +1448,7 @@ fbq('track', 'PageView');
     function getGranularSource(item) {
       if(!item) return 'Bilinmir';
       let s = item.source;
+      if (s === 'Qeydiyyat - Montessori') s = 'Qeydiyyat - Montessori Kids';
       // Aggressive keyword scan across all application fields
       if (!s || s === 'Vebsayt' || s === 'Veb' || s === 'Naməlum' || s === 'Əlaqə Səhifəsi') {
         const allText = Object.values(item).join(' ').toLowerCase();
