@@ -451,7 +451,7 @@
             </div>
             <div class="dyn-input-group">
               <label data-i18n="reg-child-age">Övladınızın yaşı</label>
-              <input type="text" id="mf_class" placeholder="Məs: 4 və ya 4.5" data-i18n-placeholder="reg-pl-age-4" required>
+              <input type="number" id="mf_class" placeholder="Məs: 4 və ya 4.5" data-i18n-placeholder="reg-pl-age-4" required min="0" max="6" step="0.1">
             </div>
             <div class="dyn-input-group">
               <label data-i18n="reg-parent-contact">Valideyinin əlaqə nömrəsi</label>
@@ -492,6 +492,14 @@
               var grade = document.getElementById('mf_class').value;
               var phoneNum = document.getElementById('mf_phoneNum').value;
               var email = document.getElementById('mf_email').value;
+
+              var childAge = parseFloat(grade);
+              if(isNaN(childAge) || childAge > 6) {
+                 alert("Montessori şöbəsinə qeydiyyat üçün övladınızın yaşı maksimum 6 ola bilər.");
+                 btn.disabled = false;
+                 btn.innerHTML = btnOriginalText;
+                 return;
+              }
 
               var note = "Filial: Montessori Kids | Bölmə: " + sectorText + " | Yaş: " + grade + " | E-mail: " + email;
 
