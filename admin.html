@@ -518,8 +518,9 @@ fbq('track', 'PageView');
       <div class="sb-link" data-module="site" onclick="switchTab('news')"><i class="fas fa-newspaper"></i> <span>Xəbər & Media</span></div>
       <div class="sb-link" data-module="site" onclick="switchTab('leadership')"><i class="fas fa-user-shield"></i> <span>Rəhbərlik</span></div>
 
+      <div class="sb-link" data-module="finance" onclick="switchTab('settings')"><i class="fas fa-cog"></i> <span>Sistem Ayarları</span></div>
+
       <!-- General Actions -->
-      <div class="sb-link" style="color:var(--warning);" onclick="switchTab('settings')"><i class="fas fa-cog"></i> <span>Sistem Ayarları (Şifrələr)</span></div>
       <div class="sb-link" style="color:var(--royal-blue);" onclick="window.open('index.html', '_blank')"><i class="fas fa-external-link-alt"></i> <span>Sayta Bax</span></div>
       <div class="sb-link" style="color:var(--burgundy);" onclick="window.location.reload()"><i class="fas fa-sign-out-alt"></i> <span>HUB-a Qayıt</span></div>
     </div>
@@ -1221,50 +1222,6 @@ fbq('track', 'PageView');
           </button>
         </div>
 
-        <!-- NEW SECTION: Giriş Şifrələri -->
-        <div class="detail-group">
-          <div class="detail-group-header">Admin Panel Şifrələri</div>
-          
-          <div class="fgroup" style="margin-bottom: 20px;">
-            <label style="display:block; margin-bottom:10px; font-size:0.8rem; font-weight:800; color:var(--text-muted);">CRM &amp; ANALİTİKA Şifrəsi</label>
-            <div style="position: relative;">
-              <input type="text" id="setting-pass-crm" class="admin-input" style="padding-left: 45px;" placeholder="Məs: crm123">
-              <i class="fas fa-lock" style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.4);"></i>
-            </div>
-          </div>
-          <div class="fgroup" style="margin-bottom: 20px;">
-            <label style="display:block; margin-bottom:10px; font-size:0.8rem; font-weight:800; color:var(--text-muted);">HR PANEL Şifrəsi</label>
-            <div style="position: relative;">
-              <input type="text" id="setting-pass-hr" class="admin-input" style="padding-left: 45px;" placeholder="Məs: hr123">
-              <i class="fas fa-lock" style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.4);"></i>
-            </div>
-          </div>
-          <div class="fgroup" style="margin-bottom: 20px;">
-            <label style="display:block; margin-bottom:10px; font-size:0.8rem; font-weight:800; color:var(--text-muted);">FİNANS PANEL Şifrəsi</label>
-            <div style="position: relative;">
-              <input type="text" id="setting-pass-finance" class="admin-input" style="padding-left: 45px;" placeholder="Məs: fin123">
-              <i class="fas fa-lock" style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.4);"></i>
-            </div>
-          </div>
-          <div class="fgroup" style="margin-bottom: 20px;">
-            <label style="display:block; margin-bottom:10px; font-size:0.8rem; font-weight:800; color:var(--text-muted);">SAYT İDARƏETMƏ Şifrəsi</label>
-            <div style="position: relative;">
-              <input type="text" id="setting-pass-site" class="admin-input" style="padding-left: 45px;" placeholder="Məs: site123">
-              <i class="fas fa-lock" style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.4);"></i>
-            </div>
-          </div>
-          <div class="fgroup" style="margin-bottom: 20px;">
-            <label style="display:block; margin-bottom:10px; font-size:0.8rem; font-weight:800; color:var(--text-muted);">İMTAHAN PANELİ Şifrəsi</label>
-            <div style="position: relative;">
-              <input type="text" id="setting-pass-exam" class="admin-input" style="padding-left: 45px;" placeholder="Məs: exam123">
-              <i class="fas fa-lock" style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.4);"></i>
-            </div>
-          </div>
-          
-          <button onclick="saveAdminPasswords()" class="btn-view" style="width:100%; justify-content:center; background:var(--accent); border:none; padding:18px; color: white;">
-            Şifrələri Yadda Saxla <i class="fas fa-save" style="margin-left: 10px;"></i>
-          </button>
-        </div>
 
         <div id="settings-status" style="margin-top:15px; font-size:0.8rem; font-weight:800; text-align:center; opacity:0; transition:0.3s;"></div>
       </div>
