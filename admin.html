@@ -1831,8 +1831,9 @@ fbq('track', 'PageView');
     window.renderExamResults = () => {
         const tb = document.getElementById('exam-students-list');
         if(!tb) return;
-        // Check for payment_status and also it should probably have exam details
-        const examStudents = rawData.filter(i => i.payment_status === 'Ödənilib' && (i.amount || i.epoint_amount));
+        // Check for epoint_amount or explicit payment_status
+        const examStudents = rawData.filter(i => i.epoint_amount || (i.amount && i.payment_status === 'Ödənilib'))
+                                   .sort((a,b) => new Date(b.created_at || 0) - new Date(a.created_at || 0)); // also sort newest first
         
         let doneCount = 0;
         
@@ -1840,7 +1841,7 @@ fbq('track', 'PageView');
             const fullName = p['[2.Şagird] Adı'] ? (p['[2.Şagird] Adı'] + ' ' + (p['[2.Şagird] Soyadı']||'')) : (p.fullName || p.name || 'Adsız Şagird');
             const className = p.class_name || p['Neçənci sinif üçün imtahan verəcək?'] || 'Qeyd edilməyib';
             const rev = p.exam_reviews || {};
-            const isDone = rev.psy && rev.math && rev.eng;
+            const isDone = rev.score && rev.academic && rev.psycho;
             if (isDone) doneCount++;
             
             return `<tr onclick="loadExamStudent('${p._db_id_}')" style="cursor:pointer;">
