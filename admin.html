@@ -2219,7 +2219,9 @@ fbq('track', 'PageView');
           groups['FAYLLAR'].push(dataPair);
         } else if (upperKey.includes('EPOINT') || upperKey === 'AMOUNT' || upperKey.includes('PAYMENT') || ['RRN', 'APPROVAL_CODE', 'CARD_NUMBER', 'CARDNAME', 'RESULT_CODE', '3DSECURE', 'RESULT_PS', 'RESULT'].includes(upperKey)) {
           // Eğer isFinance false ise, bəzi spesifik bank detallarını CRM-də gizlədirik
-          if (!isFinance && (upperKey.includes('EPOINT') || ['RRN', 'APPROVAL_CODE', 'CARD_NUMBER', 'CARDNAME', 'RESULT_CODE', '3DSECURE', 'RESULT_PS', 'RESULT'].includes(upperKey))) {
+          if (isExam) {
+             // Imtahan panelinde ödəniş detallarını ümumiyyətlə gizlədirik
+          } else if (!isFinance && (upperKey.includes('EPOINT') || ['RRN', 'APPROVAL_CODE', 'CARD_NUMBER', 'CARDNAME', 'RESULT_CODE', '3DSECURE', 'RESULT_PS', 'RESULT'].includes(upperKey))) {
              if (upperKey === 'EPOINT_AMOUNT' || upperKey === 'PAYMENT_STATUS' || upperKey === 'EPOINT_CARD_NUMBER' || upperKey === 'EPOINT_CARD_TYPE') {
                 groups['ÖDƏNİŞ DETALLARI'].push(dataPair);
              }
