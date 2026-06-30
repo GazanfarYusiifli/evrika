@@ -3,7 +3,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { queryType, ...queryParams } = req.query;
+  const { queryType, from, to, groupBy, limit, ...queryParams } = req.query;
   const tokenP1 = 'vcp_0lAQZbetboZxT5X8';
   const tokenP2 = 'omU0olJpfVei3mNiSSyEkOeESlqyHbpTOb4HCI4W';
   const token = process.env.VERCEL_TOKEN || (tokenP1 + tokenP2);
@@ -17,32 +17,44 @@ export default async function handler(req, res) {
     });
   }
 
-  // Construct the Vercel API URL
-  let endpoint = '';
-  switch (queryType) {
-    case 'visits-count':
-      endpoint = '/v1/query/web-analytics/visits/count';
-      break;
-    case 'visits-aggregate':
-      endpoint = '/v1/query/web-analytics/visits/aggregate';
-      break;
-    case 'events-count':
-      endpoint = '/v1/query/web-analytics/events/count';
-      break;
-    case 'events-aggregate':
-      endpoint = '/v1/query/web-analytics/events/aggregate';
-      break;
-    default:
-      return res.status(400).json({ error: 'Invalid queryType parameter' });
+  let endpoint = '/v1/query/web-analytics/visits/aggregate';
+  let isCount = false;
+  if (queryType === 'visits-count') {
+    endpoint = '/v1/query/web-analytics/visits/count';
+    isCount = true;
   }
 
   const url = new URL(`https://api.vercel.com${endpoint}`);
   url.searchParams.append('projectId', projectId);
   if (teamId) url.searchParams.append('teamId', teamId);
   
-  // Forward any other query parameters (e.g. from, to, groupBy, limit, etc.)
-  for (const [key, value] of Object.entries(queryParams)) {
-    url.searchParams.append(key, value);
+  // Enforce 31 day limit for Hobby plan
+  let dateFrom = from ? new Date(from) : new Date();
+  let dateTo = to ? new Date(to) : new Date();
+  
+  const diffTime = Math.abs(dateTo - dateFrom);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+  if (diffDays > 30) {
+    dateFrom = new Date(dateTo);
+    dateFrom.setDate(dateFrom.getDate() - 30);
+  }
+
+  url.searchParams.append('since', dateFrom.toISOString());
+  url.searchParams.append('until', dateTo.toISOString());
+  if (limit) url.searchParams.append('limit', limit);
+
+  if (!isCount) {
+     let byDimension = groupBy;
+     if (queryType === 'top-pages') byDimension = 'requestPath';
+     else if (queryType === 'countries') byDimension = 'country';
+     else if (queryType === 'browsers') byDimension = 'browserName';
+     else if (queryType === 'devices') byDimension = 'deviceType';
+     else if (queryType === 'referrers') byDimension = 'referrerHostname';
+     else if (queryType === 'events') byDimension = 'eventName';
+
+     if (byDimension) {
+        url.searchParams.append('by', byDimension);
+     }
   }
 
   try {

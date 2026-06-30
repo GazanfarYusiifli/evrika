@@ -3512,6 +3512,7 @@ fbq('track', 'PageView');
             const timeParams = `from=${fromISO}&to=${toISO}`;
 
             // 1. Fetch Overall Stats (Visitors, Pageviews)
+            // 1. Fetch Overall Stats
             const countRes = await fetch(`/api/vercel-analytics?queryType=visits-count&${timeParams}&groupBy=page`);
             if (!countRes.ok) {
                 const err = await countRes.json().catch(() => ({}));
@@ -3519,8 +3520,6 @@ fbq('track', 'PageView');
             }
             const countData = await countRes.json();
             
-            // Note: The structure of Vercel Analytics API response might vary. 
-            // We will attempt to parse it based on typical telemetry structures.
             // aggregate data for charts
             const aggViewsRes = await fetch(`/api/vercel-analytics?queryType=visits-aggregate&${timeParams}&groupBy=day`);
             const aggViewsData = await aggViewsRes.json();
@@ -3545,26 +3544,21 @@ fbq('track', 'PageView');
             const referrersRes = await fetch(`/api/vercel-analytics?queryType=visits-aggregate&${timeParams}&groupBy=referrer&limit=10`);
             const referrersData = await referrersRes.json();
 
-            // events count
-            const eventsRes = await fetch(`/api/vercel-analytics?queryType=events-count&${timeParams}`);
-            const eventsData = await eventsRes.json();
+            // --- Fetching Logic ---
+            // events count has been removed because it requires Vercel Pro/Enterprise
 
             // === Update DOM ===
-            
-            // We assume data structure from Vercel is { data: [ { key: '...', visits: 100 } ] } or similar
-            // If it's just raw arrays, we adapt. Let's write a safe getter.
-            const getSum = (dataArr, field = 'visits') => Array.isArray(dataArr) ? dataArr.reduce((acc, curr) => acc + (curr[field] || curr.count || 0), 0) : 0;
             const getDataArray = (res) => Array.isArray(res) ? res : (res.data || []);
-
-            const totalVisitors = getSum(getDataArray(countData), 'visitors');
-            const totalPageviews = getSum(getDataArray(countData), 'visits') || getSum(getDataArray(aggViewsData), 'visits');
+            const countObj = countData.data || {};
+            
+            const totalVisitors = countObj.visitors || 0;
+            const totalPageviews = countObj.pageviews || 0;
             const totalCountries = getDataArray(countriesData).length;
-            const totalEvents = getSum(getDataArray(eventsData), 'events') || getSum(getDataArray(eventsData), 'count');
 
             document.getElementById('stat-visitors').innerText = totalVisitors > 0 ? totalVisitors.toLocaleString() : '-';
             document.getElementById('stat-pageviews').innerText = totalPageviews > 0 ? totalPageviews.toLocaleString() : '-';
             document.getElementById('stat-countries').innerText = totalCountries > 0 ? totalCountries.toLocaleString() : '-';
-            document.getElementById('stat-events').innerText = totalEvents > 0 ? totalEvents.toLocaleString() : '-';
+            document.getElementById('stat-events').innerText = '-';
 
             // --- Tables ---
             const populateTable = (tableId, data, keyName, valName) => {
@@ -3577,7 +3571,7 @@ fbq('track', 'PageView');
                 }
                 arr.forEach(item => {
                     const k = item[keyName] || item.key || 'Naməlum';
-                    const v = item[valName] || item.visits || item.count || 0;
+                    const v = item[valName] || item.pageviews || item.visits || item.count || 0;
                     tbody.innerHTML += `
                         <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
                             <td style="padding:12px 0;">${k}</td>
@@ -3587,9 +3581,9 @@ fbq('track', 'PageView');
                 });
             };
 
-            populateTable('analytics-pages-table', topPagesData, 'page', 'visits');
-            populateTable('analytics-countries-table', countriesData, 'country', 'visits');
-            populateTable('analytics-referrers-table', referrersData, 'referrer', 'visits');
+            populateTable('analytics-pages-table', topPagesData, 'requestPath', 'pageviews');
+            populateTable('analytics-countries-table', countriesData, 'country', 'pageviews');
+            populateTable('analytics-referrers-table', referrersData, 'referrerHostname', 'pageviews');
 
             // --- Charts ---
             const destroyChart = (name) => {
@@ -3603,10 +3597,10 @@ fbq('track', 'PageView');
             
             // Format labels for chart
             const labels = trafficArr.map(i => {
-                const d = new Date(i.key || i.day || i.date);
-                return isNaN(d) ? (i.key || '') : `${d.getDate()}/${d.getMonth()+1}`;
+                const d = new Date(i.timestamp || i.key || i.day || i.date);
+                return isNaN(d) ? (i.timestamp || i.key || '') : `${d.getDate()}/${d.getMonth()+1}`;
             });
-            const visits = trafficArr.map(i => i.visits || i.count || 0);
+            const visits = trafficArr.map(i => i.pageviews || i.visits || i.count || 0);
 
             analyticsCharts['traffic'] = new Chart(ctxTraffic, {
                 type: 'line',
@@ -3647,9 +3641,9 @@ fbq('track', 'PageView');
             analyticsCharts['browser'] = new Chart(ctxBrowser, {
                 type: 'doughnut',
                 data: {
-                    labels: browserArr.length > 0 ? browserArr.map(i => i.browser || i.key || 'Naməlum') : ['No Data'],
+                    labels: browserArr.length > 0 ? browserArr.map(i => i.browserName || i.browser || i.key || 'Naməlum') : ['No Data'],
                     datasets: [{
-                        data: browserArr.length > 0 ? browserArr.map(i => i.visits || i.count || 0) : [1],
+                        data: browserArr.length > 0 ? browserArr.map(i => i.pageviews || i.visits || i.count || 0) : [1],
                         backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'],
                         borderWidth: 0,
                         hoverOffset: 4
@@ -3665,9 +3659,9 @@ fbq('track', 'PageView');
             analyticsCharts['device'] = new Chart(ctxDevice, {
                 type: 'doughnut',
                 data: {
-                    labels: deviceArr.length > 0 ? deviceArr.map(i => i.device || i.key || 'Naməlum') : ['No Data'],
+                    labels: deviceArr.length > 0 ? deviceArr.map(i => i.deviceType || i.device || i.key || 'Naməlum') : ['No Data'],
                     datasets: [{
-                        data: deviceArr.length > 0 ? deviceArr.map(i => i.visits || i.count || 0) : [1],
+                        data: deviceArr.length > 0 ? deviceArr.map(i => i.pageviews || i.visits || i.count || 0) : [1],
                         backgroundColor: ['#EC4899', '#6366F1', '#14B8A6', '#F97316', '#06B6D4'],
                         borderWidth: 0,
                         hoverOffset: 4
