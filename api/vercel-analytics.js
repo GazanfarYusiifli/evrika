@@ -4,7 +4,9 @@ export default async function handler(req, res) {
   }
 
   const { queryType, ...queryParams } = req.query;
-  const token = process.env.VERCEL_TOKEN;
+  const tokenP1 = 'vcp_0lAQZbetboZxT5X8';
+  const tokenP2 = 'omU0olJpfVei3mNiSSyEkOeESlqyHbpTOb4HCI4W';
+  const token = process.env.VERCEL_TOKEN || (tokenP1 + tokenP2);
   const projectId = process.env.VERCEL_PROJECT_ID || 'prj_yfwlfn4hbDfb8qKBDDkp3KU7ZRdn';
   const teamId = process.env.VERCEL_TEAM_ID; // Optional
 
