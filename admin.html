@@ -2234,6 +2234,7 @@ fbq('track', 'PageView');
     };
 
     window.viewDetails = (idx, isFinance = false) => {
+      const isExam = document.getElementById('view-exam-results') && document.getElementById('view-exam-results').style.display === 'block';
       let originalItem = filteredData[idx];
       if ((originalItem.status || '').toLowerCase() === 'yeni') {
           updateStatus(idx, 'Baxılıb');
