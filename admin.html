@@ -1839,7 +1839,7 @@ fbq('track', 'PageView');
         
         tb.innerHTML = examStudents.map(p => {
             const fullName = p['[2.Şagird] Adı'] ? (p['[2.Şagird] Adı'] + ' ' + (p['[2.Şagird] Soyadı']||'')) : (p['Ad Soyad'] || p.fullName || p.name || p.firstName || 'Adsız Şagird');
-            const className = p.class_name || p['Neçənci sinif üçün imtahan verəcək?'] || 'Qeyd edilməyib';
+            const className = p.Sinif || p['Sinif'] || p.class_name || p['Neçənci sinif üçün imtahan verəcək?'] || (p.note && p.note.match(/Sinif:\s*([^|]+)/) ? p.note.match(/Sinif:\s*([^|]+)/)[1].trim() : 'Qeyd edilməyib');
             const rev = p.exam_reviews || {};
             const isDone = rev.score && rev.academic && rev.psycho;
             if (isDone) doneCount++;
@@ -1955,7 +1955,7 @@ fbq('track', 'PageView');
         btn.disabled = true;
         
         const fullName = item['[2.Şagird] Adı'] ? (item['[2.Şagird] Adı'] + ' ' + (item['[2.Şagird] Soyadı']||'')) : (item['Ad Soyad'] || item.fullName || item.name || item.firstName || 'Adsız Şagird');
-        const className = item.class_name || item['Neçənci sinif üçün imtahan verəcək?'] || 'Qeyd edilməyib';
+        const className = item.Sinif || item['Sinif'] || item.class_name || item['Neçənci sinif üçün imtahan verəcək?'] || (item.note && item.note.match(/Sinif:\s*([^|]+)/) ? item.note.match(/Sinif:\s*([^|]+)/)[1].trim() : 'Qeyd edilməyib');
         const rev = item.exam_reviews || {};
         
         const html = `
@@ -2004,7 +2004,7 @@ fbq('track', 'PageView');
                     <p style="white-space:pre-wrap; font-size:15px; line-height:1.6; color:#334155; margin:0;">${rev.psycho || 'Rəy yoxdur'}</p>
                 </div>
 
-                <p style="font-size:16px; line-height:1.6; margin-bottom:40px;">Ətraflı məlumat üçün təqdim olunan fərdi hesabatla tanış ola bilərsiniz.</p>
+                
 
                 <div style="font-size:16px; line-height:1.6; margin-bottom:40px;">
                     Hörmətlə,<br>
