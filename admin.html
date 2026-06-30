@@ -1838,7 +1838,7 @@ fbq('track', 'PageView');
         let doneCount = 0;
         
         tb.innerHTML = examStudents.map(p => {
-            const fullName = p['[2.Şagird] Adı'] ? (p['[2.Şagird] Adı'] + ' ' + (p['[2.Şagird] Soyadı']||'')) : (p.fullName || p.name || 'Adsız Şagird');
+            const fullName = p['[2.Şagird] Adı'] ? (p['[2.Şagird] Adı'] + ' ' + (p['[2.Şagird] Soyadı']||'')) : (p['Ad Soyad'] || p.fullName || p.name || p.firstName || 'Adsız Şagird');
             const className = p.class_name || p['Neçənci sinif üçün imtahan verəcək?'] || 'Qeyd edilməyib';
             const rev = p.exam_reviews || {};
             const isDone = rev.score && rev.academic && rev.psycho;
@@ -1863,7 +1863,7 @@ fbq('track', 'PageView');
         panel.style.opacity = '1';
         panel.style.pointerEvents = 'all';
         
-        const fullName = item['[2.Şagird] Adı'] ? (item['[2.Şagird] Adı'] + ' ' + (item['[2.Şagird] Soyadı']||'')) : (item.fullName || item.name || 'Adsız Şagird');
+        const fullName = item['[2.Şagird] Adı'] ? (item['[2.Şagird] Adı'] + ' ' + (item['[2.Şagird] Soyadı']||'')) : (item['Ad Soyad'] || item.fullName || item.name || item.firstName || 'Adsız Şagird');
         document.getElementById('exam-student-name').innerText = fullName;
         document.getElementById('exam-current-student-id').value = dbId;
         
@@ -1954,7 +1954,7 @@ fbq('track', 'PageView');
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Hazırlanır...';
         btn.disabled = true;
         
-        const fullName = item['[2.Şagird] Adı'] ? (item['[2.Şagird] Adı'] + ' ' + (item['[2.Şagird] Soyadı']||'')) : (item.fullName || item.name || 'Adsız Şagird');
+        const fullName = item['[2.Şagird] Adı'] ? (item['[2.Şagird] Adı'] + ' ' + (item['[2.Şagird] Soyadı']||'')) : (item['Ad Soyad'] || item.fullName || item.name || item.firstName || 'Adsız Şagird');
         const className = item.class_name || item['Neçənci sinif üçün imtahan verəcək?'] || 'Qeyd edilməyib';
         const rev = item.exam_reviews || {};
         
@@ -1962,7 +1962,7 @@ fbq('track', 'PageView');
             <div style="padding:40px; font-family:sans-serif; color:#1e293b; max-width:800px; margin:auto;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px; border-bottom:2px solid #9c1c31; padding-bottom:20px;">
                     <h1 style="color:#9c1c31; margin:0; font-size:28px;">EVRİKA LİSEYİ</h1>
-                    <img src="assets/loqoYeni.PNG" style="height:60px;" alt="Evrika Loqo">
+                    <img src="https://evrikaliseyi.edu.az/assets/loqoYeni.PNG" style="height:60px;" alt="Evrika Loqo">
                 </div>
                 
                 <div style="background-color: #f8fafc; padding: 15px 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
