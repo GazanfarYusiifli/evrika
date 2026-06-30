@@ -3514,8 +3514,8 @@ fbq('track', 'PageView');
             // 1. Fetch Overall Stats (Visitors, Pageviews)
             const countRes = await fetch(`/api/vercel-analytics?queryType=visits-count&${timeParams}&groupBy=page`);
             if (!countRes.ok) {
-                const err = await countRes.json();
-                throw new Error(err.details || 'Failed to fetch visits count');
+                const err = await countRes.json().catch(() => ({}));
+                throw new Error(err.details || err.error || `Failed to fetch visits count (Status: ${countRes.status})`);
             }
             const countData = await countRes.json();
             

@@ -10,7 +10,8 @@ export default async function handler(req, res) {
 
   if (!token || !projectId) {
     return res.status(500).json({ 
-      error: 'Missing VERCEL_TOKEN in environment variables.' 
+      error: 'Environment Error',
+      details: `VERCEL_TOKEN is ${token ? 'set' : 'MISSING'}. VERCEL_PROJECT_ID is ${projectId ? 'set' : 'MISSING'}. Please check Vercel settings and ensure Environment Variables apply to the Production environment.`
     });
   }
 
