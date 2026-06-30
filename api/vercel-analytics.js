@@ -5,12 +5,12 @@ export default async function handler(req, res) {
 
   const { queryType, ...queryParams } = req.query;
   const token = process.env.VERCEL_TOKEN;
-  const projectId = process.env.VERCEL_PROJECT_ID;
+  const projectId = process.env.VERCEL_PROJECT_ID || 'prj_yfwlfn4hbDfb8qKBDDkp3KU7ZRdn';
   const teamId = process.env.VERCEL_TEAM_ID; // Optional
 
   if (!token || !projectId) {
     return res.status(500).json({ 
-      error: 'Missing VERCEL_TOKEN or VERCEL_PROJECT_ID in environment variables.' 
+      error: 'Missing VERCEL_TOKEN in environment variables.' 
     });
   }
 
