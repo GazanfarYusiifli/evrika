@@ -1837,7 +1837,15 @@ fbq('track', 'PageView');
         let coupons = rawData.filter(i => (i.epoint_amount || i.amount) && i.payment_status === 'Ödənilib');
         
         if (branchFilter !== 'all') {
-            coupons = coupons.filter(i => getGranularSource(i) === branchFilter);
+            coupons = coupons.filter(i => {
+                const s = getGranularSource(i) || '';
+                if (branchFilter === 'lisey1') return s === 'lisey1' || s.includes('Nərimanov');
+                if (branchFilter === 'lisey2') return s === 'lisey2' || s.includes('Gənclik');
+                if (branchFilter === 'montessori') return s === 'montessori' || s.includes('Montessori');
+                if (branchFilter === 'victory') return s === 'victory' || s.includes('Victory');
+                if (branchFilter === 'zumrud') return s === 'zumrud' || s.includes('Zümrüd') || s.includes('zumrud');
+                return s === branchFilter;
+            });
         }
         
         coupons = coupons.sort((a,b) => new Date(b.epoint_date || b.created_at || b.submissionDate || 0) - new Date(a.epoint_date || a.created_at || a.submissionDate || 0));
@@ -1854,7 +1862,7 @@ fbq('track', 'PageView');
             const date = p.epoint_date ? new Date(p.epoint_date).toLocaleString('az') : new Date(p.created_at || p.submissionDate || Date.now()).toLocaleString('az');
             
             const s = getGranularSource(p);
-            const sourceLabel = MAP[s] || s || 'Email';
+            const sourceLabel = MAP[s] || String(s).replace('Qeydiyyat - ', '') || 'Email';
             
             return `<tr>
               <td>
