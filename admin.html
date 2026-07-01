@@ -1821,13 +1821,13 @@ fbq('track', 'PageView');
         const tb = document.getElementById('kupon-tbody');
         if(!tb) return;
         const coupons = rawData.filter(i => (i.epoint_amount || i.amount) && i.payment_status === 'Ödənilib')
-                                .sort((a,b) => new Date(b.epoint_date || b.submissionDate || 0) - new Date(a.epoint_date || a.submissionDate || 0));
+                                .sort((a,b) => new Date(b.epoint_date || b.created_at || b.submissionDate || 0) - new Date(a.epoint_date || a.created_at || a.submissionDate || 0));
 
         tb.innerHTML = coupons.map((p, idx) => {
             const fullName = p.fullName || p['Ad Soyad'] || p.name || (p['[2.Şagird] Adı'] ? p['[2.Şagird] Adı'] + ' ' + (p['[2.Şagird] Soyadı']||'') : 'Adsız');
             const amount = p.epoint_amount || p.amount || 0;
             const phone = p.phone || p.tel || p['[1.Əlaqə] Əlaqə Nömrəsi'] || '-';
-            const date = p.epoint_date ? new Date(p.epoint_date).toLocaleString('az') : new Date(p.submissionDate || Date.now()).toLocaleString('az');
+            const date = p.epoint_date ? new Date(p.epoint_date).toLocaleString('az') : new Date(p.created_at || p.submissionDate || Date.now()).toLocaleString('az');
             
             return `<tr>
               <td>
