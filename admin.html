@@ -844,7 +844,7 @@ fbq('track', 'PageView');
                  <div id="epoint-total-count" style="font-size:1.8rem; font-weight:900; color:var(--accent); margin-top:10px;">0</div>
              </div>
              <div class="stat-card" style="background:rgba(245,158,11,0.05); border:1px solid rgba(245,158,11,0.2);">
-                 <div style="font-size:0.8rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Epoint Komissiyası (~2%)</div>
+                 <div style="font-size:0.8rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Epoint Əməliyyat komissiyası</div>
                  <div id="epoint-total-commission" style="font-size:1.8rem; font-weight:900; color:var(--warning); margin-top:10px;">0 ₼</div>
              </div>
          </div>
@@ -1774,7 +1774,8 @@ fbq('track', 'PageView');
               </td>
               <td>
                 <div style="font-weight:900; font-size:1rem; color:var(--success);">${parsedAmount} <span style="font-size:0.75rem;">₼</span></div>
-                <div style="font-size:0.65rem; color:var(--text-muted); margin-top:3px;">Komissiya: <span style="color:var(--warning); font-weight:700;">${commission} ₼</span></div>
+                <div style="font-size:0.65rem; color:var(--text-muted); margin-top:3px;">Komissiya: <span style="font-weight:700;">₼ 0.00</span></div>
+                <div style="font-size:0.65rem; color:var(--text-muted); margin-top:1px;">Epoint Əməliyyat komissiyası: <span style="color:var(--warning); font-weight:700;">₼ ${commission}</span></div>
               </td>
               <td>
                 <div style="font-size:0.8rem; font-weight:700; color:white; font-family:monospace;">Sifariş №: EV-${String(p.order_id || p._db_id_ || '').padStart(4, '0')}</div>
@@ -1983,7 +1984,7 @@ fbq('track', 'PageView');
               </td>
               <td>
                  <div style="color:${isSuccess ? 'var(--success)' : 'var(--text-muted)'}; font-weight:800; font-size:1rem;">${amount.toFixed(2)} ₼</div>
-                 ${isSuccess ? `<div style="font-size:0.65rem; color:var(--warning); margin-top:3px;">- ${comm.toFixed(2)} ₼ (Epoint)</div>` : ''}
+                 ${isSuccess ? `<div style="font-size:0.65rem; color:var(--text-muted); margin-top:3px;">Komissiya: <span style="font-weight:700;">₼ 0.00</span></div><div style="font-size:0.65rem; color:var(--text-muted); margin-top:1px;">Epoint Əməliyyat komissiyası: <span style="color:var(--warning); font-weight:700;">₼ ${comm.toFixed(2)}</span></div>` : ''}
               </td>
               <td><div style="color:var(--text-muted); font-size:0.8rem; font-weight:600;">${date}</div></td>
               <td>
