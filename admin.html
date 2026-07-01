@@ -908,20 +908,31 @@ fbq('track', 'PageView');
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 30px;">
-            <!-- Student List -->
-            <div class="table-wrapper" style="height: 600px; overflow-y: auto;">
-                <div style="padding:20px; border-bottom:1px solid var(--border); background:rgba(255,255,255,0.01); display:flex; justify-content:space-between; align-items:center;">
-                    <h3 style="font-weight:800; font-size:1.1rem; margin:0;"><i class="fas fa-list-ul" style="color:var(--burgundy); margin-right:10px;"></i> <span id="exam-list-title">Kupon alan Şagirdlər</span></h3>
-                    <select id="exam-list-filter" onchange="renderExamResults()" style="padding: 5px 10px; border-radius: 8px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--glass-border);">
-                        <option value="kupon">Kupon Alanlar</option>
-                        <option value="istirak">İmtahanda İştirak Edənlər</option>
-                    </select>
+            <!-- Student Lists -->
+            <div style="height: 600px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; padding-right: 10px;">
+                <!-- Table 1: İmtahanda İştirak Edənlər -->
+                <div class="table-wrapper" style="margin: 0; box-shadow: none; border: 1px solid var(--border);">
+                    <div style="padding:20px; border-bottom:1px solid var(--border); background:rgba(34,197,94,0.05);">
+                        <h3 style="font-weight:800; font-size:1.1rem; margin:0;"><i class="fas fa-check-double" style="color:var(--success); margin-right:10px;"></i> İmtahanda İştirak Edənlər <span style="font-size:0.7rem; font-weight:normal; color:var(--text-muted);">(Rəy yazıla bilər)</span></h3>
+                    </div>
+                    <table>
+                        <thead><tr><th>Şagird</th><th>Sinif</th><th>Filial</th><th style="text-align:center;">Status</th></tr></thead>
+                        <tbody id="exam-students-list-participated">
+                        </tbody>
+                    </table>
                 </div>
-                <table>
-                    <thead><tr><th>Şagird</th><th>Sinif</th><th>Filial</th><th style="text-align:center;">Status</th></tr></thead>
-                    <tbody id="exam-students-list">
-                    </tbody>
-                </table>
+
+                <!-- Table 2: Kupon Alan Şagirdlər -->
+                <div class="table-wrapper" style="margin: 0; box-shadow: none; border: 1px solid var(--border);">
+                    <div style="padding:20px; border-bottom:1px solid var(--border); background:rgba(255,255,255,0.01);">
+                        <h3 style="font-weight:800; font-size:1.1rem; margin:0;"><i class="fas fa-ticket-alt" style="color:var(--burgundy); margin-right:10px;"></i> Kupon Alanlar <span style="font-size:0.7rem; font-weight:normal; color:var(--text-muted);">(İmtahana girməyiblər)</span></h3>
+                    </div>
+                    <table>
+                        <thead><tr><th>Şagird</th><th>Sinif</th><th>Filial</th><th style="text-align:center;">Status</th></tr></thead>
+                        <tbody id="exam-students-list-kupon">
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Review Panel -->
@@ -2039,22 +2050,13 @@ fbq('track', 'PageView');
     };
 
     window.renderExamResults = () => {
-        const tb = document.getElementById('exam-students-list');
-        if(!tb) return;
+        const tbParticipated = document.getElementById('exam-students-list-participated');
+        const tbKupon = document.getElementById('exam-students-list-kupon');
+        if(!tbParticipated || !tbKupon) return;
+        
         // Check for epoint_amount or explicit payment_status
         const allExamStudents = rawData.filter(i => i.epoint_amount || (i.amount && i.payment_status === 'Ödənilib'))
                                    .sort((a,b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
-        
-        const listFilter = document.getElementById('exam-list-filter') ? document.getElementById('exam-list-filter').value : 'kupon';
-        let examStudents = allExamStudents;
-        
-        if (listFilter === 'istirak') {
-            if(document.getElementById('exam-list-title')) document.getElementById('exam-list-title').innerText = 'İmtahanda İştirak Edənlər';
-            examStudents = examStudents.filter(i => i.status === 'QR İstifadə Edilib' || i.status === 'İştirak Etdi');
-        } else {
-            if(document.getElementById('exam-list-title')) document.getElementById('exam-list-title').innerText = 'Kupon alan Şagirdlər';
-            examStudents = examStudents.filter(i => i.status !== 'QR İstifadə Edilib' && i.status !== 'İştirak Etdi');
-        }
         
         let doneCount = 0;
         
@@ -2063,7 +2065,7 @@ fbq('track', 'PageView');
           'victory':'Victory', 'zumrud':'Zümrüd'
         };
 
-        tb.innerHTML = examStudents.map(p => {
+        const renderRow = (p, isParticipated) => {
             const fullName = p['[2.Şagird] Adı'] ? (p['[2.Şagird] Adı'] + ' ' + (p['[2.Şagird] Soyadı']||'')) : (p['Ad Soyad'] || p.fullName || p.name || p.firstName || p['[1.Əlaqə] Valideyn Adı'] || p['Valideyn'] || 'Adsız Şagird');
             const className = p.Sinif || p['Sinif'] || p.class_name || p['Neçənci sinif üçün imtahan verəcək?'] || (p.note && p.note.match(/Sinif:\s*([^|]+)/) ? p.note.match(/Sinif:\s*([^|]+)/)[1].trim() : 'Qeyd edilməyib');
             const rev = p.exam_reviews || {};
@@ -2072,19 +2074,25 @@ fbq('track', 'PageView');
             const s = getGranularSource(p);
             const filial = MAP[s] || String(s).replace('Qeydiyyat - ', '') || 'Bilinmir';
 
-            if (isDone) doneCount++;
+            if (isParticipated && isDone) doneCount++;
             
-            return `<tr onclick="loadExamStudent('${p._db_id_}')" style="cursor:pointer;">
+            return `<tr ${isParticipated ? `onclick="loadExamStudent('${p._db_id_}')" style="cursor:pointer;"` : `style="opacity:0.5; pointer-events:none;" title="Yalnız imtahanda iştirak edənlərə rəy yazıla bilər"`}>
                 <td>${fullName}</td>
                 <td>${className}</td>
                 <td><span style="font-size:0.8rem; color:var(--text-muted);">${filial}</span></td>
                 <td style="text-align:center;"><span style="color:var(--${isDone ? 'success' : 'warning'}); font-size:1.2rem;" title="${isDone ? 'Tamamlanıb' : 'Gözləyir'}"><i class="fas fa-${isDone ? 'check-circle' : 'clock'}"></i></span></td>
             </tr>`;
-        }).join('');
+        };
+
+        const participated = allExamStudents.filter(i => i.status === 'QR İstifadə Edilib' || i.status === 'İştirak Etdi');
+        const kuponOnly = allExamStudents.filter(i => i.status !== 'QR İstifadə Edilib' && i.status !== 'İştirak Etdi');
+
+        tbParticipated.innerHTML = participated.length ? participated.map(p => renderRow(p, true)).join('') : '<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--text-muted);"><i class="fas fa-info-circle"></i> Hələ imtahanda iştirak edən şagird yoxdur.</td></tr>';
+        tbKupon.innerHTML = kuponOnly.length ? kuponOnly.map(p => renderRow(p, false)).join('') : '<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--text-muted);"><i class="fas fa-check-circle"></i> Bütün kupon alanlar imtahanda iştirak edib!</td></tr>';
         
         document.getElementById('exam-stat-total').innerText = allExamStudents.length;
-        document.getElementById('exam-stat-done').innerText = allExamStudents.filter(p => p.exam_reviews && p.exam_reviews.score && p.exam_reviews.academic && p.exam_reviews.psycho).length;
-        document.getElementById('exam-stat-waiting').innerText = allExamStudents.length - parseInt(document.getElementById('exam-stat-done').innerText);
+        document.getElementById('exam-stat-done').innerText = doneCount;
+        document.getElementById('exam-stat-waiting').innerText = participated.length - doneCount;
     };
 
     window.loadExamStudent = (dbId) => {
