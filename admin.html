@@ -910,11 +910,15 @@ fbq('track', 'PageView');
         <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 30px;">
             <!-- Student List -->
             <div class="table-wrapper" style="height: 600px; overflow-y: auto;">
-                <div style="padding:20px; border-bottom:1px solid var(--border); background:rgba(255,255,255,0.01);">
-                    <h3 style="font-weight:800; font-size:1.1rem;"><i class="fas fa-list-ul" style="color:var(--burgundy); margin-right:10px;"></i> Şagirdlərin Siyahısı</h3>
+                <div style="padding:20px; border-bottom:1px solid var(--border); background:rgba(255,255,255,0.01); display:flex; justify-content:space-between; align-items:center;">
+                    <h3 style="font-weight:800; font-size:1.1rem; margin:0;"><i class="fas fa-list-ul" style="color:var(--burgundy); margin-right:10px;"></i> <span id="exam-list-title">Kupon alan Şagirdlər</span></h3>
+                    <select id="exam-list-filter" onchange="renderExamResults()" style="padding: 5px 10px; border-radius: 8px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--glass-border);">
+                        <option value="kupon">Kupon Alanlar</option>
+                        <option value="istirak">İmtahanda İştirak Edənlər</option>
+                    </select>
                 </div>
                 <table>
-                    <thead><tr><th>Şagird</th><th>Sinif</th><th>Filial</th><th>Status</th></tr></thead>
+                    <thead><tr><th>Şagird</th><th>Sinif</th><th>Filial</th><th style="text-align:center;">Status</th></tr></thead>
                     <tbody id="exam-students-list">
                     </tbody>
                 </table>
@@ -2038,8 +2042,19 @@ fbq('track', 'PageView');
         const tb = document.getElementById('exam-students-list');
         if(!tb) return;
         // Check for epoint_amount or explicit payment_status
-        const examStudents = rawData.filter(i => i.epoint_amount || (i.amount && i.payment_status === 'Ödənilib'))
-                                   .sort((a,b) => new Date(b.created_at || 0) - new Date(a.created_at || 0)); // also sort newest first
+        const allExamStudents = rawData.filter(i => i.epoint_amount || (i.amount && i.payment_status === 'Ödənilib'))
+                                   .sort((a,b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+        
+        const listFilter = document.getElementById('exam-list-filter') ? document.getElementById('exam-list-filter').value : 'kupon';
+        let examStudents = allExamStudents;
+        
+        if (listFilter === 'istirak') {
+            if(document.getElementById('exam-list-title')) document.getElementById('exam-list-title').innerText = 'İmtahanda İştirak Edənlər';
+            examStudents = examStudents.filter(i => i.status === 'QR İstifadə Edilib' || i.status === 'İştirak Etdi');
+        } else {
+            if(document.getElementById('exam-list-title')) document.getElementById('exam-list-title').innerText = 'Kupon alan Şagirdlər';
+            examStudents = examStudents.filter(i => i.status !== 'QR İstifadə Edilib' && i.status !== 'İştirak Etdi');
+        }
         
         let doneCount = 0;
         
@@ -2063,13 +2078,13 @@ fbq('track', 'PageView');
                 <td>${fullName}</td>
                 <td>${className}</td>
                 <td><span style="font-size:0.8rem; color:var(--text-muted);">${filial}</span></td>
-                <td><span style="color:var(--${isDone ? 'success' : 'warning'}); font-weight:700;">${isDone ? 'Tamamlanıb' : 'Gözləyir'}</span></td>
+                <td style="text-align:center;"><span style="color:var(--${isDone ? 'success' : 'warning'}); font-size:1.2rem;" title="${isDone ? 'Tamamlanıb' : 'Gözləyir'}"><i class="fas fa-${isDone ? 'check-circle' : 'clock'}"></i></span></td>
             </tr>`;
         }).join('');
         
-        document.getElementById('exam-stat-total').innerText = examStudents.length;
-        document.getElementById('exam-stat-done').innerText = doneCount;
-        document.getElementById('exam-stat-waiting').innerText = examStudents.length - doneCount;
+        document.getElementById('exam-stat-total').innerText = allExamStudents.length;
+        document.getElementById('exam-stat-done').innerText = allExamStudents.filter(p => p.exam_reviews && p.exam_reviews.score && p.exam_reviews.academic && p.exam_reviews.psycho).length;
+        document.getElementById('exam-stat-waiting').innerText = allExamStudents.length - parseInt(document.getElementById('exam-stat-done').innerText);
     };
 
     window.loadExamStudent = (dbId) => {
