@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
       :root {
         --navy-deep: #020617; 
@@ -491,6 +492,9 @@ fbq('track', 'PageView');
       <p style="font-size: 0.7rem; opacity: 0.5; margin-top: 5px; font-weight: 700; color: var(--text-muted);">PROFESSIONAL SYSTEM</p>
     </div>
     <div class="sb-nav">
+      <div class="sb-group-title" data-module="crm">MÜŞTƏRİ XİDMƏTLƏRİ</div>
+      <div class="sb-link" data-module="crm" onclick="switchTab('call-center')"><i class="fas fa-headset"></i> <span>Zəng Mərkəzi</span></div>
+      <div class="sb-link active" data-module="crm" onclick="switchTab('apps')"><i class="fas fa-users"></i> <span>Müraciətlər & CRM</span></div>
       <div class="sb-group-title" data-module="crm">CRM & ANALİTİKA</div>
       <div class="sb-link" data-module="crm" onclick="switchTab('dashboard')"><i class="fas fa-th-large"></i> <span>Dashboard</span></div>
       <a href="https://vercel.com/evrikaproject/evrika/analytics" target="_blank" class="sb-link" data-module="crm" style="text-decoration:none;"><i class="fas fa-chart-line"></i> <span>Analitika</span></a>
@@ -618,6 +622,79 @@ fbq('track', 'PageView');
             <svg viewBox="0 0 76 65" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:20px;"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="currentColor"/></svg>
             Vercel Dashboard-a Keç
          </a>
+      </div>
+    </div>
+
+    <!-- CALL CENTER MODULE -->
+    <div id="view-call-center" class="content" style="display: none;">
+      <!-- Incoming Call Popup UI (Fixed position) -->
+      <div id="incoming-call-popup" style="display:none; position:fixed; bottom:30px; right:30px; background:#1c1c1e; border:1px solid rgba(16,185,129,0.3); border-left:4px solid var(--success); border-radius:12px; padding:20px; box-shadow:0 10px 30px rgba(0,0,0,0.5); z-index:9999; animation: slideInUp 0.4s ease-out; width:300px;">
+         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <div style="color:var(--success); font-weight:800; font-size:0.9rem; display:flex; align-items:center; gap:8px;">
+               <i class="fas fa-phone-volume fa-shake"></i> Daxil olan zəng
+            </div>
+            <button onclick="document.getElementById('incoming-call-popup').style.display='none'" style="background:none; border:none; color:var(--text-muted); cursor:pointer;"><i class="fas fa-times"></i></button>
+         </div>
+         <div id="call-popup-name" style="font-weight:800; font-size:1.1rem; color:white; margin-bottom:5px;">Axtarılır...</div>
+         <div id="call-popup-number" style="font-family:monospace; color:var(--text-muted); font-size:0.9rem;"></div>
+         <div style="margin-top:15px; display:flex; gap:10px;">
+            <button onclick="document.getElementById('incoming-call-popup').style.display='none'" style="flex:1; background:var(--success); color:white; border:none; padding:8px; border-radius:6px; font-weight:700; cursor:pointer;"><i class="fas fa-check"></i> Qəbul Et</button>
+         </div>
+      </div>
+
+      <div class="stat-card">
+         <h3 style="font-weight: 800; font-size: 1.2rem; margin-bottom: 25px; display:flex; justify-content:space-between; align-items:center;">
+             <span><i class="fas fa-headset" style="color:var(--accent); margin-right: 10px;"></i> Zəng Mərkəzi (Twilio / Zadarma)</span>
+             <button class="btn-view" onclick="fetchCalls()" style="background:var(--accent); border:none; padding:8px 15px; font-size:0.8rem;"><i class="fas fa-sync-alt" style="margin-right:5px;"></i> Yenilə</button>
+         </h3>
+         
+         <div class="stat-grid" style="margin-bottom:25px;">
+            <div class="stat-item">
+               <div class="stat-icon" style="background: rgba(59,130,246,0.1); color: var(--accent);"><i class="fas fa-phone-alt"></i></div>
+               <div class="stat-info">
+                  <h4>Bugünkü Zənglər</h4>
+                  <div class="stat-value" id="calls-today">0</div>
+               </div>
+            </div>
+            <div class="stat-item">
+               <div class="stat-icon" style="background: rgba(16,185,129,0.1); color: var(--success);"><i class="fas fa-check"></i></div>
+               <div class="stat-info">
+                  <h4>Cavablandırılan</h4>
+                  <div class="stat-value" id="calls-answered">0</div>
+               </div>
+            </div>
+            <div class="stat-item">
+               <div class="stat-icon" style="background: rgba(239,68,68,0.1); color: var(--error);"><i class="fas fa-phone-slash"></i></div>
+               <div class="stat-info">
+                  <h4>Buraxılmış</h4>
+                  <div class="stat-value" id="calls-missed">0</div>
+               </div>
+            </div>
+            <div class="stat-item">
+               <div class="stat-icon" style="background: rgba(245,158,11,0.1); color: var(--warning);"><i class="fas fa-clock"></i></div>
+               <div class="stat-info">
+                  <h4>Ortalama Müddət</h4>
+                  <div class="stat-value" id="calls-avg-duration">0 san</div>
+               </div>
+            </div>
+         </div>
+
+         <div class="table-wrapper">
+             <table class="data-table">
+                 <thead>
+                     <tr>
+                         <th>Nömrə & Müştəri</th>
+                         <th>Status</th>
+                         <th>Müddət</th>
+                         <th>Tarix</th>
+                         <th>Səs Yazısı</th>
+                     </tr>
+                 </thead>
+                 <tbody id="calls-tbody">
+                     <tr><td colspan="5" style="text-align:center;">Məlumat yüklənir...</td></tr>
+                 </tbody>
+             </table>
+         </div>
       </div>
     </div>
 
@@ -1346,7 +1423,96 @@ fbq('track', 'PageView');
     });
 
     const API_URL='https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1', API_KEY='sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV', HEADERS={ 'apikey':API_KEY, 'Authorization':'Bearer '+API_KEY, 'Content-Type':'application/json' };
-    let rawData=[], filteredData=[], vacanciesData=[], newsData=[], ugurlarData=[], tasksData=JSON.parse(localStorage.getItem('evrika_tasks'))||[];
+    let rawData=[], filteredData=[], vacanciesData=[], newsData=[], ugurlarData=[], rawCalls=[], tasksData=JSON.parse(localStorage.getItem('evrika_tasks'))||[];
+
+    // --- CALL CENTER LOGIC ---
+    let supabaseClient = null;
+    if (window.supabase) {
+        supabaseClient = window.supabase.createClient('https://miwvdhwrmxoetszkxlzy.supabase.co', API_KEY);
+    }
+    
+    window.fetchCalls = async () => {
+        try {
+            const res = await fetch(`${API_URL}/calls?select=*&order=created_at.desc`, { headers: HEADERS });
+            if (res.ok) {
+                rawCalls = await res.json();
+                renderCalls();
+            }
+        } catch (e) { console.error("Error fetching calls", e); }
+    };
+    
+    window.renderCalls = () => {
+        if (!document.getElementById('calls-tbody')) return;
+        let today = 0, answered = 0, missed = 0, totalDur = 0;
+        const todayStr = new Date().toISOString().split('T')[0];
+        
+        let html = '';
+        rawCalls.forEach(c => {
+            const isToday = (c.created_at || '').startsWith(todayStr);
+            if (isToday) today++;
+            if (c.status === 'completed') { answered++; totalDur += c.duration || 0; }
+            if (c.status === 'missed') missed++;
+            
+            let statusHtml = '';
+            if(c.status === 'ringing') statusHtml = `<span style="background:rgba(59,130,246,0.1); color:#3b82f6; padding:4px 8px; border-radius:6px;"><i class="fas fa-bell fa-shake"></i> Zəng gəlir...</span>`;
+            else if(c.status === 'completed') statusHtml = `<span style="background:rgba(16,185,129,0.1); color:#10b981; padding:4px 8px; border-radius:6px;"><i class="fas fa-check"></i> Cavablandırıldı</span>`;
+            else if(c.status === 'missed') statusHtml = `<span style="background:rgba(239,68,68,0.1); color:#ef4444; padding:4px 8px; border-radius:6px;"><i class="fas fa-phone-slash"></i> Buraxılmış</span>`;
+            else statusHtml = `<span style="background:rgba(255,255,255,0.1); padding:4px 8px; border-radius:6px;">${c.status}</span>`;
+            
+            let name = c.customer_name || 'Naməlum Müştəri';
+            if (name === 'Naməlum Müştəri' && window.allFetchedData) {
+                // Try to lookup
+                const p = c.phone.replace(/[^0-9]/g, '');
+                const found = window.allFetchedData.find(d => (d.phone && d.phone.replace(/[^0-9]/g,'') === p) || (d['Valideynin Nömrəsi'] && String(d['Valideynin Nömrəsi']).replace(/[^0-9]/g,'') === p));
+                if (found) name = found.fullName || found.name || found['Ad Soyad'] || name;
+            }
+            
+            const rec = c.recording_url ? `<a href="${c.recording_url}" target="_blank" style="color:var(--accent);"><i class="fas fa-play-circle"></i> Dinlə</a>` : '-';
+            
+            html += `<tr>
+                <td><div style="font-weight:800; color:white;">${name}</div><div style="font-family:monospace; color:var(--text-muted); font-size:0.8rem;">${c.phone}</div></td>
+                <td>${statusHtml}</td>
+                <td><div style="font-weight:800;">${c.duration} san</div></td>
+                <td><div style="color:var(--text-muted); font-size:0.8rem;">${new Date(c.created_at).toLocaleString('az')}</div></td>
+                <td>${rec}</td>
+            </tr>`;
+        });
+        
+        document.getElementById('calls-tbody').innerHTML = html || '<tr><td colspan="5" style="text-align:center;">Zəng yoxdur</td></tr>';
+        document.getElementById('calls-today').innerText = today;
+        document.getElementById('calls-answered').innerText = answered;
+        document.getElementById('calls-missed').innerText = missed;
+        document.getElementById('calls-avg-duration').innerText = answered > 0 ? Math.round(totalDur / answered) + ' san' : '0 san';
+    };
+    
+    // Setup Supabase Realtime
+    if (supabaseClient) {
+        supabaseClient.channel('calls-channel')
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'calls' }, payload => {
+                rawCalls.unshift(payload.new);
+                renderCalls();
+                if (payload.new.status === 'ringing') {
+                    document.getElementById('incoming-call-popup').style.display = 'block';
+                    document.getElementById('call-popup-number').innerText = payload.new.phone;
+                    document.getElementById('call-popup-name').innerText = 'Daxil olan zəng (Twilio/Zadarma)';
+                    let audio = new Audio('https://actions.google.com/sounds/v1/alarms/phone_ringing.ogg');
+                    audio.play().catch(e => {}); // Ignore play preventions
+                }
+            })
+            .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'calls' }, payload => {
+                const idx = rawCalls.findIndex(c => c.provider_call_id === payload.new.provider_call_id);
+                if (idx !== -1) {
+                    rawCalls[idx] = payload.new;
+                    renderCalls();
+                    if (payload.new.status === 'completed' || payload.new.status === 'missed') {
+                        document.getElementById('incoming-call-popup').style.display = 'none';
+                    }
+                }
+            })
+            .subscribe();
+    }
+    // --- END CALL CENTER LOGIC ---
+
     const statusMap = { 'Yeni': { color:'#f59e0b', bg:'rgba(245,158,11,0.1)' }, 'Baxılıb': { color:'#3b82f6', bg:'rgba(59,130,246,0.1)' }, 'Əlaqə': { color:'#8b5cf6', bg:'rgba(139,92,246,0.1)' }, 'Qəbul': { color:'#10b981', bg:'rgba(16,185,129,0.1)' }, 'İmtina': { color:'#ef4444', bg:'rgba(239,68,68,0.1)' } };
 
     function getGranularSource(item) {
@@ -2073,7 +2239,7 @@ fbq('track', 'PageView');
     window.switchTab = (t) => {
       document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
       if(document.getElementById('view-'+t)) document.getElementById('view-'+t).style.display = 'block';
-      const titles = { 'dashboard':'Dashboard', 'analytics':'Sayt Analitikası', 'speed':'Sayt Sürəti', 'apps':'Müraciətlər', 'exam-results':'Nəticələr & Rəylər', 'kanban':'Kanban Board', 'tasks':'Tapşırıqlar', 'employees':'Əməkdaşlar', 'hr-panel':'Vakansiyalar', 'finance':'Maliyyə Paneli', 'epoint-reports':'Köçürmələrin Tarixçəsi', 'kupon':'Kupon Alanlar', 'ugurlar':'Uğurlar & Məzun', 'news':'Xəbərlər', 'leadership':'Rəhbərlik', 'settings':'Sistem Ayarları', 'parents':'Valideynlərimiz' };
+      const titles = { 'dashboard':'Dashboard', 'call-center': 'Zəng Mərkəzi', 'analytics':'Sayt Analitikası', 'speed':'Sayt Sürəti', 'apps':'Müraciətlər', 'exam-results':'Nəticələr & Rəylər', 'kanban':'Kanban Board', 'tasks':'Tapşırıqlar', 'employees':'Əməkdaşlar', 'hr-panel':'Vakansiyalar', 'finance':'Maliyyə Paneli', 'epoint-reports':'Köçürmələrin Tarixçəsi', 'kupon':'Kupon Alanlar', 'ugurlar':'Uğurlar & Məzun', 'news':'Xəbərlər', 'leadership':'Rəhbərlik', 'settings':'Sistem Ayarları', 'parents':'Valideynlərimiz' };
       document.getElementById('topbar-title').innerText = titles[t] || 'EVRIKA EMS';
       
       // Handle the active class for sidebar links
@@ -2086,6 +2252,7 @@ fbq('track', 'PageView');
       if(t==='dashboard') renderDashboard();
       if(t==='finance') renderFinance();
       if(t==='epoint-reports') renderEpointReports();
+      if(t==='call-center') fetchCalls();
       if(t==='exam-results') renderExamResults();
       if(t==='kupon') renderKupon();
       if(t==='mezunlar') loadMezunlar();
