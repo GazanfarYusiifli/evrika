@@ -1701,7 +1701,7 @@ fbq('track', 'PageView');
           <td style="font-weight:600; font-size:0.9rem;">${phone}</td>
           <td><span class="kanban-card-tag" style="background:rgba(139,26,43,0.1); color:var(--burgundy); border:1px solid rgba(139,26,43,0.2); padding:6px 12px; border-radius:8px; font-weight:700;">${sourceLabel}</span></td>
           <td>${item.payment_status ? `<span style="font-weight:bold; font-size:0.75rem; color:${item.payment_status==='Ödənilib' ? '#10B981' : '#EF4444'}; background:${item.payment_status==='Ödənilib' ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)'}; padding:4px 8px; border-radius:6px;">${item.payment_status}</span>` : '<span style="color:var(--text-muted); font-size:0.8rem;">-</span>'}</td>
-          <td style="font-size:0.85rem; color:var(--text-muted);">${new Date(item.submissionDate || Date.now()).toLocaleDateString('az')}</td>
+          <td style="font-size:0.85rem; color:var(--text-muted);">${new Date(item.created_at || item.submissionDate || Date.now()).toLocaleString('az')}</td>
           <td>
             <select onchange="updateStatus(${i}, this.value)" 
                     style="background:${statusMap[st].bg}; color:${statusMap[st].color}; border:1px solid ${statusMap[st].color}44; cursor:pointer;" 
