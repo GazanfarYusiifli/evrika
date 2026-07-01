@@ -914,7 +914,7 @@ fbq('track', 'PageView');
                     <h3 style="font-weight:800; font-size:1.1rem;"><i class="fas fa-list-ul" style="color:var(--burgundy); margin-right:10px;"></i> Şagirdlərin Siyahısı</h3>
                 </div>
                 <table>
-                    <thead><tr><th>Şagird</th><th>Sinif</th><th>Status</th></tr></thead>
+                    <thead><tr><th>Şagird</th><th>Sinif</th><th>Filial</th><th>Status</th></tr></thead>
                     <tbody id="exam-students-list">
                     </tbody>
                 </table>
@@ -2043,16 +2043,26 @@ fbq('track', 'PageView');
         
         let doneCount = 0;
         
+        const MAP = { 
+          'lisey1':'Nərimanov', 'lisey2':'Gənclik', 'montessori':'Montessori', 
+          'victory':'Victory', 'zumrud':'Zümrüd'
+        };
+
         tb.innerHTML = examStudents.map(p => {
             const fullName = p['[2.Şagird] Adı'] ? (p['[2.Şagird] Adı'] + ' ' + (p['[2.Şagird] Soyadı']||'')) : (p['Ad Soyad'] || p.fullName || p.name || p.firstName || p['[1.Əlaqə] Valideyn Adı'] || p['Valideyn'] || 'Adsız Şagird');
             const className = p.Sinif || p['Sinif'] || p.class_name || p['Neçənci sinif üçün imtahan verəcək?'] || (p.note && p.note.match(/Sinif:\s*([^|]+)/) ? p.note.match(/Sinif:\s*([^|]+)/)[1].trim() : 'Qeyd edilməyib');
             const rev = p.exam_reviews || {};
             const isDone = rev.score && rev.academic && rev.psycho;
+            
+            const s = getGranularSource(p);
+            const filial = MAP[s] || String(s).replace('Qeydiyyat - ', '') || 'Bilinmir';
+
             if (isDone) doneCount++;
             
             return `<tr onclick="loadExamStudent('${p._db_id_}')" style="cursor:pointer;">
                 <td>${fullName}</td>
                 <td>${className}</td>
+                <td><span style="font-size:0.8rem; color:var(--text-muted);">${filial}</span></td>
                 <td><span style="color:var(--${isDone ? 'success' : 'warning'}); font-weight:700;">${isDone ? 'Tamamlanıb' : 'Gözləyir'}</span></td>
             </tr>`;
         }).join('');
