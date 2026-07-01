@@ -915,11 +915,8 @@ fbq('track', 'PageView');
                     <div style="padding:20px; border-bottom:1px solid var(--border); background:rgba(34,197,94,0.05);">
                         <h3 style="font-weight:800; font-size:1.1rem; margin:0;"><i class="fas fa-check-double" style="color:var(--success); margin-right:10px;"></i> İmtahanda İştirak Edənlər <span style="font-size:0.7rem; font-weight:normal; color:var(--text-muted);">(Rəy yazıla bilər)</span></h3>
                     </div>
-                    <table>
-                        <thead><tr><th>Şagird</th><th>Sinif</th><th>Filial</th><th style="text-align:center;">Status</th></tr></thead>
-                        <tbody id="exam-students-list-participated">
-                        </tbody>
-                    </table>
+                    <div id="exam-students-list-participated" style="display:flex; flex-direction:column; gap:10px; padding:20px;">
+                    </div>
                 </div>
 
                 <!-- Table 2: Kupon Alan Şagirdlər -->
@@ -927,11 +924,8 @@ fbq('track', 'PageView');
                     <div style="padding:20px; border-bottom:1px solid var(--border); background:rgba(255,255,255,0.01);">
                         <h3 style="font-weight:800; font-size:1.1rem; margin:0;"><i class="fas fa-ticket-alt" style="color:var(--burgundy); margin-right:10px;"></i> Kupon Alanlar <span style="font-size:0.7rem; font-weight:normal; color:var(--text-muted);">(İmtahana girməyiblər)</span></h3>
                     </div>
-                    <table>
-                        <thead><tr><th>Şagird</th><th>Sinif</th><th>Filial</th><th style="text-align:center;">Status</th></tr></thead>
-                        <tbody id="exam-students-list-kupon">
-                        </tbody>
-                    </table>
+                    <div id="exam-students-list-kupon" style="display:flex; flex-direction:column; gap:10px; padding:20px;">
+                    </div>
                 </div>
             </div>
 
@@ -2076,19 +2070,27 @@ fbq('track', 'PageView');
 
             if (isParticipated && isDone) doneCount++;
             
-            return `<tr ${isParticipated ? `onclick="loadExamStudent('${p._db_id_}')" style="cursor:pointer;"` : `style="opacity:0.5; pointer-events:none;" title="Yalnız imtahanda iştirak edənlərə rəy yazıla bilər"`}>
-                <td>${fullName}</td>
-                <td>${className}</td>
-                <td><span style="font-size:0.8rem; color:var(--text-muted);">${filial}</span></td>
-                <td style="text-align:center;"><span style="color:var(--${isDone ? 'success' : 'warning'}); font-size:1.2rem;" title="${isDone ? 'Tamamlanıb' : 'Gözləyir'}"><i class="fas fa-${isDone ? 'check-circle' : 'clock'}"></i></span></td>
-            </tr>`;
+            return `<div ${isParticipated ? `onclick="loadExamStudent('${p._db_id_}')" style="cursor:pointer;"` : `style="opacity:0.5; pointer-events:none;" title="Yalnız imtahanda iştirak edənlərə rəy yazıla bilər"`} class="exam-student-card" style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 15px; border-radius: 12px; transition: 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='rgba(255,255,255,0.02)'; this.style.transform='none'">
+                <div style="flex:1;">
+                   <div style="font-weight:800; font-size:1rem; color:white; margin-bottom:8px;">${fullName}</div>
+                   <div style="display:flex; gap:10px; font-size:0.8rem; flex-wrap:wrap;">
+                       <span style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); padding:4px 10px; border-radius:8px; color:var(--text-muted);"><i class="fas fa-layer-group" style="margin-right:5px; color:var(--burgundy);"></i> ${className}</span>
+                       <span style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); padding:4px 10px; border-radius:8px; color:var(--text-muted);"><i class="fas fa-map-marker-alt" style="margin-right:5px; color:var(--royal-blue);"></i> ${filial}</span>
+                   </div>
+                </div>
+                <div style="display:flex; align-items:center; justify-content:center; width:50px;">
+                    <span style="color:var(--${isDone ? 'success' : 'warning'}); font-size:1.5rem;" title="${isDone ? 'Tamamlanıb' : 'Gözləyir'}">
+                        <i class="fas fa-${isDone ? 'check-circle' : 'clock'}"></i>
+                    </span>
+                </div>
+            </div>`;
         };
 
         const participated = allExamStudents.filter(i => i.status === 'QR İstifadə Edilib' || i.status === 'İştirak Etdi');
         const kuponOnly = allExamStudents.filter(i => i.status !== 'QR İstifadə Edilib' && i.status !== 'İştirak Etdi');
 
-        tbParticipated.innerHTML = participated.length ? participated.map(p => renderRow(p, true)).join('') : '<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--text-muted);"><i class="fas fa-info-circle"></i> Hələ imtahanda iştirak edən şagird yoxdur.</td></tr>';
-        tbKupon.innerHTML = kuponOnly.length ? kuponOnly.map(p => renderRow(p, false)).join('') : '<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--text-muted);"><i class="fas fa-check-circle"></i> Bütün kupon alanlar imtahanda iştirak edib!</td></tr>';
+        tbParticipated.innerHTML = participated.length ? participated.map(p => renderRow(p, true)).join('') : '<div style="text-align:center; padding:20px; color:var(--text-muted);"><i class="fas fa-info-circle"></i> Hələ imtahanda iştirak edən şagird yoxdur.</div>';
+        tbKupon.innerHTML = kuponOnly.length ? kuponOnly.map(p => renderRow(p, false)).join('') : '<div style="text-align:center; padding:20px; color:var(--text-muted);"><i class="fas fa-check-circle"></i> Bütün kupon alanlar imtahanda iştirak edib!</div>';
         
         document.getElementById('exam-stat-total').innerText = allExamStudents.length;
         document.getElementById('exam-stat-done').innerText = doneCount;
