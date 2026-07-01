@@ -902,9 +902,10 @@ fbq('track', 'PageView');
     <!-- Exam Results & Reviews Panel -->
     <div id="view-exam-results" class="content" style="display: none;">
         <div class="stats-grid">
-            <div class="ems-stat-card" style="--accent: var(--royal-blue);"><div class="ems-stat-icon"><i class="fas fa-user-graduate"></i></div><div class="stat-lab">İmtahana giriş kuponu alanlar</div><div class="stat-val" id="exam-stat-total">0</div></div>
+            <div class="ems-stat-card" style="--accent: var(--royal-blue);"><div class="ems-stat-icon"><i class="fas fa-ticket-alt"></i></div><div class="stat-lab">İmtahana giriş kuponu alanlar</div><div class="stat-val" id="exam-stat-total">0</div></div>
+            <div class="ems-stat-card" style="--accent: var(--burgundy);"><div class="ems-stat-icon"><i class="fas fa-users"></i></div><div class="stat-lab">İmtahanda İştirak Edənlər</div><div class="stat-val" id="exam-stat-participated">0</div></div>
             <div class="ems-stat-card" style="--accent: var(--warning);"><div class="ems-stat-icon"><i class="fas fa-clock"></i></div><div class="stat-lab">Rəy Gözləyən</div><div class="stat-val" id="exam-stat-waiting">0</div></div>
-            <div class="ems-stat-card" style="--accent: var(--success);"><div class="ems-stat-icon"><i class="fas fa-check-double"></i></div><div class="stat-lab">Tamamlanmış</div><div class="stat-val" id="exam-stat-done">0</div></div>
+            <div class="ems-stat-card" style="--accent: var(--success);"><div class="ems-stat-icon"><i class="fas fa-check-double"></i></div><div class="stat-lab">Rəy Göndərilən</div><div class="stat-val" id="exam-stat-done">0</div></div>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
@@ -2092,6 +2093,7 @@ fbq('track', 'PageView');
         tbKupon.innerHTML = kuponOnly.length ? kuponOnly.map(p => renderRow(p, false)).join('') : '<div style="text-align:center; padding:20px; color:var(--text-muted);"><i class="fas fa-check-circle"></i> Bütün kupon alanlar imtahanda iştirak edib!</div>';
         
         document.getElementById('exam-stat-total').innerText = allExamStudents.length;
+        document.getElementById('exam-stat-participated').innerText = participated.length;
         document.getElementById('exam-stat-done').innerText = doneCount;
         document.getElementById('exam-stat-waiting').innerText = participated.length - doneCount;
     };
