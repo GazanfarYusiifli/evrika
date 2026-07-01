@@ -907,81 +907,80 @@ fbq('track', 'PageView');
             <div class="ems-stat-card" style="--accent: var(--success);"><div class="ems-stat-icon"><i class="fas fa-check-double"></i></div><div class="stat-lab">Tamamlanmış</div><div class="stat-val" id="exam-stat-done">0</div></div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 30px;">
-            <!-- Student Lists -->
-            <div style="height: 600px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; padding-right: 10px;">
-                <!-- Table 1: İmtahanda İştirak Edənlər -->
-                <div class="table-wrapper" style="margin: 0; box-shadow: none; border: 1px solid var(--border);">
-                    <div style="padding:20px; border-bottom:1px solid var(--border); background:rgba(34,197,94,0.05);">
-                        <h3 style="font-weight:800; font-size:1.1rem; margin:0;"><i class="fas fa-check-double" style="color:var(--success); margin-right:10px;"></i> İmtahanda İştirak Edənlər <span style="font-size:0.7rem; font-weight:normal; color:var(--text-muted);">(Rəy yazıla bilər)</span></h3>
-                    </div>
-                    <div id="exam-students-list-participated" style="display:flex; flex-direction:column; gap:10px; padding:20px;">
-                    </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+            <!-- Left: Kupon Alan Şagirdlər -->
+            <div class="table-wrapper" style="margin: 0; box-shadow: none; border: 1px solid var(--border); height: 500px; overflow-y: auto; background: rgba(0,0,0,0.2);">
+                <div style="padding:20px; border-bottom:1px solid var(--border); background:rgba(255,255,255,0.02); position: sticky; top: 0; z-index: 10; backdrop-filter: blur(10px);">
+                    <h3 style="font-weight:800; font-size:1.1rem; margin:0;"><i class="fas fa-ticket-alt" style="color:var(--burgundy); margin-right:10px;"></i> Kupon Alanlar <span style="font-size:0.7rem; font-weight:normal; color:var(--text-muted);">(İmtahana girməyiblər)</span></h3>
                 </div>
-
-                <!-- Table 2: Kupon Alan Şagirdlər -->
-                <div class="table-wrapper" style="margin: 0; box-shadow: none; border: 1px solid var(--border);">
-                    <div style="padding:20px; border-bottom:1px solid var(--border); background:rgba(255,255,255,0.01);">
-                        <h3 style="font-weight:800; font-size:1.1rem; margin:0;"><i class="fas fa-ticket-alt" style="color:var(--burgundy); margin-right:10px;"></i> Kupon Alanlar <span style="font-size:0.7rem; font-weight:normal; color:var(--text-muted);">(İmtahana girməyiblər)</span></h3>
-                    </div>
-                    <div id="exam-students-list-kupon" style="display:flex; flex-direction:column; gap:10px; padding:20px;">
-                    </div>
+                <div id="exam-students-list-kupon" style="display:flex; flex-direction:column; gap:10px; padding:20px;">
                 </div>
             </div>
 
-            <!-- Review Panel -->
-            <div class="stat-card" id="exam-review-panel" style="display: flex; flex-direction: column; opacity: 0.5; pointer-events: none; transition: 0.3s;">
-                <h3 style="margin-bottom: 25px; font-weight: 900; font-size: 1.4rem; border-bottom: 1px solid var(--border); padding-bottom: 15px;">
-                    <i class="fas fa-user-edit" style="color:var(--burgundy); margin-right: 10px;"></i> 
-                    <span id="exam-student-name">Şagird Seçin</span>
-                </h3>
+            <!-- Right: İmtahanda İştirak Edənlər -->
+            <div class="table-wrapper" style="margin: 0; box-shadow: none; border: 1px solid var(--border); height: 500px; overflow-y: auto; background: rgba(0,0,0,0.2);">
+                <div style="padding:20px; border-bottom:1px solid var(--border); background:rgba(34,197,94,0.05); position: sticky; top: 0; z-index: 10; backdrop-filter: blur(10px);">
+                    <h3 style="font-weight:800; font-size:1.1rem; margin:0;"><i class="fas fa-check-double" style="color:var(--success); margin-right:10px;"></i> İmtahanda İştirak Edənlər <span style="font-size:0.7rem; font-weight:normal; color:var(--text-muted);">(Rəy yazıla bilər)</span></h3>
+                </div>
+                <div id="exam-students-list-participated" style="display:flex; flex-direction:column; gap:10px; padding:20px;">
+                </div>
+            </div>
+        </div>
 
-                <div style="flex:1; display:flex; flex-direction:column; gap:20px; overflow-y:auto; padding-right:10px;">
-                    <input type="hidden" id="exam-current-student-id">
-                    
-                    <!-- Section 1: Score -->
-                    <div style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 16px; border: 1px solid var(--border);">
-                        <div style="display:flex; justify-content:space-between; margin-bottom: 10px;">
-                            <h4 style="color:var(--royal-blue); font-weight:800; font-size:0.9rem;"><i class="fas fa-poll"></i> Şagirdin İmtahan Balı</h4>
-                            <span id="status-score" style="font-size:0.7rem; padding:3px 8px; border-radius:10px; background:var(--warning); color:white; font-weight:700;">Gözləyir</span>
-                        </div>
-                        <input type="number" class="admin-input exam-review-input" id="review-score" placeholder="Şagirdin topladığı balı daxil edin (Məs: 58)" style="width:100%; padding:15px; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background:rgba(0,0,0,0.2); color:white; font-size:16px;" oninput="checkExamStatus()">
+        <!-- Review Panel (Bottom, Full Width) -->
+        <div class="stat-card" id="exam-review-panel" style="display: flex; flex-direction: column; opacity: 0.5; pointer-events: none; transition: 0.3s; width: 100%;">
+            <h3 style="margin-bottom: 25px; font-weight: 900; font-size: 1.4rem; border-bottom: 1px solid var(--border); padding-bottom: 15px;">
+                <i class="fas fa-user-edit" style="color:var(--burgundy); margin-right: 10px;"></i> 
+                <span id="exam-student-name">Şagird Seçin</span>
+            </h3>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:20px;">
+                <input type="hidden" id="exam-current-student-id">
+                
+                <!-- Section 1: Score -->
+                <div style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 16px; border: 1px solid var(--border); display: flex; flex-direction: column;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
+                        <h4 style="color:var(--royal-blue); font-weight:800; font-size:0.95rem; margin:0;"><i class="fas fa-poll"></i> İmtahan Balı</h4>
+                        <span id="status-score" style="font-size:0.7rem; padding:4px 10px; border-radius:12px; background:var(--warning); color:white; font-weight:700;">Gözləyir</span>
                     </div>
-
-                    <!-- Section 2: Academic -->
-                    <div style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 16px; border: 1px solid var(--border);">
-                        <div style="display:flex; justify-content:space-between; margin-bottom: 10px;">
-                            <h4 style="color:var(--royal-blue); font-weight:800; font-size:0.9rem;"><i class="fas fa-book-open"></i> Akademik Qiymətləndirmə</h4>
-                            <span id="status-academic" style="font-size:0.7rem; padding:3px 8px; border-radius:10px; background:var(--warning); color:white; font-weight:700;">Gözləyir</span>
-                        </div>
-                        <textarea class="admin-input exam-review-input" id="review-academic" placeholder="* Rus dilində şifahi nitqi zəifdir&#10;* Oxu bacarıqları formalaşıb..." style="height:100px; resize:vertical;" oninput="checkExamStatus()"></textarea>
-                    </div>
-
-                    <!-- Section 3: Psycho -->
-                    <div style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 16px; border: 1px solid var(--border);">
-                        <div style="display:flex; justify-content:space-between; margin-bottom: 10px;">
-                            <h4 style="color:var(--royal-blue); font-weight:800; font-size:0.9rem;"><i class="fas fa-brain"></i> Psixoloji Müayinə Protokolu</h4>
-                            <span id="status-psycho" style="font-size:0.7rem; padding:3px 8px; border-radius:10px; background:var(--warning); color:white; font-weight:700;">Gözləyir</span>
-                        </div>
-                        <textarea class="admin-input exam-review-input" id="review-psycho" placeholder="Aparılan psixoloji müayinə zamanı idrak proseslərinin inkişaf göstəriciləri..." style="height:100px; resize:vertical;" oninput="checkExamStatus()"></textarea>
-                    </div>
-
+                    <input type="number" class="admin-input exam-review-input" id="review-score" placeholder="Bal daxil edin (Məs: 58)" style="width:100%; padding:15px; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background:rgba(0,0,0,0.2); color:white; font-size:16px; margin-top:auto;" oninput="checkExamStatus()">
                 </div>
 
-                <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
-                    <div style="font-size: 0.8rem; color: var(--text-muted);">
-                        <button class="btn-view" style="background:var(--burgundy); color:white; border:none; padding:10px 20px; font-weight:bold;" onclick="saveExamReviews()">Yadda Saxla</button>
-                        <span style="margin-left:15px;"><i class="fas fa-info-circle"></i> Bütün rəylər yazıldıqda göndərmək aktivləşəcək.</span>
+                <!-- Section 2: Academic -->
+                <div style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 16px; border: 1px solid var(--border); display: flex; flex-direction: column;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
+                        <h4 style="color:var(--royal-blue); font-weight:800; font-size:0.95rem; margin:0;"><i class="fas fa-book-open"></i> Akademik Qiymətləndirmə</h4>
+                        <span id="status-academic" style="font-size:0.7rem; padding:4px 10px; border-radius:12px; background:var(--warning); color:white; font-weight:700;">Gözləyir</span>
                     </div>
-                    <div style="display: flex; gap: 10px;">
-                        <button id="exam-send-wa-btn" class="btn-view exam-send-btn" disabled style="background: var(--text-muted); color: rgba(255,255,255,0.5); border: none; padding: 15px 20px; font-size: 0.9rem; cursor: not-allowed;" onclick="sendExamResult('wa')">
-                            <i class="fab fa-whatsapp"></i> WhatsApp ilə Göndər
-                        </button>
-                        <button id="exam-send-mail-btn" class="btn-view exam-send-btn" disabled style="background: var(--text-muted); color: rgba(255,255,255,0.5); border: none; padding: 15px 20px; font-size: 0.9rem; cursor: not-allowed;" onclick="sendExamResult('mail')">
-                            <i class="fas fa-envelope"></i> E-mail ilə Göndər
-                        </button>
+                    <textarea class="admin-input exam-review-input" id="review-academic" placeholder="* Rus dilində şifahi nitqi zəifdir&#10;* Oxu bacarıqları formalaşıb..." style="flex:1; min-height: 120px; resize:vertical; padding:15px;" oninput="checkExamStatus()"></textarea>
+                </div>
+
+                <!-- Section 3: Psycho -->
+                <div style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 16px; border: 1px solid var(--border); display: flex; flex-direction: column;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
+                        <h4 style="color:var(--royal-blue); font-weight:800; font-size:0.95rem; margin:0;"><i class="fas fa-brain"></i> Psixoloji Müayinə</h4>
+                        <span id="status-psycho" style="font-size:0.7rem; padding:4px 10px; border-radius:12px; background:var(--warning); color:white; font-weight:700;">Gözləyir</span>
                     </div>
+                    <textarea class="admin-input exam-review-input" id="review-psycho" placeholder="İdrak proseslərinin inkişaf göstəriciləri..." style="flex:1; min-height: 120px; resize:vertical; padding:15px;" oninput="checkExamStatus()"></textarea>
+                </div>
             </div>
+
+            <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                <div style="font-size: 0.85rem; color: var(--text-muted); display:flex; align-items:center; gap: 15px;">
+                    <button class="btn-view" style="background:var(--burgundy); color:white; border:none; padding:12px 25px; font-weight:800; font-size: 1rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(139,26,43,0.3);" onclick="saveExamReviews()">
+                        <i class="fas fa-save" style="margin-right: 5px;"></i> Yadda Saxla
+                    </button>
+                    <span><i class="fas fa-info-circle"></i> Bütün rəylər yazıldıqda göndərmək aktivləşəcək.</span>
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <button id="exam-send-wa-btn" class="btn-view exam-send-btn" disabled style="background: var(--text-muted); color: rgba(255,255,255,0.5); border: none; padding: 12px 20px; font-size: 0.95rem; cursor: not-allowed; border-radius: 10px; font-weight: bold;" onclick="sendExamResult('wa')">
+                        <i class="fab fa-whatsapp" style="margin-right: 5px;"></i> WhatsApp
+                    </button>
+                    <button id="exam-send-mail-btn" class="btn-view exam-send-btn" disabled style="background: var(--text-muted); color: rgba(255,255,255,0.5); border: none; padding: 12px 20px; font-size: 0.95rem; cursor: not-allowed; border-radius: 10px; font-weight: bold;" onclick="sendExamResult('mail')">
+                        <i class="fas fa-envelope" style="margin-right: 5px;"></i> E-mail
+                    </button>
+                </div>
+        </div>
         </div>
     </div>
     </div>
