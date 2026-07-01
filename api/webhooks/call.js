@@ -51,8 +51,16 @@ export default async function handler(req, res) {
     else if (payload.event && payload.call_id_with_node) {
         provider = 'zadarma';
         call_id = payload.call_id_with_node;
-        phone = payload.caller_id;
-        agent = payload.internal || payload.called_did || '';
+        
+        // Handle incoming vs outgoing correctly
+        if (payload.event === 'NOTIFY_OUT_START' || payload.event === 'NOTIFY_OUT_END') {
+            phone = payload.destination || payload.called_did || '';
+            agent = payload.internal || payload.caller_id || '';
+        } else {
+            phone = payload.caller_id || '';
+            agent = payload.internal || payload.called_did || '';
+        }
+        
         duration = parseInt(payload.seconds || payload.duration || 0);
         
         if (payload.event === 'NOTIFY_START') {
