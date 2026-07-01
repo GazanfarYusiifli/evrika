@@ -1,3 +1,5 @@
+import crypto from 'crypto';
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method Not Allowed' });
@@ -62,9 +64,34 @@ export default async function handler(req, res) {
             if (disp === 'answered') status = 'completed';
             else status = 'missed'; // no answer, busy, cancel
             
-            // Zadarma recording link might come later or be attached
+            // Zadarma API Integration: Fetch the actual direct MP3 link
             if (payload.is_recorded && payload.pbx_call_id) {
-                recording_url = `https://api.zadarma.com/v1/pbx/record/request/?call_id=${payload.pbx_call_id}`; 
+                const Z_KEY = process.env.ZADARMA_KEY || '46c1136999a0003106d4';
+                const Z_SECRET = process.env.ZADARMA_SECRET || '698e98b07e9c2c4e5cf0';
+                try {
+                    const apiPath = '/v1/pbx/record/request/';
+                    const paramsStr = `call_id=${payload.pbx_call_id}`;
+                    const md5Str = crypto.createHash('md5').update(paramsStr).digest('hex');
+                    const dataToSign = apiPath + paramsStr + md5Str;
+                    const signature = crypto.createHmac('sha1', Z_SECRET).update(dataToSign).digest('base64');
+                    
+                    const zRes = await fetch(`https://api.zadarma.com${apiPath}?${paramsStr}`, {
+                        headers: { 'Authorization': `${Z_KEY}:${signature}` }
+                    });
+                    
+                    if (zRes.ok) {
+                        const zData = await zRes.json();
+                        if (zData.status === 'success' && zData.link) {
+                            recording_url = zData.link;
+                        } else if (zData.status === 'success' && zData.links && zData.links.length > 0) {
+                            recording_url = zData.links[0];
+                        }
+                    } else {
+                        console.error("Zadarma recording fetch failed", await zRes.text());
+                    }
+                } catch(err) {
+                    console.error("Zadarma signature/fetch error", err);
+                }
             }
         } else {
             status = payload.event;
