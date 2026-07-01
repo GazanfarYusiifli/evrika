@@ -870,7 +870,17 @@ fbq('track', 'PageView');
     <!-- Kuponlar View -->
     <div id="view-kupon" class="content" style="display: none;">
       <div class="stat-card">
-         <h3 style="font-weight: 800; font-size: 1.2rem; margin-bottom: 25px;"><i class="fas fa-ticket-alt" style="color:var(--burgundy); margin-right: 10px;"></i> Kupon Alanlar (Ödənişlər)</h3>
+         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 25px;">
+           <h3 style="font-weight: 800; font-size: 1.2rem; margin:0;"><i class="fas fa-ticket-alt" style="color:var(--burgundy); margin-right: 10px;"></i> Kupon Alanlar (Ödənişlər)</h3>
+           <select id="filter-kupon-branch" onchange="renderKupon()" style="padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--glass-border); width: 250px;">
+             <option value="all">Bütün Filiallar</option>
+             <option value="lisey1">Nərimanov filialı</option>
+             <option value="lisey2">Gənclik filialı</option>
+             <option value="montessori">Montessori</option>
+             <option value="victory">Victory</option>
+             <option value="zumrud">Zümrüd</option>
+           </select>
+         </div>
          <div class="table-wrapper">
            <table style="width: 100%; border-collapse: collapse;">
              <thead style="background: rgba(255,255,255,0.02);">
@@ -1821,8 +1831,21 @@ fbq('track', 'PageView');
     window.renderKupon = () => {
         const tb = document.getElementById('kupon-tbody');
         if(!tb) return;
-        const coupons = rawData.filter(i => (i.epoint_amount || i.amount) && i.payment_status === 'Ödənilib')
-                                .sort((a,b) => new Date(b.epoint_date || b.created_at || b.submissionDate || 0) - new Date(a.epoint_date || a.created_at || a.submissionDate || 0));
+        
+        const branchFilter = document.getElementById('filter-kupon-branch') ? document.getElementById('filter-kupon-branch').value : 'all';
+        
+        let coupons = rawData.filter(i => (i.epoint_amount || i.amount) && i.payment_status === 'Ödənilib');
+        
+        if (branchFilter !== 'all') {
+            coupons = coupons.filter(i => getGranularSource(i) === branchFilter);
+        }
+        
+        coupons = coupons.sort((a,b) => new Date(b.epoint_date || b.created_at || b.submissionDate || 0) - new Date(a.epoint_date || a.created_at || a.submissionDate || 0));
+
+        const MAP = { 
+          'lisey1':'Nərimanov filialı', 'lisey2':'Gənclik filialı', 'montessori':'Montessori', 
+          'victory':'Victory', 'zumrud':'Zümrüd'
+        };
 
         tb.innerHTML = coupons.map((p, idx) => {
             const fullName = p.fullName || p['Ad Soyad'] || p.name || (p['[2.Şagird] Adı'] ? p['[2.Şagird] Adı'] + ' ' + (p['[2.Şagird] Soyadı']||'') : 'Adsız');
@@ -1830,10 +1853,13 @@ fbq('track', 'PageView');
             const phone = p.phone || p.tel || p['[1.Əlaqə] Əlaqə Nömrəsi'] || '-';
             const date = p.epoint_date ? new Date(p.epoint_date).toLocaleString('az') : new Date(p.created_at || p.submissionDate || Date.now()).toLocaleString('az');
             
+            const s = getGranularSource(p);
+            const sourceLabel = MAP[s] || s || 'Email';
+            
             return `<tr>
               <td>
                  <div style="font-weight:800; color:white; font-size:0.9rem;">${fullName}</div>
-                 <div style="font-size:0.7rem; color:var(--text-muted); margin-top:3px;">${p.description || 'Sınaq / Təhsil Ödənişi'}</div>
+                 <div style="font-size:0.7rem; color:var(--text-muted); margin-top:3px;">${p.description || 'Sınaq / Təhsil Ödənişi'} <span style="color:var(--warning); margin-left:5px;">• ${sourceLabel}</span></div>
               </td>
               <td>
                  <div style="color:var(--success); font-weight:800; font-size:1rem;">${amount} ₼</div>
