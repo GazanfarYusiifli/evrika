@@ -642,39 +642,60 @@ fbq('track', 'PageView');
          </div>
       </div>
 
-      <div class="stat-card">
-         <h3 style="font-weight: 800; font-size: 1.2rem; margin-bottom: 25px; display:flex; justify-content:space-between; align-items:center;">
-             <span><i class="fas fa-headset" style="color:var(--accent); margin-right: 10px;"></i> Zəng Mərkəzi (Twilio / Zadarma)</span>
-             <button class="btn-view" onclick="fetchCalls()" style="background:var(--accent); border:none; padding:8px 15px; font-size:0.8rem;"><i class="fas fa-sync-alt" style="margin-right:5px;"></i> Yenilə</button>
-         </h3>
+      <div class="stat-card" style="background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.0)); border: 1px solid rgba(255,255,255,0.05); padding: 30px; border-radius: 20px;">
+         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 30px; flex-wrap:wrap; gap:15px;">
+             <div>
+                <h3 style="font-weight: 900; font-size: 1.5rem; letter-spacing:-0.5px; margin:0; display:flex; align-items:center; gap:12px;">
+                    <div style="width:45px; height:45px; border-radius:12px; background:linear-gradient(135deg, var(--accent), #3b82f6); display:flex; align-items:center; justify-content:center; color:white; font-size:1.2rem; box-shadow:0 10px 20px rgba(59,130,246,0.3);">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    Zəng Mərkəzi
+                </h3>
+                <p style="margin:8px 0 0 57px; font-size:0.85rem; color:var(--text-muted); font-weight:600;">Twilio və Zadarma İnteqrasiyası ilə Real Vaxt Zəng İdarəetməsi</p>
+             </div>
+             <button class="btn-view" onclick="fetchCalls()" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='none'" style="background:linear-gradient(135deg, var(--accent), #3b82f6); border:none; padding:12px 24px; font-size:0.85rem; font-weight:800; border-radius:10px; box-shadow:0 8px 20px rgba(59,130,246,0.4); transition:all 0.3s ease; display:flex; align-items:center; gap:8px;">
+                 <i class="fas fa-sync-alt"></i> Məlumatları Yenilə
+             </button>
+         </div>
          
-         <div class="stat-grid" style="margin-bottom:25px;">
-            <div class="stat-item">
-               <div class="stat-icon" style="background: rgba(59,130,246,0.1); color: var(--accent);"><i class="fas fa-phone-alt"></i></div>
-               <div class="stat-info">
-                  <h4>Bugünkü Zənglər</h4>
-                  <div class="stat-value" id="calls-today">0</div>
+         <div class="stat-grid" style="margin-bottom:35px; gap:20px;">
+            <!-- Today's Calls -->
+            <div class="stat-item" style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:16px; padding:20px; position:relative; overflow:hidden; transition:transform 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.3)'; this.style.borderColor='rgba(59,130,246,0.3)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'; this.style.borderColor='rgba(255,255,255,0.05)';">
+               <div style="position:absolute; top:-30px; right:-30px; width:100px; height:100px; background:#3b82f6; filter:blur(50px); opacity:0.15; border-radius:50%;"></div>
+               <div class="stat-icon" style="background: linear-gradient(135deg, #3b82f6, #60a5fa); color: white; width:45px; height:45px; border-radius:12px; font-size:1.1rem; box-shadow:0 5px 15px rgba(59,130,246,0.3);"><i class="fas fa-phone-alt"></i></div>
+               <div class="stat-info" style="margin-top:20px;">
+                  <h4 style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); font-weight:700;">Bugünkü Zənglər</h4>
+                  <div class="stat-value" id="calls-today" style="font-size:2.2rem; font-weight:900; letter-spacing:-1px; margin-top:5px;">0</div>
                </div>
             </div>
-            <div class="stat-item">
-               <div class="stat-icon" style="background: rgba(16,185,129,0.1); color: var(--success);"><i class="fas fa-check"></i></div>
-               <div class="stat-info">
-                  <h4>Cavablandırılan</h4>
-                  <div class="stat-value" id="calls-answered">0</div>
+            
+            <!-- Answered -->
+            <div class="stat-item" style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:16px; padding:20px; position:relative; overflow:hidden; transition:transform 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.3)'; this.style.borderColor='rgba(16,185,129,0.3)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'; this.style.borderColor='rgba(255,255,255,0.05)';">
+               <div style="position:absolute; top:-30px; right:-30px; width:100px; height:100px; background:#10b981; filter:blur(50px); opacity:0.15; border-radius:50%;"></div>
+               <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #34d399); color: white; width:45px; height:45px; border-radius:12px; font-size:1.1rem; box-shadow:0 5px 15px rgba(16,185,129,0.3);"><i class="fas fa-check-double"></i></div>
+               <div class="stat-info" style="margin-top:20px;">
+                  <h4 style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); font-weight:700;">Cavablandırılan</h4>
+                  <div class="stat-value" id="calls-answered" style="font-size:2.2rem; font-weight:900; letter-spacing:-1px; margin-top:5px; color:#10b981;">0</div>
                </div>
             </div>
-            <div class="stat-item">
-               <div class="stat-icon" style="background: rgba(239,68,68,0.1); color: var(--error);"><i class="fas fa-phone-slash"></i></div>
-               <div class="stat-info">
-                  <h4>Buraxılmış</h4>
-                  <div class="stat-value" id="calls-missed">0</div>
+            
+            <!-- Missed -->
+            <div class="stat-item" style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:16px; padding:20px; position:relative; overflow:hidden; transition:transform 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.3)'; this.style.borderColor='rgba(239,68,68,0.3)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'; this.style.borderColor='rgba(255,255,255,0.05)';">
+               <div style="position:absolute; top:-30px; right:-30px; width:100px; height:100px; background:#ef4444; filter:blur(50px); opacity:0.15; border-radius:50%;"></div>
+               <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444, #f87171); color: white; width:45px; height:45px; border-radius:12px; font-size:1.1rem; box-shadow:0 5px 15px rgba(239,68,68,0.3);"><i class="fas fa-phone-slash"></i></div>
+               <div class="stat-info" style="margin-top:20px;">
+                  <h4 style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); font-weight:700;">Buraxılmış</h4>
+                  <div class="stat-value" id="calls-missed" style="font-size:2.2rem; font-weight:900; letter-spacing:-1px; margin-top:5px; color:#ef4444;">0</div>
                </div>
             </div>
-            <div class="stat-item">
-               <div class="stat-icon" style="background: rgba(245,158,11,0.1); color: var(--warning);"><i class="fas fa-clock"></i></div>
-               <div class="stat-info">
-                  <h4>Ortalama Müddət</h4>
-                  <div class="stat-value" id="calls-avg-duration">0 san</div>
+            
+            <!-- Avg Duration -->
+            <div class="stat-item" style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:16px; padding:20px; position:relative; overflow:hidden; transition:transform 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.3)'; this.style.borderColor='rgba(245,158,11,0.3)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'; this.style.borderColor='rgba(255,255,255,0.05)';">
+               <div style="position:absolute; top:-30px; right:-30px; width:100px; height:100px; background:#f59e0b; filter:blur(50px); opacity:0.15; border-radius:50%;"></div>
+               <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #fbbf24); color: white; width:45px; height:45px; border-radius:12px; font-size:1.1rem; box-shadow:0 5px 15px rgba(245,158,11,0.3);"><i class="fas fa-stopwatch"></i></div>
+               <div class="stat-info" style="margin-top:20px;">
+                  <h4 style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); font-weight:700;">Ortalama Müddət</h4>
+                  <div class="stat-value" id="calls-avg-duration" style="font-size:2.2rem; font-weight:900; letter-spacing:-1px; margin-top:5px; color:#f59e0b;">0 san</div>
                </div>
             </div>
          </div>
