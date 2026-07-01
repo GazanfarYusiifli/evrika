@@ -1562,7 +1562,7 @@ fbq('track', 'PageView');
       try {
         const res = await fetch(`${API_URL}/registrations?select=*&order=id.desc`, { headers: HEADERS });
         if(res.ok) { 
-            let fetchedData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id })); 
+            let fetchedData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id, created_at: r.created_at })); 
             window.allFetchedData = fetchedData;
             rawData = fetchedData.filter(r => {
                 // Əgər ödənişli müraciətdirsə və hələ ödənilməyibsə, CRM-ə düşməsin
