@@ -2455,15 +2455,9 @@ fbq('track', 'PageView');
       let item = JSON.parse(JSON.stringify(originalItem));
       const content = document.getElementById('modal-content');
       
-      // Split name into Ad and Soyad
+      // Do not split name, keep as AD SOYAD
       if (item.name) {
-          let parts = item.name.split(' ');
-          if (parts.length > 1) {
-              item['Soyad'] = parts.pop();
-              item['Ad'] = parts.join(' ');
-          } else {
-              item['Ad'] = item.name;
-          }
+          item['Ad Soyad'] = item.name;
           delete item.name;
       }
       
@@ -2485,8 +2479,7 @@ fbq('track', 'PageView');
         'ƏLAQƏ VƏ TƏMAS': [],
         'TƏHSİL VƏ İSTİQAMƏT': [],
         'ÖDƏNİŞ DETALLARI': [],
-        'DİGƏR / SİSTEM': [],
-        'FAYLLAR': []
+                'FAYLLAR': []
       };
 
       for(let key in item) {
@@ -2510,12 +2503,13 @@ fbq('track', 'PageView');
         
         // Translate some common English keys
         if (upperKey === 'PHONE') cleanKey = 'Telefon';
+        if (upperKey === 'AD SOYAD') cleanKey = 'Ad Soyad';
         if (upperKey === 'EMAIL' || upperKey === 'E-MAIL') cleanKey = 'E-mail';
         if (upperKey === 'SOURCE') cleanKey = 'Mənbə';
         if (upperKey === 'STATUS') cleanKey = 'Status';
         if (upperKey === 'DATE') cleanKey = 'Tarix';
         if (upperKey === 'NOTE') cleanKey = 'Qeyd';
-        if (upperKey === 'EPOINT_AMOUNT') cleanKey = 'Ödəniş Məbləği';
+        if (upperKey === 'EPOINT_AMOUNT' || upperKey === 'AMOUNT') cleanKey = 'Ödəniş Məbləği';
         if (upperKey === 'EPOINT_DATE') cleanKey = 'Ödəniş Tarixi';
         if (upperKey === 'EPOINT_CARD_NUMBER') cleanKey = 'Ödəyici Kartı (Maska)';
         if (upperKey === 'EPOINT_CARD_TYPE') cleanKey = 'Kartın Növü';
@@ -2556,7 +2550,7 @@ fbq('track', 'PageView');
         } else if (upperKey.includes('FİLİAL') || upperKey.includes('BÖLMƏ') || upperKey.includes('SİNİF') || upperKey.includes('SEKTOR') || upperKey.includes('TƏHSİL') || upperKey.includes('MÜƏSSİSƏ') || upperKey.includes('MƏKTƏB') || upperKey.includes('BAĞÇA') || upperKey.includes('HAZIRDA OXUDUĞU') || upperKey.includes('MƏRKƏZ')) {
           groups['TƏHSİL VƏ İSTİQAMƏT'].push(dataPair);
         } else {
-          groups['DİGƏR / SİSTEM'].push(dataPair);
+          groups['ÖDƏNİŞ DETALLARI'].push(dataPair);
         }
       }
 
