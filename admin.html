@@ -2492,7 +2492,7 @@ fbq('track', 'PageView');
       for(let key in item) {
         if(key.startsWith('_')) continue;
         const val = item[key];
-        const upperKey = key.toUpperCase();
+        const upperKey = key.toLocaleUpperCase('az-AZ');
         
         let cleanKey = key.replace(/\[.*?\]\s*/g, '').replace(/_/g, ' ');
         
