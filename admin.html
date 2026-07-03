@@ -2486,6 +2486,7 @@ fbq('track', 'PageView');
         if(key.startsWith('_')) continue;
         const val = item[key];
         const upperKey = key.toLocaleUpperCase('az-AZ');
+        if(upperKey === 'PAYMENT_STATUS' || upperKey === 'DAXILI ÖDƏNIŞ STATUSU') continue;
         
         let cleanKey = key.replace(/\[.*?\]\s*/g, '').replace(/_/g, ' ');
         
@@ -2532,18 +2533,9 @@ fbq('track', 'PageView');
           groups['FAYLLAR'].push({ rawKey: key, label: 'Bax / Yüklə (' + (item.cv_file_name || 'Fayl') + ')', value: val, isBase64: true, filename: item.cv_file_name || 'cv_file' });
         } else if (typeof val === 'string' && upperKey !== 'CV_FILE_NAME' && (val.includes('supabase.co/storage') || val.match(/\.(jpg|jpeg|png|gif|pdf)/i))) {
           groups['FAYLLAR'].push(dataPair);
-        } else if (upperKey.includes('EPOINT') || upperKey === 'AMOUNT' || upperKey.includes('PAYMENT') || ['RRN', 'APPROVAL_CODE', 'CARD_NUMBER', 'CARDNAME', 'RESULT_CODE', '3DSECURE', 'RESULT_PS', 'RESULT'].includes(upperKey)) {
-          // Eğer isFinance false ise, bəzi spesifik bank detallarını CRM-də gizəlidirik
-          if (isExam) {
-             // Imtahan panelinde ödəniş detallarını ümumiyyətlə gizəlidirik
-          } else if (!isFinance && (upperKey.includes('EPOINT') || ['RRN', 'APPROVAL_CODE', 'CARD_NUMBER', 'CARDNAME', 'RESULT_CODE', '3DSECURE', 'RESULT_PS', 'RESULT'].includes(upperKey))) {
-             if (upperKey === 'EPOINT_AMOUNT' || upperKey === 'PAYMENT_STATUS' || upperKey === 'EPOINT_CARD_NUMBER' || upperKey === 'EPOINT_CARD_TYPE') {
-                groups['ÖDƏNİŞ DETALLARI'].push(dataPair);
-             }
-          } else {
-             groups['ÖDƏNİŞ DETALLARI'].push(dataPair);
-          }
-        } else if (upperKey.includes('PHONE') || upperKey.includes('TEL') || upperKey.includes('MAIL') || upperKey === 'ƏLAQƏ') {
+        } else if (upperKey.includes('EPOINT') || upperKey.includes('EPOİNT') || upperKey === 'AMOUNT' || upperKey.includes('PAYMENT') || ['RRN', 'APPROVAL_CODE', 'CARD_NUMBER', 'CARDNAME', 'RESULT_CODE', '3DSECURE', 'RESULT_PS', 'RESULT'].includes(upperKey) || upperKey === 'DATE' || upperKey === 'TARIX' || upperKey === 'CREATED_AT' || upperKey === 'MƏNBƏ' || upperKey === 'STATUS' || upperKey === 'ORDER_ID') {
+          groups['ÖDƏNİŞ DETALLARI'].push(dataPair);
+        } else if (upperKey.includes('PHONE') || upperKey.includes('TEL') || upperKey.includes('MAIL') || upperKey.includes('MAİL') || upperKey === 'ƏLAQƏ') {
           groups['ƏLAQƏ VƏ TƏMAS'].push(dataPair);
         } else if (upperKey.includes('AD') || upperKey.includes('SOYAD') || upperKey.includes('NAME') || upperKey.includes('CANDIDATE') || upperKey.includes('STUDENT')) {
           groups['ŞƏXSİ MƏLUMATLAR'].push(dataPair);
