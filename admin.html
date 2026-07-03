@@ -2493,7 +2493,20 @@ fbq('track', 'PageView');
         if(key.startsWith('_')) continue;
         const val = item[key];
         const upperKey = key.toUpperCase();
+        
         let cleanKey = key.replace(/\[.*?\]\s*/g, '').replace(/_/g, ' ');
+        
+        let displayVal = val;
+        if (upperKey === 'ƏVVƏLKİ MÜƏSSİSƏ' || upperKey.includes('ƏVVƏL OXUDUĞU') || upperKey.includes('GƏLDİYİNİZ TƏHSİL')) cleanKey = 'Hazırda Təhsil Aldığı Müəssisə';
+        if ((upperKey === 'DATE' || upperKey === 'TARIX' || upperKey === 'CREATED_AT') && typeof val === 'string') {
+            try {
+                let d = new Date(val);
+                if (!isNaN(d.getTime())) {
+                    displayVal = d.toLocaleString('az-AZ', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit', second:'2-digit' }).replace(',', '');
+                }
+            } catch(e){}
+        }
+
         
         // Translate some common English keys
         if (upperKey === 'PHONE') cleanKey = 'Telefon';
@@ -2519,7 +2532,7 @@ fbq('track', 'PageView');
         if (upperKey === 'RESULT' || upperKey === 'EPOINT_BANK_RESPONSE') cleanKey = 'Bankın Cavabı';
         if (upperKey === 'PAYMENT_STATUS') cleanKey = 'Daxili Ödəniş Statusu';
         
-        const dataPair = { rawKey: key, label: cleanKey.toUpperCase(), value: val };
+        const dataPair = { rawKey: key, label: cleanKey.toUpperCase(), value: displayVal };
 
         if (upperKey === 'CV_FILE_BASE64') {
           groups['FAYLLAR'].push({ rawKey: key, label: 'Bax / Yüklə (' + (item.cv_file_name || 'Fayl') + ')', value: val, isBase64: true, filename: item.cv_file_name || 'cv_file' });
@@ -2540,7 +2553,7 @@ fbq('track', 'PageView');
           groups['ƏLAQƏ VƏ TƏMAS'].push(dataPair);
         } else if (upperKey.includes('AD') || upperKey.includes('SOYAD') || upperKey.includes('NAME') || upperKey.includes('CANDIDATE') || upperKey.includes('STUDENT')) {
           groups['ŞƏXSİ MƏLUMATLAR'].push(dataPair);
-        } else if (upperKey.includes('FİLİAL') || upperKey.includes('BÖLMƏ') || upperKey.includes('SİNİF') || upperKey.includes('SEKTOR') || upperKey.includes('TƏHSİL')) {
+        } else if (upperKey.includes('FİLİAL') || upperKey.includes('BÖLMƏ') || upperKey.includes('SİNİF') || upperKey.includes('SEKTOR') || upperKey.includes('TƏHSİL') || upperKey.includes('MÜƏSSİSƏ') || upperKey.includes('MƏKTƏB') || upperKey.includes('BAĞÇA') || upperKey.includes('HAZIRDA OXUDUĞU') || upperKey.includes('MƏRKƏZ')) {
           groups['TƏHSİL VƏ İSTİQAMƏT'].push(dataPair);
         } else {
           groups['DİGƏR / SİSTEM'].push(dataPair);
