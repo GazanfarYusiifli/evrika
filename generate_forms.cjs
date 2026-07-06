@@ -27,7 +27,7 @@ const formCss = `
   
   .form-container { 
     width: 100%; max-width: 650px; 
-    background: rgba(255, 255, 255, 0.85); 
+    background: #fdf0f2; 
     border: 1px solid rgba(139, 26, 43, 0.1); 
     padding: 50px; border-radius: 32px; 
     backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); 
@@ -253,7 +253,7 @@ function getHtml(branchTitle, sectors, sourceName, hasPayment) {
               <input type="text" id="mf_lastName" placeholder="Məs: Əliyev" required>
             </div>
             <div class="dyn-input-group full-width">
-              <label>HAZIRDA TƏHSİL ALDIĞI TƏHSİL MÜƏSSİSƏSİ ( BAĞÇA VƏ MƏKTƏB)</label>
+              <label>Hazırda təhsil aldığı təhsil müəssisəsi ( bağça və məktəb)</label>
               <input type="text" id="mf_previousSchool" placeholder="Məs: 20 nömrəli məktəb" required>
             </div>
             <div class="dyn-input-group">
@@ -265,7 +265,7 @@ function getHtml(branchTitle, sectors, sourceName, hasPayment) {
               <input type="text" id="mf_currentSector" placeholder="Məs: Azərbaycan bölməsi" required>
             </div>
             <div class="dyn-input-group">
-              <label>MÜRACİƏT ETDİYİ SİNİF</label>
+              <label>Müraciət etdiyi sinif</label>
               <div style="position: relative;">
                 <select id="mf_class" required>
                   ${classOptions}
@@ -274,7 +274,7 @@ function getHtml(branchTitle, sectors, sourceName, hasPayment) {
               </div>
             </div>
             <div class="dyn-input-group">
-              <label>MÜRACİƏT ETDİYİ BÖLMƏ</label>
+              <label>Müraciət etdiyi bölmə</label>
               <div style="position: relative;">
                 <select id="mf_sector" required>
                   <option value="" disabled selected>Bölmə seçin</option>
