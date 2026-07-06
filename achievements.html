@@ -531,7 +531,8 @@
             });
             
             if (res.ok) {
-              const data = await res.json();
+              let data = await res.json();
+              data.sort((a,b) => (parseInt(a.payload.seq)||0) - (parseInt(b.payload.seq)||0));
               data.forEach(item => {
                 const u = item.payload;
                 if (!u || !u.img) return;
