@@ -1,5 +1,4 @@
-        document.getElementById('ug-id').value = u._db_id_;
-        document.getElementById('ug-seq').value = u.seq || 0;<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="az">
 <head>
     <meta charset="UTF-8" />
@@ -1186,7 +1185,8 @@ fbq('track', 'PageView');
             <h3 style="margin-bottom: 25px; font-weight: 900;" id="ug-form-title">Yeni Uğur Əlavə Et</h3>
             <form onsubmit="handleUgurSubmit(event)" id="ug-form" style="display: flex; flex-direction: column; gap: 15px;">
               <input type="hidden" id="ug-id">
-              <input type="number" id="ug-seq" placeholder="Ardıcıllıq (Məs: 1)" required class="admin-input">
+              <input type="text" id="ug-name" placeholder="Ad Soyad" required class="admin-input">
+              <input type="text" id="ug-uni" placeholder="Nailiyyət (Məs: Respublika Birincisi)" required class="admin-input">
               
               <div style="font-size:0.65rem; color:var(--text-muted); margin-bottom:5px;"><i class="fas fa-info-circle"></i> Daha gözəl görünüş üçün Portrait (9:16) şəkillərə üstünlük verin</div>
               <div style="display:flex; gap:10px; align-items:center;">
@@ -1201,7 +1201,7 @@ fbq('track', 'PageView');
             </form>
           </div>
           <div class="table-wrapper">
-            <table><thead><tr><th>Sıra</th><th>Şəkil</th><th>Əməliyyat</th></tr></thead><tbody id="ug-tbody"></tbody></table>
+            <table><thead><tr><th>Şəkil</th><th>Ad Soyad</th><th>Nailiyyət</th><th>Əməliyyat</th></tr></thead><tbody id="ug-tbody"></tbody></table>
           </div>
         </div>
     </div>
@@ -2628,10 +2628,7 @@ fbq('track', 'PageView');
     window.loadUgurlar = async () => {
       const res = await fetch(`${API_URL}/ugurlar?select=*&order=id.desc`, { headers: HEADERS });
       if(res.ok) { ugurlarData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id })); }
-      const tb = document.getElementById('ug-tbody'); if(tb) {
-          ugurlarData.sort((a,b) => (parseInt(a.seq)||0) - (parseInt(b.seq)||0));
-          tb.innerHTML = ugurlarData.map((u, i) => `<tr><td>${u.seq || 0}</td><td><img src="${u.img}" style="width:100px;height:auto;object-fit:cover;border-radius:8px;"></td><td><div style="display:flex; gap:8px;"><button class="btn-view" style="padding:8px 12px; background:rgba(255,255,255,0.05);" onclick="editUgur(${i})"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:8px 12px;" onclick="deleteUgur('${u._db_id_}')"><i class="fas fa-trash"></i></button></div></td></tr>`).join('');
-      }
+      const tb = document.getElementById('ug-tbody'); if(tb) tb.innerHTML = ugurlarData.map((u, i) => `<tr><td><img src="${u.img}" style="width:40px;height:40px;object-fit:cover;border-radius:8px;"></td><td>${u.name}</td><td>${u.uni}</td><td><div style="display:flex; gap:8px;"><button class="btn-view" style="padding:8px 12px; background:rgba(255,255,255,0.05);" onclick="editUgur(${i})"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:8px 12px;" onclick="deleteUgur('${u._db_id_}')"><i class="fas fa-trash"></i></button></div></td></tr>`).join('');
       if(document.getElementById('dash-ugur')) document.getElementById('dash-ugur').innerText = ugurlarData.length;
     }
 
@@ -2650,7 +2647,7 @@ fbq('track', 'PageView');
     window.resetUgurForm = () => {
         document.getElementById('ug-form').reset();
         document.getElementById('ug-id').value = "";
-        document.getElementById('ug-seq').value = "";
+        document.getElementById('ug-uni').value = "";
         document.getElementById('ug-img-preview').style.display='none';
         document.getElementById('ug-form-title').innerText = "Yeni Uğur Əlavə Et";
         document.getElementById('ug-submit-btn').innerText = "Yadda Saxla";
@@ -2661,7 +2658,9 @@ fbq('track', 'PageView');
         const id = document.getElementById('ug-id').value;
         const btn = document.getElementById('ug-submit-btn');
         const payload = { 
-            seq: parseInt(document.getElementById('ug-seq').value) || 0,
+            name: document.getElementById('ug-name').value, 
+            uni: document.getElementById('ug-uni').value, 
+            detail: "",
             img: document.getElementById('ug-img').value 
         };
         btn.disabled = true;
