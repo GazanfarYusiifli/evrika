@@ -1186,11 +1186,13 @@ fbq('track', 'PageView');
             <form onsubmit="handleUgurSubmit(event)" id="ug-form" style="display: flex; flex-direction: column; gap: 15px;">
               <input type="hidden" id="ug-id">
               <input type="text" id="ug-name" placeholder="Ad Soyad" required class="admin-input">
+              <input type="text" id="ug-uni" placeholder="Nailiyyət (Məs: Respublika Birincisi)" required class="admin-input">
               
               <div style="font-size:0.65rem; color:var(--text-muted); margin-bottom:5px;"><i class="fas fa-info-circle"></i> Daha gözəl görünüş üçün Portrait (9:16) şəkillərə üstünlük verin</div>
               <div style="display:flex; gap:10px; align-items:center;">
                 <input type="text" id="ug-img" placeholder="Şəkil URL" required class="admin-input" style="flex:1;">
                 <label class="btn-view" style="cursor:pointer; padding:18px;"><i class="fas fa-upload"></i><input type="file" hidden accept="image/jpeg,image/png,image/webp" onchange="uploadImage(this, 'ug-img')"></label>
+                <img id="ug-img-preview" style="width:40px; height:40px; border-radius:8px; object-fit:cover; display:none;">
               </div>
               <div style="display: flex; gap: 10px;">
                 <button type="submit" id="ug-submit-btn" class="btn-view" style="flex:2; justify-content: center; background: var(--burgundy); border: none; padding: 15px;">Yadda Saxla</button>
@@ -1216,6 +1218,7 @@ fbq('track', 'PageView');
               <div style="display:flex; gap:10px; align-items:center;">
                 <input type="text" id="mz-img" placeholder="Şəkil URL" required class="admin-input" style="flex:1;">
                 <label class="btn-view" style="cursor:pointer; padding:18px;"><i class="fas fa-upload"></i><input type="file" hidden accept="image/jpeg,image/png,image/webp" onchange="uploadImage(this, 'mz-img')"></label>
+                <img id="mz-img-preview" style="width:40px; height:40px; border-radius:50%; object-fit:cover; display:none;">
               </div>
               <div style="display: flex; gap: 10px;">
                 <button type="submit" id="mz-submit-btn" class="btn-view" style="flex:2; justify-content: center; background: var(--success); border: none; padding: 15px;">Yadda Saxla</button>
@@ -2633,8 +2636,10 @@ fbq('track', 'PageView');
         const u = ugurlarData[idx];
         document.getElementById('ug-id').value = u._db_id_;
         document.getElementById('ug-name').value = u.name;
+        document.getElementById('ug-uni').value = u.uni || '';
 
         document.getElementById('ug-img').value = u.img;
+        const pv = document.getElementById('ug-img-preview'); if(u.img) { pv.src = u.img; pv.style.display='block'; } else { pv.style.display='none'; }
         document.getElementById('ug-form-title').innerText = "Uğura Düzəliş Et";
         document.getElementById('ug-submit-btn').innerText = "Dəyişikliyi Saxla";
     };
@@ -2642,6 +2647,8 @@ fbq('track', 'PageView');
     window.resetUgurForm = () => {
         document.getElementById('ug-form').reset();
         document.getElementById('ug-id').value = "";
+        document.getElementById('ug-uni').value = "";
+        document.getElementById('ug-img-preview').style.display='none';
         document.getElementById('ug-form-title').innerText = "Yeni Uğur Əlavə Et";
         document.getElementById('ug-submit-btn').innerText = "Yadda Saxla";
     };
@@ -2652,7 +2659,7 @@ fbq('track', 'PageView');
         const btn = document.getElementById('ug-submit-btn');
         const payload = { 
             name: document.getElementById('ug-name').value, 
-            uni: "", 
+            uni: document.getElementById('ug-uni').value, 
             detail: "",
             img: document.getElementById('ug-img').value 
         };
@@ -2788,6 +2795,7 @@ fbq('track', 'PageView');
         document.getElementById('mz-name').value = m.name;
         document.getElementById('mz-uni').value = m.uni;
         document.getElementById('mz-img').value = m.img;
+        const pv = document.getElementById('mz-img-preview'); if(m.img) { pv.src = m.img; pv.style.display='block'; } else { pv.style.display='none'; }
         document.getElementById('mz-form-title').innerText = "Məzuna Düzəliş Et";
         document.getElementById('mz-submit-btn').innerText = "Dəyişikliyi Saxla";
     };
@@ -2829,6 +2837,7 @@ fbq('track', 'PageView');
     window.resetMezunForm = () => { 
         document.getElementById('mz-form').reset(); 
         document.getElementById('mz-id').value = "";
+        document.getElementById('mz-img-preview').style.display='none';
         document.getElementById('mz-form-title').innerText = "Yeni Məzun Əlavə Et";
         document.getElementById('mz-submit-btn').innerText = "Yadda Saxla";
     };
