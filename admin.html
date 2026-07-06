@@ -528,7 +528,6 @@ fbq('track', 'PageView');
     </div>
     <div class="sb-nav">
       <div class="sb-group-title" data-module="crm">MÜŞTƏRİ XİDMƏTLƏRİ</div>
-      <div class="sb-link" data-module="crm" onclick="switchTab('call-center')"><i class="fas fa-headset"></i> <span>Zəng Mərkəzi</span></div>
       <div class="sb-link active" data-module="crm" onclick="switchTab('apps')"><i class="fas fa-users"></i> <span>Müraciətlər & CRM</span></div>
       <div class="sb-group-title" data-module="crm">CRM & ANALİTİKA</div>
       <div class="sb-link" data-module="crm" onclick="switchTab('dashboard')"><i class="fas fa-th-large"></i> <span>Dashboard</span></div>
@@ -658,100 +657,6 @@ fbq('track', 'PageView');
             <svg viewBox="0 0 76 65" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:20px;"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="currentColor"/></svg>
             Vercel Dashboard-a Keç
          </a>
-      </div>
-    </div>
-
-    <!-- CALL CENTER MODULE -->
-    <div id="view-call-center" class="content" style="display: none;">
-      <!-- Incoming Call Popup UI (Fixed position) -->
-      <div id="incoming-call-popup" style="display:none; position:fixed; bottom:30px; right:30px; background:#1c1c1e; border:1px solid rgba(16,185,129,0.3); border-left:4px solid var(--success); border-radius:12px; padding:20px; box-shadow:0 10px 30px rgba(0,0,0,0.5); z-index:9999; animation: slideInUp 0.4s ease-out; width:300px;">
-         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <div style="color:var(--success); font-weight:800; font-size:0.9rem; display:flex; align-items:center; gap:8px;">
-               <i class="fas fa-phone-volume fa-shake"></i> Daxil olan zəng
-            </div>
-            <button onclick="document.getElementById('incoming-call-popup').style.display='none'" style="background:none; border:none; color:var(--text-muted); cursor:pointer;"><i class="fas fa-times"></i></button>
-         </div>
-         <div id="call-popup-name" style="font-weight:800; font-size:1.1rem; color:white; margin-bottom:5px;">Axtarılır...</div>
-         <div id="call-popup-number" style="font-family:monospace; color:var(--text-muted); font-size:0.9rem;"></div>
-         <div style="margin-top:15px; display:flex; gap:10px;">
-            <button onclick="document.getElementById('incoming-call-popup').style.display='none'" style="flex:1; background:var(--success); color:white; border:none; padding:8px; border-radius:6px; font-weight:700; cursor:pointer;"><i class="fas fa-check"></i> Qəbul Et</button>
-         </div>
-      </div>
-
-      <div class="stat-card" style="background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.0)); border: 1px solid rgba(255,255,255,0.05); padding: 30px; border-radius: 20px;">
-         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 30px; flex-wrap:wrap; gap:15px;">
-             <div>
-                <h3 style="font-weight: 900; font-size: 1.5rem; letter-spacing:-0.5px; margin:0; display:flex; align-items:center; gap:12px;">
-                    <div style="width:45px; height:45px; border-radius:12px; background:linear-gradient(135deg, var(--accent), #3b82f6); display:flex; align-items:center; justify-content:center; color:white; font-size:1.2rem; box-shadow:0 10px 20px rgba(59,130,246,0.3);">
-                        <i class="fas fa-headset"></i>
-                    </div>
-                    Zəng Mərkəzi
-                </h3>
-                <p style="margin:8px 0 0 57px; font-size:0.85rem; color:var(--text-muted); font-weight:600;">Twilio və Zadarma İnteqrasiyası ilə Real Vaxt Zəng İdarəetməsi</p>
-             </div>
-             <button class="btn-view" onclick="fetchCalls()" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='none'" style="background:linear-gradient(135deg, var(--accent), #3b82f6); border:none; padding:12px 24px; font-size:0.85rem; font-weight:800; border-radius:10px; box-shadow:0 8px 20px rgba(59,130,246,0.4); transition:all 0.3s ease; display:flex; align-items:center; gap:8px;">
-                 <i class="fas fa-sync-alt"></i> Məlumatları Yenilə
-             </button>
-         </div>
-         
-         <div class="stat-grid" style="margin-bottom:35px; gap:20px;">
-            <!-- Today's Calls -->
-            <div class="stat-item" style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:16px; padding:20px; position:relative; overflow:hidden; transition:transform 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.3)'; this.style.borderColor='rgba(59,130,246,0.3)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'; this.style.borderColor='rgba(255,255,255,0.05)';">
-               <div style="position:absolute; top:-30px; right:-30px; width:100px; height:100px; background:#3b82f6; filter:blur(50px); opacity:0.15; border-radius:50%;"></div>
-               <div class="stat-icon" style="background: linear-gradient(135deg, #3b82f6, #60a5fa); color: white; width:45px; height:45px; border-radius:12px; font-size:1.1rem; box-shadow:0 5px 15px rgba(59,130,246,0.3);"><i class="fas fa-phone-alt"></i></div>
-               <div class="stat-info" style="margin-top:20px;">
-                  <h4 style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); font-weight:700;">Bugünkü Zənglər</h4>
-                  <div class="stat-value" id="calls-today" style="font-size:2.2rem; font-weight:900; letter-spacing:-1px; margin-top:5px;">0</div>
-               </div>
-            </div>
-            
-            <!-- Answered -->
-            <div class="stat-item" style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:16px; padding:20px; position:relative; overflow:hidden; transition:transform 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.3)'; this.style.borderColor='rgba(16,185,129,0.3)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'; this.style.borderColor='rgba(255,255,255,0.05)';">
-               <div style="position:absolute; top:-30px; right:-30px; width:100px; height:100px; background:#10b981; filter:blur(50px); opacity:0.15; border-radius:50%;"></div>
-               <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #34d399); color: white; width:45px; height:45px; border-radius:12px; font-size:1.1rem; box-shadow:0 5px 15px rgba(16,185,129,0.3);"><i class="fas fa-check-double"></i></div>
-               <div class="stat-info" style="margin-top:20px;">
-                  <h4 style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); font-weight:700;">Cavablandırılan</h4>
-                  <div class="stat-value" id="calls-answered" style="font-size:2.2rem; font-weight:900; letter-spacing:-1px; margin-top:5px; color:#10b981;">0</div>
-               </div>
-            </div>
-            
-            <!-- Missed -->
-            <div class="stat-item" style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:16px; padding:20px; position:relative; overflow:hidden; transition:transform 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.3)'; this.style.borderColor='rgba(239,68,68,0.3)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'; this.style.borderColor='rgba(255,255,255,0.05)';">
-               <div style="position:absolute; top:-30px; right:-30px; width:100px; height:100px; background:#ef4444; filter:blur(50px); opacity:0.15; border-radius:50%;"></div>
-               <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444, #f87171); color: white; width:45px; height:45px; border-radius:12px; font-size:1.1rem; box-shadow:0 5px 15px rgba(239,68,68,0.3);"><i class="fas fa-phone-slash"></i></div>
-               <div class="stat-info" style="margin-top:20px;">
-                  <h4 style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); font-weight:700;">Buraxılmış</h4>
-                  <div class="stat-value" id="calls-missed" style="font-size:2.2rem; font-weight:900; letter-spacing:-1px; margin-top:5px; color:#ef4444;">0</div>
-               </div>
-            </div>
-            
-            <!-- Avg Duration -->
-            <div class="stat-item" style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:16px; padding:20px; position:relative; overflow:hidden; transition:transform 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 12px 30px rgba(0,0,0,0.3)'; this.style.borderColor='rgba(245,158,11,0.3)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)'; this.style.borderColor='rgba(255,255,255,0.05)';">
-               <div style="position:absolute; top:-30px; right:-30px; width:100px; height:100px; background:#f59e0b; filter:blur(50px); opacity:0.15; border-radius:50%;"></div>
-               <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #fbbf24); color: white; width:45px; height:45px; border-radius:12px; font-size:1.1rem; box-shadow:0 5px 15px rgba(245,158,11,0.3);"><i class="fas fa-stopwatch"></i></div>
-               <div class="stat-info" style="margin-top:20px;">
-                  <h4 style="font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); font-weight:700;">Ortalama Müddət</h4>
-                  <div class="stat-value" id="calls-avg-duration" style="font-size:2.2rem; font-weight:900; letter-spacing:-1px; margin-top:5px; color:#f59e0b;">0 san</div>
-               </div>
-            </div>
-         </div>
-
-         <div class="table-wrapper">
-             <table class="data-table">
-                 <thead>
-                     <tr>
-                         <th>Nömrə & Müştəri</th>
-                         <th>Status</th>
-                         <th>Müddət</th>
-                         <th>Tarix</th>
-                         <th>Səs Yazısı</th>
-                     </tr>
-                 </thead>
-                 <tbody id="calls-tbody">
-                     <tr><td colspan="5" style="text-align:center;">Məlumat yüklənir...</td></tr>
-                 </tbody>
-             </table>
-         </div>
       </div>
     </div>
 
@@ -2401,7 +2306,7 @@ fbq('track', 'PageView');
     window.switchTab = (t) => {
       document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
       if(document.getElementById('view-'+t)) document.getElementById('view-'+t).style.display = 'block';
-      const titles = { 'dashboard':'Dashboard', 'call-center': 'Zəng Mərkəzi', 'analytics':'Sayt Analitikası', 'speed':'Sayt Sürəti', 'apps':'Müraciətlər', 'exam-results':'Nəticələr & Rəylər', 'kanban':'Kanban Board', 'tasks':'Tapşırıqlar', 'employees':'Əməkdaşlar', 'hr-panel':'Vakansiyalar', 'finance':'Maliyyə Paneli', 'epoint-reports':'Köçürmələrin Tarixçəsi', 'kupon':'Kupon Alanlar', 'ugurlar':'Uğurlar & Məzun', 'news':'Xəbərlər', 'leadership':'Rəhbərlik', 'settings':'Sistem Ayarları', 'parents':'Valideynlərimiz' };
+      const titles = { 'dashboard':'Dashboard',  'analytics':'Sayt Analitikası', 'speed':'Sayt Sürəti', 'apps':'Müraciətlər', 'exam-results':'Nəticələr & Rəylər', 'kanban':'Kanban Board', 'tasks':'Tapşırıqlar', 'employees':'Əməkdaşlar', 'hr-panel':'Vakansiyalar', 'finance':'Maliyyə Paneli', 'epoint-reports':'Köçürmələrin Tarixçəsi', 'kupon':'Kupon Alanlar', 'ugurlar':'Uğurlar & Məzun', 'news':'Xəbərlər', 'leadership':'Rəhbərlik', 'settings':'Sistem Ayarları', 'parents':'Valideynlərimiz' };
       document.getElementById('topbar-title').innerText = titles[t] || 'EVRIKA EMS';
       
       // Handle the active class for sidebar links
