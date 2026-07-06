@@ -11,175 +11,90 @@
     
 <style>
   :root {
-    --burgundy: #9ca476;
-    --burgundy-bright: #b0b985;
+    --burgundy: #8B1A2B;
+    --burgundy-light: #FDF4F6;
     --navy: #070d1f;
-    --glass-bg: rgba(255, 255, 255, 0.03);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --text-primary: #ffffff;
-    --text-muted: rgba(255, 255, 255, 0.6);
+    --accent: #e11d48;
+    --text-primary: #1e293b;
+    --text-muted: #64748b;
+    --surface: #ffffff;
+    --bg-color: #f8fafc;
   }
-
   body {
-    background: #0a0d0f;
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    color: var(--text-primary);
+    background: linear-gradient(135deg, var(--bg-color) 0%, var(--burgundy-light) 100%);
+    background-attachment: fixed;
+    margin: 0; font-family: 'Inter', sans-serif; color: var(--text-primary);
     overflow-x: hidden;
-    min-height: 100vh;
   }
-
-  /* Dynamic Colorful Mesh Background - Unified Theme */
-  .vibrant-bg {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    background: radial-gradient(circle at 20% 30%, rgba(156, 164, 118, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(7, 13, 31, 0.8) 0%, transparent 50%),
-                #0a0d0f;
+  .mesh-bg {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%25%22 height=%22100%25%22 viewBox=%220 0 100 100%22><path d=%22M-20 50 Q 50 10, 120 50 T 250 50%22 stroke=%22rgba(139,26,43,0.05)%22 fill=%22none%22 stroke-width=%220.5%22/></svg>');
+    background-size: cover; opacity: 0.8;
   }
-
-  .vibrant-bg::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-    background-size: 30px 30px;
-    opacity: 0.3;
+  .centered-layout { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; position: relative; z-index: 1; padding: 140px 20px 60px; }
+  
+  .form-container { 
+    width: 100%; max-width: 650px; 
+    background: rgba(255, 255, 255, 0.85); 
+    border: 1px solid rgba(139, 26, 43, 0.1); 
+    padding: 50px; border-radius: 32px; 
+    backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); 
+    box-shadow: 0 25px 50px -12px rgba(139, 26, 43, 0.15); 
+    transition: transform 0.4s ease, box-shadow 0.4s ease; 
+    margin-top: 20px; 
+  }
+  .form-container:hover { 
+    transform: translateY(-8px); 
+    box-shadow: 0 40px 80px -15px rgba(139, 26, 43, 0.2); 
+    border-color: rgba(139, 26, 43, 0.2); 
   }
   
-  .aura-blob {
-    position: absolute;
-    width: 600px;
-    height: 600px;
-    background: var(--burgundy);
-    filter: blur(150px);
-    opacity: 0.15;
-    border-radius: 50%;
-    z-index: -1;
-    animation: auraFloat 20s infinite alternate;
-  }
-  
-  @keyframes auraFloat {
-    from { transform: translate(-10%, -10%) scale(1); }
-    to { transform: translate(10%, 10%) scale(1.2); }
-  }
+  .form-header { text-align: center; margin-bottom: 40px; }
+  .form-header h2 { font-size: 1.8rem; font-weight: 800; margin: 0 0 10px 0; color: var(--burgundy); }
+  .form-header p { margin: 0; color: var(--text-muted); font-size: 0.95rem; }
 
-  .centered-layout {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 240px 20px 80px; /* Increased top padding for readability */
-    position: relative;
-    z-index: 10;
-  }
-
-  /* Premium Glass Card */
-  .form-container {
-    width: 100%;
-    max-width: 680px;
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 45px;
-    padding: 60px;
-    box-shadow: 0 50px 100px rgba(0,0,0,0.4), inset 0 0 80px rgba(255,255,255,0.02);
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .form-container::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 4px;
-    background: linear-gradient(90deg, transparent, var(--burgundy), transparent);
-  }
-
-  .form-header { text-align: center; margin-bottom: 50px; }
-  .form-header h2 { 
-    font-size: 2.2rem; 
-    font-weight: 900; 
-    margin-bottom: 10px;
-    background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.4) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .form-header p { color: var(--text-muted); font-size: 1rem; font-weight: 500; }
-
-  /* Modern Inputs */
-  .dyn-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+  .dyn-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   @media (max-width: 640px) { .dyn-form-grid { grid-template-columns: 1fr; } }
   .full-width { grid-column: 1 / -1; }
   
-  .dyn-input-group label { 
-    display: block; 
-    font-size: 0.75rem; 
-    font-weight: 800; 
-    color: var(--burgundy-bright);
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    margin-bottom: 10px;
-  }
+  .dyn-input-group label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--burgundy); margin-bottom: 8px; transition: color 0.3s ease; letter-spacing: 0.05em; }
+  .dyn-input-group:focus-within label { color: var(--accent); }
   
   .dyn-input-group input, .dyn-input-group select { 
-    width: 100%; 
-    padding: 18px 22px; 
-    background: rgba(255, 255, 255, 0.05); 
-    border: 1px solid rgba(255, 255, 255, 0.08); 
-    border-radius: 18px; 
-    font-family: inherit; 
-    font-size: 1rem; 
-    color: white; 
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-sizing: border-box;
+    width: 100%; padding: 14px 18px; 
+    background: rgba(255, 255, 255, 0.9); 
+    border: 1px solid rgba(139, 26, 43, 0.15); 
+    border-radius: 12px; font-family: inherit; font-size: 0.95rem; 
+    color: var(--text-primary); transition: all 0.3s ease; appearance: none; box-sizing: border-box; 
   }
-  
+  .dyn-input-group input::placeholder { color: #94a3b8; }
+  .dyn-input-group select option { background: var(--surface); color: var(--text-primary); }
+  .dyn-input-group input:hover, .dyn-input-group select:hover { background: #ffffff; border-color: rgba(139, 26, 43, 0.3); }
   .dyn-input-group input:focus, .dyn-input-group select:focus { 
-    background: rgba(255, 255, 255, 0.1);
     border-color: var(--burgundy); 
-    box-shadow: 0 0 25px rgba(156, 164, 118, 0.2);
-    outline: none;
-    transform: translateY(-2px);
+    background: #ffffff; 
+    box-shadow: 0 0 0 3px rgba(139, 26, 43, 0.1); 
+    outline: none; 
   }
-
-  /* Vibrant Submit Button */
-  .submit-btn { 
-    width: 100%; 
-    margin-top: 40px; 
-    padding: 22px; 
-    background: linear-gradient(135deg, var(--burgundy) 0%, #6c734e 100%); 
-    color: white; 
-    border: none; 
-    border-radius: 20px; 
-    font-size: 1.1rem; 
-    font-weight: 900; 
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    cursor: pointer; 
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    gap: 15px; 
-    box-shadow: 0 20px 40px rgba(156, 164, 118, 0.3);
-  }
+  .select-arrow { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: rgba(139,26,43,0.4); pointer-events: none; transition: color 0.3s ease; font-size: 0.8rem; }
+  .dyn-input-group select:focus + .select-arrow { color: var(--burgundy); }
   
-  .submit-btn:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 30px 60px rgba(255,255,255,0.2); background: linear-gradient(135deg, var(--burgundy) 0%, var(--burgundy-bright) 100%); }
-
-  .payment-info-alert {
-    background: rgba(156, 164, 118, 0.05); 
-    border: 1px solid rgba(156, 164, 118, 0.2); 
-    border-radius: 20px; 
-    padding: 20px 25px; 
-    margin-top: 40px; 
-    display: flex; 
-    gap: 15px; 
-    align-items: center;
+  .submit-btn { 
+    width: 100%; margin-top: 30px; padding: 20px; 
+    background: var(--burgundy); color: #ffffff; 
+    border: none; border-radius: 16px; font-size: 1.05rem; font-weight: 800; 
+    letter-spacing: 0.02em; cursor: pointer; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+    display: flex; align-items: center; justify-content: center; gap: 12px; 
   }
-  .alert-icon { color: var(--burgundy-bright); font-size: 1.5rem; }
-  .alert-text { font-size: 0.9rem; color: rgba(255,255,255,0.8); line-height: 1.6; }
-  .alert-text strong { color: white; font-weight: 800; }
+  .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(139, 26, 43, 0.3); background: #6b1220; }
+  
+  .payment-info-alert {
+    background: rgba(139, 26, 43, 0.05); border: 1px solid rgba(139, 26, 43, 0.15); 
+    border-radius: 16px; padding: 18px 20px; margin-top: 30px; display: flex; gap: 15px; align-items: flex-start; margin-bottom: -15px;
+  }
+  .alert-icon { color: var(--burgundy); font-size: 1.3rem; margin-top: 2px; }
+  .alert-text { font-size: 0.85rem; color: var(--text-primary); line-height: 1.5; }
+  .alert-text strong { color: var(--burgundy); }
 </style>
 
 
@@ -416,15 +331,15 @@
 
   <div class="centered-layout">
     <div style="text-align: center; margin-bottom: 50px; padding: 0 20px; position: relative; z-index: 10;">
-      <div class="brand-eyebrow modern-glow" style="margin-bottom: 24px; color: rgba(255,255,255,0.7); opacity: 1; letter-spacing: 0.6em; text-transform: uppercase; font-weight: 800; font-size: 0.8rem;">
+      <div class="brand-eyebrow modern-glow" style="margin-bottom: 24px; color: var(--burgundy); opacity: 1; letter-spacing: 0.6em; text-transform: uppercase; font-weight: 800; font-size: 0.8rem;">
         EVRİKA TƏHSİL EKOSİSTEMİ
       </div>
-      <h1 class="titan-header" style="font-size: clamp(3rem, 6vw, 5.5rem); color: #fff; margin-bottom: 30px; line-height: 1.1; font-weight: 900; letter-spacing: -0.02em;" data-i18n="reg-title">Qeydiyyat</h1>
-      <div style="width: 100px; height: 2px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); margin: 0 auto 30px;"></div>
-      <p class="subtitle-pro" style="max-width: 850px; margin: 0 auto; font-size: 1.6rem; color: #fff; line-height: 1.6; font-weight: 700; opacity: 1;">
+      <h1 class="titan-header" style="font-size: clamp(3rem, 6vw, 5.5rem); color: var(--text-primary); margin-bottom: 30px; line-height: 1.1; font-weight: 900; letter-spacing: -0.02em;" data-i18n="reg-title">Qeydiyyat</h1>
+      <div style="width: 100px; height: 2px; background: linear-gradient(90deg, transparent, rgba(139,26,43,0.3), transparent); margin: 0 auto 30px;"></div>
+      <p class="subtitle-pro" style="max-width: 850px; margin: 0 auto; font-size: 1.6rem; color: var(--text-primary); line-height: 1.6; font-weight: 700; opacity: 1;">
         <span data-i18n="reg-school-montessori">Evrika Montessori Kids Academy</span>
       </p>
-      <p style="max-width: 700px; margin: 15px auto 0; font-size: 1.1rem; color: rgba(255,255,255,0.7); line-height: 1.6;">
+      <p style="max-width: 700px; margin: 15px auto 0; font-size: 1.1rem; color: var(--burgundy); line-height: 1.6;">
         <span data-i18n="reg-desc">Məlumatlarınızı daxil edərək onlayn müraciətinizi tamamlayın.</span>
       </p>
     </div>
@@ -460,7 +375,7 @@
             <div class="dyn-input-group">
               <label data-i18n="reg-parent-contact">VALİDEYNİN ƏLAQƏ NÖMRƏSİ</label>
               <div style="position: relative; display: flex; align-items: center;">
-                <span style="position: absolute; left: 18px; color: rgba(255,255,255,0.7); font-weight: 600; font-size: 0.95rem; pointer-events: none;">+994</span>
+                <span style="position: absolute; left: 18px; color: var(--burgundy); font-weight: 600; font-size: 0.95rem; pointer-events: none;">+994</span>
                 <input type="tel" id="mf_phoneNum" placeholder="551234567" data-i18n-placeholder="reg-pl-phone" required pattern="[0-9]{9}" maxlength="9" minlength="9" title="Nömrə yalnız 9 rəqəmdən ibarət olmalıdır (Məs: 551234567)" style="padding-left: 65px;" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9);">
               </div>
             </div>

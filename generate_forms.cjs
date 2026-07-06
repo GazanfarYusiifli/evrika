@@ -4,71 +4,89 @@ const formCss = `
 <style>
   :root {
     --burgundy: #8B1A2B;
+    --burgundy-light: #FDF4F6;
     --navy: #070d1f;
     --accent: #e11d48;
-    --accent-glow: rgba(225, 29, 72, 0.6);
-    --text-primary: #f8fafc;
-    --text-muted: #94a3b8;
+    --text-primary: #1e293b;
+    --text-muted: #64748b;
+    --surface: #ffffff;
+    --bg-color: #f8fafc;
   }
   body {
-    background: linear-gradient(135deg, var(--burgundy) 0%, var(--navy) 100%);
+    background: linear-gradient(135deg, var(--bg-color) 0%, var(--burgundy-light) 100%);
     background-attachment: fixed;
     margin: 0; font-family: 'Inter', sans-serif; color: var(--text-primary);
     overflow-x: hidden;
   }
   .mesh-bg {
     position: fixed; inset: 0; z-index: 0; pointer-events: none;
-    background: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%25%22 height=%22100%25%22 viewBox=%220 0 100 100%22><path d=%22M-20 50 Q 50 10, 120 50 T 250 50%22 stroke=%22rgba(255,255,255,0.03)%22 fill=%22none%22 stroke-width=%220.5%22/></svg>');
+    background: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%25%22 height=%22100%25%22 viewBox=%220 0 100 100%22><path d=%22M-20 50 Q 50 10, 120 50 T 250 50%22 stroke=%22rgba(139,26,43,0.05)%22 fill=%22none%22 stroke-width=%220.5%22/></svg>');
     background-size: cover; opacity: 0.8;
   }
   .centered-layout { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; position: relative; z-index: 1; padding: 140px 20px 60px; }
   
-  .form-container { width: 100%; max-width: 650px; background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255,255,255,0.1); padding: 50px; border-radius: 32px; backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); transition: transform 0.4s ease, box-shadow 0.4s ease; margin-top: 20px; }
-  .form-container:hover { transform: translateY(-8px); box-shadow: 0 40px 80px -15px rgba(0,0,0,0.7); border-color: rgba(255,255,255,0.15); }
+  .form-container { 
+    width: 100%; max-width: 650px; 
+    background: rgba(255, 255, 255, 0.85); 
+    border: 1px solid rgba(139, 26, 43, 0.1); 
+    padding: 50px; border-radius: 32px; 
+    backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); 
+    box-shadow: 0 25px 50px -12px rgba(139, 26, 43, 0.15); 
+    transition: transform 0.4s ease, box-shadow 0.4s ease; 
+    margin-top: 20px; 
+  }
+  .form-container:hover { 
+    transform: translateY(-8px); 
+    box-shadow: 0 40px 80px -15px rgba(139, 26, 43, 0.2); 
+    border-color: rgba(139, 26, 43, 0.2); 
+  }
   
   .form-header { text-align: center; margin-bottom: 40px; }
-  .form-header h2 { font-size: 1.8rem; font-weight: 800; margin: 0 0 10px 0; color: #e11d48; }
+  .form-header h2 { font-size: 1.8rem; font-weight: 800; margin: 0 0 10px 0; color: var(--burgundy); }
   .form-header p { margin: 0; color: var(--text-muted); font-size: 0.95rem; }
 
   .dyn-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   @media (max-width: 640px) { .dyn-form-grid { grid-template-columns: 1fr; } }
   .full-width { grid-column: 1 / -1; }
   
-  .dyn-input-group label { display: block; font-size: 0.8rem; font-weight: 600; color: rgba(255, 255, 255, 0.5); margin-bottom: 8px; transition: color 0.3s ease; }
-  .dyn-input-group:focus-within label { color: rgba(255, 255, 255, 0.9); }
-  .dyn-input-group input, .dyn-input-group select { width: 100%; padding: 14px 18px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 12px; font-family: inherit; font-size: 0.95rem; color: white; transition: all 0.3s ease; appearance: none; box-sizing: border-box; }
-  .dyn-input-group input::placeholder { color: rgba(255, 255, 255, 0.2); }
-  .dyn-input-group select option { background: var(--navy); color: white; }
-  .dyn-input-group input:hover, .dyn-input-group select:hover { background: rgba(255, 255, 255, 0.06); border-color: rgba(255, 255, 255, 0.15); }
-  .dyn-input-group input:focus, .dyn-input-group select:focus { border-color: rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.05); box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05); outline: none; }
-  .select-arrow { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.3); pointer-events: none; transition: color 0.3s ease; font-size: 0.8rem; }
-  .dyn-input-group select:focus + .select-arrow { color: rgba(255,255,255,0.8); }
+  .dyn-input-group label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--burgundy); margin-bottom: 8px; transition: color 0.3s ease; letter-spacing: 0.05em; }
+  .dyn-input-group:focus-within label { color: var(--accent); }
   
-  .submit-btn { width: 100%; margin-top: 30px; padding: 20px; background: #fff; color: #000; border: none; border-radius: 16px; font-size: 1.05rem; font-weight: 800; letter-spacing: 0.02em; cursor: pointer; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: center; justify-content: center; gap: 12px; }
-  .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(255, 255, 255, 0.15); }
-  
-  #payment-gateway-simulation { position: fixed; inset: 0; background: rgba(3, 7, 18, 0.9); backdrop-filter: blur(20px); z-index: 10000; display: none; align-items: center; justify-content: center; animation: fadeIn 0.3s ease; }
-  .pay-card { background: #0f172a; border: 1px solid rgba(255,255,255,0.08); padding: 40px; border-radius: 32px; box-shadow: 0 40px 100px rgba(0,0,0,0.8); width: 100%; max-width: 440px; color: white; position: relative; overflow: hidden; }
-  .pay-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: linear-gradient(90deg, #3b82f6, #8b5cf6, #e11d48); }
-  .pay-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; }
-  .pay-amount-box { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 20px; text-align: center; margin-bottom: 30px; }
-  .pay-amount-box p { margin: 0 0 5px 0; font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
-  .pay-amount-box h2 { margin: 0; font-size: 2.2rem; font-weight: 900; color: #fff; letter-spacing: -1px; }
-  
-  .pay-input-group { margin-bottom: 20px; }
-  .pay-input-group label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .pay-input { width: 100%; padding: 16px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; font-family: 'Inter', monospace; font-size: 1rem; transition: all 0.3s; box-sizing: border-box; }
-  .pay-input:focus { border-color: #3b82f6; background: rgba(0,0,0,0.4); outline: none; }
-  .pay-btn { width: 100%; padding: 20px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border: none; border-radius: 16px; font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: all 0.3s; margin-top: 10px; box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3); }
-  .pay-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(37, 99, 235, 0.4); }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-  .payment-info-alert {
-    background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 16px; padding: 18px 20px; margin-top: 30px; display: flex; gap: 15px; align-items: flex-start; margin-bottom: -15px;
+  .dyn-input-group input, .dyn-input-group select { 
+    width: 100%; padding: 14px 18px; 
+    background: rgba(255, 255, 255, 0.9); 
+    border: 1px solid rgba(139, 26, 43, 0.15); 
+    border-radius: 12px; font-family: inherit; font-size: 0.95rem; 
+    color: var(--text-primary); transition: all 0.3s ease; appearance: none; box-sizing: border-box; 
   }
-  .alert-icon { color: #3b82f6; font-size: 1.3rem; margin-top: 2px; }
-  .alert-text { font-size: 0.85rem; color: #cbd5e1; line-height: 1.5; }
-  .alert-text strong { color: white; }
+  .dyn-input-group input::placeholder { color: #94a3b8; }
+  .dyn-input-group select option { background: var(--surface); color: var(--text-primary); }
+  .dyn-input-group input:hover, .dyn-input-group select:hover { background: #ffffff; border-color: rgba(139, 26, 43, 0.3); }
+  .dyn-input-group input:focus, .dyn-input-group select:focus { 
+    border-color: var(--burgundy); 
+    background: #ffffff; 
+    box-shadow: 0 0 0 3px rgba(139, 26, 43, 0.1); 
+    outline: none; 
+  }
+  .select-arrow { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: rgba(139,26,43,0.4); pointer-events: none; transition: color 0.3s ease; font-size: 0.8rem; }
+  .dyn-input-group select:focus + .select-arrow { color: var(--burgundy); }
+  
+  .submit-btn { 
+    width: 100%; margin-top: 30px; padding: 20px; 
+    background: var(--burgundy); color: #ffffff; 
+    border: none; border-radius: 16px; font-size: 1.05rem; font-weight: 800; 
+    letter-spacing: 0.02em; cursor: pointer; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+    display: flex; align-items: center; justify-content: center; gap: 12px; 
+  }
+  .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(139, 26, 43, 0.3); background: #6b1220; }
+  
+  .payment-info-alert {
+    background: rgba(139, 26, 43, 0.05); border: 1px solid rgba(139, 26, 43, 0.15); 
+    border-radius: 16px; padding: 18px 20px; margin-top: 30px; display: flex; gap: 15px; align-items: flex-start; margin-bottom: -15px;
+  }
+  .alert-icon { color: var(--burgundy); font-size: 1.3rem; margin-top: 2px; }
+  .alert-text { font-size: 0.85rem; color: var(--text-primary); line-height: 1.5; }
+  .alert-text strong { color: var(--burgundy); }
 </style>
 `;
 
@@ -205,17 +223,17 @@ function getHtml(branchTitle, sectors, sourceName, hasPayment) {
 
   <div class="centered-layout">
     <div style="text-align: center; margin-bottom: 50px; padding: 0 20px; position: relative; z-index: 10;">
-      <div class="brand-eyebrow modern-glow" style="margin-bottom: 24px; color: rgba(255,255,255,0.7); opacity: 1; letter-spacing: 0.6em; text-transform: uppercase; font-weight: 800; font-size: 0.8rem;">
+      <div class="brand-eyebrow modern-glow" style="margin-bottom: 24px; color: var(--burgundy); opacity: 1; letter-spacing: 0.6em; text-transform: uppercase; font-weight: 800; font-size: 0.8rem;">
         EVRİKA TƏHSİL EKOSİSTEMİ
       </div>
-      <h1 class="titan-header" style="font-size: clamp(3rem, 6vw, 5.5rem); color: #fff; margin-bottom: 30px; line-height: 1.1; font-weight: 900; letter-spacing: -0.02em;">
+      <h1 class="titan-header" style="font-size: clamp(3rem, 6vw, 5.5rem); color: var(--text-primary); margin-bottom: 30px; line-height: 1.1; font-weight: 900; letter-spacing: -0.02em;">
         Qeydiyyat
       </h1>
-      <div style="width: 100px; height: 2px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); margin: 0 auto 30px;"></div>
-      <p class="subtitle-pro" style="max-width: 850px; margin: 0 auto; font-size: 1.6rem; color: #fff; line-height: 1.6; font-weight: 700; opacity: 1;">
+      <div style="width: 100px; height: 2px; background: linear-gradient(90deg, transparent, rgba(139,26,43,0.3), transparent); margin: 0 auto 30px;"></div>
+      <p class="subtitle-pro" style="max-width: 850px; margin: 0 auto; font-size: 1.6rem; color: var(--text-primary); line-height: 1.6; font-weight: 700; opacity: 1;">
         ${branchTitle.replace(/<br>/g, ' ')}
       </p>
-      <p style="max-width: 700px; margin: 15px auto 0; font-size: 1.1rem; color: rgba(255,255,255,0.7); line-height: 1.6;">
+      <p style="max-width: 700px; margin: 15px auto 0; font-size: 1.1rem; color: var(--burgundy); line-height: 1.6;">
         Məlumatlarınızı daxil edərək onlayn müraciətinizi tamamlayın.
       </p>
     </div>
@@ -268,7 +286,7 @@ function getHtml(branchTitle, sectors, sourceName, hasPayment) {
             <div class="dyn-input-group">
               <label>VALİDEYNİN ƏLAQƏ NÖMRƏSİ</label>
               <div style="position: relative; display: flex; align-items: center;">
-                <span style="position: absolute; left: 18px; color: rgba(255,255,255,0.7); font-weight: 600; font-size: 0.95rem; pointer-events: none;">+994</span>
+                <span style="position: absolute; left: 18px; color: var(--burgundy); font-weight: 600; font-size: 0.95rem; pointer-events: none;">+994</span>
                 <input type="tel" id="mf_phoneNum" placeholder="551234567" required pattern="[0-9]{9}" maxlength="9" minlength="9" title="Nömrə yalnız 9 rəqəmdən ibarət olmalıdır (Məs: 551234567)" style="padding-left: 65px;" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9);">
               </div>
             </div>
