@@ -459,7 +459,10 @@
             </div>
             <div class="dyn-input-group">
               <label data-i18n="reg-parent-contact">VALİDEYNİN ƏLAQƏ NÖMRƏSİ</label>
-              <input type="tel" id="mf_phoneNum" placeholder="Məs: 551234567" data-i18n-placeholder="reg-pl-phone" required>
+              <div style="position: relative; display: flex; align-items: center;">
+                <span style="position: absolute; left: 18px; color: rgba(255,255,255,0.7); font-weight: 600; font-size: 0.95rem; pointer-events: none;">+994</span>
+                <input type="tel" id="mf_phoneNum" placeholder="551234567" data-i18n-placeholder="reg-pl-phone" required pattern="[0-9]{9}" maxlength="9" minlength="9" title="Nömrə yalnız 9 rəqəmdən ibarət olmalıdır (Məs: 551234567)" style="padding-left: 65px;" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9);">
+              </div>
             </div>
             <div class="dyn-input-group full-width">
               <label data-i18n="reg-email">MAİL ÜNVANI</label>
