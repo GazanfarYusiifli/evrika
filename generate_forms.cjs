@@ -27,7 +27,7 @@ const formCss = `
   
   .form-container { 
     width: 100%; max-width: 650px; 
-    background: #fdf0f2; 
+    background: #fdebf0; 
     border: 1px solid rgba(139, 26, 43, 0.1); 
     padding: 50px; border-radius: 32px; 
     backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px); 
