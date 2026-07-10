@@ -1236,7 +1236,7 @@ fbq('track', 'PageView');
               <div style="font-size:0.65rem; color:var(--text-muted); margin-bottom:5px;"><i class="fas fa-info-circle"></i> Daha gözəl görünüş üçün uyğun ölçülü (Landscape) şəkillərə üstünlük verin</div>
               <div style="display:flex; gap:10px; align-items:center;">
                 <input type="text" id="popup-img" placeholder="Şəkil URL" required class="admin-input" style="flex:1;">
-                <label class="btn-view" style="cursor:pointer; padding:18px;"><i class="fas fa-upload"></i><input type="file" hidden accept="image/jpeg,image/png,image/webp" id="popup-img-file"></label>
+                <label class="btn-view" style="cursor:pointer; padding:18px;"><i class="fas fa-upload"></i><input type="file" hidden accept="image/jpeg,image/png,image/webp" id="popup-img-file" onchange="uploadImage(this, 'popup-img'); let i=0; let int=setInterval(()=>{let v=document.getElementById('popup-img').value; if(v && v.startsWith('http')){ let p=document.getElementById('popup-img-preview'); p.src=v; p.style.display='block'; clearInterval(int);} i++; if(i>30)clearInterval(int);}, 1000);"></label>
                 <img id="popup-img-preview" style="width:40px; height:40px; border-radius:5px; object-fit:cover; display:none;">
               </div>
               <div style="display:flex; align-items:center; gap:10px; margin-top:5px; margin-bottom:10px;">
