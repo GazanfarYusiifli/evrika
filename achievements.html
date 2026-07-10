@@ -287,69 +287,6 @@
           </div>
 
           <div class="ugurlar-masonry" id="ug-grid">
-            <div class="ug-card-modern" data-name="Evrika Uğurları" data-uni="" data-img="ugur1.jpeg">
-              <img src="./assets/ugur1.jpeg" alt="Evrika Uğurları" loading="lazy">
-              <div class="overlay-text">
-                <h3 data-i18n="ach-card-title">Evrika Uğurları</h3>
-                <p></p>
-              </div>
-            </div>
-            <div class="ug-card-modern" data-name="Evrika Uğurları" data-uni="" data-img="1783333509288_0_WhatsApp_Image_2026-07-06_at_12.56.19.jpeg">
-              <img src="https://miwvdhwrmxoetszkxlzy.supabase.co/storage/v1/object/public/ems-documents/uploads/1783333509288_0_WhatsApp_Image_2026-07-06_at_12.56.19.jpeg" alt="Evrika Uğurları" loading="lazy">
-              <div class="overlay-text">
-                <h3 data-i18n="ach-card-title">Evrika Uğurları</h3>
-                <p></p>
-              </div>
-            </div>
-            <div class="ug-card-modern" data-name="Evrika Uğurları" data-uni="" data-img="1783333448814_0_WhatsApp_Image_2026-07-06_at_12.56.20.jpeg">
-              <img src="https://miwvdhwrmxoetszkxlzy.supabase.co/storage/v1/object/public/ems-documents/uploads/1783333448814_0_WhatsApp_Image_2026-07-06_at_12.56.20.jpeg" alt="Evrika Uğurları" loading="lazy">
-              <div class="overlay-text">
-                <h3 data-i18n="ach-card-title">Evrika Uğurları</h3>
-                <p></p>
-              </div>
-            </div>
-            <div class="ug-card-modern" data-name="Evrika Uğurları" data-uni="" data-img="ugur2.jpeg">
-              <img src="./assets/ugur2.jpeg" alt="Evrika Uğurları" loading="lazy">
-              <div class="overlay-text">
-                <h3 data-i18n="ach-card-title">Evrika Uğurları</h3>
-                <p></p>
-              </div>
-            </div>
-            <div class="ug-card-modern" data-name="Evrika Uğurları" data-uni="" data-img="ugur3.jpeg">
-              <img src="./assets/ugur3.jpeg" alt="Evrika Uğurları" loading="lazy">
-              <div class="overlay-text">
-                <h3 data-i18n="ach-card-title">Evrika Uğurları</h3>
-                <p></p>
-              </div>
-            </div>
-            <div class="ug-card-modern" data-name="Evrika Uğurları" data-uni="" data-img="ugur4.jpeg">
-              <img src="./assets/ugur4.jpeg" alt="Evrika Uğurları" loading="lazy">
-              <div class="overlay-text">
-                <h3 data-i18n="ach-card-title">Evrika Uğurları</h3>
-                <p></p>
-              </div>
-            </div>
-            <div class="ug-card-modern" data-name="Evrika Uğurları" data-uni="" data-img="ugur5.jpeg">
-              <img src="./assets/ugur5.jpeg" alt="Evrika Uğurları" loading="lazy">
-              <div class="overlay-text">
-                <h3 data-i18n="ach-card-title">Evrika Uğurları</h3>
-                <p></p>
-              </div>
-            </div>
-            <div class="ug-card-modern" data-name="Evrika Uğurları" data-uni="" data-img="ugur6.jpeg">
-              <img src="./assets/ugur6.jpeg" alt="Evrika Uğurları" loading="lazy">
-              <div class="overlay-text">
-                <h3 data-i18n="ach-card-title">Evrika Uğurları</h3>
-                <p></p>
-              </div>
-            </div>
-            <div class="ug-card-modern" data-name="Evrika Uğurları" data-uni="" data-img="ugur7.jpeg">
-              <img src="./assets/ugur7.jpeg" alt="Evrika Uğurları" loading="lazy">
-              <div class="overlay-text">
-                <h3 data-i18n="ach-card-title">Evrika Uğurları</h3>
-                <p></p>
-              </div>
-            </div>
             <!-- Dinamik məlumatlar admin paneldən yüklənəcək -->
           </div>
         </div>
@@ -682,6 +619,38 @@
     }
   </script>
 
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const API_URL = 'https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1';
+    const API_KEY = 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV';
+    const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY };
+
+    const grid = document.getElementById('ug-grid');
+    if (!grid) return;
+
+    try {
+        const res = await fetch(`${API_URL}/ugurlar?select=*&order=id.desc`, { headers: HEADERS });
+        if (res.ok) {
+            const data = await res.json();
+            grid.innerHTML = data.map(item => {
+                const p = item.payload;
+                return `
+                <div class="ug-card-modern" data-name="${p.name || ''}" data-uni="${p.uni || ''}" data-img="${p.img || ''}">
+                  <img src="${p.img || ''}" alt="${p.name || ''}" loading="lazy">
+                  <div class="overlay-text">
+                    <h3 data-i18n="ach-card-title">${p.name || ''}</h3>
+                    <p>${p.uni || ''}</p>
+                  </div>
+                </div>`;
+            }).join('');
+        }
+    } catch (e) {
+        console.error('Failed to load ugurlar:', e);
+    }
+});
+</script>
+
 <!-- Whelp Widget Code -->
 <script src="https://widget.whelp.co/app.js"></script>
 <script type="text/javascript">
@@ -689,6 +658,38 @@
 		app_id: "6880c82727fd01e5dc2bdcc4f78237cb"
 	});
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    const API_URL = 'https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1';
+    const API_KEY = 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV';
+    const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY };
+
+    const grid = document.getElementById('ug-grid');
+    if (!grid) return;
+
+    try {
+        const res = await fetch(`${API_URL}/ugurlar?select=*&order=id.desc`, { headers: HEADERS });
+        if (res.ok) {
+            const data = await res.json();
+            grid.innerHTML = data.map(item => {
+                const p = item.payload;
+                return `
+                <div class="ug-card-modern" data-name="${p.name || ''}" data-uni="${p.uni || ''}" data-img="${p.img || ''}">
+                  <img src="${p.img || ''}" alt="${p.name || ''}" loading="lazy">
+                  <div class="overlay-text">
+                    <h3 data-i18n="ach-card-title">${p.name || ''}</h3>
+                    <p>${p.uni || ''}</p>
+                  </div>
+                </div>`;
+            }).join('');
+        }
+    } catch (e) {
+        console.error('Failed to load ugurlar:', e);
+    }
+});
+</script>
+
 <!-- Whelp Widget Code -->
 
 </body>
