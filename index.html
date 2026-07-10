@@ -3733,9 +3733,24 @@
           const grid = document.getElementById('partners-grid-content');
           if (!grid) return;
           const repeated = [...partners, ...partners, ...partners, ...partners, ...partners];
-          grid.innerHTML = repeated.map(p => `
+          grid.innerHTML = repeated.map(p => {
+            const logo = p.logo_url || p.logo;
+            let imgStyle = '';
+            if (p.name === 'APEIA' || (p.logo_url && p.logo_url.includes('aotmalogo'))) imgStyle = 'transform: scale(1.6);';
+            return `
             <div class="partner-item">
-              <img src="${p.logo}" alt="${p.name}"  ${p.imgStyle ? `style="${p.imgStyle}"` : ''}>
+              <img src="${logo}" alt="${p.name}" ${imgStyle ? `style="${imgStyle}"` : ''}>
+              <span class="partner-name">${p.name}</span>
+              ${p.description ? `
+                <div class="partner-overlay">
+                  <div style="font-weight: 800; color: white; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 5px;">${p.name}</div>
+                  <div class="partner-info-text">${p.description}</div>
+                </div>
+              ` : ''}
+            </div>
+            `;
+          }).join('');
+        }" alt="${p.name}"  ${p.imgStyle ? `style="${p.imgStyle}"` : ''}>
               <span class="partner-name">${p.name}</span>
               ${p.description ? `
                 <div class="partner-overlay">
@@ -3755,8 +3770,18 @@
         }
 
         async function initPartners() {
-          // Admin panel fetch removed by user request
-          // Now relies completely on STATIC_PARTNERS
+          const API_URL = 'https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1';
+          const API_KEY = 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV';
+          const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY };
+          try {
+            const res = await fetch(`${API_URL}/partners?select=*&order=sort_order.asc`, { headers: HEADERS });
+            if (res.ok) {
+              const data = await res.json();
+              renderPartners(data);
+            }
+          } catch (e) {
+            console.error('Failed to load partners from Supabase:', e);
+          }
         }
 
         async function initNews() {
