@@ -1233,21 +1233,21 @@ fbq('track', 'PageView');
 
       <div style="display:grid; grid-template-columns:1fr 2fr; gap:30px; align-items:start;">
          <!-- Form -->
-         <div class="panel" style="padding: 25px;">
+         <div class="panel" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); padding: 25px;">
             <h3 id="popup-form-title" style="margin-bottom:20px; font-weight:800; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:10px;">Yeni Pop Up Əlavə Et</h3>
             <form id="popup-form" onsubmit="handlePopupSubmit(event)">
                <input type="hidden" id="popup-id">
                <div class="form-group">
                   <label>Başlıq</label>
-                  <input type="text" id="popup-title" class="form-control" placeholder="Məsələn: Qəbul Kampaniyası 2026" required>
+                  <input type="text" id="popup-title" class="form-control" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white; padding: 12px; transition: all 0.3s ease;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'" placeholder="Məsələn: Qəbul Kampaniyası 2026" required>
                </div>
                <div class="form-group">
                   <label>Keçid Linki (istəyə bağlı)</label>
-                  <input type="text" id="popup-link" class="form-control" placeholder="Məsələn: https://evrikaliseyi.edu.az/register">
+                  <input type="text" id="popup-link" class="form-control" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white; padding: 12px; transition: all 0.3s ease;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'" placeholder="Məsələn: https://evrikaliseyi.edu.az/register">
                </div>
                <div class="form-group">
                   <label>Şəkil (URL və ya Base64)</label>
-                  <input type="text" id="popup-img" class="form-control" placeholder="Şəkil URL-i daxil edin və ya fayl seçin" required>
+                  <input type="text" id="popup-img" class="form-control" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white; padding: 12px; transition: all 0.3s ease;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'" placeholder="Şəkil URL-i daxil edin və ya fayl seçin" required>
                   <input type="file" id="popup-img-file" class="form-control" style="margin-top:10px;" accept="image/*">
                </div>
                <div class="form-group" style="display:flex; align-items:center; gap:10px;">
@@ -1259,7 +1259,7 @@ fbq('track', 'PageView');
          </div>
 
          <!-- List -->
-         <div class="panel" style="padding: 0;">
+         <div class="panel" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); padding: 0; overflow: hidden;">
             <div style="padding:20px 25px; border-bottom:1px solid rgba(255,255,255,0.05);">
                <h3 style="font-weight:800; font-size:1.1rem; margin:0;">Mövcud Pop Up-lar</h3>
             </div>

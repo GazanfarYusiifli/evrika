@@ -128,22 +128,7 @@
 </head>
 <body>
 <!-- Navbar visibility rule removed to stay visible on all slides -->
-<!-- Admission Welcome Modal -->
-<div class="welcome-modal-overlay" id="welcomeModal">
-<div class="welcome-modal-content">
-<div class="welcome-modal-close" onclick="closeWelcomeModal()">
-<i class="fas fa-times"></i>
-</div>
-<img alt="Admission" class="welcome-modal-image" src="./assets/admission_popup.jpg"/>
-<div class="welcome-modal-body">
-<h2 class="welcome-modal-title" data-i18n="modal-title">Gələcəyin uğuru burada başlayır..</h2>
-<p class="welcome-modal-desc" data-i18n="modal-desc">
-          2026/27-ci tədris ili üzrə şagird qəbulu davam edir.
-        </p>
-<a class="welcome-modal-btn" data-i18n="modal-btn" href="schools.html">Qeydiyyatdan keç</a>
-</div>
-</div>
-</div>
+
 <!-- Ultra-Modern Floating Navbar -->
 <header class="navbar modern-floating-nav">
 <div class="nav-glass-container">
@@ -4006,22 +3991,12 @@
 
             // Welcome Modal Logic (Temporarily always shown for review)
             setTimeout(() => {
-                const welcomeModal = document.getElementById('welcomeModal');
-                if (welcomeModal) {
-                    welcomeModal.style.display = 'flex';
-                    setTimeout(() => welcomeModal.classList.add('active'), 10);
+                
                 }
             }, 500); // Faster trigger for review
         });
 
-        function closeWelcomeModal() {
-            const welcomeModal = document.getElementById('welcomeModal');
-            if (welcomeModal) {
-                welcomeModal.classList.remove('active');
-                setTimeout(() => {
-                    welcomeModal.style.display = 'none';
-                    // Removed overflow toggle
-                }, 500);
+        , 500);
                 sessionStorage.setItem('evrika_welcome_shown', 'true');
             }
         }
