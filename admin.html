@@ -1223,6 +1223,66 @@ fbq('track', 'PageView');
         </div>
     </div>
 
+    
+    <!-- POPUP MODULE -->
+    <div id="view-popup" class="content" style="display: none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 30px;">
+         <h2 style="font-weight: 800; font-size: 1.8rem;">POP UP İdarəetməsi</h2>
+         <button class="btn-primary" onclick="resetPopupForm()" style="background:var(--burgundy);"><i class="fas fa-plus"></i> Yeni Pop Up</button>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 2fr; gap:30px; align-items:start;">
+         <!-- Form -->
+         <div class="panel" style="padding: 25px;">
+            <h3 id="popup-form-title" style="margin-bottom:20px; font-weight:800; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:10px;">Yeni Pop Up Əlavə Et</h3>
+            <form id="popup-form" onsubmit="handlePopupSubmit(event)">
+               <input type="hidden" id="popup-id">
+               <div class="form-group">
+                  <label>Başlıq</label>
+                  <input type="text" id="popup-title" class="form-control" placeholder="Məsələn: Qəbul Kampaniyası 2026" required>
+               </div>
+               <div class="form-group">
+                  <label>Keçid Linki (istəyə bağlı)</label>
+                  <input type="text" id="popup-link" class="form-control" placeholder="Məsələn: https://evrikaliseyi.edu.az/register">
+               </div>
+               <div class="form-group">
+                  <label>Şəkil (URL və ya Base64)</label>
+                  <input type="text" id="popup-img" class="form-control" placeholder="Şəkil URL-i daxil edin və ya fayl seçin" required>
+                  <input type="file" id="popup-img-file" class="form-control" style="margin-top:10px;" accept="image/*">
+               </div>
+               <div class="form-group" style="display:flex; align-items:center; gap:10px;">
+                  <input type="checkbox" id="popup-status" checked style="width:20px; height:20px;">
+                  <label for="popup-status" style="margin:0;">Aktivdir (Sayta daxil olanda görünsün)</label>
+               </div>
+               <button type="submit" id="popup-submit-btn" class="btn-primary" style="width:100%; margin-top:15px; background:var(--success);">Yadda Saxla</button>
+            </form>
+         </div>
+
+         <!-- List -->
+         <div class="panel" style="padding: 0;">
+            <div style="padding:20px 25px; border-bottom:1px solid rgba(255,255,255,0.05);">
+               <h3 style="font-weight:800; font-size:1.1rem; margin:0;">Mövcud Pop Up-lar</h3>
+            </div>
+            <div style="overflow-x:auto;">
+               <table class="data-table">
+                  <thead>
+                     <tr>
+                        <th>Şəkil</th>
+                        <th>Başlıq</th>
+                        <th>Status</th>
+                        <th>Link</th>
+                        <th>Əməliyyatlar</th>
+                     </tr>
+                  </thead>
+                  <tbody id="popup-tbody">
+                     <!-- Popups loaded dynamically -->
+                  </tbody>
+               </table>
+            </div>
+         </div>
+      </div>
+    </div>
+
     <div id="view-settings" class="content" style="display: none;">
       <div class="stat-card" style="max-width: 600px; border-top: 4px solid var(--burgundy);">
         <h3 style="margin-bottom: 25px; font-weight: 900;"><i class="fas fa-tools" style="color:var(--burgundy); margin-right: 10px;"></i> Ümumi Sistem Ayarları</h3>
