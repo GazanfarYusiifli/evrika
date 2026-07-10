@@ -3720,15 +3720,6 @@
           });
         }
 
-        const STATIC_PARTNERS = [
-          { name: 'TEDx', logo: 'assets/partners/tedx.jpg', description: '' },
-          { name: 'Cambridge', logo: 'assets/partners/cambridge.png', description: '' },
-          { name: 'AP', logo: 'assets/partners/ap.jpg', description: '' },
-          { name: 'EC IS', logo: 'assets/partners/ecis.png', description: '' },
-          { name: 'APEIA', logo: 'assets/partners/aotmalogo.png', description: '', imgStyle: 'transform: scale(1.6);' },
-          { name: 'Elm və Təhsil Nazirliyi', logo: 'assets/partners/tehsilnazirliyi.png', description: '' }
-        ];
-
         function renderPartners(partners) {
           const grid = document.getElementById('partners-grid-content');
           if (!grid) return;
@@ -3750,23 +3741,6 @@
             </div>
             `;
           }).join('');
-        }" alt="${p.name}"  ${p.imgStyle ? `style="${p.imgStyle}"` : ''}>
-              <span class="partner-name">${p.name}</span>
-              ${p.description ? `
-                <div class="partner-overlay">
-                  <div style="font-weight: 800; color: white; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 5px;">${p.name}</div>
-                  <div class="partner-info-text">${p.description}</div>
-                </div>
-              ` : ''}
-            </div>
-          `).join('');
-        }
-
-        // Render partners immediately with static data
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', () => renderPartners(STATIC_PARTNERS));
-        } else {
-          renderPartners(STATIC_PARTNERS);
         }
 
         async function initPartners() {
