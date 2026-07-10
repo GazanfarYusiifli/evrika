@@ -1232,6 +1232,7 @@ fbq('track', 'PageView');
             <form onsubmit="handlePopupSubmit(event)" id="popup-form" style="display: flex; flex-direction: column; gap: 15px;">
               <input type="hidden" id="popup-id">
               <input type="text" id="popup-title" placeholder="Başlıq (Məs: Qəbul Kampaniyası 2026)" required class="admin-input">
+              <input type="text" id="popup-desc" placeholder="Alt Yazı (Məs: 2026/27-ci tədris ili...)" class="admin-input">
               <input type="text" id="popup-link" placeholder="Keçid Linki (istəyə bağlı)" class="admin-input">
               <div style="font-size:0.65rem; color:var(--text-muted); margin-bottom:5px;"><i class="fas fa-info-circle"></i> Daha gözəl görünüş üçün uyğun ölçülü (Landscape) şəkillərə üstünlük verin</div>
               <div style="display:flex; gap:10px; align-items:center;">
@@ -2982,6 +2983,7 @@ fbq('track', 'PageView');
         const btn = document.getElementById('popup-submit-btn');
         const payload = {
             title: document.getElementById('popup-title').value,
+            desc: document.getElementById('popup-desc').value,
             img: document.getElementById('popup-img').value,
             link: document.getElementById('popup-link').value,
             status: document.getElementById('popup-status').value,
