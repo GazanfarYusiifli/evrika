@@ -554,6 +554,7 @@ fbq('track', 'PageView');
       <div class="sb-link" data-module="site" onclick="switchTab('parents')"><i class="fas fa-heart"></i> <span>Valideynlərimiz</span></div>
       <div class="sb-link" data-module="site" onclick="switchTab('partners')"><i class="fas fa-handshake"></i> <span>Partnyorlar</span></div>
       <div class="sb-link" data-module="site" onclick="switchTab('news')"><i class="fas fa-newspaper"></i> <span>Xəbər & Media</span></div>
+      <div class="sb-link" data-module="site" onclick="switchTab('popup')"><i class="fas fa-window-restore"></i> <span>POP UP</span></div>
       <div class="sb-link" data-module="site" onclick="switchTab('leadership')"><i class="fas fa-user-shield"></i> <span>Rəhbərlik</span></div>
 
       <div class="sb-link" data-module="finance" onclick="switchTab('settings')"><i class="fas fa-cog"></i> <span>Sistem Ayarları</span></div>
@@ -2306,7 +2307,7 @@ fbq('track', 'PageView');
     window.switchTab = (t) => {
       document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
       if(document.getElementById('view-'+t)) document.getElementById('view-'+t).style.display = 'block';
-      const titles = { 'dashboard':'Dashboard',  'analytics':'Sayt Analitikası', 'speed':'Sayt Sürəti', 'apps':'Müraciətlər', 'exam-results':'Nəticələr & Rəylər', 'kanban':'Kanban Board', 'tasks':'Tapşırıqlar', 'employees':'Əməkdaşlar', 'hr-panel':'Vakansiyalar', 'finance':'Maliyyə Paneli', 'epoint-reports':'Köçürmələrin Tarixçəsi', 'kupon':'Kupon Alanlar', 'ugurlar':'Uğurlar & Məzun', 'news':'Xəbərlər', 'leadership':'Rəhbərlik', 'settings':'Sistem Ayarları', 'parents':'Valideynlərimiz' };
+      const titles = { 'dashboard':'Dashboard',  'analytics':'Sayt Analitikası', 'speed':'Sayt Sürəti', 'apps':'Müraciətlər', 'exam-results':'Nəticələr & Rəylər', 'kanban':'Kanban Board', 'tasks':'Tapşırıqlar', 'employees':'Əməkdaşlar', 'hr-panel':'Vakansiyalar', 'finance':'Maliyyə Paneli', 'epoint-reports':'Köçürmələrin Tarixçəsi', 'kupon':'Kupon Alanlar', 'ugurlar':'Uğurlar & Məzun', 'news':'Xəbərlər', 'popup':'POP UP Yönətimi', 'leadership':'Rəhbərlik', 'settings':'Sistem Ayarları', 'parents':'Valideynlərimiz' };
       document.getElementById('topbar-title').innerText = titles[t] || 'EVRIKA EMS';
       
       // Handle the active class for sidebar links
