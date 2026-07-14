@@ -817,6 +817,14 @@
 	Whelp("init", {
 		app_id: "6880c82727fd01e5dc2bdcc4f78237cb"
 	});
+	// Mobil ekranda avtomatik açılmanın qarşısını almaq üçün (JS üsulu)
+	if (window.innerWidth < 768) {
+		let wCount = 0;
+		let wTimer = setInterval(() => {
+			if (typeof Whelp === 'function') { Whelp('close'); }
+			if (++wCount > 10) clearInterval(wTimer);
+		}, 500);
+	}
 </script>
 <!-- Whelp Widget Code -->
 
