@@ -2524,15 +2524,22 @@
 <script src="https://widget.whelp.co/app.js"></script>
 <script type="text/javascript">
 	Whelp("init", {
-		app_id: "6880c82727fd01e5dc2bdcc4f78237cb"
+		app_id: "fdbc088cd36f5d0531bd6672933d00b2"
 	});
-	// Mobil ekranda avtomatik açılmanın qarşısını almaq üçün (JS üsulu)
-	if (window.innerWidth < 768) {
-		let wCount = 0;
-		let wTimer = setInterval(() => {
-			if (typeof Whelp === 'function') { Whelp('close'); }
-			if (++wCount > 10) clearInterval(wTimer);
-		}, 500);
+	
+	// Ensure Whelp doesn't auto open on mobile by intercepting its state
+	if (window.innerWidth <= 768) {
+	    // Poll and force close if it opens automatically without user interaction
+	    let userClicked = false;
+	    window.addEventListener('touchstart', (e) => { userClicked = true; }, {once: true});
+	    let wTimer = setInterval(() => {
+	        if (!userClicked && typeof Whelp === 'function') {
+	            try { Whelp('close'); } catch(e) {}
+	        } else if (userClicked) {
+	            clearInterval(wTimer);
+	        }
+	    }, 300);
+	    setTimeout(() => clearInterval(wTimer), 8000);
 	}
 </script>
 <!-- Whelp Widget Code -->
