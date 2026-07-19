@@ -4053,15 +4053,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
             // Welcome Modal Logic (Temporarily always shown for review)
             setTimeout(() => {
-                
+                if (typeof openWelcomeModal === 'function' && !sessionStorage.getItem('evrika_welcome_shown')) {
+                    openWelcomeModal();
+                    sessionStorage.setItem('evrika_welcome_shown', 'true');
                 }
             }, 500); // Faster trigger for review
         });
-
-        , 500);
-                sessionStorage.setItem('evrika_welcome_shown', 'true');
-            }
-        }
     </script>
 <!-- Cookie Consent Scripts Removed -->
 <!-- Video Modal (Global scope) -->
