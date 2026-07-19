@@ -330,6 +330,21 @@ fbq('init', '854979317627172');
 fbq('track', 'PageView');
 </script>
 <!-- End Meta Pixel Code -->
+
+<!-- UTM Tracker -->
+<script>
+(function() {
+    var params = new URLSearchParams(window.location.search);
+    var utms = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+    utms.forEach(function(utm) {
+        if (params.has(utm)) {
+            sessionStorage.setItem(utm, params.get(utm));
+        }
+    });
+})();
+</script>
+<!-- End UTM Tracker -->
+
 </head>
 <body>
     <!-- EMS Gateway Hub -->
@@ -685,7 +700,7 @@ fbq('track', 'PageView');
 
       <div class="table-wrapper">
         <table>
-          <thead><tr><th>Müraciətçi</th><th>Əlaqə</th><th>Mənbə / Bölmə</th><th>Ödəniş</th><th>Tarix</th><th>Status</th><th>Əməliyyat</th></tr></thead>
+          <thead><tr><th>Müraciətçi</th><th>Əlaqə</th><th>Mənbə / Bölmə</th><th>Kampaniya (UTM)</th><th>Ödəniş</th><th>Tarix</th><th>Status</th><th>Əməliyyat</th></tr></thead>
           <tbody id="crm-tbody"></tbody>
         </table>
       </div>
@@ -1718,6 +1733,8 @@ fbq('track', 'PageView');
         // Robust phone extraction
         const phone = item.phone || item.tel || item['[1.Əlaqə] Əlaqə Nömrəsi'] || '-';
 
+        const utmCampaign = item.utm_campaign || '-';
+
         return `<tr>
           <td>
             <div style="font-weight:800; color:white; font-size:0.95rem;">${fullName}</div>
@@ -1725,6 +1742,7 @@ fbq('track', 'PageView');
           </td>
           <td style="font-weight:600; font-size:0.9rem;">${phone}</td>
           <td><span class="kanban-card-tag" style="background:rgba(139,26,43,0.1); color:var(--burgundy); border:1px solid rgba(139,26,43,0.2); padding:6px 12px; border-radius:8px; font-weight:700;">${sourceLabel}</span></td>
+          <td style="font-size:0.85rem; color:var(--accent); font-weight:600;">${utmCampaign}</td>
           <td>${item.payment_status ? `<span style="font-weight:bold; font-size:0.75rem; color:${item.payment_status==='Ödənilib' ? '#10B981' : '#EF4444'}; background:${item.payment_status==='Ödənilib' ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)'}; padding:4px 8px; border-radius:6px;">${item.payment_status}</span>` : '<span style="color:var(--text-muted); font-size:0.8rem;">-</span>'}</td>
           <td style="font-size:0.85rem; color:var(--text-muted);">${new Date(item.created_at || item.submissionDate || Date.now()).toLocaleString('az')}</td>
           <td>
@@ -2421,7 +2439,8 @@ fbq('track', 'PageView');
         'ƏLAQƏ VƏ TƏMAS': [],
         'TƏHSİL VƏ İSTİQAMƏT': [],
         'ÖDƏNİŞ DETALLARI': [],
-                'FAYLLAR': []
+        'MARKETİNQ (UTM)': [],
+        'FAYLLAR': []
       };
 
       for(let key in item) {
@@ -2483,6 +2502,8 @@ fbq('track', 'PageView');
           groups['ŞƏXSİ MƏLUMATLAR'].push(dataPair);
         } else if (upperKey.includes('FİLİAL') || upperKey.includes('BÖLMƏ') || upperKey.includes('SİNİF') || upperKey.includes('SEKTOR') || upperKey.includes('TƏHSİL') || upperKey.includes('MÜƏSSİSƏ') || upperKey.includes('MƏKTƏB') || upperKey.includes('BAĞÇA') || upperKey.includes('HAZIRDA OXUDUĞU') || upperKey.includes('MƏRKƏZ')) {
           groups['TƏHSİL VƏ İSTİQAMƏT'].push(dataPair);
+        } else if (upperKey.startsWith('UTM_')) {
+          groups['MARKETİNQ (UTM)'].push(dataPair);
         } else {
           groups['ÖDƏNİŞ DETALLARI'].push(dataPair);
         }
