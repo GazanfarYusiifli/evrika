@@ -1499,7 +1499,7 @@ fbq('track', 'PageView');
     });
 
     const API_URL='https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1', API_KEY='sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV', HEADERS={ 'apikey':API_KEY, 'Authorization':'Bearer '+API_KEY, 'Content-Type':'application/json' };
-    let rawData=[], filteredData=[], vacanciesData=[], newsData=[], ugurlarData=[], rawCalls=[], tasksData=JSON.parse(localStorage.getItem('evrika_tasks'))||[];
+    let rawData=[], filteredData=[], hrData=[], vacanciesData=[], newsData=[], ugurlarData=[], rawCalls=[], tasksData=JSON.parse(localStorage.getItem('evrika_tasks'))||[];
 
     // --- CALL CENTER LOGIC ---
     let supabaseClient = null;
@@ -1619,7 +1619,14 @@ fbq('track', 'PageView');
         if(res.ok) { 
             let fetchedData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id, created_at: r.created_at })); 
             window.allFetchedData = fetchedData;
+            
+            // Extract HR apps
+            hrData = fetchedData.filter(r => r.source === 'Karyera' || r.position);
+
             rawData = fetchedData.filter(r => {
+                // Remove HR apps from main CRM
+                if (r.source === 'Karyera' || r.position) return false;
+                
                 // Əgər ödənişli müraciətdirsə və hələ ödənilməyibsə, CRM-ə düşməsin
                 if ((r.amount || r.epoint_amount || r.epoint_transaction) && r.payment_status !== 'Ödənilib') return false;
                 if (r.is_scan_log) return false;
@@ -2421,11 +2428,11 @@ fbq('track', 'PageView');
         }
     };
 
-    window.viewDetails = (idx, isFinance = false) => {
+    window.viewDetails = (idx, isFinance = false, isHR = false) => {
       const isExam = document.getElementById('view-exam-results') && document.getElementById('view-exam-results').style.display === 'block';
-      let originalItem = filteredData[idx];
+      let originalItem = isFinance ? financeData[idx] : (isHR ? hrData[idx] : filteredData[idx]);
       if ((originalItem.status || '').toLowerCase() === 'yeni') {
-          updateStatus(idx, 'Baxılıb');
+          updateStatus(idx, 'Baxılıb', isFinance, isHR);
           originalItem.status = 'Baxılıb';
       }
       let item = JSON.parse(JSON.stringify(originalItem));
@@ -2605,9 +2612,9 @@ fbq('track', 'PageView');
 
     window.renderVacancyApps = () => {
        const tb = document.getElementById('vac-apps-tbody'); if(!tb) return;
-       const apps = rawData.filter(i => i.source === 'Karyera' || i.position);
+       const apps = hrData;
        if(document.getElementById('vac-app-count')) document.getElementById('vac-app-count').innerText = apps.length + ' Müraciət';
-       tb.innerHTML = apps.map(a => `<tr><td>${a.fullName || 'Adsız'}</td><td>${a.phone || '-'}</td><td>${a.position || '-'}</td><td>${a.submissionDate || '-'}</td><td>${a.status || 'Yeni'}</td><td><button onclick="viewDetails(${rawData.indexOf(a)})" class="btn-view">Bax</button></td></tr>`).join('');
+       tb.innerHTML = apps.map((a, idx) => `<tr><td>${a.fullName || 'Adsız'}</td><td>${a.phone || '-'}</td><td>${a.position || '-'}</td><td>${a.submissionDate || '-'}</td><td>${a.status || 'Yeni'}</td><td><button onclick="viewDetails(${idx}, false, true)" class="btn-view">Bax</button></td></tr>`).join('');
     };
 
     window.loadUgurlar = async () => {
@@ -3577,8 +3584,8 @@ fbq('track', 'PageView');
       });
     }
 
-    async function updateStatus(idx, newStatus) {
-      const item = filteredData[idx];
+    async function updateStatus(idx, newStatus, isFinance = false, isHR = false) {
+      const item = isFinance ? financeData[idx] : (isHR ? hrData[idx] : filteredData[idx]);
       const dbId = item._db_id_;
       if (!dbId) return;
 
