@@ -546,7 +546,7 @@ fbq('track', 'PageView');
       <div class="sb-link active" data-module="crm" onclick="switchTab('apps')"><i class="fas fa-users"></i> <span>Müraciətlər & CRM</span></div>
       <div class="sb-group-title" data-module="crm">CRM & ANALİTİKA</div>
       <div class="sb-link" data-module="crm" onclick="switchTab('dashboard')"><i class="fas fa-th-large"></i> <span>Dashboard</span></div>
-      <a href="https://vercel.com/evrikaproject/evrika/analytics" target="_blank" class="sb-link" data-module="crm" style="text-decoration:none;"><i class="fas fa-chart-line"></i> <span>Analitika</span></a>
+      <a href="#" class="sb-link" data-module="crm" onclick="switchView(\'analytics\')" style="text-decoration:none;"><i class="fas fa-chart-line"></i> <span>Analitika</span></a>
       <div class="sb-link" data-module="crm" onclick="switchTab('speed')"><i class="fas fa-tachometer-alt"></i> <span>Sayt Sürəti</span></div>
       <div class="sb-link" data-module="crm" onclick="switchTab('apps')" style="display:flex; justify-content:space-between; align-items:center;">
         <div><i class="fas fa-user-graduate"></i> <span>Müraciətlər</span></div>
@@ -653,6 +653,21 @@ fbq('track', 'PageView');
       </div>
 
 
+    </div>
+
+    
+    <div id="view-analytics" class="content" style="display: none;">
+      <h2 style="color: white; margin-bottom: 20px;">Marketinq Analitikası (UTM)</h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+        <div class="stat-card" style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+          <h3 style="color: white; margin-bottom: 20px; font-size: 1.1rem; text-align: center;">Mənbələr üzrə (utm_source)</h3>
+          <canvas id="utmSourceChart"></canvas>
+        </div>
+        <div class="stat-card" style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+          <h3 style="color: white; margin-bottom: 20px; font-size: 1.1rem; text-align: center;">Kampaniyalar üzrə (utm_campaign)</h3>
+          <canvas id="utmCampaignChart"></canvas>
+        </div>
+      </div>
     </div>
 
     <div id="view-speed" class="content" style="display: none;">
@@ -1625,7 +1640,7 @@ fbq('track', 'PageView');
             }
         }
       } catch(e) {}
-      renderDashboard(); renderApps(); renderFinance(); renderVacancyApps(); loadUgurlar(); loadVacancies(); loadNews(); loadManagement(); loadMezunlar();
+      renderDashboard(); renderApps(); renderAnalytics(); renderFinance(); renderVacancyApps(); loadUgurlar(); loadVacancies(); loadNews(); loadManagement(); loadMezunlar();
     }
 
     window.filterData = () => {
@@ -2369,6 +2384,7 @@ fbq('track', 'PageView');
       if(t==='hr-panel') renderVacancyApps();
       if(t==='apps') renderApps();
       if(t==='dashboard') renderDashboard();
+      if(t==='analytics') renderAnalytics();
       if(t==='finance') renderFinance();
       if(t==='epoint-reports') renderEpointReports();
       if(t==='call-center') fetchCalls();
@@ -3230,6 +3246,88 @@ fbq('track', 'PageView');
         document.getElementById('partner-form-title').innerText = "Yeni Partnyor Əlavə Et";
         document.getElementById('partner-submit-btn').innerText = "Yadda Saxla";
     };
+
+
+    window.utmSourceChartObj = null;
+    window.utmCampaignChartObj = null;
+
+    function renderAnalytics() {
+      const sourceCounts = {};
+      const campaignCounts = {};
+
+      rawData.forEach(item => {
+        let source = item.utm_source || item.utm_medium || '';
+        let campaign = item.utm_campaign || '';
+        
+        if (source) {
+            source = source.toLowerCase().trim();
+            if (source.includes('face') || source.includes('fb')) source = 'Facebook';
+            else if (source.includes('insta') || source.includes('ig')) source = 'Instagram';
+            else if (source.includes('goog') || source.includes('gl')) source = 'Google';
+            sourceCounts[source] = (sourceCounts[source] || 0) + 1;
+        }
+
+        if (campaign) {
+            campaign = campaign.trim();
+            campaignCounts[campaign] = (campaignCounts[campaign] || 0) + 1;
+        }
+      });
+
+      const sLabels = Object.keys(sourceCounts).length > 0 ? Object.keys(sourceCounts) : ['Məlumat yoxdur'];
+      const sData = Object.keys(sourceCounts).length > 0 ? Object.values(sourceCounts) : [1];
+      
+      const cLabels = Object.keys(campaignCounts).length > 0 ? Object.keys(campaignCounts) : ['Məlumat yoxdur'];
+      const cData = Object.keys(campaignCounts).length > 0 ? Object.values(campaignCounts) : [1];
+
+      // Colors
+      const colors = ['#E11D48', '#2563EB', '#10B981', '#F59E0B', '#8B5CF6'];
+
+      // Source Chart
+      const ctxS = document.getElementById('utmSourceChart');
+      if (ctxS) {
+          if (window.utmSourceChartObj) window.utmSourceChartObj.destroy();
+          window.utmSourceChartObj = new Chart(ctxS.getContext('2d'), {
+              type: 'doughnut',
+              data: {
+                  labels: sLabels,
+                  datasets: [{
+                      data: sData,
+                      backgroundColor: colors,
+                      borderWidth: 0
+                  }]
+              },
+              options: {
+                  plugins: { legend: { labels: { color: 'white' }, position: 'bottom' } },
+                  cutout: '65%'
+              }
+          });
+      }
+
+      // Campaign Chart
+      const ctxC = document.getElementById('utmCampaignChart');
+      if (ctxC) {
+          if (window.utmCampaignChartObj) window.utmCampaignChartObj.destroy();
+          window.utmCampaignChartObj = new Chart(ctxC.getContext('2d'), {
+              type: 'bar',
+              data: {
+                  labels: cLabels,
+                  datasets: [{
+                      label: 'Müraciət sayı',
+                      data: cData,
+                      backgroundColor: 'rgba(225, 29, 72, 0.8)',
+                      borderRadius: 6
+                  }]
+              },
+              options: {
+                  plugins: { legend: { display: false } },
+                  scales: {
+                      y: { ticks: { color: 'rgba(255,255,255,0.7)', stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.1)' } },
+                      x: { ticks: { color: 'rgba(255,255,255,0.7)' }, grid: { display: false } }
+                  }
+              }
+          });
+      }
+    }
 
     function renderDashboard() {
       if(document.getElementById('dash-total')) document.getElementById('dash-total').innerText = rawData.length;
