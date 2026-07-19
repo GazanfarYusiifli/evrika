@@ -2454,8 +2454,11 @@ fbq('track', 'PageView');
         'ŞƏXSİ MƏLUMATLAR': [],
         'ƏLAQƏ VƏ TƏMAS': [],
         'TƏHSİL VƏ İSTİQAMƏT': [],
+        'İŞ TƏCRÜBƏSİ': [],
+        'BİLİKLƏR (DİL VƏ İT)': [],
         'ÖDƏNİŞ DETALLARI': [],
         'MARKETİNQ (UTM)': [],
+        'ƏLAVƏ MƏLUMAT': [],
         'FAYLLAR': []
       };
 
@@ -2512,12 +2515,18 @@ fbq('track', 'PageView');
           groups['FAYLLAR'].push(dataPair);
         } else if (upperKey.includes('EPOINT') || upperKey.includes('EPOİNT') || upperKey === 'AMOUNT' || upperKey.includes('PAYMENT') || ['RRN', 'APPROVAL_CODE', 'CARD_NUMBER', 'CARDNAME', 'RESULT_CODE', '3DSECURE', 'RESULT_PS', 'RESULT'].includes(upperKey) || upperKey === 'DATE' || upperKey === 'TARIX' || upperKey === 'CREATED_AT' || upperKey === 'MƏNBƏ' || upperKey === 'STATUS' || upperKey === 'ORDER_ID') {
           groups['ÖDƏNİŞ DETALLARI'].push(dataPair);
-        } else if (upperKey.includes('PHONE') || upperKey.includes('TEL') || upperKey.includes('MAIL') || upperKey.includes('MAİL') || upperKey === 'ƏLAQƏ') {
+        } else if (upperKey.includes('PHONE') || upperKey.includes('TEL') || upperKey.includes('MAIL') || upperKey.includes('MAİL') || upperKey.includes('ƏLAQƏ') || upperKey.includes('ÜNVAN')) {
           groups['ƏLAQƏ VƏ TƏMAS'].push(dataPair);
-        } else if (upperKey.includes('AD') || upperKey.includes('SOYAD') || upperKey.includes('NAME') || upperKey.includes('CANDIDATE') || upperKey.includes('STUDENT')) {
+        } else if (upperKey.includes('AD ') || upperKey.includes('ADINIZ') || upperKey.includes('SOYAD') || upperKey.includes('NAME') || upperKey.includes('CANDIDATE') || upperKey.includes('STUDENT') || upperKey.includes('DOĞUM') || upperKey === 'AD' || upperKey === 'ATA ADI') {
           groups['ŞƏXSİ MƏLUMATLAR'].push(dataPair);
-        } else if (upperKey.includes('FİLİAL') || upperKey.includes('BÖLMƏ') || upperKey.includes('SİNİF') || upperKey.includes('SEKTOR') || upperKey.includes('TƏHSİL') || upperKey.includes('MÜƏSSİSƏ') || upperKey.includes('MƏKTƏB') || upperKey.includes('BAĞÇA') || upperKey.includes('HAZIRDA OXUDUĞU') || upperKey.includes('MƏRKƏZ')) {
+        } else if (upperKey.includes('FİLİAL') || upperKey.includes('BÖLMƏ') || upperKey.includes('SİNİF') || upperKey.includes('SEKTOR') || upperKey.includes('TƏHSİL') || upperKey.includes('MÜƏSSİSƏ') || upperKey.includes('MƏKTƏB') || upperKey.includes('BAĞÇA') || upperKey.includes('HAZIRDA OXUDUĞU') || upperKey.includes('MƏRKƏZ') || upperKey.includes('İXTİSAS')) {
           groups['TƏHSİL VƏ İSTİQAMƏT'].push(dataPair);
+        } else if (upperKey.includes('İŞ') || upperKey.includes('TƏCRÜBƏ') || upperKey.includes('VƏZİFƏ')) {
+          groups['İŞ TƏCRÜBƏSİ'].push(dataPair);
+        } else if (upperKey.includes('DİL') || upperKey.includes('KOMPÜTER') || upperKey.includes('OFFİCE') || upperKey.includes('WORKSPACE') || upperKey.includes('PROQRAM')) {
+          groups['BİLİKLƏR (DİL VƏ İT)'].push(dataPair);
+        } else if (upperKey.includes('SERTİFİKAT') || upperKey.includes('TƏLİM') || upperKey.includes('NAİLİYYƏT') || upperKey.includes('MOTİVASİYA')) {
+          groups['ƏLAVƏ MƏLUMAT'].push(dataPair);
         } else if (upperKey.startsWith('UTM_')) {
           groups['MARKETİNQ (UTM)'].push(dataPair);
         } else {
