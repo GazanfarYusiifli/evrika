@@ -3778,17 +3778,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           });
         }
 
+        const STATIC_PARTNERS = [
+          { name: 'TEDx', logo: 'assets/partners/tedx.jpg', description: '' },
+          { name: 'Cambridge', logo: 'assets/partners/cambridge.png', description: '' },
+          { name: 'AP', logo: 'assets/partners/ap.jpg', description: '' },
+          { name: 'EC IS', logo: 'assets/partners/ecis.png', description: '' },
+          { name: 'APEIA', logo: 'assets/partners/aotmalogo.png', description: '', imgStyle: 'transform: scale(1.6);' },
+          { name: 'Elm və Təhsil Nazirliyi', logo: 'assets/partners/tehsilnazirliyi.png', description: '' }
+        ];
+
         function renderPartners(partners) {
           const grid = document.getElementById('partners-grid-content');
           if (!grid) return;
           const repeated = [...partners, ...partners, ...partners, ...partners, ...partners];
-          grid.innerHTML = repeated.map(p => {
-            const logo = p.logo_url || p.logo;
-            let imgStyle = '';
-            if (p.name === 'APEIA' || (p.logo_url && p.logo_url.includes('aotmalogo'))) imgStyle = 'transform: scale(1.6);';
-            return `
+          grid.innerHTML = repeated.map(p => `
             <div class="partner-item">
-              <img src="${logo}" alt="${p.name}" ${imgStyle ? `style="${imgStyle}"` : ''}>
+              <img src="${p.logo}" alt="${p.name}" ${p.imgStyle ? `style="${p.imgStyle}"` : ''}>
               <span class="partner-name">${p.name}</span>
               ${p.description ? `
                 <div class="partner-overlay">
@@ -3797,23 +3802,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 </div>
               ` : ''}
             </div>
-            `;
-          }).join('');
+          `).join('');
         }
 
         async function initPartners() {
-          const API_URL = 'https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1';
-          const API_KEY = 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV';
-          const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY };
-          try {
-            const res = await fetch(`${API_URL}/partners?select=*&order=sort_order.asc`, { headers: HEADERS });
-            if (res.ok) {
-              const data = await res.json();
-              renderPartners(data);
-            }
-          } catch (e) {
-            console.error('Failed to load partners from Supabase:', e);
-          }
+          renderPartners(STATIC_PARTNERS);
         }
 
         async function initNews() {
