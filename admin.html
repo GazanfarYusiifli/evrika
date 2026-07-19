@@ -2516,9 +2516,9 @@ fbq('track', 'PageView');
         
         const dataPair = { rawKey: key, label: cleanKey.toUpperCase(), value: displayVal };
 
-        if (upperKey === 'CV_FILE_BASE64') {
+        if (upperKey.includes('BASE64')) {
           groups['FAYLLAR'].push({ rawKey: key, label: 'Bax / Yüklə (' + (item.cv_file_name || 'Fayl') + ')', value: val, isBase64: true, filename: item.cv_file_name || 'cv_file' });
-        } else if (typeof val === 'string' && upperKey !== 'CV_FILE_NAME' && (val.includes('supabase.co/storage') || val.match(/\.(jpg|jpeg|png|gif|pdf)/i))) {
+        } else if (typeof val === 'string' && !upperKey.includes('FİLE_NAME') && !upperKey.includes('FILE_NAME') && (val.includes('supabase.co/storage') || val.match(/\.(jpg|jpeg|png|gif|pdf)/i))) {
           groups['FAYLLAR'].push(dataPair);
         } else if (upperKey.includes('EPOINT') || upperKey.includes('EPOİNT') || upperKey === 'AMOUNT' || upperKey.includes('PAYMENT') || ['RRN', 'APPROVAL_CODE', 'CARD_NUMBER', 'CARDNAME', 'RESULT_CODE', '3DSECURE', 'RESULT_PS', 'RESULT'].includes(upperKey) || upperKey === 'DATE' || upperKey === 'TARIX' || upperKey === 'CREATED_AT' || upperKey === 'MƏNBƏ' || upperKey === 'STATUS' || upperKey === 'ORDER_ID') {
           groups['ÖDƏNİŞ DETALLARI'].push(dataPair);
