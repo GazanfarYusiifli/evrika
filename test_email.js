@@ -5,7 +5,7 @@ async function testEmail() {
       service: 'gmail',
       auth: {
           user: 'yusifliqezenfer90@gmail.com',
-          pass: 'nnzjppmkbpbhjvow'
+          pass: 'rpgxzocjbyrefdlj'
       }
   });
 

@@ -99,7 +99,7 @@ export default async function handler(req, res) {
     service: 'gmail',
     auth: {
       user: process.env.EMAIL_USER || 'yusifliqezenfer90@gmail.com',
-      pass: process.env.EMAIL_PASS || 'nnzjppmkbpbhjvow'
+      pass: process.env.EMAIL_PASS || 'rpgxzocjbyrefdlj'
     }
   });
 
