@@ -478,8 +478,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="alert-icon"><i class="fas fa-info-circle"></i></div>
             <div class="alert-text">
               <strong>Diqqət:</strong> Qəbul imtahanında iştirak etmək və buraxılış kuponunu əldə etmək üçün onlayn ödəniş tələb olunur:<br>
-              &bull; Məktəbəqədər - 0.01 AZN<br>
-              &bull; 1-11 siniflər - 0.01 AZN
+              &bull; Məktəbəqədər - 25 AZN<br>
+              &bull; 1-11 siniflər - 35 AZN
             </div>
           </div>
           
@@ -512,14 +512,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               });
 
               var classSelect = document.getElementById('mf_class');
-              var amountText = '0.01 AZN';
+              var amountText = '35 AZN';
               if (classSelect && classSelect.value === 'Məktəbəqədər') {
-                amountText = '0.01 AZN';
+                amountText = '25 AZN';
               }
               
               var textContainer = paymentAlert.querySelector('.alert-text');
               if (textContainer) {
-                textContainer.innerHTML = '<strong>Diqqət:</strong> Qəbul imtahanında iştirak etmək və buraxılış kuponunu əldə etmək üçün onlayn ödəniş tələb olunur:<br>&bull; Məktəbəqədər - 0.01 AZN<br>&bull; 1-11 siniflər - 0.01 AZN';
+                textContainer.innerHTML = '<strong>Diqqət:</strong> Qəbul imtahanında iştirak etmək və buraxılış kuponunu əldə etmək üçün onlayn ödəniş tələb olunur:<br>&bull; Məktəbəqədər - 25 AZN<br>&bull; 1-11 siniflər - 35 AZN';
               }
 
               if (allFilled) {
@@ -552,7 +552,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               var previousSchool = document.getElementById('mf_previousSchool').value;
 
               // Həqiqi qiymətlərə keçid
-              var amountNum = (grade === 'Məktəbəqədər' || grade === 'Məktəbəqədər (5-6 yaş)') ? '0.01' : '0.01';
+              var amountNum = (grade === 'Məktəbəqədər' || grade === 'Məktəbəqədər (5-6 yaş)') ? '25' : '35';
 
               var note = "Filial: EVRİKA Beynəlxalq<br>Elm və Texnologiya Liseyi<br>(Gənclik filialı) | Bölmə: " + sectorText + " | Sinif: " + grade + " | E-mail: " + email + " | Əvvəlki müəssisə: " + previousSchool + " | Hazırda oxuduğu sinif: " + currentClass + " | Hazırda oxuduğu bölmə: " + currentSector + " | Ödəniş Məbləği: " + amountNum + " AZN";
 
