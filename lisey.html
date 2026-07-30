@@ -1003,7 +1003,12 @@
       .lang-chip { flex: 0 0 auto !important; scroll-snap-align: center; }
       .foreign-langs { margin-bottom: 150px !important; }
       
-      /* Disable sticky overlap on mobile if it causes cramping */
+      /* Disable sticky overlap on mobile or short screens if it causes cramping */
+      .stack-base { height: auto !important; position: relative !important; padding-bottom: 150px !important; }
+      .stack-cover { margin-top: 0 !important; }
+    }
+    
+    @media (max-height: 850px) {
       .stack-base { height: auto !important; position: relative !important; padding-bottom: 150px !important; }
       .stack-cover { margin-top: 0 !important; }
 
