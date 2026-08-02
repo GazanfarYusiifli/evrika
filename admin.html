@@ -3677,6 +3677,8 @@ fbq('track', 'PageView');
     }
 
     loadData();
+    // Auto-refresh the CRM every 30 seconds
+    setInterval(loadData, 30000);
   </script>
 
     <script>
