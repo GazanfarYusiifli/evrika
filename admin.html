@@ -1624,9 +1624,6 @@ fbq('track', 'PageView');
             hrData = fetchedData.filter(r => r.source === 'Karyera' || r.position);
 
             rawData = fetchedData.filter(r => {
-                // Remove HR apps from main CRM
-                if (r.source === 'Karyera' || r.position) return false;
-                
                 // Şagird qeydiyyatlarının (hətta ödənilməmiş olsa belə) CRM-də görünməsi üçün bu məhdudiyyəti qaldırırıq.
                 // if ((r.amount || r.epoint_amount || r.epoint_transaction) && r.payment_status !== 'Ödənilib') return false;
                 if (r.is_scan_log) return false;
