@@ -2617,8 +2617,8 @@ fbq('track', 'PageView');
     };
 
     window.loadUgurlar = async () => {
-      const res = await fetch(`${API_URL}/ugurlar?select=*&order=id.desc`, { headers: HEADERS });
-      if(res.ok) { ugurlarData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id })); }
+      const res = await fetch(`${API_URL}/ugurlar?select=*`, { headers: HEADERS });
+      if(res.ok) { ugurlarData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id })).sort((a,b) => b._db_id_ - a._db_id_); }
       const tb = document.getElementById('ug-tbody'); if(tb) tb.innerHTML = ugurlarData.map((u, i) => `<tr><td><img src="${u.img}" style="width:40px;height:40px;object-fit:cover;border-radius:8px;"></td><td>${u.name}</td><td>${u.uni}</td><td><div style="display:flex; gap:8px;"><button class="btn-view" style="padding:8px 12px; background:rgba(255,255,255,0.05);" onclick="editUgur(${i})"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:8px 12px;" onclick="deleteUgur('${u._db_id_}')"><i class="fas fa-trash"></i></button></div></td></tr>`).join('');
       if(document.getElementById('dash-ugur')) document.getElementById('dash-ugur').innerText = ugurlarData.length;
     }
@@ -2667,7 +2667,7 @@ fbq('track', 'PageView');
                 alert("Uğurla yadda saxlanıldı!"); 
             } else {
                 const errText = await res.text();
-                alert("Xəta baş verdi: " + errText + "\\nZəhmət olmasa bazada 'ugurlar' cədvəlinin mövcudluğunu və quraşdırmasını yoxlayın.");
+                alert("Xəta baş verdi: " + errText + "\nZəhmət olmasa bazada 'ugurlar' cədvəlinin mövcudluğunu və quraşdırmasını yoxlayın.");
             }
         } catch (err) {
             alert("Sistem xətası: " + err.message);
@@ -2716,15 +2716,15 @@ fbq('track', 'PageView');
     };
 
     window.loadVacancies = async () => {
-      const res = await fetch(`${API_URL}/vacancies?select=*&order=id.desc`, { headers: HEADERS });
-      if(res.ok) vacanciesData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id }));
+      const res = await fetch(`${API_URL}/vacancies?select=*`, { headers: HEADERS });
+      if(res.ok) { vacanciesData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id })).sort((a,b) => b._db_id_ - a._db_id_); }
       const tb = document.getElementById('vac-tbody'); if(tb) tb.innerHTML = vacanciesData.map(v => `<tr><td>${v.title}</td><td>${v.location}</td><td>${v.time}</td><td><button class="btn-danger" onclick="deleteVacancy('${v._db_id_}')">Sil</button></td></tr>`).join('');
       renderDashboard();
     }
 
     window.loadNews = async () => {
-      const res = await fetch(`${API_URL}/news?select=*&order=id.desc`, { headers: HEADERS });
-      if(res.ok) newsData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id }));
+      const res = await fetch(`${API_URL}/news?select=*`, { headers: HEADERS });
+      if(res.ok) { newsData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id })).sort((a,b) => b._db_id_ - a._db_id_); }
       const tb = document.getElementById('news-tbody'); 
       if(tb) tb.innerHTML = newsData.map((n, i) => `<tr><td><img src="${n.img}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;"></td><td>${n.title}</td><td>${n.date}</td><td><div style="display:flex; gap:8px;"><button class="btn-view" style="padding:8px 12px; background:rgba(255,255,255,0.05);" onclick="editNews(${i})"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:8px 12px;" onclick="deleteNews('${n._db_id_}')"><i class="fas fa-trash"></i></button></div></td></tr>`).join('');
     }
@@ -2774,8 +2774,10 @@ fbq('track', 'PageView');
     // --- MEZUNLAR LOGIC ---
     let mezunlarData = [];
     window.loadMezunlar = async () => {
-       const res = await fetch(`${API_URL}/mezunlar?select=*&order=id.desc`, { headers: HEADERS });
-       if(res.ok) mezunlarData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id }));
+       const res = await fetch(`${API_URL}/mezunlar?select=*`, { headers: HEADERS });
+       if(res.ok) { 
+           mezunlarData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id })).sort((a,b) => b._db_id_ - a._db_id_);
+       }
        const tb = document.getElementById('mz-tbody'); if(tb) tb.innerHTML = mezunlarData.map((m, i) => `<tr><td><img src="${m.img}" style="width:40px;height:40px;object-fit:cover;border-radius:50%;"></td><td>${m.name}</td><td>${m.uni}</td><td><div style="display:flex; gap:8px;"><button class="btn-view" style="padding:8px 12px; background:rgba(255,255,255,0.05);" onclick="editMezun(${i})"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:8px 12px;" onclick="deleteMezun('${m._db_id_}')"><i class="fas fa-trash"></i></button></div></td></tr>`).join('');
        if(document.getElementById('dash-mz')) document.getElementById('dash-mz').innerText = mezunlarData.length;
     };
@@ -2837,7 +2839,7 @@ fbq('track', 'PageView');
     let managementData = [];
     window.loadManagement = async () => {
        try {
-         const res = await fetch(`${API_URL}/management?select=*&order=id.asc`, { headers: HEADERS });
+         const res = await fetch(`${API_URL}/management?select=*`, { headers: HEADERS });
          if(res.ok) {
            managementData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id }));
            const tb = document.getElementById('led-tbody'); if(tb) tb.innerHTML = managementData.map((m, i) => `<tr><td><img src="${m.img}" style="width:40px;height:40px;object-fit:cover;border-radius:50%;"></td><td>${m.name}</td><td>${m.role}</td><td><div style="display:flex; gap:8px;"><button class="btn-view" style="padding:8px 12px; background:rgba(255,255,255,0.05);" onclick="editManagement(${i})"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:8px 12px;" onclick="deleteManagement('${m._db_id_}')"><i class="fas fa-trash"></i></button></div></td></tr>`).join('');
@@ -2984,9 +2986,9 @@ fbq('track', 'PageView');
     let popupData = [];
     window.loadPopups = async () => {
         try {
-            const res = await fetch(`${API_URL}/popups?select=*&order=id.desc`, { headers: HEADERS });
+            const res = await fetch(`${API_URL}/popups?select=*`, { headers: HEADERS });
             if(res.ok) {
-                popupData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id }));
+                popupData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id })).sort((a,b) => b._db_id_ - a._db_id_);
                 const tb = document.getElementById('popup-tbody');
                 if(tb) tb.innerHTML = popupData.map((p, i) => `
                     <tr>
@@ -3372,9 +3374,9 @@ fbq('track', 'PageView');
     let parentsData = [];
     window.loadParents = async () => {
         try {
-            const res = await fetch(`${API_URL}/parent_testimonials?select=*&order=id.desc`, { headers: HEADERS });
+            const res = await fetch(`${API_URL}/parent_testimonials?select=*`, { headers: HEADERS });
             if(res.ok) {
-                parentsData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id }));
+                parentsData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id })).sort((a,b) => b._db_id_ - a._db_id_);
                 const tb = document.getElementById('par-tbody');
                 if(tb) tb.innerHTML = parentsData.map((p, i) => `
                     <tr>
