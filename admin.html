@@ -1615,7 +1615,7 @@ fbq('track', 'PageView');
 
     async function loadData() {
       try {
-        const res = await fetch(`${API_URL}/registrations?select=*&order=id.desc&limit=10000`, { headers: HEADERS });
+        const res = await fetch(`${API_URL}/registrations?select=*&order=id.desc&limit=10000&_=${Date.now()}`, { headers: HEADERS });
         if(res.ok) { 
             let fetchedData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id, created_at: r.created_at })); 
             window.allFetchedData = fetchedData;
