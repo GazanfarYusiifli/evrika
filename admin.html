@@ -1615,9 +1615,11 @@ fbq('track', 'PageView');
 
     async function loadData() {
       try {
-        const res = await fetch(`${API_URL}/registrations?select=*&order=id.desc&limit=10000`, { headers: HEADERS, cache: 'no-store' });
+        const res = await fetch(`${API_URL}/registrations?select=*&limit=10000`, { headers: HEADERS, cache: 'no-store' });
         if(res.ok) { 
-            let fetchedData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id, created_at: r.created_at })); 
+            let fetchedData = (await res.json())
+                .map(r => ({ ...r.payload, _db_id_: r.id, created_at: r.created_at }))
+                .sort((a, b) => b._db_id_ - a._db_id_);
             window.allFetchedData = fetchedData;
             
             // Extract HR apps
