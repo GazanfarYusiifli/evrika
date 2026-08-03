@@ -1619,36 +1619,29 @@ fbq('track', 'PageView');
         if(idRes.ok) { 
             const ids = await idRes.json();
             let allData = [];
-            for (let i = 0; i < ids.length; i += 30) {
-                const batchIds = ids.slice(i, i + 30).map(x => x.id).join(',');
+            for (let i = 0; i < ids.length; i += 15) {
+                const batchIds = ids.slice(i, i + 15).map(x => x.id).join(',');
                 const bRes = await fetch(`${API_URL}/registrations?id=in.(${batchIds})&select=*`, { headers: HEADERS });
-                if (bRes.ok) allData.push(...await bRes.json());
-            }
-            let fetchedData = allData
-                .map(r => ({ ...r.payload, _db_id_: r.id, created_at: r.created_at }))
-                .sort((a, b) => b._db_id_ - a._db_id_);
-            window.allFetchedData = fetchedData;
-            
-            // Extract HR apps
-            hrData = fetchedData.filter(r => r.source === 'Karyera' || r.position);
-
-            rawData = fetchedData.filter(r => {
-                // Şagird qeydiyyatlarının (hətta ödənilməmiş olsa belə) CRM-də görünməsi üçün bu məhdudiyyəti qaldırırıq.
-                // if ((r.amount || r.epoint_amount || r.epoint_transaction) && r.payment_status !== 'Ödənilib') return false;
-                if (r.is_scan_log) return false;
-                return true;
-            });
-            filteredData = [...rawData]; 
-            
-            // Calculate new apps badge
-            const newCount = rawData.filter(item => (item.status || '').toLowerCase() === 'yeni').length;
-            const badge = document.getElementById('new-apps-badge');
-            if (badge) {
-                if (newCount > 0) {
-                    badge.innerText = newCount;
-                    badge.style.display = 'inline-block';
-                } else {
-                    badge.style.display = 'none';
+                if (bRes.ok) {
+                    allData.push(...await bRes.json());
+                    // Proqressiv yükləmə - məlumat gəldikcə ekrana çıxarır
+                    let partialData = allData
+                        .map(r => ({ ...r.payload, _db_id_: r.id, created_at: r.created_at }))
+                        .sort((a, b) => b._db_id_ - a._db_id_);
+                    
+                    window.allFetchedData = partialData;
+                    hrData = partialData.filter(r => r.source === 'Karyera' || r.position);
+                    rawData = partialData.filter(r => !r.is_scan_log);
+                    filteredData = [...rawData];
+                    
+                    renderApps();
+                    
+                    const newCount = rawData.filter(item => (item.status || '').toLowerCase() === 'yeni').length;
+                    const badge = document.getElementById('new-apps-badge');
+                    if (badge) {
+                        badge.innerText = newCount;
+                        badge.style.display = newCount > 0 ? 'inline-block' : 'none';
+                    }
                 }
             }
         }
@@ -1669,8 +1662,8 @@ fbq('track', 'PageView');
         
         // Yeni data var, tam çək (batch ilə timeout olmasın)
         let allData = [];
-        for (let i = 0; i < newIds.length; i += 30) {
-            const batchIds = newIds.slice(i, i + 30).map(x => x.id).join(',');
+        for (let i = 0; i < newIds.length; i += 15) {
+            const batchIds = newIds.slice(i, i + 15).map(x => x.id).join(',');
             const bRes = await fetch(`${API_URL}/registrations?id=in.(${batchIds})&select=*`, { headers: HEADERS });
             if (bRes.ok) allData.push(...await bRes.json());
         }
