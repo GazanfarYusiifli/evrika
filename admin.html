@@ -1613,7 +1613,7 @@ fbq('track', 'PageView');
       return s;
     }
 
-    async function loadData() {
+    async function initialLoad() {
       try {
         const res = await fetch(`${API_URL}/registrations?select=*`, { headers: HEADERS, cache: 'no-store' });
         if(res.ok) { 
@@ -1647,6 +1647,56 @@ fbq('track', 'PageView');
         }
       } catch(e) {}
       renderDashboard(); renderApps(); renderAnalytics(); renderFinance(); renderVacancyApps(); loadUgurlar(); loadVacancies(); loadNews(); loadManagement(); loadMezunlar();
+    }
+
+    async function refreshApps() {
+      // Səssizcə yoxla və ancaq yeni data varsa yenilə (səhifə donmasın, modal itməsin)
+      try {
+        const res = await fetch(`${API_URL}/registrations?select=id`, { headers: HEADERS, cache: 'no-store' });
+        if(res.ok) { 
+            const newIds = await res.json();
+            if(window.allFetchedData && window.allFetchedData.length === newIds.length) {
+                return; // Dəyişiklik yoxdur
+            }
+        }
+        
+        // Yeni data var, tam çək
+        const fullRes = await fetch(`${API_URL}/registrations?select=*`, { headers: HEADERS, cache: 'no-store' });
+        if(fullRes.ok) {
+            let fetchedData = (await fullRes.json())
+                .map(r => ({ ...r.payload, _db_id_: r.id, created_at: r.created_at }))
+                .sort((a, b) => b._db_id_ - a._db_id_);
+            window.allFetchedData = fetchedData;
+            
+            hrData = fetchedData.filter(r => r.source === 'Karyera' || r.position);
+            rawData = fetchedData.filter(r => !r.is_scan_log);
+            
+            // Yalnız axtarış/filtr yoxdursa və ya ehtiyac varsa yenilə
+            const q = document.getElementById('search-input')?.value.toLowerCase() || '';
+            const source = document.getElementById('filter-source')?.value || 'all';
+            const status = document.getElementById('filter-status')?.value || 'all';
+            
+            if (q === '' && source === 'all' && status === 'all') {
+                filteredData = [...rawData];
+                renderApps();
+            } else {
+                window.filterData();
+            }
+            
+            const newCount = rawData.filter(item => (item.status || '').toLowerCase() === 'yeni').length;
+            const badge = document.getElementById('new-apps-badge');
+            if (badge) {
+                if (newCount > 0) {
+                    badge.innerText = newCount;
+                    badge.style.display = 'inline-block';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+            
+            renderDashboard(); renderAnalytics(); renderFinance(); renderVacancyApps();
+        }
+      } catch(e) {}
     }
 
     window.filterData = () => {
@@ -3676,9 +3726,9 @@ fbq('track', 'PageView');
       b.textContent = b.textContent === 'AZ' ? 'EN' : 'AZ';
     }
 
-    loadData();
-    // Auto-refresh the CRM every 30 seconds
-    setInterval(loadData, 30000);
+    initialLoad();
+    // Auto-refresh the CRM every 30 seconds smoothly
+    setInterval(refreshApps, 30000);
   </script>
 
     <script>
