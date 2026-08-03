@@ -1488,7 +1488,7 @@ fbq('track', 'PageView');
             document.getElementById('main-sidebar').style.display='flex';
             const startTabs = { 'crm':'dashboard', 'hr':'hr-panel', 'finance':'finance', 'site':'ugurlar', 'exam':'exam-results' };
             switchTab(startTabs[mk]);
-            loadData();
+            initialLoad();
             loadManagement();
         }, 500);
     }
