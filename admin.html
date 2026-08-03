@@ -1615,9 +1615,16 @@ fbq('track', 'PageView');
 
     async function initialLoad() {
       try {
-        const res = await fetch(`${API_URL}/registrations?select=*`, { headers: HEADERS, cache: 'no-store' });
-        if(res.ok) { 
-            let fetchedData = (await res.json())
+        const idRes = await fetch(`${API_URL}/registrations?select=id&order=id.desc`, { headers: HEADERS, cache: 'no-store' });
+        if(idRes.ok) { 
+            const ids = await idRes.json();
+            let allData = [];
+            for (let i = 0; i < ids.length; i += 30) {
+                const batchIds = ids.slice(i, i + 30).map(x => x.id).join(',');
+                const bRes = await fetch(`${API_URL}/registrations?id=in.(${batchIds})&select=*`, { headers: HEADERS });
+                if (bRes.ok) allData.push(...await bRes.json());
+            }
+            let fetchedData = allData
                 .map(r => ({ ...r.payload, _db_id_: r.id, created_at: r.created_at }))
                 .sort((a, b) => b._db_id_ - a._db_id_);
             window.allFetchedData = fetchedData;
@@ -1660,10 +1667,16 @@ fbq('track', 'PageView');
             }
         }
         
-        // Yeni data var, tam çək
-        const fullRes = await fetch(`${API_URL}/registrations?select=*`, { headers: HEADERS, cache: 'no-store' });
-        if(fullRes.ok) {
-            let fetchedData = (await fullRes.json())
+        // Yeni data var, tam çək (batch ilə timeout olmasın)
+        let allData = [];
+        for (let i = 0; i < newIds.length; i += 30) {
+            const batchIds = newIds.slice(i, i + 30).map(x => x.id).join(',');
+            const bRes = await fetch(`${API_URL}/registrations?id=in.(${batchIds})&select=*`, { headers: HEADERS });
+            if (bRes.ok) allData.push(...await bRes.json());
+        }
+        
+        if(allData.length > 0) {
+            let fetchedData = allData
                 .map(r => ({ ...r.payload, _db_id_: r.id, created_at: r.created_at }))
                 .sort((a, b) => b._db_id_ - a._db_id_);
             window.allFetchedData = fetchedData;
