@@ -2485,7 +2485,7 @@ fbq('track', 'PageView');
 
     window.viewDetails = (idx, isFinance = false, isHR = false) => {
       const isExam = document.getElementById('view-exam-results') && document.getElementById('view-exam-results').style.display === 'block';
-      let originalItem = isFinance ? financeData[idx] : (isHR ? hrData[idx] : filteredData[idx]);
+      let originalItem = (isHR ? hrData[idx] : filteredData[idx]);
       if ((originalItem.status || '').toLowerCase() === 'yeni') {
           updateStatus(idx, 'Baxılıb', isFinance, isHR);
           originalItem.status = 'Baxılıb';
@@ -3642,7 +3642,7 @@ fbq('track', 'PageView');
     }
 
     async function updateStatus(idx, newStatus, isFinance = false, isHR = false) {
-      const item = isFinance ? financeData[idx] : (isHR ? hrData[idx] : filteredData[idx]);
+      const item = (isHR ? hrData[idx] : filteredData[idx]);
       const dbId = item._db_id_;
       if (!dbId) return;
 
