@@ -2177,7 +2177,7 @@ fbq('track', 'PageView');
         if(!tbParticipated || !tbKupon) return;
         
         // Check for epoint_amount or explicit payment_status
-        const allExamStudents = rawData.filter(i => (i.epoint_amount || i.amount) && i.payment_status === 'Ödənilib');
+        const allExamStudents = rawData.filter(i => (i.epoint_amount || i.amount) && i.payment_status === 'Ödənilib')
                                    .sort((a,b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
         
         let doneCount = 0;
