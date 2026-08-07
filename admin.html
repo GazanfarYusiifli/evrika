@@ -1648,8 +1648,15 @@ fbq('track', 'PageView');
                         .sort((a, b) => b._db_id_ - a._db_id_);
                     
                     window.allFetchedData = partialData;
-                    hrData = partialData.filter(r => r.source === 'Karyera' || r.position);
-                    rawData = partialData.filter(r => !r.is_scan_log);
+                    
+                    const isKaryera = (r) => {
+                        if (!r) return false;
+                        const s = r.source || '';
+                        return s.includes('Karyera') || s.includes('Vakansiya') || s === 'career' || !!r.position || getGranularSource(r) === 'career';
+                    };
+                    
+                    hrData = partialData.filter(r => isKaryera(r));
+                    rawData = partialData.filter(r => !r.is_scan_log && !isKaryera(r));
                     filteredData = [...rawData];
                     
                     renderApps();
@@ -1697,8 +1704,14 @@ fbq('track', 'PageView');
                 .sort((a, b) => b._db_id_ - a._db_id_);
             window.allFetchedData = fetchedData;
             
-            hrData = fetchedData.filter(r => r.source === 'Karyera' || r.position);
-            rawData = fetchedData.filter(r => !r.is_scan_log);
+            const isKaryera = (r) => {
+                if (!r) return false;
+                const s = r.source || '';
+                return s.includes('Karyera') || s.includes('Vakansiya') || s === 'career' || !!r.position || getGranularSource(r) === 'career';
+            };
+            
+            hrData = fetchedData.filter(r => isKaryera(r));
+            rawData = fetchedData.filter(r => !r.is_scan_log && !isKaryera(r));
             
             // Yalnız axtarış/filtr yoxdursa və ya ehtiyac varsa yenilə
             const q = document.getElementById('search-input')?.value.toLowerCase() || '';
