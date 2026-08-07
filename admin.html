@@ -1683,6 +1683,7 @@ fbq('track', 'PageView');
                     filteredData = [...rawData];
                     
                     renderApps();
+                    if (window.renderVacancyApps) window.renderVacancyApps();
                     
                     const newCount = rawData.filter(item => (item.status || '').toLowerCase() === 'yeni').length;
                     const badge = document.getElementById('new-apps-badge');
@@ -1751,6 +1752,7 @@ fbq('track', 'PageView');
             if (q === '' && source === 'all' && status === 'all') {
                 filteredData = [...rawData];
                 renderApps();
+                if (window.renderVacancyApps) window.renderVacancyApps();
             } else {
                 window.filterData();
             }
@@ -1855,6 +1857,18 @@ fbq('track', 'PageView');
       document.body.removeChild(a);
     };
 
+    function formatDateStr(dateStr) {
+        if (!dateStr) return '-';
+        try {
+            const d = new Date(dateStr);
+            if (isNaN(d)) return dateStr;
+            const pad = (n) => n.toString().padStart(2, '0');
+            return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} / ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        } catch(e) {
+            return dateStr;
+        }
+    }
+
     function renderApps() {
       const tb = document.getElementById('crm-tbody');
       const tbExam = document.getElementById('exam-apps-tbody');
@@ -1890,7 +1904,7 @@ fbq('track', 'PageView');
           <td><span class="kanban-card-tag" style="background:rgba(139,26,43,0.1); color:var(--burgundy); border:1px solid rgba(139,26,43,0.2); padding:6px 12px; border-radius:8px; font-weight:700;">${sourceLabel}</span></td>
           <td style="font-size:0.85rem; color:var(--accent); font-weight:600;">${utmCampaign}</td>
           <td>${item.payment_status ? `<span style="font-weight:bold; font-size:0.75rem; color:${item.payment_status==='Ödənilib' ? '#10B981' : '#EF4444'}; background:${item.payment_status==='Ödənilib' ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)'}; padding:4px 8px; border-radius:6px;">${item.payment_status}</span>` : '<span style="color:var(--text-muted); font-size:0.8rem;">-</span>'}</td>
-          <td style="font-size:0.85rem; color:var(--text-muted);">${new Date(item.created_at || item.submissionDate || Date.now()).toLocaleString('az')}</td>
+          <td style="font-size:0.85rem; color:var(--text-muted);">${formatDateStr(item.created_at || item.submissionDate || Date.now())}</td>
           <td>
             <select onchange="updateStatus(${i}, this.value)" 
                     style="background:${statusMap[st].bg}; color:${statusMap[st].color}; border:1px solid ${statusMap[st].color}44; cursor:pointer;" 
@@ -2741,7 +2755,24 @@ fbq('track', 'PageView');
        const tb = document.getElementById('vac-apps-tbody'); if(!tb) return;
        const apps = hrData;
        if(document.getElementById('vac-app-count')) document.getElementById('vac-app-count').innerText = apps.length + ' Müraciət';
-       tb.innerHTML = apps.map((a, idx) => `<tr><td>${a.fullName || 'Adsız'}</td><td>${a.phone || '-'}</td><td>${a.position || '-'}</td><td>${a.submissionDate || '-'}</td><td>${a.status || 'Yeni'}</td><td><button onclick="viewDetails(${idx}, false, true)" class="btn-view">Bax</button></td></tr>`).join('');
+       tb.innerHTML = apps.map((a, idx) => {
+           let st = a.status || 'Yeni';
+           if (typeof statusMap !== 'undefined' && !statusMap[st]) st = 'Yeni';
+           return `<tr>
+               <td>${a.fullName || 'Adsız'}</td>
+               <td>${a.phone || '-'}</td>
+               <td>${a.position || '-'}</td>
+               <td>${formatDateStr(a.submissionDate || a.created_at || Date.now())}</td>
+               <td>
+                 <select onchange="updateStatus(${idx}, this.value, false, true)" 
+                         style="background:${statusMap[st]?.bg || 'rgba(255,255,255,0.1)'}; color:${statusMap[st]?.color || '#fff'}; border:1px solid ${statusMap[st]?.color || '#fff'}44; cursor:pointer;" 
+                         class="status-select">
+                   ${Object.keys(statusMap).map(s=>`<option value="${s}" ${s===st?'selected':''}>${s}</option>`).join('')}
+                 </select>
+               </td>
+               <td><button onclick="viewDetails(${idx}, false, true)" class="btn-view">Bax</button></td>
+           </tr>`;
+       }).join('');
     };
 
     window.loadUgurlar = async () => {
