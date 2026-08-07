@@ -550,6 +550,10 @@ fbq('track', 'PageView');
         <span id="new-apps-badge" style="display:none; background:var(--error); color:white; padding:2px 8px; border-radius:12px; font-size:0.7rem; font-weight:800; animation: badgePulse 2s infinite;">0</span>
       </div>
       <div class="sb-group-title" data-module="exam">İMTAHAN</div>
+      <div class="sb-link" data-module="exam" onclick="switchTab('exam-apps')" style="display:flex; justify-content:space-between; align-items:center;">
+        <div><i class="fas fa-list-alt"></i> <span>Müraciətlər</span></div>
+        <span id="new-exam-apps-badge" style="display:none; background:var(--error); color:white; padding:2px 8px; border-radius:12px; font-size:0.7rem; font-weight:800; animation: badgePulse 2s infinite;">0</span>
+      </div>
       <div class="sb-link" data-module="exam" onclick="switchTab('exam-results')"><i class="fas fa-file-signature"></i> <span>Nəticələr & Rəylər</span></div>
       <div class="sb-link" data-module="exam" onclick="switchTab('kupon')"><i class="fas fa-ticket-alt"></i> <span>Kupon Alanlar</span></div>
 
@@ -868,16 +872,9 @@ fbq('track', 'PageView');
       </div>
     </div>
 
-    <!-- Exam Results & Reviews Panel -->
-    <div id="view-exam-results" class="content" style="display: none;">
-        <div class="stats-grid">
-            <div class="ems-stat-card" style="--accent: var(--royal-blue);"><div class="ems-stat-icon"><i class="fas fa-ticket-alt"></i></div><div class="stat-lab">İmtahana giriş kuponu alanlar</div><div class="stat-val" id="exam-stat-total">0</div></div>
-            <div class="ems-stat-card" style="--accent: var(--burgundy);"><div class="ems-stat-icon"><i class="fas fa-users"></i></div><div class="stat-lab">İmtahanda İştirak Edənlər</div><div class="stat-val" id="exam-stat-participated">0</div></div>
-            <div class="ems-stat-card" style="--accent: var(--warning);"><div class="ems-stat-icon"><i class="fas fa-clock"></i></div><div class="stat-lab">Rəy Gözləyən</div><div class="stat-val" id="exam-stat-waiting">0</div></div>
-            <div class="ems-stat-card" style="--accent: var(--success);"><div class="ems-stat-icon"><i class="fas fa-check-double"></i></div><div class="stat-lab">Rəy Göndərilən</div><div class="stat-val" id="exam-stat-done">0</div></div>
-        </div>
-
-        <div style="margin-top: 40px; margin-bottom: 20px;">
+    <!-- Exam Apps Panel -->
+    <div id="view-exam-apps" class="content" style="display: none;">
+        <div style="margin-bottom: 20px;">
             <h3 style="font-weight: 800; font-size: 1.2rem; margin:0;"><i class="fas fa-list-alt" style="color:var(--burgundy); margin-right: 10px;"></i> Ümumi Müraciətlər (CRM)</h3>
             <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 5px;">Müraciətlər paneli ilə eyni siyahıdır. Yeni gələn müraciətləri və ödənişləri buradan izləyə bilərsiniz.</p>
         </div>
@@ -887,7 +884,16 @@ fbq('track', 'PageView');
             <tbody id="exam-apps-tbody"></tbody>
             </table>
         </div>
+    </div>
 
+    <!-- Exam Results & Reviews Panel -->
+    <div id="view-exam-results" class="content" style="display: none;">
+        <div class="stats-grid">
+            <div class="ems-stat-card" style="--accent: var(--royal-blue);"><div class="ems-stat-icon"><i class="fas fa-ticket-alt"></i></div><div class="stat-lab">İmtahana giriş kuponu alanlar</div><div class="stat-val" id="exam-stat-total">0</div></div>
+            <div class="ems-stat-card" style="--accent: var(--burgundy);"><div class="ems-stat-icon"><i class="fas fa-users"></i></div><div class="stat-lab">İmtahanda İştirak Edənlər</div><div class="stat-val" id="exam-stat-participated">0</div></div>
+            <div class="ems-stat-card" style="--accent: var(--warning);"><div class="ems-stat-icon"><i class="fas fa-clock"></i></div><div class="stat-lab">Rəy Gözləyən</div><div class="stat-val" id="exam-stat-waiting">0</div></div>
+            <div class="ems-stat-card" style="--accent: var(--success);"><div class="ems-stat-icon"><i class="fas fa-check-double"></i></div><div class="stat-lab">Rəy Göndərilən</div><div class="stat-val" id="exam-stat-done">0</div></div>
+        </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
             <!-- Left: Kupon Alan Şagirdlər -->
             <div class="table-wrapper" style="margin: 0; box-shadow: none; border: 1px solid var(--border); height: 500px; overflow-y: auto; background: rgba(0,0,0,0.2);">
@@ -1649,9 +1655,14 @@ fbq('track', 'PageView');
                     
                     const newCount = rawData.filter(item => (item.status || '').toLowerCase() === 'yeni').length;
                     const badge = document.getElementById('new-apps-badge');
+                    const badgeExam = document.getElementById('new-exam-apps-badge');
                     if (badge) {
                         badge.innerText = newCount;
                         badge.style.display = newCount > 0 ? 'inline-block' : 'none';
+                    }
+                    if (badgeExam) {
+                        badgeExam.innerText = newCount;
+                        badgeExam.style.display = newCount > 0 ? 'inline-block' : 'none';
                     }
                 }
             }
@@ -1702,13 +1713,14 @@ fbq('track', 'PageView');
             
             const newCount = rawData.filter(item => (item.status || '').toLowerCase() === 'yeni').length;
             const badge = document.getElementById('new-apps-badge');
+            const badgeExam = document.getElementById('new-exam-apps-badge');
             if (badge) {
-                if (newCount > 0) {
-                    badge.innerText = newCount;
-                    badge.style.display = 'inline-block';
-                } else {
-                    badge.style.display = 'none';
-                }
+                badge.innerText = newCount;
+                badge.style.display = newCount > 0 ? 'inline-block' : 'none';
+            }
+            if (badgeExam) {
+                badgeExam.innerText = newCount;
+                badgeExam.style.display = newCount > 0 ? 'inline-block' : 'none';
             }
             
             renderDashboard(); renderAnalytics(); renderFinance(); renderVacancyApps();
@@ -2450,7 +2462,7 @@ fbq('track', 'PageView');
     window.switchTab = (t) => {
       document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
       if(document.getElementById('view-'+t)) document.getElementById('view-'+t).style.display = 'block';
-      const titles = { 'dashboard':'Dashboard',  'analytics':'Sayt Analitikası', 'speed':'Sayt Sürəti', 'apps':'Müraciətlər', 'exam-results':'Nəticələr & Rəylər', 'kanban':'Kanban Board', 'tasks':'Tapşırıqlar', 'employees':'Əməkdaşlar', 'hr-panel':'Vakansiyalar', 'finance':'Maliyyə Paneli', 'epoint-reports':'Köçürmələrin Tarixçəsi', 'kupon':'Kupon Alanlar', 'ugurlar':'Uğurlar & Məzun', 'news':'Xəbərlər', 'popup':'POP UP Yönətimi', 'leadership':'Rəhbərlik', 'settings':'Sistem Ayarları', 'parents':'Valideynlərimiz' };
+      const titles = { 'dashboard':'Dashboard',  'analytics':'Sayt Analitikası', 'speed':'Sayt Sürəti', 'apps':'Müraciətlər', 'exam-apps':'Müraciətlər (İmtahan)', 'exam-results':'Nəticələr & Rəylər', 'kanban':'Kanban Board', 'tasks':'Tapşırıqlar', 'employees':'Əməkdaşlar', 'hr-panel':'Vakansiyalar', 'finance':'Maliyyə Paneli', 'epoint-reports':'Köçürmələrin Tarixçəsi', 'kupon':'Kupon Alanlar', 'ugurlar':'Uğurlar & Məzun', 'news':'Xəbərlər', 'popup':'POP UP Yönətimi', 'leadership':'Rəhbərlik', 'settings':'Sistem Ayarları', 'parents':'Valideynlərimiz' };
       document.getElementById('topbar-title').innerText = titles[t] || 'EVRIKA EMS';
       
       // Handle the active class for sidebar links
@@ -3682,6 +3694,7 @@ fbq('track', 'PageView');
 
            // Update notification badge instantly
            const badge = document.getElementById('new-apps-badge');
+           const badgeExam = document.getElementById('new-exam-apps-badge');
            if (badge) {
                let currentCount = parseInt(badge.innerText) || 0;
                if (oldStatus === 'yeni' && newStatusLower !== 'yeni') {
@@ -3691,6 +3704,10 @@ fbq('track', 'PageView');
                }
                badge.innerText = currentCount;
                badge.style.display = currentCount > 0 ? 'inline-block' : 'none';
+               if (badgeExam) {
+                   badgeExam.innerText = currentCount;
+                   badgeExam.style.display = currentCount > 0 ? 'inline-block' : 'none';
+               }
            }
 
            renderApps(); // Refresh table view without losing filters
