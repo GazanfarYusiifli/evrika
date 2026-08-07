@@ -1631,7 +1631,30 @@ fbq('track', 'PageView');
       return s;
     }
 
+    function formatPhone(phone) {
+        if (!phone) return '-';
+        let p = String(phone).replace(/[^\d+]/g, '');
+        if (p.startsWith('0')) p = '+994' + p.substring(1);
+        else if (p.startsWith('994')) p = '+' + p;
+        else if (!p.startsWith('+994') && p.length >= 9) p = '+994' + p;
+        return p;
+    }
+
     async function initialLoad() {
+      let loadingToast = document.getElementById('data-loading-status');
+      if (!loadingToast) {
+          loadingToast = document.createElement('div');
+          loadingToast.id = 'data-loading-status';
+          loadingToast.innerHTML = '<i class="fas fa-spinner fa-spin" id="data-loading-icon"></i> <span id="data-loading-text">Məlumatlar yüklənir...</span>';
+          loadingToast.style.cssText = 'position:fixed; bottom:20px; right:20px; background:var(--royal-blue); color:white; padding:10px 20px; border-radius:30px; font-weight:800; font-size:0.9rem; z-index:9999; box-shadow:0 10px 20px rgba(0,0,0,0.3); display:flex; align-items:center; gap:10px; transition:0.3s; opacity:1;';
+          document.body.appendChild(loadingToast);
+      } else {
+          loadingToast.style.display = 'flex';
+          loadingToast.style.opacity = '1';
+          loadingToast.style.background = 'var(--royal-blue)';
+          document.getElementById('data-loading-icon').className = 'fas fa-spinner fa-spin';
+          document.getElementById('data-loading-text').innerText = 'Məlumatlar yüklənir...';
+      }
       try {
         const idRes = await fetch(`${API_URL}/registrations?select=id&order=id.desc`, { headers: HEADERS, cache: 'no-store' });
         if(idRes.ok) { 
@@ -1644,7 +1667,7 @@ fbq('track', 'PageView');
                     allData.push(...await bRes.json());
                     // Proqressiv yükləmə - məlumat gəldikcə ekrana çıxarır
                     let partialData = allData
-                        .map(r => ({ ...r.payload, _db_id_: r.id, created_at: r.created_at }))
+                        .map(r => ({ ...r.payload, _db_id_: r.id, created_at: r.created_at, phone: formatPhone(r.payload.phone) }))
                         .sort((a, b) => b._db_id_ - a._db_id_);
                     
                     window.allFetchedData = partialData;
@@ -1674,6 +1697,13 @@ fbq('track', 'PageView');
                     }
                 }
             }
+            
+            if (loadingToast) {
+                loadingToast.style.background = 'var(--success)';
+                document.getElementById('data-loading-icon').className = 'fas fa-check-circle';
+                document.getElementById('data-loading-text').innerText = 'Məlumatlar yükləndi, tamamlandı';
+                setTimeout(() => { loadingToast.style.opacity = '0'; setTimeout(() => loadingToast.style.display = 'none', 300); }, 3000);
+            }
         }
       } catch(e) {}
       renderDashboard(); renderApps(); renderAnalytics(); renderFinance(); renderVacancyApps(); loadUgurlar(); loadVacancies(); loadNews(); loadManagement(); loadMezunlar();
@@ -1700,7 +1730,7 @@ fbq('track', 'PageView');
         
         if(allData.length > 0) {
             let fetchedData = allData
-                .map(r => ({ ...r.payload, _db_id_: r.id, created_at: r.created_at }))
+                .map(r => ({ ...r.payload, _db_id_: r.id, created_at: r.created_at, phone: formatPhone(r.payload.phone) }))
                 .sort((a, b) => b._db_id_ - a._db_id_);
             window.allFetchedData = fetchedData;
             
