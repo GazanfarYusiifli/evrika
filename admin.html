@@ -577,7 +577,7 @@ fbq('track', 'PageView');
 
       <!-- General Actions -->
       <div class="sb-link" style="color:var(--royal-blue);" onclick="window.open('index.html', '_blank')"><i class="fas fa-external-link-alt"></i> <span>Sayta Bax</span></div>
-      <div class="sb-link" style="color:var(--burgundy);" onclick="window.location.reload()"><i class="fas fa-sign-out-alt"></i> <span>HUB-a Qayıt</span></div>
+      <div class="sb-link" style="color:var(--burgundy);" onclick="localStorage.removeItem('evrika_active_module'); localStorage.removeItem('evrika_active_tab'); window.location.reload()"><i class="fas fa-sign-out-alt"></i> <span>HUB-a Qayıt</span></div>
       <div class="sb-link" style="color:var(--warning);" onclick="toggleTheme()"><i class="fas fa-sun" id="theme-icon"></i> <span>Aydınlıq Modu</span></div>
     </div>
     
@@ -1491,6 +1491,7 @@ fbq('track', 'PageView');
 
     function overlaySuccessfulLogin() {
         const mk = currentModuleKey;
+        localStorage.setItem('evrika_active_module', mk);
         document.getElementById('hub-login-overlay').style.opacity = '0';
         document.getElementById('ems-hub').style.opacity = '0';
         
@@ -2460,6 +2461,7 @@ fbq('track', 'PageView');
     };
 
     window.switchTab = (t) => {
+      localStorage.setItem('evrika_active_tab', t);
       document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
       if(document.getElementById('view-'+t)) document.getElementById('view-'+t).style.display = 'block';
       const titles = { 'dashboard':'Dashboard',  'analytics':'Sayt Analitikası', 'speed':'Sayt Sürəti', 'apps':'Müraciətlər', 'exam-apps':'Müraciətlər (İmtahan)', 'exam-results':'Nəticələr & Rəylər', 'kanban':'Kanban Board', 'tasks':'Tapşırıqlar', 'employees':'Əməkdaşlar', 'hr-panel':'Vakansiyalar', 'finance':'Maliyyə Paneli', 'epoint-reports':'Köçürmələrin Tarixçəsi', 'kupon':'Kupon Alanlar', 'ugurlar':'Uğurlar & Məzun', 'news':'Xəbərlər', 'popup':'POP UP Yönətimi', 'leadership':'Rəhbərlik', 'settings':'Sistem Ayarları', 'parents':'Valideynlərimiz' };
@@ -3767,6 +3769,21 @@ fbq('track', 'PageView');
     initialLoad();
     // Auto-refresh the CRM every 30 seconds smoothly
     setInterval(refreshApps, 30000);
+
+    // Auto-login on refresh
+    const savedModule = localStorage.getItem('evrika_active_module');
+    if(savedModule) {
+        currentModuleKey = savedModule;
+        document.getElementById('hub-login-overlay').style.display='none';
+        document.getElementById('ems-hub').style.display='none';
+        document.getElementById('main-sidebar').style.display='flex';
+        document.querySelectorAll('[data-module]').forEach(el => {
+            el.style.display = (el.getAttribute('data-module') === savedModule ? 'flex' : 'none');
+        });
+        const savedTab = localStorage.getItem('evrika_active_tab');
+        const startTabs = { 'crm':'dashboard', 'hr':'hr-panel', 'finance':'finance', 'site':'ugurlar', 'exam':'exam-results' };
+        switchTab(savedTab || startTabs[savedModule]);
+    }
   </script>
 
     <script>
