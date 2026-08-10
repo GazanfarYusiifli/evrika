@@ -2340,7 +2340,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 
                 const mobileTrigger = document.querySelector('#mob-acc-vacancy .mobile-accordion-trigger');
                 if (mobileTrigger && !mobileTrigger.querySelector('.vac-badge')) {
-                    mobileTrigger.innerHTML = mobileTrigger.innerHTML.replace('Təcrübə', '<span style="position:relative;">Təcrübə<span class="vac-badge" style="position: absolute; top: -5px; right: -28px; background: #ef4444; color: white; font-size: 0.55rem; padding: 2px 5px; border-radius: 6px; font-weight: 800;">YENİ</span></span>');
+                    mobileTrigger.innerHTML = mobileTrigger.innerHTML.replace('Vakansiya &amp; Təcrübə', '<span style="position:relative;">Vakansiya &amp; Təcrübə<span class="vac-badge" style="position: absolute; top: -5px; right: -28px; background: #ef4444; color: white; font-size: 0.55rem; padding: 2px 5px; border-radius: 6px; font-weight: 800;">YENİ</span></span>');
                 }
             }
         }
