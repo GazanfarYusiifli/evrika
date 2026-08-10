@@ -2335,14 +2335,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (data.length > 0) {
                 const desktopLink = document.querySelector('a[data-i18n="nav-vacancy"]');
                 if (desktopLink && !desktopLink.querySelector('.vac-badge')) {
-                    desktopLink.style.position = 'relative';
-                    desktopLink.innerHTML += '<span class="vac-badge" style="position: absolute; top: -5px; right: -25px; background: #ef4444; color: white; font-size: 0.55rem; padding: 2px 5px; border-radius: 6px; font-weight: 800;">YENİ</span>';
+                    desktopLink.innerHTML = desktopLink.innerHTML.replace('Təcrübə', '<span style="position:relative;">Təcrübə<span class="vac-badge" style="position: absolute; top: -5px; right: -28px; background: #ef4444; color: white; font-size: 0.55rem; padding: 2px 5px; border-radius: 6px; font-weight: 800;">YENİ</span></span>');
                 }
                 
                 const mobileTrigger = document.querySelector('#mob-acc-vacancy .mobile-accordion-trigger');
                 if (mobileTrigger && !mobileTrigger.querySelector('.vac-badge')) {
-                    mobileTrigger.style.position = 'relative';
-                    mobileTrigger.innerHTML = mobileTrigger.innerHTML.replace('Vakansiya &amp; Təcrübə', 'Vakansiya &amp; Təcrübə <span class="vac-badge" style="background: #ef4444; color: white; font-size: 0.55rem; padding: 2px 5px; border-radius: 6px; font-weight: 800; margin-left:8px; vertical-align: middle;">YENİ</span>');
+                    mobileTrigger.innerHTML = mobileTrigger.innerHTML.replace('Təcrübə', '<span style="position:relative;">Təcrübə<span class="vac-badge" style="position: absolute; top: -5px; right: -28px; background: #ef4444; color: white; font-size: 0.55rem; padding: 2px 5px; border-radius: 6px; font-weight: 800;">YENİ</span></span>');
                 }
             }
         }
