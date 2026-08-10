@@ -611,8 +611,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           }
 
           vacancies.forEach((v, index) => {
-            const reqsArray = Array.isArray(v.reqs) ? v.reqs : (typeof v.reqs === 'string' ? v.reqs.split('\n') : [v.reqs]);
-            const respsArray = Array.isArray(v.resps) ? v.resps : (v.resps ? (typeof v.resps === 'string' ? v.resps.split('\n') : [v.resps]) : (v.resp ? v.resp.split('\n') : ['...']));
+            const reqData = v.reqs || v.requirements || '';
+            const respData = v.resps || v.resp || v.responsibilities || '';
+            const locationData = v.location || v.dept || '-';
+
+            const reqsArray = Array.isArray(reqData) ? reqData : (typeof reqData === 'string' ? reqData.split('\n') : [reqData]);
+            const respsArray = Array.isArray(respData) ? respData : (typeof respData === 'string' ? respData.split('\n') : [respData]);
             
             const reqHtml = reqsArray.map(r => `<li style="margin-bottom: 8px;">${r}</li>`).join('');
             const respHtml = respsArray.map(r => `<li style="margin-bottom: 8px;">${r}</li>`).join('');
@@ -626,7 +630,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <div>
                   <h3 style="font-size: 1.8rem; color: var(--navy); margin-bottom: 8px;">${v.title}</h3>
                   <div style="display: flex; gap: 15px; color: var(--text-muted); font-size: 0.95rem;">
-                    <span style="display: flex; align-items: center; gap: 5px;"><i class="fas fa-map-marker-alt" style="color: var(--burgundy);"></i> ${v.location}</span>
+                    <span style="display: flex; align-items: center; gap: 5px;"><i class="fas fa-map-marker-alt" style="color: var(--burgundy);"></i> ${locationData}</span>
                     <span style="display: flex; align-items: center; gap: 5px;"><i class="fas fa-clock" style="color: var(--burgundy);"></i> ${v.time}</span>
                   </div>
                 </div>

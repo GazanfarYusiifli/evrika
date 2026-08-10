@@ -2877,7 +2877,7 @@ fbq('track', 'PageView');
     window.loadVacancies = async () => {
       const res = await fetch(`${API_URL}/vacancies?select=*`, { headers: HEADERS });
       if(res.ok) { vacanciesData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id })).sort((a,b) => b._db_id_ - a._db_id_); }
-      const tb = document.getElementById('vac-tbody'); if(tb) tb.innerHTML = vacanciesData.map(v => `<tr><td>${v.title}</td><td>${v.location}</td><td>${v.time}</td><td><button class="btn-danger" onclick="deleteVacancy('${v._db_id_}')">Sil</button></td></tr>`).join('');
+      const tb = document.getElementById('vac-tbody'); if(tb) tb.innerHTML = vacanciesData.map(v => `<tr><td>${v.title}</td><td>${v.location || v.dept || '-'}</td><td>${v.time}</td><td><button class="btn-danger" onclick="deleteVacancy('${v._db_id_}')">Sil</button></td></tr>`).join('');
       renderDashboard();
     }
 
