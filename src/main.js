@@ -2320,3 +2320,33 @@ document.addEventListener('DOMContentLoaded', () => {
 setInterval(setupFormValidation, 2000);
 
 console.log('💎 Evrika Pro Optimized v4.0 Initialized');
+
+// --- Vacancy Notification Badge ---
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const res = await fetch('https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1/vacancies?select=id&limit=1', {
+            headers: {
+                'apikey': 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
+                'Authorization': 'Bearer sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV'
+            }
+        });
+        if (res.ok) {
+            const data = await res.json();
+            if (data.length > 0) {
+                const desktopLink = document.querySelector('a[data-i18n="nav-vacancy"]');
+                if (desktopLink && !desktopLink.querySelector('.vac-badge')) {
+                    desktopLink.style.position = 'relative';
+                    desktopLink.innerHTML += '<span class="vac-badge" style="position: absolute; top: -10px; right: -25px; background: #ef4444; color: white; font-size: 0.6rem; padding: 2px 6px; border-radius: 10px; font-weight: 900; animation: badgePulse 2s infinite; box-shadow: 0 4px 10px rgba(239,68,68,0.4);">YENİ</span>';
+                }
+                
+                const mobileTrigger = document.querySelector('#mob-acc-vacancy .mobile-accordion-trigger');
+                if (mobileTrigger && !mobileTrigger.querySelector('.vac-badge')) {
+                    mobileTrigger.style.position = 'relative';
+                    mobileTrigger.innerHTML = mobileTrigger.innerHTML.replace('Vakansiya &amp; Təcrübə', 'Vakansiya &amp; Təcrübə <span class="vac-badge" style="background: #ef4444; color: white; font-size: 0.6rem; padding: 2px 6px; border-radius: 10px; font-weight: 900; animation: badgePulse 2s infinite; box-shadow: 0 4px 10px rgba(239,68,68,0.4); margin-left:10px; vertical-align: middle;">YENİ</span>');
+                }
+            }
+        }
+    } catch(e) {
+        console.error('Vacancy notification error:', e);
+    }
+});
