@@ -31,7 +31,7 @@ export default async function handler(req, res) {
         
         // Əgər artıq ödənilibsə, heç nə etmə (dublikatın qarşısını al)
         if (payload.payment_status !== 'Ödənilib') {
-            payload.status = 'Ödənilib';
+            payload.status = 'Yeni';
             payload.payment_status = 'Ödənilib';
             payload.order_id = "EV-" + String(dbId).padStart(4, '0');
             
