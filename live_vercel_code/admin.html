@@ -1279,7 +1279,7 @@ src="https://www.facebook.com/tr?id=854979317627172&ev=PageView&noscript=1"
         if (e.key === 'Enter') attemptUnlock();
     });
 
-    const API_URL='https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1', API_KEY='sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV', HEADERS={ 'apikey':API_KEY, 'Authorization':'Bearer '+API_KEY, 'Content-Type':'application/json' };
+    const API_URL='https://gziuhrlvagflokivfgwt.supabase.co/rest/v1', API_KEY='sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP', HEADERS={ 'apikey':API_KEY, 'Authorization':'Bearer '+API_KEY, 'Content-Type':'application/json' };
     let rawData=[], filteredData=[], vacanciesData=[], newsData=[], ugurlarData=[], tasksData=JSON.parse(localStorage.getItem('evrika_tasks'))||[];
     const statusMap = { 'Yeni': { color:'#f59e0b', bg:'rgba(245,158,11,0.1)' }, 'Baxılıb': { color:'#3b82f6', bg:'rgba(59,130,246,0.1)' }, 'Əlaqə': { color:'#8b5cf6', bg:'rgba(139,92,246,0.1)' }, 'Qəbul': { color:'#10b981', bg:'rgba(16,185,129,0.1)' }, 'İmtina': { color:'#ef4444', bg:'rgba(239,68,68,0.1)' } };
 
@@ -1896,14 +1896,14 @@ src="https://www.facebook.com/tr?id=854979317627172&ev=PageView&noscript=1"
             
             const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
             const fileName = `uploads/${Date.now()}_${i}_${safeName}`;
-            const res = await fetch(`https://miwvdhwrmxoetszkxlzy.supabase.co/storage/v1/object/ems-documents/${fileName}`, {
+            const res = await fetch(`https://gziuhrlvagflokivfgwt.supabase.co/storage/v1/object/ems-documents/${fileName}`, {
                 method: 'POST',
                 headers: { 'apikey': API_KEY, 'Authorization': 'Bearer '+API_KEY },
                 body: file
             });
             
             if(res.ok) {
-                uploadedUrls.push(`https://miwvdhwrmxoetszkxlzy.supabase.co/storage/v1/object/public/ems-documents/${fileName}`);
+                uploadedUrls.push(`https://gziuhrlvagflokivfgwt.supabase.co/storage/v1/object/public/ems-documents/${fileName}`);
             } else {
                 console.error("Upload failed for", file.name, await res.text());
                 alert(`Xəta: ${file.name} yüklənə bilmədi.`);

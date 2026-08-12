@@ -1,10 +1,10 @@
 import urllib.request
 import json
 
-url = "https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1/management?select=*"
+url = "https://gziuhrlvagflokivfgwt.supabase.co/rest/v1/management?select=*"
 req = urllib.request.Request(url, headers={
-    'apikey': 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
-    'Authorization': 'Bearer sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV'
+    'apikey': 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP',
+    'Authorization': 'Bearer sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP'
 })
 
 with urllib.request.urlopen(req) as response:

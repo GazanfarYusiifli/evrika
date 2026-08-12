@@ -4,8 +4,8 @@ import re
 
 # New WhatsApp target
 WA_PHONE = "994555945300"
-API_URL = 'https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1'
-API_KEY = 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV'
+API_URL = 'https://gziuhrlvagflokivfgwt.supabase.co/rest/v1'
+API_KEY = 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP'
 
 chat_widget_html = f"""
     <!-- Professional WhatsApp Chat Widget -->

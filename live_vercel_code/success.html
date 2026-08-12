@@ -271,10 +271,10 @@
         document.querySelector('.container p').innerHTML += '<br><br><span style="font-size: 0.9rem; color: #10b981;"><i class="fas fa-spinner fa-spin"></i> Sistem qeydiyyatınızı təsdiqləyir...</span>';
         
         // Epoint ödənişi uğurla keçibsə (bura yalnız success olduqda redirect olur):
-        fetch('https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1/registrations?id=eq.' + regId, {
+        fetch('https://gziuhrlvagflokivfgwt.supabase.co/rest/v1/registrations?id=eq.' + regId, {
             headers: {
-                'apikey': 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
-                'Authorization': 'Bearer sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV'
+                'apikey': 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP',
+                'Authorization': 'Bearer sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP'
             }
         }).then(res => res.json()).then(records => {
             if (records && records.length > 0) {
@@ -282,11 +282,11 @@
                 currentPayload.note += ' | EPOINT VASİTƏSİLƏ ÖDƏNİLDİ.';
                 currentPayload.status = "Ödənilib";
 
-                fetch('https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1/registrations?id=eq.' + regId, {
+                fetch('https://gziuhrlvagflokivfgwt.supabase.co/rest/v1/registrations?id=eq.' + regId, {
                   method: 'PATCH',
                   headers: {
-                    'apikey': 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
-                    'Authorization': 'Bearer sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
+                    'apikey': 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP',
+                    'Authorization': 'Bearer sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP',
                     'Content-Type': 'application/json'
                   },
                   body: JSON.stringify({ payload: currentPayload })
@@ -390,10 +390,10 @@
         
         async function fetchVacancies() {
           try {
-            const res = await fetch('https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1/vacancies?select=*&order=id.desc', {
+            const res = await fetch('https://gziuhrlvagflokivfgwt.supabase.co/rest/v1/vacancies?select=*&order=id.desc', {
               headers: {
-                'apikey': 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
-                'Authorization': 'Bearer sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV'
+                'apikey': 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP',
+                'Authorization': 'Bearer sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP'
               }
             });
             
@@ -498,11 +498,11 @@
             };
 
             try {
-                const res = await fetch('https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1/registrations', {
+                const res = await fetch('https://gziuhrlvagflokivfgwt.supabase.co/rest/v1/registrations', {
                     method: 'POST',
                     headers: {
-                        'apikey': 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
-                        'Authorization': 'Bearer sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV',
+                        'apikey': 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP',
+                        'Authorization': 'Bearer sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP',
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ payload: payload })

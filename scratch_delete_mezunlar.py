@@ -1,10 +1,10 @@
 import requests
 import json
 
-url = "https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1/mezunlar"
+url = "https://gziuhrlvagflokivfgwt.supabase.co/rest/v1/mezunlar"
 headers = {
-    "apikey": "sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV",
-    "Authorization": "Bearer sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV"
+    "apikey": "sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP",
+    "Authorization": "Bearer sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP"
 }
 
 # Delete all IDs from 159 to 178

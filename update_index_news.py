@@ -56,8 +56,8 @@ fetch_script = """
         const grid = document.getElementById('home-news-grid');
         if(!grid) return;
         try {
-            const API_URL = 'https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1';
-            const API_KEY = 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV';
+            const API_URL = 'https://gziuhrlvagflokivfgwt.supabase.co/rest/v1';
+            const API_KEY = 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP';
             const res = await fetch(`${API_URL}/news?select=*&order=id.desc&limit=3`, {
                 headers: { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY }
             });

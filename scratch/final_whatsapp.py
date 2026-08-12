@@ -4,8 +4,8 @@ import re
 
 # Final WhatsApp Configuration
 WA_TARGET = "994555945300"
-API_URL = 'https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1'
-API_KEY = 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV'
+API_URL = 'https://gziuhrlvagflokivfgwt.supabase.co/rest/v1'
+API_KEY = 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP'
 
 # NEW DESIGN: More premium, centered layout, tracks on SEND only
 WIDGET_HTML = f"""

@@ -5,8 +5,8 @@ import re
 # Professional Configuration
 WA_PHONE = "994555945300"
 WA_MSG = "Salam, mən Evrika Təhsil Ekosistemi ilə maraqlanıram. Qəbul və qeydiyyat şərtləri barədə ətraflı məlumat almaq üçün müraciət edirəm."
-API_URL = 'https://miwvdhwrmxoetszkxlzy.supabase.co/rest/v1'
-API_KEY = 'sb_publishable_jH_DXzdK6KxixdfZqvra-w_oZbU8EzV'
+API_URL = 'https://gziuhrlvagflokivfgwt.supabase.co/rest/v1'
+API_KEY = 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP'
 
 precise_tracker_html = f"""
     <!-- Precise WhatsApp Lead Tracker (Counts on Send, not Click) -->

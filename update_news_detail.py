@@ -63,7 +63,7 @@ if not footer_match:
 footer = footer_match.group(1)
 
 # Extract detail scripts
-detail_js_match = re.search(r'(<script>\s*const API_URL = \'https://miwvdhwrmxoetszkxlzy\.supabase\.co[\s\S]*?loadDetail\(\);\s*</script>)', detail_content)
+detail_js_match = re.search(r'(<script>\s*const API_URL = \'https://gziuhrlvagflokivfgwt\.supabase\.co[\s\S]*?loadDetail\(\);\s*</script>)', detail_content)
 if detail_js_match:
     detail_js = detail_js_match.group(1)
 else:
