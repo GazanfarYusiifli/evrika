@@ -39,8 +39,8 @@ export default async function handler(req, res) {
             try {
                 const PUB_KEY = "i000201608";
                 const PVT_KEY = process.env.EPOINT_PRIVATE_KEY || "HNIbtyFLu3PbxXlVykJEwOR1";
-                const targetTransaction = transactionId || String(dbId);
-                const dataObj = { public_key: PUB_KEY, transaction: targetTransaction };
+                const targetOrderId = "EV-" + String(dbId).padStart(4, '0');
+                const dataObj = { public_key: PUB_KEY, order_id: targetOrderId };
                 const dataJson = JSON.stringify(dataObj);
                 const dataB64 = Buffer.from(dataJson).toString('base64');
                 const shasum = crypto.createHash('sha1');

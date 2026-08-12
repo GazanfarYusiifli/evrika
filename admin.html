@@ -1712,14 +1712,12 @@ fbq('track', 'PageView');
     }
 
     async function refreshApps() {
-      // Səssizcə yoxla və ancaq yeni data varsa yenilə (səhifə donmasın, modal itməsin)
+      // Fetch latest data every 30s to ensure payment_statuses are up to date
       try {
         const res = await fetch(`${API_URL}/registrations?select=id`, { headers: HEADERS, cache: 'no-store' });
+        let newIds = [];
         if(res.ok) { 
-            const newIds = await res.json();
-            if(window.allFetchedData && window.allFetchedData.length === newIds.length) {
-                return; // Dəyişiklik yoxdur
-            }
+            newIds = await res.json();
         }
         
         // Yeni data var, tam çək (batch ilə timeout olmasın)
@@ -3753,14 +3751,23 @@ fbq('track', 'PageView');
       const oldStatus = (item.status || '').toLowerCase();
       const newStatusLower = (newStatus || '').toLowerCase();
 
-      const updatedPayload = { ...item, status: newStatus };
-      delete updatedPayload._db_id_; // Remove temp ID before sync
-
       try {
+        // Həmişə ən son datanı DB-dən çəkirik ki, payment_status (Epoint tərəfindən dəyişilən) əzilməsin
+        const getRes = await fetch(`${API_URL}/registrations?id=eq.${dbId}&select=payload`, {
+            headers: HEADERS,
+            cache: 'no-store'
+        });
+        if (!getRes.ok) return;
+        const rowData = await getRes.json();
+        if (!rowData || rowData.length === 0) return;
+        
+        let latestPayload = rowData[0].payload || {};
+        latestPayload.status = newStatus;
+
         const res = await fetch(`${API_URL}/registrations?id=eq.${dbId}`, {
           method: 'PATCH',
           headers: HEADERS,
-          body: JSON.stringify({ payload: updatedPayload })
+          body: JSON.stringify({ payload: latestPayload })
         });
         if (res.ok) {
            item.status = newStatus;

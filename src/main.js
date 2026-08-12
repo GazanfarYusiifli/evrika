@@ -515,6 +515,8 @@ window.showPaymentModal = (crmForm, dbId) => {
 // Form Listeners
 if (DOM.form) {
   DOM.form.addEventListener('submit', (e) => {
+    if (DOM.form.hasAttribute('data-epoint-form')) return;
+    
     e.preventDefault();
     const btn = DOM.form.querySelector('button');
     const originalText = btn.innerHTML;
