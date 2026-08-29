@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="format-detection" content="telephone=no">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Valideyn Səsi | EVRİKA Beynəlxalq Liseyi</title>
-  <meta name="description" content="Evrika Beynəlxalq Elm və Texnologiya Liseyi — Valideyn Səsi İnteraktiv Sorğu Portalı.">
+  <title>Valideyn Sorğusu | EVRİKA Beynəlxalq Liseyi</title>
+  <meta name="description" content="Evrika Beynəlxalq Elm və Texnologiya Liseyi — Valideyn Sorğusu İnteraktiv Portalı.">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -591,7 +591,7 @@
 
       <!-- Hero Header -->
       <div class="form-hero">
-        <h1 id="hero-title">Valideyn Səsi — Nərimanov Filialı</h1>
+        <h1 id="hero-title">Valideyn Sorğusu — Nərimanov Filialı</h1>
         <p>Sizin fikriniz bizim üçün önəmlidir. Qısa sorğunu cavablandıraraq Evrika ilə bağlı fikir, təklif və müraciətlərinizi bizimlə bölüşün.</p>
         
         <div class="branch-pill-banner" id="banner-wrap">
@@ -783,7 +783,7 @@
       branchKey = 'lisey2';
       branchName = 'EVRİKA BETL (Gənclik filialı)';
       document.getElementById('live-branch-tag').innerText = 'BETL GƏNCLİK FİLİALI';
-      document.getElementById('hero-title').innerText = 'Valideyn Səsi — Gənclik Filialı';
+      document.getElementById('hero-title').innerText = 'Valideyn Sorğusu — Gənclik Filialı';
       document.getElementById('banner-text').innerText = 'EVRİKA BETL (Gənclik filialı)';
       document.documentElement.style.setProperty('--primary', '#3b82f6');
       document.documentElement.style.setProperty('--primary-glow', 'rgba(59, 130, 246, 0.4)');
@@ -793,7 +793,7 @@
       branchKey = 'lisey1';
       branchName = 'EVRİKA BETL (Nərimanov filialı)';
       document.getElementById('live-branch-tag').innerText = 'BETL NƏRİMANOV FİLİALI';
-      document.getElementById('hero-title').innerText = 'Valideyn Səsi — Nərimanov Filialı';
+      document.getElementById('hero-title').innerText = 'Valideyn Sorğusu — Nərimanov Filialı';
       document.getElementById('banner-text').innerText = 'EVRİKA BETL (Nərimanov filialı)';
     }
 
@@ -905,8 +905,8 @@
       const feedbackMsg = document.getElementById('feedback_message').value.trim();
 
       const payload = {
-        source: 'Parent Voice QR',
-        form_type: 'Parent Feedback & Attribution',
+        source: 'Valideyn Sorğusu QR',
+        form_type: 'Valideyn Sorğusu & Rəy',
         school: 'Evrika Beynəlxalq Elm və Texnologiya Liseyi',
         is_parent_voice: true,
         branch: branchKey,
@@ -923,7 +923,7 @@
         parent_feedback_message: feedbackMsg,
         status: 'Yeni',
         submissionDate: new Date().toISOString(),
-        note: `Valideyn Səsi | Filial: ${branchName} | Şagird: ${studentName} (${studentGrade}) | İlk Tanışlıq: ${selectedSource} | Maraq: ${checkedInterests.join(', ')} | Müraciət Növü: ${feedbackType} | Qeyd: ${feedbackMsg || 'Yoxdur'}`
+        note: `Valideyn Sorğusu | Filial: ${branchName} | Şagird: ${studentName} (${studentGrade}) | İlk Tanışlıq: ${selectedSource} | Maraq: ${checkedInterests.join(', ')} | Müraciət Növü: ${feedbackType} | Qeyd: ${feedbackMsg || 'Yoxdur'}`
       };
 
       try {
