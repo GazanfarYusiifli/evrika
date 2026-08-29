@@ -11,12 +11,10 @@ export default async function handler(req, res) {
   const eventStatus = eventData.status || req.headers['x-nexus-event'] || 'unknown';
   const chid = eventData.chid || eventData.call?.chid;
 
-  // Immediate 200 OK to meet Nexus SLA
-  res.status(200).json({ status: 'accepted', chid: chid });
-
-  // Async processing
   try {
-    if (!chid) return;
+    if (!chid) {
+      return res.status(200).json({ status: 'ignored_no_chid' });
+    }
 
     // Rule 14: Discard consultation calls (attended transfer sub-legs)
     if (eventData.transfer_consultation === true) {
@@ -172,7 +170,9 @@ export default async function handler(req, res) {
         });
       }
     }
+    return res.status(200).json({ status: 'success', chid: chid });
   } catch (err) {
     console.error("Nexus Webhook execution error:", err);
+    return res.status(200).json({ status: 'error_logged', message: err.message });
   }
 }
