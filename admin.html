@@ -1773,12 +1773,12 @@ fbq('track', 'PageView');
                     
                     hrData = partialData.filter(r => isKaryera(r));
                     rawData = partialData.filter(r => !r.is_scan_log && !isKaryera(r));
-                    filteredData = [...rawData];
                     
-                    renderApps();
+                    window.filterData();
                     if (window.renderVacancyApps) window.renderVacancyApps();
                     
-                    const newCount = rawData.filter(item => (item.status || '').toLowerCase() === 'yeni').length;
+                    const bData = getBranchFilteredData();
+                    const newCount = bData.filter(item => (item.status || '').toLowerCase() === 'yeni').length;
                     const badge = document.getElementById('new-apps-badge');
                     const badgeExam = document.getElementById('new-exam-apps-badge');
                     if (badge) {
@@ -1800,7 +1800,7 @@ fbq('track', 'PageView');
             }
         }
       } catch(e) {}
-      renderDashboard(); renderApps(); renderAnalytics(); renderFinance(); renderVacancyApps(); loadUgurlar(); loadVacancies(); loadNews(); loadManagement(); loadMezunlar();
+      renderDashboard(); window.filterData(); renderAnalytics(); renderFinance(); renderVacancyApps(); loadUgurlar(); loadVacancies(); loadNews(); loadManagement(); loadMezunlar();
     }
 
     async function refreshApps() {
@@ -1835,20 +1835,11 @@ fbq('track', 'PageView');
             hrData = fetchedData.filter(r => isKaryera(r));
             rawData = fetchedData.filter(r => !r.is_scan_log && !isKaryera(r));
             
-            // Yalnız axtarış/filtr yoxdursa və ya ehtiyac varsa yenilə
-            const q = document.getElementById('search-input')?.value.toLowerCase() || '';
-            const source = document.getElementById('filter-source')?.value || 'all';
-            const status = document.getElementById('filter-status')?.value || 'all';
+            window.filterData();
+            if (window.renderVacancyApps) window.renderVacancyApps();
             
-            if (q === '' && source === 'all' && status === 'all') {
-                filteredData = [...rawData];
-                renderApps();
-                if (window.renderVacancyApps) window.renderVacancyApps();
-            } else {
-                window.filterData();
-            }
-            
-            const newCount = rawData.filter(item => (item.status || '').toLowerCase() === 'yeni').length;
+            const bData = getBranchFilteredData();
+            const newCount = bData.filter(item => (item.status || '').toLowerCase() === 'yeni').length;
             const badge = document.getElementById('new-apps-badge');
             const badgeExam = document.getElementById('new-exam-apps-badge');
             if (badge) {
