@@ -1919,8 +1919,8 @@ fbq('track', 'PageView');
         const typeFilter = document.getElementById('filter-pv-type')?.value || 'all';
         const statusFilter = document.getElementById('filter-pv-status')?.value || 'all';
 
-        // Extract parent voice feedback records
-        let feedbacks = rawData.filter(r => r.is_parent_voice || (r.source && r.source.includes('Valideyn Səsi')));
+        // Extract parent voice & survey records
+        let feedbacks = rawData.filter(r => r.is_parent_voice || (r.source && (r.source.includes('Valideyn Səsi') || r.source.includes('Parent Survey') || r.source.includes('Parent Voice'))));
 
         // Branch filter
         if (activeBranch !== 'all') {
@@ -1949,7 +1949,7 @@ fbq('track', 'PageView');
         // Table search and filtering
         let displayed = feedbacks.filter(f => {
           const pName = (f.parent_name || f.fullName || '').toLowerCase();
-          const sName = (f.student_name || '').toLowerCase();
+          const sName = (f.child_name || f.student_name || '').toLowerCase();
           const phone = (f.phone || '').toLowerCase();
           const msg = (f.parent_feedback_message || f.note || '').toLowerCase();
           const matchesQ = !q || pName.includes(q) || sName.includes(q) || phone.includes(q) || msg.includes(q);
@@ -1988,8 +1988,8 @@ fbq('track', 'PageView');
           const bConf = BRANCH_CONFIG[bKey] || { label: 'EVRİKA Kompleks', color: '#ec4899', bg: 'rgba(236,72,153,0.12)', border: 'rgba(236,72,153,0.25)', icon: 'fas fa-school' };
           
           const pName = f.parent_name || f.fullName || 'Valideyn';
-          const sName = f.student_name || 'Şagird';
-          const grade = f.student_grade || '-';
+          const sName = f.child_name || f.student_name || 'Övlad';
+          const grade = f.child_age || f.student_grade || '-';
           const phone = f.phone || '-';
           const phoneClean = formatPhone(phone);
           const fSource = f.first_touch_source || '-';
@@ -2079,90 +2079,73 @@ fbq('track', 'PageView');
 
       const qrList = [
         {
-          id: 'lisey1',
-          name: '🔴 BETL Lisey (Nərimanov)',
-          subtitle: 'Elm və Texnologiya Liseyi',
-          url: 'https://evrikaliseyi.edu.az/valideyn-sesi?branch=lisey1',
+          id: 'lisey',
+          name: '1. EVRİKA BEYNƏLXALQ ELM VƏ TEXNOLOGİYA LİSEYİ',
+          subtitle: 'VALİDEYN SƏSİ — CRM FORMU (I–XI SİNİF)',
+          desc: 'Valideynlərin rəy, təklif və müraciətlərini toplamaq, ilk tanışlıq kanalını və STEAM/Cambridge maraq sahələrini ölçmək üçün QR form.',
+          url: 'https://evrikaliseyi.edu.az/valideyn-sesi',
+          branches: [
+            { name: 'Nərimanov Filialı', url: 'https://evrikaliseyi.edu.az/valideyn-sesi?branch=lisey1' },
+            { name: 'Gənclik Filialı', url: 'https://evrikaliseyi.edu.az/valideyn-sesi?branch=lisey2' }
+          ],
           color: '#ef4444',
-          icon: 'fas fa-microscope'
-        },
-        {
-          id: 'lisey2',
-          name: '🔵 BETL Lisey (Gənclik)',
-          subtitle: 'Beynəlxalq Kampus',
-          url: 'https://evrikaliseyi.edu.az/valideyn-sesi?branch=lisey2',
-          color: '#3b82f6',
-          icon: 'fas fa-atom'
-        },
-        {
-          id: 'mont1',
-          name: '🟢 Montessori Bağçası (Filial 1 - MONT1)',
-          subtitle: 'Erkən İnkişaf & Bağça Sorğusu',
-          url: 'https://evrikaliseyi.edu.az/parent-survey?branch=MONT1',
-          color: '#10b981',
-          icon: 'fas fa-child'
-        },
-        {
-          id: 'mont2',
-          name: '🟢 Montessori Bağçası (Filial 2 - MONT2)',
-          subtitle: 'Erkən İnkişaf & Bağça Sorğusu',
-          url: 'https://evrikaliseyi.edu.az/parent-survey?branch=MONT2',
-          color: '#059669',
-          icon: 'fas fa-shapes'
-        },
-        {
-          id: 'victory',
-          name: '🟣 Victory Colleges',
-          subtitle: 'Xaricdə Təhsil & Kollec',
-          url: 'https://evrikaliseyi.edu.az/valideyn-sesi?branch=victory',
-          color: '#a855f7',
-          icon: 'fas fa-graduation-cap'
-        },
-        {
-          id: 'zumrud',
-          name: '🟡 Zümrüd İdman Mərkəzi',
-          subtitle: 'Sağlam Həyat & İdman',
-          url: 'https://evrikaliseyi.edu.az/valideyn-sesi?branch=zumrud',
-          color: '#eab308',
-          icon: 'fas fa-swimmer'
-        },
-        {
-          id: 'all',
-          name: '🏢 BÜTÜN EVRİKA KOMPLEKSİ',
-          subtitle: 'Ümumi Lisey Rəy Portalı',
-          url: 'https://evrikaliseyi.edu.az/valideyn-sesi?branch=all',
-          color: '#ec4899',
+          bgGlow: 'rgba(239, 68, 68, 0.12)',
           icon: 'fas fa-school'
+        },
+        {
+          id: 'montessori',
+          name: '2. EVRİKA MONTESSORİ UŞAQ BAĞÇASI',
+          subtitle: 'VALİDEYN SORĞUSU — CRM İNTEQRASİYASI (1–6 YAŞ)',
+          desc: 'Bağça valideynlərinin rəyini öyrənmək, uşağın yaşını (1–6 yaş), Montessori inkişaf sahələrini və ilk tanışlıq kanalını ölçmək üçün QR sorğu.',
+          url: 'https://evrikaliseyi.edu.az/parent-survey?branch=MONT1',
+          branches: [
+            { name: 'Montessori Filial 1 (MONT1)', url: 'https://evrikaliseyi.edu.az/parent-survey?branch=MONT1' },
+            { name: 'Montessori Filial 2 (MONT2)', url: 'https://evrikaliseyi.edu.az/parent-survey?branch=MONT2' }
+          ],
+          color: '#10b981',
+          bgGlow: 'rgba(16, 185, 129, 0.12)',
+          icon: 'fas fa-child'
         }
       ];
 
-      container.innerHTML = qrList.map(item => {
-        const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(item.url)}`;
+      container.innerHTML = qrList.map((item, idx) => {
+        const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(item.url)}`;
+        const branchButtons = item.branches.map(b => `
+          <button onclick="copyQrLink('${b.url}')" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#94a3b8; padding:6px 12px; border-radius:8px; font-size:0.75rem; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:0.2s;" onmouseover="this.style.borderColor='${item.color}'; this.style.color='white';" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.color='#94a3b8';">
+            <i class="fas fa-link" style="color:${item.color};"></i> ${b.name} Linki
+          </button>
+        `).join('');
+
         return `
-          <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:20px; padding:25px; text-align:center; position:relative; overflow:hidden; display:flex; flex-direction:column; align-items:center; transition:0.3s; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
-            <div style="position:absolute; top:0; left:0; right:0; height:4px; background:${item.color};"></div>
+          <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:24px; padding:35px 30px; text-align:center; position:relative; overflow:hidden; display:flex; flex-direction:column; align-items:center; transition:0.3s; box-shadow:0 15px 35px rgba(0,0,0,0.25);">
+            <div style="position:absolute; top:0; left:0; right:0; height:6px; background:${item.color};"></div>
             
-            <div style="width:45px; height:45px; border-radius:12px; background:${item.color}22; color:${item.color}; display:flex; align-items:center; justify-content:center; font-size:1.2rem; margin-bottom:12px;">
+            <div style="width:56px; height:56px; border-radius:16px; background:${item.bgGlow}; color:${item.color}; display:flex; align-items:center; justify-content:center; font-size:1.6rem; margin-bottom:16px; border:1px solid ${item.color}33;">
               <i class="${item.icon}"></i>
             </div>
             
-            <h3 style="font-size:1.1rem; font-weight:800; color:white; margin-bottom:4px;">${item.name}</h3>
-            <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:18px;">${item.subtitle}</p>
+            <h3 style="font-size:1.25rem; font-weight:900; color:white; margin-bottom:6px; letter-spacing:0.3px;">${item.name}</h3>
+            <div style="font-size:0.85rem; font-weight:800; color:${item.color}; margin-bottom:12px; letter-spacing:0.5px;">${item.subtitle}</div>
+            <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5; margin-bottom:20px; max-width:480px;">${item.desc}</p>
 
-            <div style="background:white; padding:12px; border-radius:16px; box-shadow:0 8px 20px rgba(0,0,0,0.15); margin-bottom:18px;">
-              <img src="${qrImgUrl}" alt="QR" style="width:160px; height:160px; display:block;">
+            <div style="background:white; padding:16px; border-radius:20px; box-shadow:0 12px 30px rgba(0,0,0,0.25); margin-bottom:22px;">
+              <img src="${qrImgUrl}" alt="QR Kod" style="width:200px; height:200px; display:block;">
             </div>
 
-            <div style="font-size:0.75rem; color:var(--text-muted); font-family:monospace; background:rgba(255,255,255,0.03); padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.05); width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-bottom:15px;" title="${item.url}">
-              ${item.url}
+            <div style="font-size:0.8rem; color:#60a5fa; font-family:monospace; background:rgba(255,255,255,0.03); padding:10px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.07); width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-bottom:15px;" title="${item.url}">
+              <i class="fas fa-globe" style="margin-right:6px;"></i> ${item.url}
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:100%;">
-              <button onclick="copyQrLink('${item.url}')" class="btn-view" style="font-size:0.8rem; padding:10px; background:rgba(255,255,255,0.05);">
+            <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:20px; width:100%;">
+              ${branchButtons}
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; width:100%;">
+              <button onclick="copyQrLink('${item.url}')" class="btn-view" style="font-size:0.85rem; padding:12px; background:rgba(255,255,255,0.05); font-weight:700;">
                 <i class="fas fa-copy"></i> Linki Kopyala
               </button>
-              <a href="${qrImgUrl}" download="EVRİKA_QR_${item.id}.png" target="_blank" class="btn-view" style="font-size:0.8rem; padding:10px; background:${item.color}; color:white; border:none; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
-                <i class="fas fa-download"></i> QR Yüklə
+              <a href="${qrImgUrl}" download="EVRIKA_QR_${item.id}.png" target="_blank" class="btn-view" style="font-size:0.85rem; padding:12px; background:${item.color}; color:white; border:none; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; font-weight:800;">
+                <i class="fas fa-download"></i> QR Yüklə (HD)
               </a>
             </div>
           </div>
@@ -2172,7 +2155,7 @@ fbq('track', 'PageView');
 
     window.copyQrLink = (url) => {
       navigator.clipboard.writeText(url).then(() => {
-        alert('Link kopyalandı:\n' + url);
+        alert('QR Linki Kopyalandı:\n' + url);
       });
     };
     
@@ -2376,6 +2359,12 @@ fbq('track', 'PageView');
       const topTitle = document.getElementById('topbar-title');
       if (topTitle) topTitle.innerText = titles[branchKey] || 'CRM MÜRACİƏTLƏRİ';
       
+      // Update QR generator visibility (ONLY visible in BÜTÜN CRM)
+      const qrLink = document.getElementById('sb-link-qr-generator');
+      if (qrLink) {
+        qrLink.style.display = (branchKey === 'all' ? 'flex' : 'none');
+      }
+
       // Update active state in sidebar
       document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
       const activeLink = document.querySelector(`.sb-link[onclick="switchBranchCrm('${branchKey}')"]`);
