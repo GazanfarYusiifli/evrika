@@ -599,15 +599,12 @@ fbq('track', 'PageView');
       <p style="font-size: 0.7rem; opacity: 0.5; margin-top: 5px; font-weight: 700; color: var(--text-muted);">PROFESSIONAL SYSTEM</p>
     </div>
     <div class="sb-nav">
-      <div class="sb-group-title" data-module="crm">CRM FİLİALLARI</div>
-      <div class="sb-link active" data-module="crm" onclick="switchBranchCrm('all')"><i class="fas fa-layer-group"></i> <span>🏢 BÜTÜN CRM</span></div>
-      <div class="sb-link" data-module="crm" onclick="switchBranchCrm('lisey1')"><i class="fas fa-microscope" style="color: #ef4444;"></i> <span>🔴 BETL Nərimanov</span></div>
-      <div class="sb-link" data-module="crm" onclick="switchBranchCrm('lisey2')"><i class="fas fa-atom" style="color: #3b82f6;"></i> <span>🔵 BETL Gənclik</span></div>
-      <div class="sb-link" data-module="crm" onclick="switchBranchCrm('montessori')"><i class="fas fa-child" style="color: #10b981;"></i> <span>🟢 Montessori Kids</span></div>
-      <div class="sb-link" data-module="crm" onclick="switchBranchCrm('victory')"><i class="fas fa-graduation-cap" style="color: #a855f7;"></i> <span>🟣 Victory Colleges</span></div>
-      <div class="sb-link" data-module="crm" onclick="switchBranchCrm('zumrud')"><i class="fas fa-swimmer" style="color: #eab308;"></i> <span>🟡 Zümrüd İdman</span></div>
-      <div class="sb-group-title" data-module="crm">CRM & ANALİTİKA</div>
-      <div class="sb-link" data-module="crm" onclick="switchTab('dashboard')"><i class="fas fa-th-large"></i> <span>Dashboard</span></div>
+      <div class="sb-group-title" data-module="crm" id="sb-crm-title">CRM & ANALİTİKA</div>
+      <div class="sb-link active" data-module="crm" onclick="switchTab('dashboard')"><i class="fas fa-th-large"></i> <span>Dashboard</span></div>
+      <div class="sb-link" data-module="crm" onclick="switchTab('apps')" style="display:flex; justify-content:space-between; align-items:center;">
+        <div><i class="fas fa-users"></i> <span>Müraciətlər</span></div>
+        <span id="new-apps-badge" style="display:none; background:var(--error); color:white; padding:2px 8px; border-radius:12px; font-size:0.7rem; font-weight:800; animation: badgePulse 2s infinite;">0</span>
+      </div>
       <a href="#" class="sb-link" data-module="crm" onclick="switchView('analytics')" style="text-decoration:none;"><i class="fas fa-chart-line"></i> <span>Analitika</span></a>
       <div class="sb-link" data-module="crm" onclick="switchTab('speed')"><i class="fas fa-tachometer-alt"></i> <span>Sayt Sürəti</span></div>
       <div class="sb-group-title" data-module="exam">İMTAHAN</div>
@@ -3586,6 +3583,19 @@ fbq('track', 'PageView');
         document.getElementById('partner-submit-btn').innerText = "Yadda Saxla";
     };
 
+    function getBranchFilteredData() {
+      const b = window.selectedCrmBranch || 'all';
+      if (!b || b === 'all') return rawData;
+      return rawData.filter(i => {
+        const s = getGranularSource(i) || '';
+        if (b === 'lisey1') return s === 'lisey1' || s.includes('Nərimanov');
+        if (b === 'lisey2') return s === 'lisey2' || s.includes('Gənclik');
+        if (b === 'montessori') return s === 'montessori' || s.includes('Montessori');
+        if (b === 'victory') return s === 'victory' || s.includes('Victory');
+        if (b === 'zumrud') return s === 'zumrud' || s.includes('Zümrüd') || s.includes('zumrud');
+        return true;
+      });
+    }
 
     window.utmSourceChartObj = null;
     window.utmCampaignChartObj = null;
@@ -3593,8 +3603,9 @@ fbq('track', 'PageView');
     function renderAnalytics() {
       const sourceCounts = {};
       const campaignCounts = {};
+      const bData = getBranchFilteredData();
 
-      rawData.forEach(item => {
+      bData.forEach(item => {
         let source = item.utm_source || item.utm_medium || '';
         let campaign = item.utm_campaign || '';
         
@@ -3651,17 +3662,17 @@ fbq('track', 'PageView');
               data: {
                   labels: cLabels,
                   datasets: [{
-                      label: 'Müraciət sayı',
+                      label: 'Müraciətlər',
                       data: cData,
-                      backgroundColor: 'rgba(225, 29, 72, 0.8)',
-                      borderRadius: 6
+                      backgroundColor: '#3B82F6',
+                      borderRadius: 8
                   }]
               },
               options: {
                   plugins: { legend: { display: false } },
                   scales: {
-                      y: { ticks: { color: 'rgba(255,255,255,0.7)', stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.1)' } },
-                      x: { ticks: { color: 'rgba(255,255,255,0.7)' }, grid: { display: false } }
+                      x: { ticks: { color: 'rgba(255,255,255,0.6)' }, grid: { display: false } },
+                      y: { ticks: { color: 'rgba(255,255,255,0.6)', stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.05)' } }
                   }
               }
           });
@@ -3832,7 +3843,7 @@ fbq('track', 'PageView');
       const PRIMARY_KEYS = ['lisey1', 'lisey2', 'montessori', 'victory', 'zumrud', 'contact', 'career', 'whatsapp', 'instagram', 'linkedin', 'facebook', 'email'];
       PRIMARY_KEYS.forEach(k => sourceCounts[SOURCE_MAP[k]] = 0);
 
-      rawData.forEach(item => {
+      getBranchFilteredData().forEach(item => {
         const s = getGranularSource(item);
         const mapped = SOURCE_MAP[s] || s || 'Email'; 
         const finalLabel = mapped === 'Digər Mənbələr' || mapped === 'Vebsayt' ? 'Email' : mapped;
