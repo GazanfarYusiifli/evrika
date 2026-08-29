@@ -11,20 +11,27 @@ export default async function handler(req, res) {
   const eventStatus = eventData.status || req.headers['x-nexus-event'] || 'unknown';
   const chid = eventData.chid || eventData.call?.chid;
 
-  console.log(`Nexus Call Webhook [${eventStatus}]: chid=${chid}`);
-
-  // Send 200 OK right away to satisfy Nexus SLA
+  // Immediate 200 OK to meet Nexus SLA
   res.status(200).json({ status: 'accepted', chid: chid });
 
-  // Process asynchronously
+  // Async processing
   try {
     if (!chid) return;
 
-    // Determine branch from IVR menu or DID
-    const menu = eventData.nexus_menu || eventData.call?.nexus_menu || '';
-    const did = eventData.inbound_did || eventData.call?.inbound_did || '';
-    let branchName = 'Evrika Ekosistemi';
-    let branchKey = 'general';
+    // Rule 14: Discard consultation calls (attended transfer sub-legs)
+    if (eventData.transfer_consultation === true) {
+      console.log(`Nexus consultation leg ignored: chid=${chid}, parent_chid=${eventData.parent_chid}`);
+      return;
+    }
+
+    const callObj = eventData.call || eventData;
+    const menu = callObj.nexus_menu !== undefined ? String(callObj.nexus_menu) : (eventData.nexus_menu !== undefined ? String(eventData.nexus_menu) : '');
+    const did = callObj.inbound_did || eventData.inbound_did || '';
+
+    // Branch Mapping from IVR menu / DID
+    // 0: General/BETL Nərimanov, 1: Montessori, 2: Nərimanov, 3: Gənclik, 4: Victory, 5: Zümrüd
+    let branchName = 'EVRİKA BETL (Nərimanov)';
+    let branchKey = 'lisey1';
 
     if (menu === '1' || did.includes('montessori')) {
       branchName = 'Montessori Kids Academy';
@@ -41,53 +48,131 @@ export default async function handler(req, res) {
     } else if (menu === '5' || did.includes('zumrud')) {
       branchName = 'Zümrüd İdman Mərkəzi';
       branchKey = 'zumrud';
+    } else if (menu === '0') {
+      branchName = 'EVRİKA BETL (Nərimanov filialı)';
+      branchKey = 'lisey1';
     }
 
-    const callerNumber = eventData.external_number || eventData.call?.external_number || 'Gizli Nömrə';
-    const agentName = eventData.agent_name || eventData.call?.agent_name || 'Operator';
-    const agentExt = eventData.agent_ext || eventData.call?.agent_ext || '';
+    const callerNumber = callObj.external_number || eventData.external_number || 'Gizli Nömrə';
+    const agentName = callObj.agent_name || eventData.agent_name || 'Operator';
+    const agentExt = callObj.agent_ext || eventData.agent_ext || '';
+    const direction = callObj.direction || eventData.direction || 'inbound';
+    
+    // Status normalization
+    let finalStatus = callObj.final_status || eventStatus;
+    let talkMs = callObj.talk_duration_ms || eventData.talk_duration_ms || 0;
+    let totalMs = callObj.total_duration_ms || eventData.total_duration_ms || 0;
+    let waitMs = callObj.wait_time_ms || eventData.wait_time_ms || 0;
+    let ringMs = callObj.ring_duration_ms || eventData.ring_duration_ms || 0;
+    let durationSec = Math.round(talkMs > 0 ? (talkMs / 1000) : (totalMs / 1000));
 
-    // Check if this chid already exists in registrations
-    const getRes = await fetch(`${SUPABASE_URL}/rest/v1/registrations?select=id,payload&limit=1`, {
+    // Recordings (if present)
+    const downloadUrls = eventData.download_urls || [];
+    const isCallback = eventStatus === 'callback_requested' || callObj.callback_requested === true || eventData.nexus_callback === '1';
+
+    // Status label in Azerbaijani for CRM
+    let statusLabel = 'Yeni';
+    let callStateAzeri = 'Zəng';
+    if (finalStatus === 'ended') {
+      callStateAzeri = 'Cavablandırıldı';
+      statusLabel = 'Baxılıb';
+    } else if (finalStatus === 'missed') {
+      callStateAzeri = 'Buraxılmış Zəng';
+      statusLabel = 'Yeni';
+    } else if (finalStatus === 'abandoned') {
+      callStateAzeri = 'Dəstək Gözləyən (IVR-dən çıxdı)';
+      statusLabel = 'Yeni';
+    } else if (finalStatus === 'unanswered') {
+      callStateAzeri = 'Cavabsız (Çıxış)';
+      statusLabel = 'Yeni';
+    } else if (isCallback) {
+      callStateAzeri = 'Geri Zəng Tələbi (Callback)';
+      statusLabel = 'Yeni';
+    } else if (finalStatus === 'delivery_failed') {
+      callStateAzeri = 'Bərpa Olunmuş Zəng';
+    }
+
+    // Check if record with this chid already exists in Supabase
+    const searchRes = await fetch(`${SUPABASE_URL}/rest/v1/registrations?payload->>chid=eq.${chid}&select=id,payload`, {
       headers: {
         'apikey': SUPABASE_KEY,
         'Authorization': `Bearer ${SUPABASE_KEY}`
       }
     });
 
-    const isTerminal = ['ended', 'missed', 'abandoned', 'unanswered', 'callback_requested', 'delivery_failed'].includes(eventStatus);
-    const durationSec = Math.round(((eventData.talk_duration_ms || eventData.total_duration_ms || eventData.call?.talk_duration_ms || eventData.call?.total_duration_ms) || 0) / 1000);
+    let existingRow = null;
+    if (searchRes.ok) {
+      const rows = await searchRes.json();
+      if (rows && rows.length > 0) existingRow = rows[0];
+    }
 
-    const callPayload = {
-      source: `Zəng - ${branchName}`,
-      branch: branchKey,
-      call_type: eventData.direction || 'inbound',
-      phone: callerNumber,
-      fullName: `Zəng: ${callerNumber}`,
-      agent: `${agentName} (${agentExt})`,
-      call_status: eventStatus,
-      duration: `${durationSec} san`,
-      chid: chid,
-      recordings: eventData.download_urls || [],
-      ivr_choice: menu,
-      note: `Nexus Zəngi | Status: ${eventStatus} | Müddət: ${durationSec} san | Operator: ${agentName} (${agentExt}) | Bölmə: ${branchName}`,
-      submissionDate: eventData.timestamp || new Date().toISOString(),
-      status: eventStatus === 'callback_requested' ? 'Yeni' : 'Baxılıb'
-    };
+    if (existingRow) {
+      // Update existing record (e.g. recording_ready arrived or terminal ended arrived)
+      let p = existingRow.payload || {};
+      p.call_status = finalStatus;
+      p.call_state_az = callStateAzeri;
+      if (downloadUrls.length > 0) {
+        p.recordings = downloadUrls;
+      }
+      if (durationSec > 0) {
+        p.duration = `${durationSec} san`;
+      }
+      if (agentName && agentName !== 'Operator') {
+        p.agent = `${agentName} (${agentExt})`;
+      }
+      p.note = `Nexus IP PBX | ${callStateAzeri} | Müddət: ${p.duration || (durationSec + ' san')} | Operator: ${p.agent || agentName} | Filial: ${branchName}`;
 
-    if (isTerminal || eventStatus === 'recording_ready') {
-      await fetch(`${SUPABASE_URL}/rest/v1/registrations`, {
-        method: 'POST',
+      await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${existingRow.id}`, {
+        method: 'PATCH',
         headers: {
           'apikey': SUPABASE_KEY,
           'Authorization': `Bearer ${SUPABASE_KEY}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ payload: callPayload })
+        body: JSON.stringify({ payload: p })
       });
-    }
+    } else {
+      // Create new call record
+      const isTerminal = ['ended', 'missed', 'abandoned', 'unanswered', 'callback_requested', 'delivery_failed', 'recording_ready'].includes(eventStatus);
+      
+      // Save on terminal events or answered/callback
+      if (isTerminal || eventStatus === 'answered') {
+        const newPayload = {
+          source: `Zəng - ${branchName}`,
+          branch: branchKey,
+          is_call: true,
+          chid: chid,
+          phone: callerNumber,
+          fullName: `📞 ${callStateAzeri}: ${callerNumber}`,
+          agent: agentExt ? `${agentName} (${agentExt})` : agentName,
+          call_type: direction,
+          call_status: finalStatus,
+          call_state_az: callStateAzeri,
+          duration: `${durationSec} san`,
+          duration_seconds: durationSec,
+          talk_duration_ms: talkMs,
+          total_duration_ms: totalMs,
+          wait_time_ms: waitMs,
+          recordings: downloadUrls,
+          ivr_menu: menu,
+          inbound_did: did,
+          note: `Nexus IP PBX | ${callStateAzeri} | Müddət: ${durationSec} san | Operator: ${agentName} (${agentExt}) | Filial: ${branchName}`,
+          submissionDate: eventData.timestamp || new Date().toISOString(),
+          status: statusLabel
+        };
 
+        await fetch(`${SUPABASE_URL}/rest/v1/registrations`, {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ payload: newPayload })
+        });
+      }
+    }
   } catch (err) {
-    console.error("Nexus Webhook processing error:", err);
+    console.error("Nexus Webhook execution error:", err);
   }
 }

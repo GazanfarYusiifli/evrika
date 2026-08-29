@@ -2686,6 +2686,7 @@ fbq('track', 'PageView');
       const groups = {
         'ŞƏXSİ MƏLUMATLAR': [],
         'ƏLAQƏ VƏ TƏMAS': [],
+        'TELEFONİYA & SƏS YAZISI': [],
         'TƏHSİL VƏ İSTİQAMƏT': [],
         'İŞ TƏCRÜBƏSİ': [],
         'BİLİKLƏR (DİL VƏ İT)': [],
@@ -2723,6 +2724,11 @@ fbq('track', 'PageView');
         if (upperKey === 'STATUS') cleanKey = 'Status';
         if (upperKey === 'DATE') cleanKey = 'Tarix';
         if (upperKey === 'NOTE') cleanKey = 'Qeyd';
+        if (upperKey === 'AGENT') cleanKey = 'Operator / Xidmət Edən';
+        if (upperKey === 'CALL_STATUS' || upperKey === 'CALL_STATE_AZ') cleanKey = 'Zəng Statusu';
+        if (upperKey === 'CALL_TYPE') cleanKey = 'Zəng İstiqaməti (Inbound/Outbound)';
+        if (upperKey === 'DURATION') cleanKey = 'Danışıq Müddəti';
+        if (upperKey === 'CHID') cleanKey = 'Zəng İdentifikatoru (CHID)';
         if (upperKey === 'EPOINT_AMOUNT' || upperKey === 'AMOUNT') cleanKey = 'Ödəniş Məbləği';
         if (upperKey === 'EPOINT_DATE') cleanKey = 'Ödəniş Tarixi';
         if (upperKey === 'EPOINT_CARD_NUMBER') cleanKey = 'Ödəyici Kartı (Maska)';
@@ -2746,6 +2752,8 @@ fbq('track', 'PageView');
           groups['FAYLLAR'].push({ rawKey: key, label: 'Bax / Yüklə (' + (item.cv_file_name || 'Fayl') + ')', value: val, isBase64: true, filename: item.cv_file_name || 'cv_file' });
         } else if (typeof val === 'string' && !upperKey.includes('FİLE_NAME') && !upperKey.includes('FILE_NAME') && (val.includes('supabase.co/storage') || val.match(/\.(jpg|jpeg|png|gif|pdf)/i))) {
           groups['FAYLLAR'].push(dataPair);
+        } else if (upperKey.includes('CHID') || upperKey.includes('CALL_') || upperKey.includes('RECORDING') || upperKey === 'AGENT' || upperKey === 'DURATION') {
+          groups['TELEFONİYA & SƏS YAZISI'].push(dataPair);
         } else if (upperKey.includes('EPOINT') || upperKey.includes('EPOİNT') || upperKey === 'AMOUNT' || upperKey.includes('PAYMENT') || ['RRN', 'APPROVAL_CODE', 'CARD_NUMBER', 'CARDNAME', 'RESULT_CODE', '3DSECURE', 'RESULT_PS', 'RESULT'].includes(upperKey) || upperKey === 'DATE' || upperKey === 'TARIX' || upperKey === 'CREATED_AT' || upperKey === 'MƏNBƏ' || upperKey === 'STATUS' || upperKey === 'ORDER_ID') {
           groups['ÖDƏNİŞ DETALLARI'].push(dataPair);
         } else if (upperKey.includes('PHONE') || upperKey.includes('TEL') || upperKey.includes('MAIL') || upperKey.includes('MAİL') || upperKey.includes('ƏLAQƏ') || upperKey.includes('ÜNVAN')) {
@@ -2794,6 +2802,23 @@ fbq('track', 'PageView');
                     </div>
                   `;
                 }
+
+                if (pair.rawKey.toLowerCase().includes('recording') && Array.isArray(pair.value)) {
+                  return `
+                    <div class="detail-box" style="grid-column: 1 / -1;">
+                      <div class="detail-box-label">${pair.label}</div>
+                      <div style="margin-top: 10px; display:flex; flex-direction:column; gap:10px;">
+                        ${pair.value.map((url, idx) => `
+                          <div style="display:flex; align-items:center; gap:10px;">
+                            <span style="font-size:0.8rem; color:var(--text-muted);">Səs Yazısı ${idx+1}:</span>
+                            <audio controls src="${url}" style="height:35px; width:100%; max-width:400px;"></audio>
+                          </div>
+                        `).join('')}
+                      </div>
+                    </div>
+                  `;
+                }
+
                 return `
                   <div class="detail-box">
                     <div class="detail-box-label">${pair.label}</div>
