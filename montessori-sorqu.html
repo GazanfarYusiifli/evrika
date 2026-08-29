@@ -4,48 +4,91 @@
   <meta charset="UTF-8" />
   <meta name="format-detection" content="telephone=no">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Valideyn Sorğusu | EVRİKA Montessori Uşaq Bağçası</title>
-  <meta name="description" content="Evrika Montessori Uşaq Bağçası — Valideyn Sorğusu və Rəy Portalı.">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <title>Valideyn Sorğusu | Evrika Montessori Uşaq Bağçası</title>
+  <meta name="description" content="Evrika Montessori Uşaq Bağçası və Erkən İnkişaf Akademiyası — Valideyn Sorğusu.">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
     :root {
-      --emerald: #10b981;
-      --emerald-dark: #065f46;
-      --emerald-light: #ecfdf5;
-      --emerald-glow: rgba(16, 185, 129, 0.2);
-      --navy: #070d1f;
-      --text-primary: #1e293b;
+      --primary: #059669;
+      --primary-hover: #047857;
+      --primary-light: rgba(5, 150, 105, 0.08);
+      --primary-glow: rgba(5, 150, 105, 0.25);
+      --accent-color: #10b981;
+      --bg-dark: #061e14;
+      --text-main: #0f172a;
       --text-muted: #64748b;
-      --surface: #ffffff;
-      --border: #e2e8f0;
+      --surface-glass: rgba(255, 255, 255, 0.95);
+      --border-glass: rgba(255, 255, 255, 0.7);
+      --card-border: rgba(5, 150, 105, 0.15);
       --success: #10b981;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: linear-gradient(135deg, #f8fafc 0%, #ecfdf5 50%, #f8fafc 100%);
+      background: #061e14;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(5, 150, 105, 0.35) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(20, 184, 166, 0.25) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.25) 0px, transparent 50%),
+        linear-gradient(180deg, #061e14 0%, #0b2e20 100%);
       background-attachment: fixed;
-      font-family: 'Inter', sans-serif;
-      color: var(--text-primary);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-main);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 40px 20px 60px;
+      padding: 30px 16px 60px;
+      position: relative;
+      overflow-x: hidden;
     }
 
+    /* Ambient animated orbs */
+    .ambient-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+      animation: floatOrb 12s ease-in-out infinite alternate;
+    }
+    .orb-1 { width: 350px; height: 350px; background: rgba(5, 150, 105, 0.35); top: -100px; left: -50px; }
+    .orb-2 { width: 300px; height: 300px; background: rgba(20, 184, 166, 0.25); top: 30%; right: -80px; animation-delay: -5s; }
+    .orb-3 { width: 380px; height: 380px; background: rgba(16, 185, 129, 0.2); bottom: -100px; left: 20%; animation-delay: -8s; }
+
+    @keyframes floatOrb {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(30px, 40px) scale(1.08); }
+    }
+
+    /* Top Floating Brand Bar */
     .top-logo-bar {
       display: flex;
       align-items: center;
-      gap: 15px;
-      margin-bottom: 25px;
+      gap: 14px;
+      margin-bottom: 24px;
       text-decoration: none;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 10px 24px;
+      border-radius: 100px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      position: relative;
+      z-index: 1;
+      transition: all 0.3s ease;
+    }
+    .top-logo-bar:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
     }
     .top-logo-bar img {
-      height: 50px;
+      height: 38px;
       width: auto;
       object-fit: contain;
     }
@@ -55,291 +98,388 @@
     }
     .top-logo-bar .logo-text span:first-child {
       font-weight: 900;
-      font-size: 1.3rem;
-      letter-spacing: 2px;
-      color: var(--emerald-dark);
+      font-size: 1.05rem;
+      letter-spacing: 1.5px;
+      color: #ffffff;
     }
     .top-logo-bar .logo-text span:last-child {
-      font-size: 0.65rem;
-      color: var(--text-muted);
-      letter-spacing: 1px;
+      font-size: 0.62rem;
+      color: #a7f3d0;
+      letter-spacing: 0.8px;
       font-weight: 700;
     }
 
+    /* Main Glass Card */
     .form-card {
       width: 100%;
       max-width: 680px;
-      background: var(--surface);
-      border: 1px solid rgba(16, 185, 129, 0.2);
-      border-radius: 28px;
-      padding: 45px;
-      box-shadow: 0 20px 40px -15px rgba(16, 185, 129, 0.12), 0 0 0 1px rgba(0,0,0,0.02);
+      background: var(--surface-glass);
+      border: 1px solid var(--border-glass);
+      border-radius: 32px;
+      padding: 40px 36px;
+      box-shadow: 
+        0 25px 60px -15px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.4) inset;
       position: relative;
-      overflow: hidden;
-    }
-    .form-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 6px;
-      background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7);
+      z-index: 1;
+      backdrop-filter: blur(24px);
     }
 
+    /* Modern Progress Tracker */
+    .progress-wrapper {
+      margin-bottom: 28px;
+      background: rgba(241, 245, 249, 0.8);
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 12px 18px;
+    }
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .progress-bar-bg {
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #059669 0%, #10b981 50%, #34d399 100%);
+      border-radius: 10px;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Header */
     .form-header {
       text-align: center;
-      margin-bottom: 35px;
+      margin-bottom: 30px;
     }
     .form-header .badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      background: var(--emerald-light);
-      color: var(--emerald-dark);
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.8rem;
+      gap: 8px;
+      background: #ecfdf5;
+      color: #059669;
+      padding: 6px 18px;
+      border-radius: 100px;
+      font-size: 0.82rem;
       font-weight: 800;
-      letter-spacing: 0.5px;
-      margin-bottom: 12px;
-      border: 1px solid rgba(16, 185, 129, 0.3);
+      letter-spacing: 0.4px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(5, 150, 105, 0.2);
+      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.06);
     }
     .form-header h1 {
       font-size: 1.65rem;
       font-weight: 900;
-      color: var(--emerald-dark);
+      color: #0f172a;
       margin-bottom: 10px;
       line-height: 1.25;
+      letter-spacing: -0.5px;
     }
     .form-header p {
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       color: var(--text-muted);
-      line-height: 1.5;
+      line-height: 1.55;
+      max-width: 520px;
+      margin: 0 auto;
     }
 
     .branch-tag-banner {
-      background: #f0fdf4;
-      border: 1px dashed rgba(16, 185, 129, 0.35);
-      border-radius: 12px;
-      padding: 10px 15px;
+      background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+      border: 1px solid #bbf7d0;
+      border-radius: 14px;
+      padding: 10px 18px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      margin-top: 15px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--emerald-dark);
+      gap: 10px;
+      margin-top: 18px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #059669;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
     }
 
+    /* Section Styling */
     .section-title {
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: var(--navy);
-      margin: 30px 0 15px;
+      font-size: 1.02rem;
+      font-weight: 900;
+      color: #0f172a;
+      margin: 32px 0 16px;
       display: flex;
       align-items: center;
       gap: 10px;
-      padding-bottom: 8px;
+      padding-bottom: 10px;
       border-bottom: 1px solid #f1f5f9;
+      letter-spacing: -0.2px;
     }
     .section-title i {
-      color: var(--emerald);
+      color: #059669;
+      font-size: 1.1rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media(max-width: 600px) {
+      .grid-2 { grid-template-columns: 1fr; gap: 12px; }
+      .form-card { padding: 28px 18px; border-radius: 24px; }
+      .form-header h1 { font-size: 1.45rem; }
     }
 
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
     .form-group label {
       display: block;
-      font-size: 0.85rem;
-      font-weight: 700;
+      font-size: 0.84rem;
+      font-weight: 800;
       color: #334155;
       margin-bottom: 8px;
+      letter-spacing: 0.2px;
     }
     .form-group label .req {
-      color: #e11d48;
+      color: #ef4444;
       margin-left: 3px;
     }
 
     .form-control {
       width: 100%;
       padding: 14px 18px;
-      border-radius: 12px;
-      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      border: 1.5px solid #e2e8f0;
       background: #ffffff;
       font-family: inherit;
-      font-size: 0.95rem;
-      color: var(--text-primary);
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #0f172a;
       transition: all 0.25s ease;
       outline: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
     }
     .form-control:focus {
-      border-color: var(--emerald);
-      box-shadow: 0 0 0 4px var(--emerald-glow);
+      border-color: #059669;
+      box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.15);
+      background: #ffffff;
+    }
+    .form-control::placeholder {
+      color: #94a3b8;
+      font-weight: 400;
     }
 
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-    }
-    @media(max-width: 600px) {
-      .grid-2 { grid-template-columns: 1fr; }
-      .form-card { padding: 30px 20px; }
-    }
-
-    /* Option Cards */
+    /* Option Grid */
     .option-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       gap: 10px;
       margin-top: 8px;
     }
     @media(max-width: 480px) {
-      .option-grid { grid-template-columns: 1fr; }
+      .option-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
     }
 
     .option-card {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 12px 15px;
-      background: #f8fafc;
+      padding: 12px 14px;
+      background: #ffffff;
       border: 1.5px solid #e2e8f0;
-      border-radius: 12px;
+      border-radius: 14px;
       cursor: pointer;
-      font-size: 0.85rem;
-      font-weight: 600;
+      font-size: 0.82rem;
+      font-weight: 700;
       color: #334155;
-      transition: all 0.2s ease;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       user-select: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
     }
     .option-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(5, 150, 105, 0.4);
       background: #f0fdf4;
-      border-color: rgba(16, 185, 129, 0.4);
+      box-shadow: 0 6px 16px rgba(5, 150, 105, 0.08);
+    }
+    .option-card i {
+      font-size: 1rem;
+      color: #059669;
+      width: 18px;
+      text-align: center;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
     }
     .option-card input[type="radio"],
     .option-card input[type="checkbox"] {
-      accent-color: var(--emerald);
-      width: 17px;
-      height: 17px;
-      cursor: pointer;
+      display: none;
+    }
+    .option-card.selected {
+      background: #ecfdf5;
+      border-color: #059669;
+      color: #059669;
+      box-shadow: 0 4px 14px rgba(5, 150, 105, 0.15);
+      transform: translateY(-2px);
+    }
+    .option-card.selected i {
+      transform: scale(1.15);
+      color: #059669;
     }
 
+    /* Feedback Cards */
     .feedback-types-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
       gap: 10px;
-      margin-top: 8px;
+      margin-top: 10px;
     }
+    @media(max-width: 480px) {
+      .feedback-types-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+      .feedback-types-grid .feedback-card:nth-child(4),
+      .feedback-types-grid .feedback-card:nth-child(5) {
+        grid-column: span 1.5;
+      }
+    }
+
     .feedback-card {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 14px 10px;
-      background: #f8fafc;
+      padding: 16px 8px;
+      background: #ffffff;
       border: 1.5px solid #e2e8f0;
-      border-radius: 14px;
+      border-radius: 16px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
     }
     .feedback-card i {
-      font-size: 1.3rem;
-      margin-bottom: 6px;
-      color: var(--text-muted);
-      transition: color 0.2s;
+      font-size: 1.4rem;
+      margin-bottom: 8px;
+      color: #64748b;
+      transition: all 0.25s ease;
     }
     .feedback-card span {
-      font-size: 0.8rem;
-      font-weight: 700;
+      font-size: 0.78rem;
+      font-weight: 800;
       color: #334155;
+      line-height: 1.2;
     }
     .feedback-card:hover {
-      background: #f0fdf4;
-      border-color: rgba(16, 185, 129, 0.4);
+      transform: translateY(-3px);
+      border-color: rgba(5, 150, 105, 0.3);
+      box-shadow: 0 8px 20px rgba(5, 150, 105, 0.08);
     }
     .feedback-card.active {
-      background: var(--emerald-light);
-      border-color: var(--emerald);
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+      background: #ecfdf5;
+      border-color: #059669;
+      box-shadow: 0 8px 20px rgba(5, 150, 105, 0.15);
+      transform: translateY(-3px);
     }
     .feedback-card.active i {
-      color: var(--emerald);
-      transform: scale(1.15);
+      color: #059669;
+      transform: scale(1.2);
     }
     .feedback-card.active span {
-      color: var(--emerald-dark);
+      color: #059669;
     }
 
+    /* Submit Button */
     .submit-btn {
       width: 100%;
-      padding: 18px;
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      padding: 18px 24px;
+      background: linear-gradient(135deg, #059669 0%, #047857 50%, #10b981 100%);
       color: white;
       border: none;
-      border-radius: 14px;
+      border-radius: 16px;
       font-size: 1.05rem;
-      font-weight: 800;
+      font-weight: 900;
       cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 12px 28px -6px rgba(5, 150, 105, 0.5);
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      margin-top: 30px;
+      gap: 12px;
+      margin-top: 32px;
+      letter-spacing: 0.3px;
     }
     .submit-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 15px 30px -5px rgba(16, 185, 129, 0.5);
+      box-shadow: 0 16px 36px -6px rgba(5, 150, 105, 0.65);
+    }
+    .submit-btn:active {
+      transform: translateY(1px);
     }
     .submit-btn:disabled {
-      opacity: 0.6;
+      opacity: 0.65;
       cursor: not-allowed;
       transform: none;
     }
 
+    /* Success Screen */
     .success-container {
       display: none;
       text-align: center;
       padding: 40px 20px;
-      animation: fadeIn 0.5s ease;
+      animation: modernFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-    .success-icon {
-      width: 85px;
-      height: 85px;
-      background: #ecfdf5;
-      color: #10b981;
+    @keyframes modernFadeIn {
+      from { opacity: 0; transform: scale(0.95) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .success-icon-wrap {
+      width: 90px;
+      height: 90px;
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      color: #059669;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2.5rem;
-      margin: 0 auto 20px;
-      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
+      font-size: 2.8rem;
+      margin: 0 auto 24px;
+      box-shadow: 0 15px 35px rgba(5, 150, 105, 0.25);
+      border: 2px solid rgba(5, 150, 105, 0.2);
     }
     .success-container h2 {
-      font-size: 1.8rem;
+      font-size: 1.85rem;
       font-weight: 900;
-      color: var(--navy);
+      color: #0f172a;
       margin-bottom: 12px;
+      letter-spacing: -0.5px;
     }
     .success-container p {
-      font-size: 1rem;
+      font-size: 0.98rem;
       color: var(--text-muted);
       line-height: 1.6;
-      max-width: 480px;
-      margin: 0 auto 25px;
+      max-width: 460px;
+      margin: 0 auto 28px;
     }
   </style>
 </head>
 <body>
 
+  <!-- Ambient background lighting -->
+  <div class="ambient-orb orb-1"></div>
+  <div class="ambient-orb orb-2"></div>
+  <div class="ambient-orb orb-3"></div>
+
+  <!-- Floating Logo Header -->
   <a href="/montessori" class="top-logo-bar">
-    <img src="https://gziuhrlvagflokivfgwt.supabase.co/storage/v1/object/public/ems-documents/evrika-logo.png" onerror="this.src='https://evrikaliseyi.edu.az/images/logo.png'" alt="Evrika Montessori">
+    <img src="https://gziuhrlvagflokivfgwt.supabase.co/storage/v1/object/public/ems-documents/evrika-logo.png" onerror="this.src='https://evrikaliseyi.edu.az/images/logo.png'" alt="Evrika">
     <div class="logo-text">
       <span>EVRİKA MONTESSORİ</span>
       <span>UŞAQ BAĞÇASI & ERKƏN İNKİŞAF AKADEMİYASI</span>
@@ -349,13 +489,25 @@
   <div class="form-card">
     
     <div id="form-wrapper">
+      
+      <!-- Progress Bar -->
+      <div class="progress-wrapper">
+        <div class="progress-header">
+          <span><i class="fas fa-tasks"></i> Sorğu İrəliləyişi</span>
+          <span id="progress-percent">0%</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+      </div>
+
       <div class="form-header">
-        <div class="badge"><i class="fas fa-child"></i> VALİDEYN SORĞUSU</div>
-        <h1>Evrika Montessori Uşaq Bağçası</h1>
+        <div class="badge" id="form-badge"><i class="fas fa-seedling"></i> 🟢 EVRİKA MONTESSORİ UŞAQ BAĞÇASI</div>
+        <h1 id="form-title">Valideyn Sorğusu — Montessori Kids</h1>
         <p>Sizin fikriniz bizim üçün önəmlidir. Qısa sorğunu cavablandıraraq Evrika Montessori ilə bağlı fikir, təklif və müraciətlərinizi bizimlə bölüşün.</p>
         
-        <div class="branch-tag-banner" id="branch-banner">
-          <i class="fas fa-map-marker-alt"></i> <span id="branch-text">Montessori Kids Academy (Filial 1)</span>
+        <div class="branch-tag-banner" id="branch-banner" style="display:flex;">
+          <i class="fas fa-map-marker-alt"></i> <span id="branch-text">Evrika Montessori Uşaq Bağçası (Montessori Kids)</span>
         </div>
       </div>
 
@@ -369,22 +521,22 @@
         <div class="grid-2">
           <div class="form-group">
             <label>Valideynin Adı və Soyadı <span class="req">*</span></label>
-            <input type="text" id="parent_name" class="form-control" placeholder="Məs: Leyla Əliyeva" required>
+            <input type="text" id="parent_name" class="form-control" placeholder="Məs: Leyla Əliyeva" required oninput="updateProgress()">
           </div>
           <div class="form-group">
-            <label>Əlaqə Telefon Nömrəsi <span class="req">*</span></label>
-            <input type="tel" id="parent_phone" class="form-control" placeholder="+994 (50) 000-00-00" required>
+            <label>Telefon Nömrəsi <span class="req">*</span></label>
+            <input type="tel" id="parent_phone" class="form-control" placeholder="+994 (50) 000-00-00" required oninput="updateProgress()">
           </div>
         </div>
 
         <div class="grid-2">
           <div class="form-group">
             <label>Uşağın Adı və Soyadı <span class="req">*</span></label>
-            <input type="text" id="child_name" class="form-control" placeholder="Məs: Aylin Əliyeva" required>
+            <input type="text" id="child_name" class="form-control" placeholder="Məs: Aylin Əliyeva" required oninput="updateProgress()">
           </div>
           <div class="form-group">
             <label>Uşağın Yaşı <span class="req">*</span></label>
-            <select id="child_age" class="form-control" required>
+            <select id="child_age" class="form-control" required onchange="updateProgress()">
               <option value="">Yaş seçin...</option>
               <option value="1 yaş">1 yaş</option>
               <option value="2 yaş">2 yaş</option>
@@ -402,22 +554,22 @@
         </div>
         <div class="form-group">
           <label>Evrika Montessori Uşaq Bağçası haqqında ilk dəfə haradan məlumat əldə etdiniz? <span class="req">*</span></label>
-          <div class="option-grid">
-            <label class="option-card"><input type="radio" name="first_touch_source" value="Instagram" required> <span>Instagram</span></label>
-            <label class="option-card"><input type="radio" name="first_touch_source" value="Facebook"> <span>Facebook</span></label>
-            <label class="option-card"><input type="radio" name="first_touch_source" value="TikTok"> <span>TikTok</span></label>
-            <label class="option-card"><input type="radio" name="first_touch_source" value="YouTube"> <span>YouTube</span></label>
-            <label class="option-card"><input type="radio" name="first_touch_source" value="Google axtarışı"> <span>Google axtarışı</span></label>
-            <label class="option-card"><input type="radio" name="first_touch_source" value="Google reklamı"> <span>Google reklamı</span></label>
-            <label class="option-card"><input type="radio" name="first_touch_source" value="Instagram / Facebook reklamı"> <span>Sosial media reklamı</span></label>
-            <label class="option-card"><input type="radio" name="first_touch_source" value="Dost / tanış tövsiyəsi"> <span>Dost / tanış tövsiyəsi</span></label>
-            <label class="option-card"><input type="radio" name="first_touch_source" value="Evrika valideyni tövsiyəsi"> <span>Evrika valideyni tövsiyəsi</span></label>
-            <label class="option-card"><input type="radio" name="first_touch_source" value="Evrika şagirdi / məzunu vasitəsilə"> <span>Evrika məzunu vasitəsilə</span></label>
-            <label class="option-card"><input type="radio" name="first_touch_source" value="Müəllim / əməkdaş tövsiyəsi"> <span>Müəllim / əməkdaş tövsiyəsi</span></label>
-            <label class="option-card"><input type="radio" name="first_touch_source" value="Tədbir / workshop"> <span>Tədbir / workshop</span></label>
-            <label class="option-card"><input type="radio" name="first_touch_source" value="Açıq qapı günü"> <span>Açıq qapı günü</span></label>
-            <label class="option-card"><input type="radio" name="first_touch_source" value="Bağçanın qarşısında / küçə reklamında"> <span>Bağça qarşısı / Çöl reklamı</span></label>
-            <label class="option-card"><input type="radio" name="first_touch_source" value="Digər"> <span>Digər</span></label>
+          <div class="option-grid" id="first-touch-grid">
+            <label class="option-card" onclick="selectOption(this)"><input type="radio" name="first_touch_source" value="Instagram" required><i class="fab fa-instagram"></i> <span>Instagram</span></label>
+            <label class="option-card" onclick="selectOption(this)"><input type="radio" name="first_touch_source" value="Facebook"><i class="fab fa-facebook-f"></i> <span>Facebook</span></label>
+            <label class="option-card" onclick="selectOption(this)"><input type="radio" name="first_touch_source" value="TikTok"><i class="fab fa-tiktok"></i> <span>TikTok</span></label>
+            <label class="option-card" onclick="selectOption(this)"><input type="radio" name="first_touch_source" value="YouTube"><i class="fab fa-youtube"></i> <span>YouTube</span></label>
+            <label class="option-card" onclick="selectOption(this)"><input type="radio" name="first_touch_source" value="Google axtarışı"><i class="fab fa-google"></i> <span>Google axtarışı</span></label>
+            <label class="option-card" onclick="selectOption(this)"><input type="radio" name="first_touch_source" value="Google reklamı"><i class="fas fa-search-dollar"></i> <span>Google reklamı</span></label>
+            <label class="option-card" onclick="selectOption(this)"><input type="radio" name="first_touch_source" value="Instagram / Facebook reklamı"><i class="fas fa-bullhorn"></i> <span>Sosial media</span></label>
+            <label class="option-card" onclick="selectOption(this)"><input type="radio" name="first_touch_source" value="Dost / tanış tövsiyəsi"><i class="fas fa-user-friends"></i> <span>Dost / tanış</span></label>
+            <label class="option-card" onclick="selectOption(this)"><input type="radio" name="first_touch_source" value="Evrika valideyni tövsiyəsi"><i class="fas fa-users"></i> <span>Evrika valideyni</span></label>
+            <label class="option-card" onclick="selectOption(this)"><input type="radio" name="first_touch_source" value="Evrika şagirdi / məzunu vasitəsilə"><i class="fas fa-user-graduate"></i> <span>Evrika məzunu</span></label>
+            <label class="option-card" onclick="selectOption(this)"><input type="radio" name="first_touch_source" value="Müəllim / əməkdaş tövsiyəsi"><i class="fas fa-chalkboard-teacher"></i> <span>Müəllim / əməkdaş</span></label>
+            <label class="option-card" onclick="selectOption(this)"><input type="radio" name="first_touch_source" value="Tədbir / workshop"><i class="fas fa-calendar-star"></i> <span>Tədbir / seminar</span></label>
+            <label class="option-card" onclick="selectOption(this)"><input type="radio" name="first_touch_source" value="Açıq qapı günü"><i class="fas fa-door-open"></i> <span>Açıq qapı günü</span></label>
+            <label class="option-card" onclick="selectOption(this)"><input type="radio" name="first_touch_source" value="Bağçanın qarşısında / küçə reklamında"><i class="fas fa-sign-hanging"></i> <span>Bağça qarşısı</span></label>
+            <label class="option-card" onclick="selectOption(this)"><input type="radio" name="first_touch_source" value="Digər"><i class="fas fa-ellipsis-h"></i> <span>Digər</span></label>
           </div>
         </div>
 
@@ -427,29 +579,29 @@
         </div>
         <div class="form-group">
           <label>Hazırda Evrika Montessori ilə bağlı ən çox hansı mövzu sizi maraqlandırır? <span class="req">*</span></label>
-          <div class="option-grid">
-            <label class="option-card"><input type="checkbox" name="interest_area" value="Montessori təhsil metodu"> <span>Montessori metodu</span></label>
-            <label class="option-card"><input type="checkbox" name="interest_area" value="Uşağın fərdi inkişafı"> <span>Uşağın fərdi inkişafı</span></label>
-            <label class="option-card"><input type="checkbox" name="interest_area" value="Erkən yaş inkişafı"> <span>Erkən yaş inkişafı</span></label>
-            <label class="option-card"><input type="checkbox" name="interest_area" value="Uşağın müstəqilliyinin inkişafı"> <span>Müstəqillik inkişafı</span></label>
-            <label class="option-card"><input type="checkbox" name="interest_area" value="Sosial və emosional inkişaf"> <span>Sosial-emosional</span></label>
-            <label class="option-card"><input type="checkbox" name="interest_area" value="Nitq və dil inkişafı"> <span>Nitq və dil inkişafı</span></label>
-            <label class="option-card"><input type="checkbox" name="interest_area" value="Riyazi inkişaf"> <span>Riyazi inkişaf</span></label>
-            <label class="option-card"><input type="checkbox" name="interest_area" value="Sensor inkişaf"> <span>Sensor inkişaf</span></label>
-            <label class="option-card"><input type="checkbox" name="interest_area" value="Praktik həyat bacarıqları"> <span>Praktik həyat bacarıqları</span></label>
-            <label class="option-card"><input type="checkbox" name="interest_area" value="Xarici dil mühiti"> <span>Xarici dil mühiti</span></label>
-            <label class="option-card"><input type="checkbox" name="interest_area" value="Musiqi"> <span>Musiqi</span></label>
-            <label class="option-card"><input type="checkbox" name="interest_area" value="İncəsənət"> <span>İncəsənət və Rəsm</span></label>
-            <label class="option-card"><input type="checkbox" name="interest_area" value="İdman"> <span>İdman və Hərəkət</span></label>
-            <label class="option-card"><input type="checkbox" name="interest_area" value="Üzgüçülük"> <span>Üzgüçülük / Hovuz</span></label>
-            <label class="option-card"><input type="checkbox" name="interest_area" value="Günlük proqram və rejim"> <span>Günlük rejim və cədvəl</span></label>
-            <label class="option-card"><input type="checkbox" name="interest_area" value="Qidalanma"> <span>Sağlam Qidalanma</span></label>
-            <label class="option-card"><input type="checkbox" name="interest_area" value="Təhlükəsizlik"> <span>Təhlükəsizlik və Nəzarət</span></label>
-            <label class="option-card"><input type="checkbox" name="interest_area" value="Adaptasiya prosesi"> <span>Adaptasiya prosesi</span></label>
-            <label class="option-card"><input type="checkbox" name="interest_area" value="Təhsil haqqı"> <span>Təhsil haqqı və Şərtlər</span></label>
-            <label class="option-card"><input type="checkbox" name="interest_area" value="Nəqliyyat"> <span>Bağça Nəqliyyatı</span></label>
-            <label class="option-card"><input type="checkbox" name="interest_area" value="Qəbul və qeydiyyat"> <span>Qəbul və qeydiyyat</span></label>
-            <label class="option-card"><input type="checkbox" name="interest_area" value="Digər"> <span>Digər</span></label>
+          <div class="option-grid" id="interest-area-grid">
+            <label class="option-card" onclick="toggleMultiOption(this)"><input type="checkbox" name="interest_area" value="Montessori təhsil metodu"><i class="fas fa-graduation-cap"></i> <span>Montessori metodu</span></label>
+            <label class="option-card" onclick="toggleMultiOption(this)"><input type="checkbox" name="interest_area" value="Uşağın fərdi inkişafı"><i class="fas fa-user-astronaut"></i> <span>Fərdi inkişaf</span></label>
+            <label class="option-card" onclick="toggleMultiOption(this)"><input type="checkbox" name="interest_area" value="Erkən yaş inkişafı"><i class="fas fa-baby"></i> <span>Erkən inkişaf</span></label>
+            <label class="option-card" onclick="toggleMultiOption(this)"><input type="checkbox" name="interest_area" value="Uşağın müstəqilliyinin inkişafı"><i class="fas fa-hiking"></i> <span>Müstəqillik</span></label>
+            <label class="option-card" onclick="toggleMultiOption(this)"><input type="checkbox" name="interest_area" value="Sosial və emosional inkişaf"><i class="fas fa-heart"></i> <span>Sosial-emosional</span></label>
+            <label class="option-card" onclick="toggleMultiOption(this)"><input type="checkbox" name="interest_area" value="Nitq və dil inkişafı"><i class="fas fa-comment-dots"></i> <span>Nitq & dil</span></label>
+            <label class="option-card" onclick="toggleMultiOption(this)"><input type="checkbox" name="interest_area" value="Riyazi inkişaf"><i class="fas fa-calculator"></i> <span>Riyazi inkişaf</span></label>
+            <label class="option-card" onclick="toggleMultiOption(this)"><input type="checkbox" name="interest_area" value="Sensor inkişaf"><i class="fas fa-cubes"></i> <span>Sensor inkişaf</span></label>
+            <label class="option-card" onclick="toggleMultiOption(this)"><input type="checkbox" name="interest_area" value="Praktik həyat bacarıqları"><i class="fas fa-hand-holding-heart"></i> <span>Praktik həyat</span></label>
+            <label class="option-card" onclick="toggleMultiOption(this)"><input type="checkbox" name="interest_area" value="Xarici dil mühiti"><i class="fas fa-language"></i> <span>Xarici dil mühiti</span></label>
+            <label class="option-card" onclick="toggleMultiOption(this)"><input type="checkbox" name="interest_area" value="Musiqi"><i class="fas fa-music"></i> <span>Musiqi</span></label>
+            <label class="option-card" onclick="toggleMultiOption(this)"><input type="checkbox" name="interest_area" value="İncəsənət və Rəsm"><i class="fas fa-palette"></i> <span>İncəsənət & Rəsm</span></label>
+            <label class="option-card" onclick="toggleMultiOption(this)"><input type="checkbox" name="interest_area" value="İdman və Hərəkət"><i class="fas fa-running"></i> <span>İdman & Hərəkət</span></label>
+            <label class="option-card" onclick="toggleMultiOption(this)"><input type="checkbox" name="interest_area" value="Üzgüçülük / Hovuz"><i class="fas fa-swimming-pool"></i> <span>Üzgüçülük / Hovuz</span></label>
+            <label class="option-card" onclick="toggleMultiOption(this)"><input type="checkbox" name="interest_area" value="Günlük proqram və rejim"><i class="fas fa-clock"></i> <span>Günlük rejim</span></label>
+            <label class="option-card" onclick="toggleMultiOption(this)"><input type="checkbox" name="interest_area" value="Sağlam Qidalanma"><i class="fas fa-apple-alt"></i> <span>Sağlam Qidalanma</span></label>
+            <label class="option-card" onclick="toggleMultiOption(this)"><input type="checkbox" name="interest_area" value="Təhlükəsizlik və Nəzarət"><i class="fas fa-shield-alt"></i> <span>Təhlükəsizlik</span></label>
+            <label class="option-card" onclick="toggleMultiOption(this)"><input type="checkbox" name="interest_area" value="Adaptasiya prosesi"><i class="fas fa-smile"></i> <span>Adaptasiya</span></label>
+            <label class="option-card" onclick="toggleMultiOption(this)"><input type="checkbox" name="interest_area" value="Təhsil haqqı və Şərtlər"><i class="fas fa-wallet"></i> <span>Təhsil haqqı</span></label>
+            <label class="option-card" onclick="toggleMultiOption(this)"><input type="checkbox" name="interest_area" value="Bağça Nəqliyyatı"><i class="fas fa-bus"></i> <span>Bağça Nəqliyyatı</span></label>
+            <label class="option-card" onclick="toggleMultiOption(this)"><input type="checkbox" name="interest_area" value="Qəbul və qeydiyyat"><i class="fas fa-id-card"></i> <span>Qəbul & qeydiyyat</span></label>
+            <label class="option-card" onclick="toggleMultiOption(this)"><input type="checkbox" name="interest_area" value="Digər"><i class="fas fa-plus"></i> <span>Digər</span></label>
           </div>
         </div>
 
@@ -477,7 +629,7 @@
               <span>Narazılıq</span>
             </div>
             <div class="feedback-card" onclick="selectFeedbackType('Hazırda yoxdur', this)">
-              <i class="fas fa-check"></i>
+              <i class="fas fa-check-circle"></i>
               <span>Hazırda yoxdur</span>
             </div>
           </div>
@@ -486,27 +638,27 @@
 
         <div class="form-group" id="message-container">
           <label>Mesajınız / Ətraflı qeydiniz <span class="req" id="msg-req">*</span></label>
-          <textarea id="feedback_message" class="form-control" rows="4" placeholder="Fikir və ya müraciətinizi buraya yaza bilərsiniz..."></textarea>
+          <textarea id="feedback_message" class="form-control" rows="4" placeholder="Fikir və ya müraciətinizi buraya yaza bilərsiniz..." oninput="updateProgress()"></textarea>
         </div>
 
         <button type="submit" class="submit-btn" id="submit-btn">
           <span>Sorğunu Göndər</span>
-          <i class="fas fa-paper-plane"></i>
+          <i class="fas fa-arrow-right"></i>
         </button>
 
       </form>
     </div>
 
-    <!-- Success Container -->
+    <!-- Success Screen -->
     <div class="success-container" id="success-view">
-      <div class="success-icon">
+      <div class="success-icon-wrap">
         <i class="fas fa-check"></i>
       </div>
       <h2>Təşəkkür edirik! 💚</h2>
       <p>Fikriniz Evrika Montessori-nin inkişafı üçün bizim üçün dəyərlidir. Müraciətiniz aidiyyəti üzrə nəzərdən keçiriləcək və ehtiyac olduqda sizinlə əlaqə saxlanılacaqdır.</p>
       
-      <a href="/montessori" class="submit-btn" style="text-decoration:none; max-width:260px; margin: 0 auto; display:inline-flex;">
-        <i class="fas fa-home"></i> <span>Bağça Səhifəsinə Qayıt</span>
+      <a href="/montessori" class="submit-btn" style="text-decoration:none; max-width:240px; margin: 0 auto; display:inline-flex;">
+        <i class="fas fa-home"></i> <span>Əsas Səhifə</span>
       </a>
     </div>
 
@@ -519,26 +671,31 @@
     // Branch resolution
     let branchKey = 'montessori';
     let branchName = 'Evrika Montessori Uşaq Bağçası';
-    const bText = document.getElementById('branch-text');
-    if (bText) bText.innerText = branchName;
 
-    // Phone Auto-formatter
-    const phoneInput = document.getElementById('parent_phone');
-    phoneInput.addEventListener('input', (e) => {
-      let v = e.target.value.replace(/\D/g, '');
-      if (v.startsWith('994')) v = v.substring(3);
-      if (v.startsWith('0')) v = v.substring(1);
-      
-      let formatted = '+994';
-      if (v.length > 0) formatted += ' (' + v.substring(0, 2);
-      if (v.length >= 2) formatted += ') ' + v.substring(2, 5);
-      if (v.length >= 5) formatted += '-' + v.substring(5, 7);
-      if (v.length >= 7) formatted += '-' + v.substring(7, 9);
-      
-      e.target.value = formatted;
-    });
+    // Interactive Option Selection
+    window.selectOption = (labelEl) => {
+      const parent = labelEl.closest('.option-grid');
+      parent.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+      labelEl.classList.add('selected');
+      const radio = labelEl.querySelector('input[type="radio"]');
+      if (radio) radio.checked = true;
+      updateProgress();
+    };
 
-    // Feedback type selector
+    window.toggleMultiOption = (labelEl) => {
+      const checkbox = labelEl.querySelector('input[type="checkbox"]');
+      if (checkbox) {
+        checkbox.checked = !checkbox.checked;
+        if (checkbox.checked) {
+          labelEl.classList.add('selected');
+        } else {
+          labelEl.classList.remove('selected');
+        }
+      }
+      updateProgress();
+    };
+
+    // Feedback Type Selection
     window.selectFeedbackType = (type, el) => {
       document.querySelectorAll('.feedback-card').forEach(c => c.classList.remove('active'));
       el.classList.add('active');
@@ -556,24 +713,58 @@
         msgInput.required = true;
         msgInput.placeholder = 'Fikir və ya müraciətinizi buraya yaza bilərsiniz...';
       }
+      updateProgress();
     };
+
+    // Progress Tracker calculation
+    window.updateProgress = () => {
+      let score = 0;
+      if (document.getElementById('parent_name')?.value.trim()) score += 20;
+      if (document.getElementById('parent_phone')?.value.trim().length >= 10) score += 20;
+      if (document.getElementById('child_name')?.value.trim()) score += 15;
+      if (document.getElementById('child_age')?.value) score += 15;
+      if (document.querySelector('input[name="first_touch_source"]:checked')) score += 15;
+      if (document.querySelectorAll('input[name="interest_area"]:checked').length > 0) score += 15;
+
+      const pFill = document.getElementById('progress-fill');
+      const pPct = document.getElementById('progress-percent');
+      if (pFill && pPct) {
+        pFill.style.width = score + '%';
+        pPct.innerText = score + '%';
+      }
+    };
+
+    // Phone Auto-formatter
+    const phoneInput = document.getElementById('parent_phone');
+    phoneInput.addEventListener('input', (e) => {
+      let v = e.target.value.replace(/\D/g, '');
+      if (v.startsWith('994')) v = v.substring(3);
+      if (v.startsWith('0')) v = v.substring(1);
+      
+      let formatted = '+994';
+      if (v.length > 0) formatted += ' (' + v.substring(0, 2);
+      if (v.length >= 2) formatted += ') ' + v.substring(2, 5);
+      if (v.length >= 5) formatted += '-' + v.substring(5, 7);
+      if (v.length >= 7) formatted += '-' + v.substring(7, 9);
+      
+      e.target.value = formatted;
+      updateProgress();
+    });
 
     // Form submission
     window.handleSubmit = async (e) => {
       e.preventDefault();
       const btn = document.getElementById('submit-btn');
       
-      // Check interest areas
       const checkedInterests = Array.from(document.querySelectorAll('input[name="interest_area"]:checked')).map(c => c.value);
       if (checkedInterests.length === 0) {
         alert('Zəhmət olmasa, ən azı 1 maraq sahəsi seçin.');
         return;
       }
 
-      // Check first touch source
       const selectedSource = document.querySelector('input[name="first_touch_source"]:checked')?.value;
       if (!selectedSource) {
-        alert('Zəhmət olmasa, Evrika Montessori ilə necə tanış olduğunuzu seçin.');
+        alert('Zəhmət olmasa, Evrika ilə necə tanış olduğunuzu seçin.');
         return;
       }
 
@@ -593,15 +784,12 @@
         school: 'Evrika Montessori Uşaq Bağçası',
         is_parent_voice: true,
         branch: branchKey,
-        branch_code: rawBranch,
         branch_name: branchName,
         fullName: `${parentName} (Valideyn)`,
         parent_name: parentName,
         phone: parentPhone,
         child_name: childName,
-        student_name: childName,
         child_age: childAge,
-        student_grade: childAge,
         first_touch_source: selectedSource,
         interest_area: checkedInterests.join(', '),
         interest_areas_list: checkedInterests,
@@ -609,7 +797,7 @@
         parent_feedback_message: feedbackMsg,
         status: 'Yeni',
         submissionDate: new Date().toISOString(),
-        note: `Montessori Valideyn Sorğusu | Filial: ${branchName} | Uşaq: ${childName} (${childAge}) | İlk Tanışlıq: ${selectedSource} | Maraq: ${checkedInterests.join(', ')} | Müraciət: ${feedbackType} | Qeyd: ${feedbackMsg || 'Yoxdur'}`
+        note: `Montessori Sorğusu | Uşaq: ${childName} (${childAge}) | İlk Tanışlıq: ${selectedSource} | Maraq: ${checkedInterests.join(', ')} | Müraciət Növü: ${feedbackType} | Qeyd: ${feedbackMsg || 'Yoxdur'}`
       };
 
       try {
@@ -627,16 +815,17 @@
         if (res.ok) {
           document.getElementById('form-wrapper').style.display = 'none';
           document.getElementById('success-view').style.display = 'block';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
           alert('Xəta baş verdi. Zəhmət olmasa bir az sonra yenidən cəhd edin.');
           btn.disabled = false;
-          btn.innerHTML = '<span>Sorğunu Göndər</span> <i class="fas fa-paper-plane"></i>';
+          btn.innerHTML = '<span>Sorğunu Göndər</span> <i class="fas fa-arrow-right"></i>';
         }
       } catch (err) {
-        console.error("Submission error:", err);
+        console.error(err);
         alert('Şəbəkə xətası baş verdi.');
         btn.disabled = false;
-        btn.innerHTML = '<span>Sorğunu Göndər</span> <i class="fas fa-paper-plane"></i>';
+        btn.innerHTML = '<span>Sorğunu Göndər</span> <i class="fas fa-arrow-right"></i>';
       }
     };
   </script>
