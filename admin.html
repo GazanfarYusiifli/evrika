@@ -1596,14 +1596,16 @@ fbq('track', 'PageView');
       <div class="modal-header"><h3>Müraciət Detalları</h3><button onclick="closeModal()" class="btn-danger" style="border:none; border-radius:50%; width:35px; height:35px; padding:0;">&times;</button></div>
       <div class="modal-body" id="modal-content"></div>
     </div>
+  </div>
+
   <!-- Dedicated Valideyn Səsi Detail & Execution Modal -->
-  <div class="modal-overlay" id="pv-detail-modal" style="display:none; align-items:center; justify-content:center; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); z-index:99999; backdrop-filter:blur(8px);">
-    <div class="modal" style="background:#0f172a; border:1px solid rgba(255,255,255,0.12); border-radius:24px; width:95%; max-width:780px; max-height:90vh; overflow-y:auto; padding:0; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);">
+  <div class="modal-overlay" id="pv-detail-modal" onclick="if(event.target===this) closePvModal()">
+    <div class="modal" style="max-width:780px; width:95%; max-height:90vh; overflow-y:auto; padding:0;">
       <div class="modal-header" style="padding:22px 28px; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02);">
         <h3 style="margin:0; font-size:1.2rem; font-weight:900; color:white; display:flex; align-items:center; gap:10px;">
           <i class="fas fa-comment-dots" style="color:var(--accent);"></i> Valideyn Səsi — İdarəetmə & Cavablandırma
         </h3>
-        <button onclick="closePvModal()" style="background:rgba(239,68,68,0.15); color:#ef4444; border:none; border-radius:50%; width:36px; height:36px; cursor:pointer; font-size:1.2rem; font-weight:bold; display:flex; align-items:center; justify-content:center;">&times;</button>
+        <button onclick="closePvModal()" class="btn-danger" style="border:none; border-radius:50%; width:36px; height:36px; padding:0; display:flex; align-items:center; justify-content:center; cursor:pointer;">&times;</button>
       </div>
       <div class="modal-body" id="pv-modal-body" style="padding:28px;">
         <!-- Injected dynamically via openPvModal -->
@@ -2340,11 +2342,11 @@ fbq('track', 'PageView');
       `;
 
       document.getElementById('pv-modal-body').innerHTML = bodyHtml;
-      document.getElementById('pv-detail-modal').style.display = 'flex';
+      document.getElementById('pv-detail-modal').classList.add('active');
     };
 
     window.closePvModal = () => {
-      document.getElementById('pv-detail-modal').style.display = 'none';
+      document.getElementById('pv-detail-modal').classList.remove('active');
     };
 
     window.saveParentVoiceDetails = async (dbId) => {
