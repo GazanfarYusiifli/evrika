@@ -354,22 +354,48 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           const API_KEY = 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP';
           const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY };
 
+          const STATIC_ALUMNI = [
+            { img: "assets/mezunlar/mezun_1.png", name: "Evrika Məzunu", uni: "" },
+            { img: "assets/mezunlar/mezun_2.png", name: "Evrika Məzunu", uni: "" },
+            { img: "assets/mezunlar/mezun_3.png", name: "Evrika Məzunu", uni: "" },
+            { img: "assets/mezunlar/mezun_4.png", name: "Evrika Məzunu", uni: "" },
+            { img: "assets/mezunlar/mezun_5.jpeg", name: "Evrika Məzunu", uni: "" },
+            { img: "assets/mezunlar/mezun_6.jpeg", name: "Evrika Məzunu", uni: "" },
+            { img: "assets/mezunlar/mezun_7.jpeg", name: "Evrika Məzunu", uni: "" },
+            { img: "assets/mezunlar/mezun_8.jpeg", name: "Evrika Məzunu", uni: "" },
+            { img: "assets/mezunlar/mezun_9.jpeg", name: "Evrika Məzunu", uni: "" },
+            { img: "assets/mezunlar/mezun_10.jpeg", name: "Evrika Məzunu", uni: "" },
+            { img: "assets/mezunlar/mezun_11.jpeg", name: "Evrika Məzunu", uni: "" },
+            { img: "assets/mezunlar/mezun_12.jpeg", name: "Evrika Məzunu", uni: "" },
+            { img: "assets/mezunlar/mezun_13.jpeg", name: "Evrika Məzunu", uni: "" },
+            { img: "assets/mezunlar/mezun_14.jpeg", name: "Evrika Məzunu", uni: "" },
+            { img: "assets/mezunlar/mezun_15.jpeg", name: "Evrika Məzunu", uni: "" },
+            { img: "assets/mezunlar/mezun_16.jpeg", name: "Evrika Məzunu", uni: "" },
+            { img: "assets/mezunlar/mezun_17.jpeg", name: "Evrika Məzunu", uni: "" },
+            { img: "assets/mezunlar/mezun_18.jpeg", name: "Evrika Məzunu", uni: "" },
+            { img: "assets/mezunlar/mezun_19.jpeg", name: "Evrika Məzunu", uni: "" },
+            { img: "assets/mezunlar/mezun_20.jpeg", name: "Evrika Məzunu", uni: "" },
+          ];
+
           async function fetchAlumni() {
+            let dbAlumni = [];
             try {
               const res = await fetch(`${API_URL}/ugurlar?select=*&order=id.desc`, { headers: HEADERS });
               if (res.ok) {
                 const data = await res.json();
-                if (data && data.length > 0) return data.map(r => r.payload).filter(p => p && p.img);
+                if (data && data.length > 0) dbAlumni = data.map(r => r.payload).filter(p => p && p.img);
               }
             } catch (e) { console.error(e); }
-            try {
-              const res2 = await fetch(`${API_URL}/mezunlar?select=*&order=id.desc`, { headers: HEADERS });
-              if (res2.ok) {
-                const data2 = await res2.json();
-                return data2.map(r => r.payload).filter(p => p && p.img);
+
+            const combined = [...dbAlumni];
+            STATIC_ALUMNI.forEach(st => {
+              const fileName = st.img.split('/').pop();
+              const alreadyExists = combined.some(c => c.img && c.img.endsWith(fileName));
+              if (!alreadyExists) {
+                combined.push(st);
               }
-            } catch (e) { console.error(e); }
-            return [];
+            });
+            return combined.length > 0 ? combined : STATIC_ALUMNI;
           }
 
           const data = await fetchAlumni();

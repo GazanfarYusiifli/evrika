@@ -2087,20 +2087,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         ];
 
         async function fetchAlumniForHome() {
+          let dbAlumni = [];
           try {
-            const res = await fetch(`${ALUMNI_API_URL}/ugurlar?select=*&order=id.desc&limit=50`, { 
+            const res = await fetch(`${ALUMNI_API_URL}/ugurlar?select=*&order=id.desc&limit=100`, { 
               headers: { 'apikey': ALUMNI_API_KEY, 'Authorization': 'Bearer ' + ALUMNI_API_KEY } 
             });
             if (res.ok) {
               const data = await res.json();
               if (data && data.length > 0) {
-                const validItems = data.map(r => r.payload).filter(p => p && p.img);
-                if (validItems.length > 0) return validItems;
+                dbAlumni = data.map(r => r.payload).filter(p => p && p.img);
               }
             }
           } catch (e) { console.error(e); }
-          // Static fallback if DB is empty or fails
-          return STATIC_ALUMNI;
+
+          // Həm bazadakı yeni məzunları, həm də köhnə məzunları birləşdiririk
+          const combined = [...dbAlumni];
+          STATIC_ALUMNI.forEach(st => {
+            const fileName = st.img.split('/').pop();
+            const alreadyExists = combined.some(c => c.img && c.img.endsWith(fileName));
+            if (!alreadyExists) {
+              combined.push(st);
+            }
+          });
+          return combined.length > 0 ? combined : STATIC_ALUMNI;
         }
 
         const alumniDataPromise = fetchAlumniForHome();
