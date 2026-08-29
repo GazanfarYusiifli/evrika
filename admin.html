@@ -1715,6 +1715,12 @@ fbq('track', 'PageView');
                 const sbCrmTitle = document.getElementById('sb-crm-title');
                 if (sbCrmTitle) sbCrmTitle.innerText = bTitle;
                 
+                // Show QR generator ONLY in BÜTÜN CRM (Ümumi İdarəetmə)
+                const qrLink = document.getElementById('sb-link-qr-generator');
+                if (qrLink) {
+                  qrLink.style.display = (window.selectedCrmBranch === 'all' ? 'flex' : 'none');
+                }
+
                 filteredData = getBranchFilteredData();
                 switchTab('dashboard');
             } else {
@@ -2074,7 +2080,7 @@ fbq('track', 'PageView');
       const qrList = [
         {
           id: 'lisey1',
-          name: 'BETL Nərimanov Filialı',
+          name: '🔴 BETL Lisey (Nərimanov)',
           subtitle: 'Elm və Texnologiya Liseyi',
           url: 'https://evrikaliseyi.edu.az/valideyn-sesi?branch=lisey1',
           color: '#ef4444',
@@ -2082,23 +2088,31 @@ fbq('track', 'PageView');
         },
         {
           id: 'lisey2',
-          name: 'BETL Gənclik Filialı',
+          name: '🔵 BETL Lisey (Gənclik)',
           subtitle: 'Beynəlxalq Kampus',
           url: 'https://evrikaliseyi.edu.az/valideyn-sesi?branch=lisey2',
           color: '#3b82f6',
           icon: 'fas fa-atom'
         },
         {
-          id: 'montessori',
-          name: 'Montessori Kids Academy',
-          subtitle: 'Bağça & Erkən İnkişaf',
-          url: 'https://evrikaliseyi.edu.az/valideyn-sesi?branch=montessori',
+          id: 'mont1',
+          name: '🟢 Montessori Bağçası (Filial 1 - MONT1)',
+          subtitle: 'Erkən İnkişaf & Bağça Sorğusu',
+          url: 'https://evrikaliseyi.edu.az/parent-survey?branch=MONT1',
           color: '#10b981',
           icon: 'fas fa-child'
         },
         {
+          id: 'mont2',
+          name: '🟢 Montessori Bağçası (Filial 2 - MONT2)',
+          subtitle: 'Erkən İnkişaf & Bağça Sorğusu',
+          url: 'https://evrikaliseyi.edu.az/parent-survey?branch=MONT2',
+          color: '#059669',
+          icon: 'fas fa-shapes'
+        },
+        {
           id: 'victory',
-          name: 'Victory Colleges',
+          name: '🟣 Victory Colleges',
           subtitle: 'Xaricdə Təhsil & Kollec',
           url: 'https://evrikaliseyi.edu.az/valideyn-sesi?branch=victory',
           color: '#a855f7',
@@ -2106,7 +2120,7 @@ fbq('track', 'PageView');
         },
         {
           id: 'zumrud',
-          name: 'Zümrüd İdman Mərkəzi',
+          name: '🟡 Zümrüd İdman Mərkəzi',
           subtitle: 'Sağlam Həyat & İdman',
           url: 'https://evrikaliseyi.edu.az/valideyn-sesi?branch=zumrud',
           color: '#eab308',
@@ -2114,8 +2128,8 @@ fbq('track', 'PageView');
         },
         {
           id: 'all',
-          name: 'BÜTÜN EVRİKA KOMPLEKSİ',
-          subtitle: 'Ümumi Rəy və Təklif Portalı',
+          name: '🏢 BÜTÜN EVRİKA KOMPLEKSİ',
+          subtitle: 'Ümumi Lisey Rəy Portalı',
           url: 'https://evrikaliseyi.edu.az/valideyn-sesi?branch=all',
           color: '#ec4899',
           icon: 'fas fa-school'
