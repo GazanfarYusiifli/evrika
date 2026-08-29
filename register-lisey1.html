@@ -552,8 +552,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               var previousSchool = document.getElementById('mf_previousSchool').value;
 
               // Həqiqi qiymətlərə keçid
-              // TEST ÜÇÜN 0.01 AZN
-              var amountNum = '0.01';
+              var amountNum = (grade === 'Məktəbəqədər' || grade === 'Məktəbəqədər (5-6 yaş)') ? '25' : '35';
 
               var note = "Filial: EVRİKA Beynəlxalq<br>Elm və Texnologiya Liseyi<br>(Nərimanov filialı) | Bölmə: " + sectorText + " | Sinif: " + grade + " | E-mail: " + email + " | Əvvəlki müəssisə: " + previousSchool + " | Hazırda oxuduğu sinif: " + currentClass + " | Hazırda oxuduğu bölmə: " + currentSector + " | Ödəniş Məbləği: " + amountNum + " AZN";
 
@@ -591,8 +590,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     window.currentPayloadData = payloadData;
                 }
                 
-                // amountNum artıq yuxarıda təyin edilib
-                
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ÖDƏNİŞƏ YÖNLƏNDİRİLİR...';
                 
                 try {
@@ -601,7 +598,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                       amount: parseFloat(amountNum),
-                      order_id: "EV-" + String(data[0].id).padStart(4, '0') + "-" + Date.now(), 
+                      order_id: "EV-" + String(data[0].id).padStart(4, '0'), 
                       description: "Evrika BETL Nərimanov | Şagird: " + firstName + " " + lastName + " | Sinif: " + grade + " | Tel: +994" + phoneNum + " | Sifariş №: EV-" + String(data[0].id).padStart(4, '0'),
                       regId: data[0].id,
                       email: email,

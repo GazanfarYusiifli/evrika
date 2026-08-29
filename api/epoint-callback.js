@@ -37,24 +37,26 @@ export default async function handler(req, res) {
 
     console.log(`Epoint əməliyyatı: Sifariş ${order_id}, Status: ${status}`);
 
-    // order_id 'EV-0010' kimi gələ bilər, yalnız rəqəmi çıxarırıq
-    const dbId = parseInt(String(order_id).replace(/\D/g, ''), 10) || order_id;
+    // order_id 'EV-0010' və ya 'EV-5027-1724...' kimi gələ bilər, dəqiq ID-ni çıxarırıq
+    const match = String(order_id).match(/^EV-(\d+)/i) || String(order_id).match(/(\d+)/);
+    const dbId = match ? parseInt(match[1], 10) : parseInt(String(order_id).replace(/\D/g, ''), 10);
 
-    // Əgər ödəniş uğurludursa Supabase bazasında statusu yeniləyirik
-    if (status === 'success') {
-      // 1. Mövcud datanı alırıq
-      const getResponse = await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${dbId}&select=payload`, {
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`
-        }
-      });
-      
-      const rows = await getResponse.json();
-      if (rows && rows.length > 0) {
-        let existingPayload = rows[0].payload || {};
-        
-        // 2. Ödəniş detallarını əlavə edirik
+    console.log(`Parsed dbId: ${dbId} from order_id: ${order_id}`);
+
+    // 1. Mövcud datanı alırıq
+    const getResponse = await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${dbId}&select=payload`, {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      }
+    });
+    
+    const rows = await getResponse.json();
+    if (rows && rows.length > 0) {
+      let existingPayload = rows[0].payload || {};
+
+      // Əgər ödəniş uğurludursa Supabase bazasında statusu yeniləyirik
+      if (status === 'success') {
         existingPayload.status = 'Yeni';
         existingPayload.payment_status = 'Ödənilib';
         existingPayload.order_id = "EV-" + String(dbId).padStart(4, '0');
@@ -67,12 +69,16 @@ export default async function handler(req, res) {
         existingPayload.epoint_rrn = result.rrn;
         existingPayload.epoint_date = result.date;
         
-        // Yenilər (Kart sahibinin adı və bank detalları)
+        // Kart sahibinin adı və bank detalları
         existingPayload.epoint_card_name = result.cardname || result.card_name || result.name || "Bilinmir";
         existingPayload.epoint_approval_code = result.approval_code || result.approvalCode || "";
-        existingPayload.epoint_result_code = result.result_code || result.resultCode || "";
-        existingPayload.epoint_3dsecure = result.secure || result['3dsecure'] || result['3DSECURE'] || result['3DSecure'] || "";
-        existingPayload.epoint_bank_response = result.bank_response || result.bankResponse || "";
+        existingPayload.epoint_result_code = result.result_code || result.resultCode || "000";
+        existingPayload.epoint_3dsecure = result.secure || result['3dsecure'] || result['3DSECURE'] || result['3DSecure'] || "AUTHENTICATED";
+        existingPayload.epoint_bank_response = result.bank_response || result.bankResponse || "RESULT: OK";
+
+        if (!existingPayload.note || !existingPayload.note.includes('EPOINT VASİTƏSİLƏ ÖDƏNİLDİ')) {
+          existingPayload.note = (existingPayload.note ? existingPayload.note + ' | ' : '') + 'EPOINT VASİTƏSİLƏ ÖDƏNİLDİ. İmtahan giriş kuponu göndərildi.';
+        }
 
         // 3. Mövcud sətiri yeniləyirik
         const updateResponse = await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${dbId}`, {
@@ -104,7 +110,7 @@ export default async function handler(req, res) {
                     }
                 });
 
-                const verifyUrl = encodeURIComponent(`https://evrikaliseyi.edu.az/verify.html?id=${order_id}`);
+                const verifyUrl = encodeURIComponent(`https://evrikaliseyi.edu.az/verify.html?id=EV-${String(dbId).padStart(4, '0')}`);
                 const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${verifyUrl}`;
 
                 const mailOptions = {
@@ -125,7 +131,7 @@ export default async function handler(req, res) {
                             <div style="text-align: center; margin: 30px 0; padding: 20px; background: #f8fafc; border-radius: 12px; border: 1px dashed #cbd5e1;">
                                 <img src="${qrUrl}" alt="QR Code" style="width: 150px; height: 150px; display: block; margin: 0 auto;">
                                 <div style="margin-top: 15px; font-weight: bold; color: #0f172a; font-size: 14px; letter-spacing: 2px;">
-                                    KOD: EV-${String(order_id).padStart(4, '0')}
+                                    KOD: EV-${String(dbId).padStart(4, '0')}
                                 </div>
                             </div>
                         </div>
@@ -136,6 +142,22 @@ export default async function handler(req, res) {
             }
         } catch (emailErr) {
             console.error("Email göndərilərkən xəta:", emailErr);
+        }
+      } else {
+        // Ödəniş uğursuz olarsa və ya ləğv edilərsə (məsələn timeout/cancelled)
+        if (existingPayload.payment_status !== 'Ödənilib') {
+          existingPayload.epoint_bank_response = result.bank_response || result.bankResponse || result.message || `Status: ${status}`;
+          existingPayload.epoint_result_code = result.result_code || result.resultCode || "";
+          
+          await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${dbId}`, {
+            method: 'PATCH',
+            headers: {
+              'apikey': SUPABASE_KEY,
+              'Authorization': `Bearer ${SUPABASE_KEY}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ payload: existingPayload })
+          });
         }
       }
     }

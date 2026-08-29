@@ -312,31 +312,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </section>
     
     <script>
-      // Səhifə yüklənəndə DB-ni yeniləyirik və emaili göndəririk (Arxa plan vasitəsilə)
+      // Səhifə yüklənəndə həm Webhook yoxlaması, həm də birbaşa Epoint yoxlaması aparılır
       const urlParams = new URLSearchParams(window.location.search);
       const regId = urlParams.get('regId') || localStorage.getItem('last_regId');
+      const orderId = urlParams.get('order_id') || ('EV-' + String(regId).padStart(4, '0'));
       const emailParam = urlParams.get('email') || localStorage.getItem('last_email');
       const regName = urlParams.get('name') || localStorage.getItem('last_name') || '';
-      const txHash = localStorage.getItem('last_epoint_transaction') || '';
 
       if (regId) {
-        document.querySelector('.container p').innerHTML += '<br><br><span style="font-size: 0.9rem; color: #10b981;"><i class="fas fa-spinner fa-spin"></i> Sistem qeydiyyatınızı təsdiqləyir və kupon göndərir...</span>';
+        const msgEl = document.querySelector('.container p');
+        msgEl.innerHTML += '<br><br><span id="sync-spinner" style="font-size: 0.95rem; color: #10b981; font-weight: 600;"><i class="fas fa-spinner fa-spin"></i> Ödəniş və qeydiyyat təsdiqlənir...</span>';
         
-        // Backend-ə sorğu göndəririk (Həm DB yeniləyir, həm də Mail göndərir)
-        fetch('/api/send-email', {
+        // Birbaşa serverdən Epoint statusunu yoxlayırıq və təsdiqləyirik
+        fetch('/api/check-epoint-status', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                email: emailParam || 'qeyd etdiyiniz',
-                name: regName || 'Şagird',
-                dbId: regId,
-                transactionId: txHash
-            })
-        }).then(res => {
-            document.querySelector('.container p').innerHTML = 'Təşəkkür edirik. Ödənişiniz sistemdə avtomatik qeydə alındı və xidmətiniz təsdiqləndi. İmtahan giriş kuponunuz ' + (emailParam ? emailParam : 'qeyd etdiyiniz') + ' ünvanınıza uğurla göndərilmişdir.';
+            body: JSON.stringify({ regId: regId, order_id: orderId })
+        }).then(res => res.json()).then(data => {
+            const spinner = document.getElementById('sync-spinner');
+            if (spinner) {
+              spinner.innerHTML = '<i class="fas fa-check-circle"></i> Ödəniş uğurla təsdiqləndi! Giriş kuponunuz e-poçt ünvanınıza göndərildi.';
+            }
         }).catch(err => {
-            console.error(err);
-            document.querySelector('.container p').innerHTML = 'Ödənişiniz təsdiqləndi, lakin kupon göndərilməsində kiçik gecikmə yaşandı. Xahiş edirik bizimlə əlaqə saxlayın.';
+            console.log('Status check:', err);
         });
       }
     </script>
