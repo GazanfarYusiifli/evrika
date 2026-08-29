@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="format-detection" content="telephone=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Valideyn Səsi | EVRİKA Təhsil Ekosistemi</title>
+  <meta name="description" content="Evrika Beynəlxalq Elm və Texnologiya Liseyi — Valideyn Səsi Sorğusu.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --burgundy: #8B1A2B;
+      --burgundy-light: #FDF4F6;
+      --burgundy-glow: rgba(139, 26, 43, 0.15);
+      --navy: #070d1f;
+      --accent: #e11d48;
+      --text-primary: #1e293b;
+      --text-muted: #64748b;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --border-focus: #8B1A2B;
+      --success: #10b981;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: linear-gradient(135deg, #f8fafc 0%, #fdf2f4 50%, #f8fafc 100%);
+      background-attachment: fixed;
+      font-family: 'Inter', sans-serif;
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 60px;
+    }
+
+    .top-logo-bar {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
+      text-decoration: none;
+    }
+    .top-logo-bar img {
+      height: 48px;
+      width: auto;
+      object-fit: contain;
+    }
+    .top-logo-bar .logo-text {
+      display: flex;
+      flex-direction: column;
+    }
+    .top-logo-bar .logo-text span:first-child {
+      font-weight: 900;
+      font-size: 1.3rem;
+      letter-spacing: 2px;
+      color: var(--burgundy);
+    }
+    .top-logo-bar .logo-text span:last-child {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      font-weight: 700;
+    }
+
+    .form-card {
+      width: 100%;
+      max-width: 680px;
+      background: var(--surface);
+      border: 1px solid rgba(139, 26, 43, 0.12);
+      border-radius: 28px;
+      padding: 45px;
+      box-shadow: 0 20px 40px -15px rgba(139, 26, 43, 0.08), 0 0 0 1px rgba(0,0,0,0.02);
+      position: relative;
+      overflow: hidden;
+    }
+    .form-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, var(--burgundy), #e11d48, #fb7185);
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+    .form-header .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--burgundy-light);
+      color: var(--burgundy);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(139, 26, 43, 0.15);
+    }
+    .form-header h1 {
+      font-size: 1.7rem;
+      font-weight: 900;
+      color: var(--burgundy);
+      margin-bottom: 10px;
+      line-height: 1.25;
+    }
+    .form-header p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .branch-tag-banner {
+      background: #f8fafc;
+      border: 1px dashed rgba(139, 26, 43, 0.25);
+      border-radius: 12px;
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 15px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--burgundy);
+    }
+
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin: 30px 0 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .section-title i {
+      color: var(--burgundy);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 8px;
+    }
+    .form-group label .req {
+      color: #e11d48;
+      margin-left: 3px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: #ffffff;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      transition: all 0.25s ease;
+      outline: none;
+    }
+    .form-control:focus {
+      border-color: var(--burgundy);
+      box-shadow: 0 0 0 4px var(--burgundy-glow);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+    @media(max-width: 600px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .form-card { padding: 30px 20px; }
+    }
+
+    /* Option Cards (Radio & Checkbox) */
+    .option-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+    @media(max-width: 480px) {
+      .option-grid { grid-template-columns: 1fr; }
+    }
+
+    .option-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 15px;
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #334155;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .option-card:hover {
+      background: #fdf2f4;
+      border-color: rgba(139, 26, 43, 0.3);
+    }
+    .option-card input[type="radio"],
+    .option-card input[type="checkbox"] {
+      accent-color: var(--burgundy);
+      width: 17px;
+      height: 17px;
+      cursor: pointer;
+    }
+    .option-card.selected {
+      background: var(--burgundy-light);
+      border-color: var(--burgundy);
+      color: var(--burgundy);
+      font-weight: 700;
+    }
+
+    .feedback-types-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .feedback-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 14px 10px;
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .feedback-card i {
+      font-size: 1.3rem;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+    .feedback-card span {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #334155;
+    }
+    .feedback-card:hover {
+      background: #fdf2f4;
+      border-color: rgba(139, 26, 43, 0.3);
+    }
+    .feedback-card.active {
+      background: var(--burgundy-light);
+      border-color: var(--burgundy);
+      box-shadow: 0 4px 12px rgba(139, 26, 43, 0.12);
+    }
+    .feedback-card.active i {
+      color: var(--burgundy);
+      transform: scale(1.15);
+    }
+    .feedback-card.active span {
+      color: var(--burgundy);
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, var(--burgundy) 0%, #a81c34 100%);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 25px -5px rgba(139, 26, 43, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 30px;
+    }
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px -5px rgba(139, 26, 43, 0.5);
+    }
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Success State */
+    .success-container {
+      display: none;
+      text-align: center;
+      padding: 40px 20px;
+      animation: fadeIn 0.5s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+    .success-icon {
+      width: 85px;
+      height: 85px;
+      background: #ecfdf5;
+      color: #10b981;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      margin: 0 auto 20px;
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
+    }
+    .success-container h2 {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--navy);
+      margin-bottom: 12px;
+    }
+    .success-container p {
+      font-size: 1rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 480px;
+      margin: 0 auto 25px;
+    }
+  </style>
+</head>
+<body>
+
+  <a href="/" class="top-logo-bar">
+    <img src="https://gziuhrlvagflokivfgwt.supabase.co/storage/v1/object/public/ems-documents/evrika-logo.png" onerror="this.src='https://evrikaliseyi.edu.az/images/logo.png'" alt="Evrika">
+    <div class="logo-text">
+      <span>EVRİKA</span>
+      <span>BEYNƏLXALQ ELM VƏ TEXNOLOGİYA LİSEYİ</span>
+    </div>
+  </a>
+
+  <div class="form-card">
+    
+    <div id="form-wrapper">
+      <div class="form-header">
+        <div class="badge"><i class="fas fa-heart"></i> VALİDEYN SƏSİ</div>
+        <h1>Fikir və Təklifləriniz Bizim Üçün Dəyərlidir</h1>
+        <p>Qısa sorğunu cavablandıraraq Evrika ilə bağlı fikir, təklif və müraciətlərinizi bizimlə bölüşün.</p>
+        
+        <div class="branch-tag-banner" id="branch-banner" style="display:none;">
+          <i class="fas fa-map-marker-alt"></i> <span id="branch-text">EVRİKA BETL (Nərimanov filialı)</span>
+        </div>
+      </div>
+
+      <form id="parent-voice-form" onsubmit="handleSubmit(event)">
+        
+        <!-- SECTION 1: Valideyn və Şagird -->
+        <div class="section-title">
+          <i class="fas fa-user-friends"></i> 1. Əsas Məlumatlar
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Valideynin Adı və Soyadı <span class="req">*</span></label>
+            <input type="text" id="parent_name" class="form-control" placeholder="Məs: Aygün Məmmədova" required>
+          </div>
+          <div class="form-group">
+            <label>Əlaqə Telefon Nömrəsi <span class="req">*</span></label>
+            <input type="tel" id="parent_phone" class="form-control" placeholder="+994 (50) 000-00-00" required>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Şagirdin Adı və Soyadı <span class="req">*</span></label>
+            <input type="text" id="student_name" class="form-control" placeholder="Məs: Murad Məmmədov" required>
+          </div>
+          <div class="form-group">
+            <label>Şagirdin Sinfi <span class="req">*</span></label>
+            <select id="student_grade" class="form-control" required>
+              <option value="">Sinif seçin...</option>
+              <option value="Məktəbəqədər / Bağça">Məktəbəqədər / Bağça</option>
+              <option value="I sinif">I sinif</option>
+              <option value="II sinif">II sinif</option>
+              <option value="III sinif">III sinif</option>
+              <option value="IV sinif">IV sinif</option>
+              <option value="V sinif">V sinif</option>
+              <option value="VI sinif">VI sinif</option>
+              <option value="VII sinif">VII sinif</option>
+              <option value="VIII sinif">VIII sinif</option>
+              <option value="IX sinif">IX sinif</option>
+              <option value="X sinif">X sinif</option>
+              <option value="XI sinif">XI sinif</option>
+              <option value="Digər">Digər</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- SECTION 2: Evrika ilə necə tanış oldunuz? -->
+        <div class="section-title">
+          <i class="fas fa-bullhorn"></i> 2. Evrika ilə necə tanış oldunuz?
+        </div>
+        <div class="form-group">
+          <label>Evrika Beynəlxalq Elm və Texnologiya Liseyi haqqında ilk dəfə haradan məlumat əldə etdiniz? <span class="req">*</span></label>
+          <div class="option-grid" id="first-touch-grid">
+            <label class="option-card"><input type="radio" name="first_touch_source" value="Instagram" required> <span>Instagram</span></label>
+            <label class="option-card"><input type="radio" name="first_touch_source" value="Facebook"> <span>Facebook</span></label>
+            <label class="option-card"><input type="radio" name="first_touch_source" value="TikTok"> <span>TikTok</span></label>
+            <label class="option-card"><input type="radio" name="first_touch_source" value="YouTube"> <span>YouTube</span></label>
+            <label class="option-card"><input type="radio" name="first_touch_source" value="Google axtarışı"> <span>Google axtarışı</span></label>
+            <label class="option-card"><input type="radio" name="first_touch_source" value="Google reklamı"> <span>Google reklamı</span></label>
+            <label class="option-card"><input type="radio" name="first_touch_source" value="Instagram / Facebook reklamı"> <span>Sosial media reklamı</span></label>
+            <label class="option-card"><input type="radio" name="first_touch_source" value="Dost / tanış tövsiyəsi"> <span>Dost / tanış tövsiyəsi</span></label>
+            <label class="option-card"><input type="radio" name="first_touch_source" value="Evrika valideyni tövsiyəsi"> <span>Evrika valideyni</span></label>
+            <label class="option-card"><input type="radio" name="first_touch_source" value="Evrika şagirdi / məzunu vasitəsilə"> <span>Evrika şagirdi / məzunu</span></label>
+            <label class="option-card"><input type="radio" name="first_touch_source" value="Müəllim / əməkdaş tövsiyəsi"> <span>Müəllim / əməkdaş</span></label>
+            <label class="option-card"><input type="radio" name="first_touch_source" value="Tədbir / seminar / workshop"> <span>Tədbir / seminar</span></label>
+            <label class="option-card"><input type="radio" name="first_touch_source" value="Məktəbin qarşısında / küçə reklamında"> <span>Küçə / Çöl reklamı</span></label>
+            <label class="option-card"><input type="radio" name="first_touch_source" value="Digər"> <span>Digər</span></label>
+          </div>
+        </div>
+
+        <!-- SECTION 3: Hazırkı maraq sahəsi -->
+        <div class="section-title">
+          <i class="fas fa-compass"></i> 3. Hazırkı Maraq Sahəniz
+        </div>
+        <div class="form-group">
+          <label>Hazırda Evrika ilə bağlı ən çox hansı mövzu sizi maraqlandırır? (Bir və ya bir neçəsini seçə bilərsiniz) <span class="req">*</span></label>
+          <div class="option-grid" id="interest-area-grid">
+            <label class="option-card"><input type="checkbox" name="interest_area" value="Qəbul və qeydiyyat"> <span>Qəbul və qeydiyyat</span></label>
+            <label class="option-card"><input type="checkbox" name="interest_area" value="Təhsil proqramı"> <span>Təhsil proqramı</span></label>
+            <label class="option-card"><input type="checkbox" name="interest_area" value="Cambridge proqramı"> <span>Cambridge proqramı</span></label>
+            <label class="option-card"><input type="checkbox" name="interest_area" value="Beynəlxalq təhsil"> <span>Beynəlxalq təhsil</span></label>
+            <label class="option-card"><input type="checkbox" name="interest_area" value="Elm və texnologiya"> <span>Elm və texnologiya</span></label>
+            <label class="option-card"><input type="checkbox" name="interest_area" value="STEAM"> <span>STEAM təhsili</span></label>
+            <label class="option-card"><input type="checkbox" name="interest_area" value="Robototexnika və kodlaşdırma"> <span>Robototexnika & IT</span></label>
+            <label class="option-card"><input type="checkbox" name="interest_area" value="Xarici dillər"> <span>Xarici dillər</span></label>
+            <label class="option-card"><input type="checkbox" name="interest_area" value="Tədris dili"> <span>Tədris dili (Az/Rus/İng)</span></label>
+            <label class="option-card"><input type="checkbox" name="interest_area" value="Təhsil haqqı"> <span>Təhsil haqqı</span></label>
+            <label class="option-card"><input type="checkbox" name="interest_area" value="Təqaüd / güzəştlər"> <span>Təqaüd / güzəştlər</span></label>
+            <label class="option-card"><input type="checkbox" name="interest_area" value="Dərsdənkənar fəaliyyətlər"> <span>Dərnəklər & Klublar</span></label>
+            <label class="option-card"><input type="checkbox" name="interest_area" value="İdman"> <span>İdman & Hovuz</span></label>
+            <label class="option-card"><input type="checkbox" name="interest_area" value="Nəqliyyat"> <span>Məktəb Nəqliyyatı</span></label>
+            <label class="option-card"><input type="checkbox" name="interest_area" value="Məktəb mühiti"> <span>Məktəb mühiti</span></label>
+            <label class="option-card"><input type="checkbox" name="interest_area" value="Digər"> <span>Digər</span></label>
+          </div>
+        </div>
+
+        <!-- SECTION 4: Valideynin müraciəti -->
+        <div class="section-title">
+          <i class="fas fa-comment-dots"></i> 4. Fikir, Təklif və ya Müraciətiniz
+        </div>
+        <div class="form-group">
+          <label>Evrika ilə bağlı bizimlə bölüşmək istədiyiniz fikir, təklif və ya müraciətiniz varmı? <span class="req">*</span></label>
+          <div class="feedback-types-grid">
+            <div class="feedback-card active" onclick="selectFeedbackType('Təklifim var', this)">
+              <i class="fas fa-lightbulb"></i>
+              <span>Təklifim var</span>
+            </div>
+            <div class="feedback-card" onclick="selectFeedbackType('Müraciətim var', this)">
+              <i class="fas fa-question-circle"></i>
+              <span>Müraciətim var</span>
+            </div>
+            <div class="feedback-card" onclick="selectFeedbackType('Müsbət rəy bildirmək istəyirəm', this)">
+              <i class="fas fa-smile-beam"></i>
+              <span>Müsbət rəy</span>
+            </div>
+            <div class="feedback-card" onclick="selectFeedbackType('Narazılığımı bildirmək istəyirəm', this)">
+              <i class="fas fa-exclamation-triangle"></i>
+              <span>Narazılıq</span>
+            </div>
+            <div class="feedback-card" onclick="selectFeedbackType('Hazırda yoxdur', this)">
+              <i class="fas fa-check"></i>
+              <span>Hazırda yoxdur</span>
+            </div>
+          </div>
+          <input type="hidden" id="feedback_type" value="Təklifim var">
+        </div>
+
+        <div class="form-group" id="message-container">
+          <label>Mesajınız / Ətraflı qeydiniz <span class="req" id="msg-req">*</span></label>
+          <textarea id="feedback_message" class="form-control" rows="4" placeholder="Fikir və ya müraciətinizi buraya yaza bilərsiniz..."></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-btn">
+          <span>Sorğunu Göndər</span>
+          <i class="fas fa-paper-plane"></i>
+        </button>
+
+      </form>
+    </div>
+
+    <!-- Success Container -->
+    <div class="success-container" id="success-view">
+      <div class="success-icon">
+        <i class="fas fa-check"></i>
+      </div>
+      <h2>Təşəkkür edirik! 💙</h2>
+      <p>Fikriniz Evrika-nın inkişafı üçün bizim üçün dəyərlidir. Müraciətiniz aidiyyəti üzrə nəzərdən keçiriləcək və ehtiyac olduqda sizinlə əlaqə saxlanılacaqdır.</p>
+      
+      <a href="/" class="submit-btn" style="text-decoration:none; max-width:260px; margin: 0 auto; display:inline-flex;">
+        <i class="fas fa-home"></i> <span>Əsas Səhifəyə Qayıt</span>
+      </a>
+    </div>
+
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://gziuhrlvagflokivfgwt.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP";
+
+    // Auto branch detection from URL (?branch=LIS1 or ?branch=lisey1, etc.)
+    const urlParams = new URLSearchParams(window.location.search);
+    const rawBranch = (urlParams.get('branch') || urlParams.get('b') || 'lisey1').toLowerCase();
+
+    let branchKey = 'lisey1';
+    let branchName = 'EVRİKA BETL (Nərimanov filialı)';
+
+    if (rawBranch === 'lis1' || rawBranch === 'lisey1' || rawBranch.includes('nerimanov')) {
+      branchKey = 'lisey1';
+      branchName = 'EVRİKA BETL (Nərimanov filialı)';
+    } else if (rawBranch === 'lis2' || rawBranch === 'lisey2' || rawBranch.includes('genclik')) {
+      branchKey = 'lisey2';
+      branchName = 'EVRİKA BETL (Gənclik filialı)';
+    } else if (rawBranch === 'mont' || rawBranch.includes('montessori')) {
+      branchKey = 'montessori';
+      branchName = 'Montessori Kids Academy';
+    } else if (rawBranch === 'vic' || rawBranch.includes('victory')) {
+      branchKey = 'victory';
+      branchName = 'Victory Colleges';
+    } else if (rawBranch === 'zum' || rawBranch.includes('zumrud')) {
+      branchKey = 'zumrud';
+      branchName = 'Zümrüd İdman Mərkəzi';
+    } else if (rawBranch === 'all') {
+      branchKey = 'lisey1';
+      branchName = 'EVRİKA Beynəlxalq Təhsil Kompleksi';
+    }
+
+    const bBanner = document.getElementById('branch-banner');
+    const bText = document.getElementById('branch-text');
+    if (bBanner && bText) {
+      bText.innerText = branchName;
+      bBanner.style.display = 'flex';
+    }
+
+    // Phone Auto-formatter
+    const phoneInput = document.getElementById('parent_phone');
+    phoneInput.addEventListener('input', (e) => {
+      let v = e.target.value.replace(/\D/g, '');
+      if (v.startsWith('994')) v = v.substring(3);
+      if (v.startsWith('0')) v = v.substring(1);
+      
+      let formatted = '+994';
+      if (v.length > 0) formatted += ' (' + v.substring(0, 2);
+      if (v.length >= 2) formatted += ') ' + v.substring(2, 5);
+      if (v.length >= 5) formatted += '-' + v.substring(5, 7);
+      if (v.length >= 7) formatted += '-' + v.substring(7, 9);
+      
+      e.target.value = formatted;
+    });
+
+    // Feedback type selector
+    window.selectFeedbackType = (type, el) => {
+      document.querySelectorAll('.feedback-card').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('feedback_type').value = type;
+
+      const msgContainer = document.getElementById('message-container');
+      const msgInput = document.getElementById('feedback_message');
+      const msgReq = document.getElementById('msg-req');
+
+      if (type === 'Hazırda yoxdur') {
+        msgReq.style.display = 'none';
+        msgInput.required = false;
+        msgInput.placeholder = 'Əlavə qeydiniz varsa yaza bilərsiniz (məcburi deyil)...';
+      } else {
+        msgReq.style.display = 'inline';
+        msgInput.required = true;
+        msgInput.placeholder = 'Fikir və ya müraciətinizi buraya yaza bilərsiniz...';
+      }
+    };
+
+    // Form submission
+    window.handleSubmit = async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      
+      // Check interest areas
+      const checkedInterests = Array.from(document.querySelectorAll('input[name="interest_area"]:checked')).map(c => c.value);
+      if (checkedInterests.length === 0) {
+        alert('Zəhmət olmasa, ən azı 1 maraq sahəsi seçin.');
+        return;
+      }
+
+      // Check first touch source
+      const selectedSource = document.querySelector('input[name="first_touch_source"]:checked')?.value;
+      if (!selectedSource) {
+        alert('Zəhmət olmasa, Evrika ilə necə tanış olduğunuzu seçin.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Göndərilir...';
+
+      const parentName = document.getElementById('parent_name').value.trim();
+      const parentPhone = document.getElementById('parent_phone').value.trim();
+      const studentName = document.getElementById('student_name').value.trim();
+      const studentGrade = document.getElementById('student_grade').value;
+      const feedbackType = document.getElementById('feedback_type').value;
+      const feedbackMsg = document.getElementById('feedback_message').value.trim();
+
+      const payload = {
+        source: 'Valideyn Səsi (QR)',
+        is_parent_voice: true,
+        branch: branchKey,
+        branch_name: branchName,
+        fullName: `${parentName} (Valideyn)`,
+        parent_name: parentName,
+        phone: parentPhone,
+        student_name: studentName,
+        student_grade: studentGrade,
+        first_touch_source: selectedSource,
+        interest_area: checkedInterests.join(', '),
+        interest_areas_list: checkedInterests,
+        parent_feedback_type: feedbackType,
+        parent_feedback_message: feedbackMsg,
+        status: 'Yeni',
+        submissionDate: new Date().toISOString(),
+        note: `Valideyn Səsi | Filial: ${branchName} | Şagird: ${studentName} (${studentGrade}) | İlk Tanışlıq: ${selectedSource} | Maraq: ${checkedInterests.join(', ')} | Müraciət Növü: ${feedbackType} | Qeyd: ${feedbackMsg || 'Yoxdur'}`
+      };
+
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/registrations`, {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation'
+          },
+          body: JSON.stringify({ payload: payload })
+        });
+
+        if (res.ok) {
+          document.getElementById('form-wrapper').style.display = 'none';
+          document.getElementById('success-view').style.display = 'block';
+        } else {
+          alert('Xəta baş verdi. Zəhmət olmasa bir az sonra yenidən cəhd edin.');
+          btn.disabled = false;
+          btn.innerHTML = '<span>Sorğunu Göndər</span> <i class="fas fa-paper-plane"></i>';
+        }
+      } catch (err) {
+        console.error("Submission error:", err);
+        alert('Şəbəkə xətası baş verdi.');
+        btn.disabled = false;
+        btn.innerHTML = '<span>Sorğunu Göndər</span> <i class="fas fa-paper-plane"></i>';
+      }
+    };
+  </script>
+</body>
+</html>

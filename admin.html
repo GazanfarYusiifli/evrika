@@ -609,6 +609,11 @@ fbq('track', 'PageView');
         <div><i class="fas fa-phone-volume" style="color:#38bdf8;"></i> <span>Zəng Müraciətləri</span></div>
         <span id="new-calls-badge" style="display:none; background:#ef4444; color:white; padding:2px 8px; border-radius:12px; font-size:0.7rem; font-weight:800;">0</span>
       </div>
+      <div class="sb-link" data-module="crm" onclick="switchTab('parent-voice')" style="display:flex; justify-content:space-between; align-items:center;">
+        <div><i class="fas fa-comment-dots" style="color:#f59e0b;"></i> <span>Valideyn Səsi</span></div>
+        <span id="new-parent-voice-badge" style="display:none; background:#f59e0b; color:white; padding:2px 8px; border-radius:12px; font-size:0.7rem; font-weight:800;">0</span>
+      </div>
+      <div class="sb-link" data-module="crm" onclick="switchTab('qr-generator')"><i class="fas fa-qrcode" style="color:#10b981;"></i> <span>QR Kod Generator</span></div>
       <div class="sb-group-title" data-module="exam">İMTAHAN</div>
       <div class="sb-link" data-module="exam" onclick="switchTab('exam-apps')" style="display:flex; justify-content:space-between; align-items:center;">
         <div><i class="fas fa-list-alt"></i> <span>Müraciətlər</span></div>
@@ -790,6 +795,92 @@ fbq('track', 'PageView');
           </thead>
           <tbody id="calls-tbody"></tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- Dedicated Valideyn Səsi (Feedback & Survey) View -->
+    <div id="view-parent-voice" class="content" style="display: none;">
+      <div class="stats-grid" style="margin-bottom: 25px;">
+        <div class="ems-stat-card" style="--accent: var(--royal-blue);">
+          <div class="ems-stat-icon"><i class="fas fa-comments"></i></div>
+          <div class="stat-lab">Ümumi Valideyn Səsi</div>
+          <div class="stat-val" id="pv-total">0</div>
+        </div>
+        <div class="ems-stat-card" style="--accent: var(--success);">
+          <div class="ems-stat-icon"><i class="fas fa-smile-beam"></i></div>
+          <div class="stat-lab">Müsbət Rəylər</div>
+          <div class="stat-val" id="pv-positive" style="color: var(--success);">0</div>
+        </div>
+        <div class="ems-stat-card" style="--accent: #38bdf8;">
+          <div class="ems-stat-icon"><i class="fas fa-lightbulb"></i></div>
+          <div class="stat-lab">Təkliflər</div>
+          <div class="stat-val" id="pv-suggestions" style="color: #38bdf8;">0</div>
+        </div>
+        <div class="ems-stat-card" style="--accent: var(--error);">
+          <div class="ems-stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+          <div class="stat-lab">Narazılıq / Şikayət</div>
+          <div class="stat-val" id="pv-complaints" style="color: var(--error);">0</div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 25px; flex-wrap: wrap;">
+        <div style="position: relative; flex: 1; min-width: 280px;">
+          <i class="fas fa-search" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+          <input type="text" id="search-pv-input" placeholder="Valideyn, şagird və ya telefon axtar..." class="admin-input" style="padding-left: 55px;" oninput="renderParentVoice()">
+        </div>
+        <select id="filter-pv-type" class="admin-input" style="width: 220px; cursor: pointer;" onchange="renderParentVoice()">
+          <option value="all">Bütün Rəy Növləri</option>
+          <option value="Təklifim var">Təkliflər</option>
+          <option value="Müraciətim var">Müraciətlər</option>
+          <option value="Müsbət rəy bildirmək istəyirəm">Müsbət Rəylər</option>
+          <option value="Narazılığımı bildirmək istəyirəm">Narazılıqlar</option>
+          <option value="Hazırda yoxdur">Rəy Qeyd Edilməyənlər</option>
+        </select>
+        <select id="filter-pv-status" class="admin-input" style="width: 200px; cursor: pointer;" onchange="renderParentVoice()">
+          <option value="all">Bütün Statuslar</option>
+          <option value="Yeni">Yeni</option>
+          <option value="Təyin Edildi">Təyin Edildi</option>
+          <option value="İcrada">İcrada</option>
+          <option value="Cavablandırıldı">Cavablandırıldı</option>
+          <option value="Bağlandı">Bağlandı</option>
+        </select>
+        <button onclick="switchTab('qr-generator')" class="btn-view" style="background: var(--burgundy); border: none; padding: 16px 22px;">
+          <i class="fas fa-qrcode"></i> QR Kodlar
+        </button>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Valideyn / Şagird</th>
+              <th>Filial / Bölmə</th>
+              <th>Rəy Növü</th>
+              <th>İlk Tanışlıq Mənbəyi</th>
+              <th>Maraq Sahələri</th>
+              <th>Tarix</th>
+              <th>Status</th>
+              <th>Əməliyyat</th>
+            </tr>
+          </thead>
+          <tbody id="pv-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Dedicated QR Kod Generator View -->
+    <div id="view-qr-generator" class="content" style="display: none;">
+      <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 20px; padding: 30px; margin-bottom: 30px;">
+        <h2 style="font-size: 1.4rem; font-weight: 900; margin-bottom: 10px; color: white; display: flex; align-items: center; gap: 10px;">
+          <i class="fas fa-qrcode" style="color: var(--accent);"></i> Valideyn Səsi — Filial QR Kod Sistemi
+        </h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; max-width: 800px; line-height: 1.5;">
+          Hər bir filial üçün xüsusi QR kodlar yaradılmışdır. Valideynlər bu QR kodu smartfonla oxutduqda filial avtomatik təyin olunur və onların sorğu cavabları birbaşa həmin filialın CRM moduluna daxil olur.
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px;" id="qr-cards-grid">
+        <!-- QR cards injected via JS -->
       </div>
     </div>
 
@@ -1813,6 +1904,263 @@ fbq('track', 'PageView');
         viewDetails(idx);
       }
     };
+
+    window.renderParentVoice = () => {
+        if (!document.getElementById('pv-tbody')) return;
+        
+        const activeBranch = window.selectedCrmBranch || 'all';
+        const q = (document.getElementById('search-pv-input')?.value || '').toLowerCase();
+        const typeFilter = document.getElementById('filter-pv-type')?.value || 'all';
+        const statusFilter = document.getElementById('filter-pv-status')?.value || 'all';
+
+        // Extract parent voice feedback records
+        let feedbacks = rawData.filter(r => r.is_parent_voice || (r.source && r.source.includes('Valideyn Səsi')));
+
+        // Branch filter
+        if (activeBranch !== 'all') {
+          feedbacks = feedbacks.filter(r => {
+            const s = getGranularSource(r);
+            return s === activeBranch;
+          });
+        }
+
+        // Stats counters
+        let total = feedbacks.length;
+        let positive = 0, suggestions = 0, complaints = 0;
+
+        feedbacks.forEach(f => {
+          const t = f.parent_feedback_type || '';
+          if (t.includes('Müsbət')) positive++;
+          else if (t.includes('Təklif')) suggestions++;
+          else if (t.includes('Narazı')) complaints++;
+        });
+
+        document.getElementById('pv-total').innerText = total;
+        document.getElementById('pv-positive').innerText = positive;
+        document.getElementById('pv-suggestions').innerText = suggestions;
+        document.getElementById('pv-complaints').innerText = complaints;
+
+        // Table search and filtering
+        let displayed = feedbacks.filter(f => {
+          const pName = (f.parent_name || f.fullName || '').toLowerCase();
+          const sName = (f.student_name || '').toLowerCase();
+          const phone = (f.phone || '').toLowerCase();
+          const msg = (f.parent_feedback_message || f.note || '').toLowerCase();
+          const matchesQ = !q || pName.includes(q) || sName.includes(q) || phone.includes(q) || msg.includes(q);
+
+          let matchesType = true;
+          if (typeFilter !== 'all') {
+            matchesType = (f.parent_feedback_type || '') === typeFilter;
+          }
+
+          let matchesStatus = true;
+          if (statusFilter !== 'all') {
+            matchesStatus = (f.status || 'Yeni') === statusFilter;
+          }
+
+          return matchesQ && matchesType && matchesStatus;
+        });
+
+        const BRANCH_CONFIG = {
+          'lisey1': { label: 'BETL Nərimanov', color: '#ef4444', bg: 'rgba(239,68,68,0.12)', border: 'rgba(239,68,68,0.25)', icon: 'fas fa-microscope' },
+          'lisey2': { label: 'BETL Gənclik', color: '#3b82f6', bg: 'rgba(59,130,246,0.12)', border: 'rgba(59,130,246,0.25)', icon: 'fas fa-atom' },
+          'montessori': { label: 'Montessori Kids', color: '#10b981', bg: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.25)', icon: 'fas fa-child' },
+          'victory': { label: 'Victory Colleges', color: '#a855f7', bg: 'rgba(168,85,247,0.12)', border: 'rgba(168,85,247,0.25)', icon: 'fas fa-graduation-cap' },
+          'zumrud': { label: 'Zümrüd İdman', color: '#eab308', bg: 'rgba(234,179,8,0.12)', border: 'rgba(234,179,8,0.25)', icon: 'fas fa-swimmer' }
+        };
+
+        const pvStatusMap = {
+          'Yeni': { color: '#f59e0b', bg: 'rgba(245,158,11,0.12)' },
+          'Təyin Edildi': { color: '#38bdf8', bg: 'rgba(56,189,248,0.12)' },
+          'İcrada': { color: '#8b5cf6', bg: 'rgba(139,92,246,0.12)' },
+          'Cavablandırıldı': { color: '#10b981', bg: 'rgba(16,185,129,0.12)' },
+          'Bağlandı': { color: '#64748b', bg: 'rgba(100,116,139,0.12)' }
+        };
+
+        let html = displayed.map(f => {
+          const bKey = getGranularSource(f);
+          const bConf = BRANCH_CONFIG[bKey] || { label: 'EVRİKA Kompleks', color: '#ec4899', bg: 'rgba(236,72,153,0.12)', border: 'rgba(236,72,153,0.25)', icon: 'fas fa-school' };
+          
+          const pName = f.parent_name || f.fullName || 'Valideyn';
+          const sName = f.student_name || 'Şagird';
+          const grade = f.student_grade || '-';
+          const phone = f.phone || '-';
+          const phoneClean = formatPhone(phone);
+          const fSource = f.first_touch_source || '-';
+          const interests = f.interest_area || '-';
+          const fType = f.parent_feedback_type || 'Müraciət';
+          const dateStr = formatDateStr(f.created_at || f.submissionDate || Date.now());
+          const st = f.status || 'Yeni';
+          const stConf = pvStatusMap[st] || pvStatusMap['Yeni'];
+
+          let typeBadge = '';
+          if (fType.includes('Müsbət')) {
+            typeBadge = `<span style="background:rgba(16,185,129,0.12); color:#10b981; border:1px solid rgba(16,185,129,0.25); padding:6px 12px; border-radius:8px; font-weight:700; font-size:0.8rem; display:inline-flex; align-items:center; gap:6px;"><i class="fas fa-smile-beam"></i> Müsbət Rəy</span>`;
+          } else if (fType.includes('Təklif')) {
+            typeBadge = `<span style="background:rgba(56,189,248,0.12); color:#38bdf8; border:1px solid rgba(56,189,248,0.25); padding:6px 12px; border-radius:8px; font-weight:700; font-size:0.8rem; display:inline-flex; align-items:center; gap:6px;"><i class="fas fa-lightbulb"></i> Təklif</span>`;
+          } else if (fType.includes('Narazı')) {
+            typeBadge = `<span style="background:rgba(239,68,68,0.12); color:#ef4444; border:1px solid rgba(239,68,68,0.25); padding:6px 12px; border-radius:8px; font-weight:700; font-size:0.8rem; display:inline-flex; align-items:center; gap:6px; animation: badgePulse 2s infinite;"><i class="fas fa-exclamation-triangle"></i> Narazılıq</span>`;
+          } else if (fType.includes('Müraciət')) {
+            typeBadge = `<span style="background:rgba(245,158,11,0.12); color:#f59e0b; border:1px solid rgba(245,158,11,0.25); padding:6px 12px; border-radius:8px; font-weight:700; font-size:0.8rem; display:inline-flex; align-items:center; gap:6px;"><i class="fas fa-question-circle"></i> Müraciət</span>`;
+          } else {
+            typeBadge = `<span style="background:rgba(255,255,255,0.05); color:var(--text-muted); padding:6px 12px; border-radius:8px; font-weight:700; font-size:0.8rem;">${fType}</span>`;
+          }
+
+          return `<tr>
+            <td>
+              <div style="font-weight:800; color:white; font-size:0.95rem;">${pName}</div>
+              <div style="font-size:0.75rem; color:var(--accent); font-weight:600; margin-top:2px;">Övlad: ${sName} (${grade})</div>
+              <div style="margin-top:3px;"><a href="tel:${phoneClean}" style="font-size:0.8rem; color:#60a5fa; text-decoration:none;"><i class="fas fa-phone-alt" style="font-size:0.7rem;"></i> ${phone}</a></div>
+            </td>
+            <td>
+              <span style="background:${bConf.bg}; color:${bConf.color}; border:1px solid ${bConf.border}; padding:6px 12px; border-radius:8px; font-weight:700; font-size:0.8rem; display:inline-flex; align-items:center; gap:6px;">
+                <i class="${bConf.icon}"></i> ${bConf.label}
+              </span>
+            </td>
+            <td>${typeBadge}</td>
+            <td><div style="font-weight:700; color:white; font-size:0.85rem;"><i class="fas fa-bullhorn" style="color:var(--text-muted); margin-right:5px;"></i> ${fSource}</div></td>
+            <td><div style="font-size:0.8rem; color:var(--text-muted); max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${interests}">${interests}</div></td>
+            <td style="font-size:0.85rem; color:var(--text-muted);">${dateStr}</td>
+            <td>
+              <select onchange="updateParentVoiceStatus(${f._db_id_}, this.value)" 
+                      style="background:${stConf.bg}; color:${stConf.color}; border:1px solid ${stConf.color}44; cursor:pointer;" 
+                      class="status-select">
+                <option value="Yeni" ${st==='Yeni'?'selected':''}>Yeni</option>
+                <option value="Təyin Edildi" ${st==='Təyin Edildi'?'selected':''}>Təyin Edildi</option>
+                <option value="İcrada" ${st==='İcrada'?'selected':''}>İcrada</option>
+                <option value="Cavablandırıldı" ${st==='Cavablandırıldı'?'selected':''}>Cavablandırıldı</option>
+                <option value="Bağlandı" ${st==='Bağlandı'?'selected':''}>Bağlandı</option>
+              </select>
+            </td>
+            <td><button class="btn-view" onclick="viewDetailsDirect(${f._db_id_})" style="padding:8px 16px;"><i class="fas fa-eye"></i></button></td>
+          </tr>`;
+        }).join('');
+
+        document.getElementById('pv-tbody').innerHTML = html || '<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fas fa-comment-slash fa-2x" style="opacity:0.3; margin-bottom:10px; display:block;"></i>Bu filial üzrə heç bir valideyn rəyi qeydə alınmayıb</td></tr>';
+
+        const newPvCount = feedbacks.filter(f => (f.status || 'Yeni') === 'Yeni').length;
+        const pvBadge = document.getElementById('new-parent-voice-badge');
+        if (pvBadge) {
+          if (newPvCount > 0) {
+            pvBadge.innerText = newPvCount;
+            pvBadge.style.display = 'inline-block';
+          } else {
+            pvBadge.style.display = 'none';
+          }
+        }
+    };
+
+    window.updateParentVoiceStatus = async (dbId, newStatus) => {
+      try {
+        const item = rawData.find(r => r._db_id_ == dbId);
+        if (item) {
+          item.status = newStatus;
+          await fetch(`${API_URL}/registrations?id=eq.${dbId}`, {
+            method: 'PATCH',
+            headers: HEADERS,
+            body: JSON.stringify({ payload: { ...item, status: newStatus } })
+          });
+          renderParentVoice();
+        }
+      } catch(e) {
+        console.error("Status update error", e);
+      }
+    };
+
+    window.renderQrGenerator = () => {
+      const container = document.getElementById('qr-cards-grid');
+      if (!container) return;
+
+      const qrList = [
+        {
+          id: 'lisey1',
+          name: 'BETL Nərimanov Filialı',
+          subtitle: 'Elm və Texnologiya Liseyi',
+          url: 'https://evrikaliseyi.edu.az/valideyn-sesi?branch=lisey1',
+          color: '#ef4444',
+          icon: 'fas fa-microscope'
+        },
+        {
+          id: 'lisey2',
+          name: 'BETL Gənclik Filialı',
+          subtitle: 'Beynəlxalq Kampus',
+          url: 'https://evrikaliseyi.edu.az/valideyn-sesi?branch=lisey2',
+          color: '#3b82f6',
+          icon: 'fas fa-atom'
+        },
+        {
+          id: 'montessori',
+          name: 'Montessori Kids Academy',
+          subtitle: 'Bağça & Erkən İnkişaf',
+          url: 'https://evrikaliseyi.edu.az/valideyn-sesi?branch=montessori',
+          color: '#10b981',
+          icon: 'fas fa-child'
+        },
+        {
+          id: 'victory',
+          name: 'Victory Colleges',
+          subtitle: 'Xaricdə Təhsil & Kollec',
+          url: 'https://evrikaliseyi.edu.az/valideyn-sesi?branch=victory',
+          color: '#a855f7',
+          icon: 'fas fa-graduation-cap'
+        },
+        {
+          id: 'zumrud',
+          name: 'Zümrüd İdman Mərkəzi',
+          subtitle: 'Sağlam Həyat & İdman',
+          url: 'https://evrikaliseyi.edu.az/valideyn-sesi?branch=zumrud',
+          color: '#eab308',
+          icon: 'fas fa-swimmer'
+        },
+        {
+          id: 'all',
+          name: 'BÜTÜN EVRİKA KOMPLEKSİ',
+          subtitle: 'Ümumi Rəy və Təklif Portalı',
+          url: 'https://evrikaliseyi.edu.az/valideyn-sesi?branch=all',
+          color: '#ec4899',
+          icon: 'fas fa-school'
+        }
+      ];
+
+      container.innerHTML = qrList.map(item => {
+        const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(item.url)}`;
+        return `
+          <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:20px; padding:25px; text-align:center; position:relative; overflow:hidden; display:flex; flex-direction:column; align-items:center; transition:0.3s; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
+            <div style="position:absolute; top:0; left:0; right:0; height:4px; background:${item.color};"></div>
+            
+            <div style="width:45px; height:45px; border-radius:12px; background:${item.color}22; color:${item.color}; display:flex; align-items:center; justify-content:center; font-size:1.2rem; margin-bottom:12px;">
+              <i class="${item.icon}"></i>
+            </div>
+            
+            <h3 style="font-size:1.1rem; font-weight:800; color:white; margin-bottom:4px;">${item.name}</h3>
+            <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:18px;">${item.subtitle}</p>
+
+            <div style="background:white; padding:12px; border-radius:16px; box-shadow:0 8px 20px rgba(0,0,0,0.15); margin-bottom:18px;">
+              <img src="${qrImgUrl}" alt="QR" style="width:160px; height:160px; display:block;">
+            </div>
+
+            <div style="font-size:0.75rem; color:var(--text-muted); font-family:monospace; background:rgba(255,255,255,0.03); padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.05); width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-bottom:15px;" title="${item.url}">
+              ${item.url}
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:100%;">
+              <button onclick="copyQrLink('${item.url}')" class="btn-view" style="font-size:0.8rem; padding:10px; background:rgba(255,255,255,0.05);">
+                <i class="fas fa-copy"></i> Linki Kopyala
+              </button>
+              <a href="${qrImgUrl}" download="EVRİKA_QR_${item.id}.png" target="_blank" class="btn-view" style="font-size:0.8rem; padding:10px; background:${item.color}; color:white; border:none; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                <i class="fas fa-download"></i> QR Yüklə
+              </a>
+            </div>
+          </div>
+        `;
+      }).join('');
+    };
+
+    window.copyQrLink = (url) => {
+      navigator.clipboard.writeText(url).then(() => {
+        alert('Link kopyalandı:\n' + url);
+      });
+    };
     
     // Setup Supabase Realtime
     if (supabaseClient) {
@@ -2028,8 +2376,8 @@ fbq('track', 'PageView');
       const branch = window.selectedCrmBranch || 'all';
 
       filteredData = rawData.filter(item => {
-        // Exclude call center records from online applications table
-        if (item.is_call || item.call_status || (item.source && item.source.includes('Zəng'))) return false;
+        // Exclude call center & parent voice feedback records from online applications table
+        if (item.is_call || item.call_status || (item.source && item.source.includes('Zəng')) || item.is_parent_voice || (item.source && item.source.includes('Valideyn Səsi'))) return false;
 
         const fullName = (item.fullName || item['Ad Soyad'] || item.name || 
                           item['[1.Əlaqə] Valideyn Adı'] || 
@@ -2061,6 +2409,7 @@ fbq('track', 'PageView');
 
       renderApps();
       renderCalls();
+      renderParentVoice();
     };
 
     window.exportToCSV = () => {
@@ -2783,7 +3132,29 @@ fbq('track', 'PageView');
       localStorage.setItem('evrika_active_tab', t);
       document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
       if(document.getElementById('view-'+t)) document.getElementById('view-'+t).style.display = 'block';
-      const titles = { 'dashboard':'Dashboard', 'apps':'Onlayn Müraciətlər', 'call-center':'Zəng Müraciətləri (Nexus PBX)', 'exam-apps':'Müraciətlər (İmtahan)', 'exam-results':'Nəticələr & Rəylər', 'kanban':'Kanban Board', 'tasks':'Tapşırıqlar', 'employees':'Əməkdaşlar', 'hr-panel':'Vakansiyalar', 'finance':'Maliyyə Paneli', 'epoint-reports':'Köçürmələrin Tarixçəsi', 'kupon':'Kupon Alanlar', 'ugurlar':'Uğurlar & Məzun', 'news':'Xəbərlər', 'popup':'POP UP Yönətimi', 'leadership':'Rəhbərlik', 'settings':'Sistem Ayarları', 'parents':'Valideynlərimiz', 'partners':'Partnyorlar' };
+      const titles = { 
+        'dashboard':'Dashboard', 
+        'apps':'Onlayn Müraciətlər', 
+        'call-center':'Zəng Müraciətləri (Nexus PBX)',
+        'parent-voice':'Valideyn Səsi (Sorğu & Rəylər)',
+        'qr-generator':'Valideyn Səsi — QR Kod Sistemi',
+        'exam-apps':'Müraciətlər (İmtahan)', 
+        'exam-results':'Nəticələr & Rəylər', 
+        'kanban':'Kanban Board', 
+        'tasks':'Tapşırıqlar', 
+        'employees':'Əməkdaşlar', 
+        'hr-panel':'Vakansiyalar', 
+        'finance':'Maliyyə Paneli', 
+        'epoint-reports':'Köçürmələrin Tarixçəsi', 
+        'kupon':'Kupon Alanlar', 
+        'ugurlar':'Uğurlar & Məzun', 
+        'news':'Xəbərlər', 
+        'popup':'POP UP Yönətimi', 
+        'leadership':'Rəhbərlik', 
+        'settings':'Sistem Ayarları', 
+        'parents':'Valideynlərimiz', 
+        'partners':'Partnyorlar' 
+      };
       document.getElementById('topbar-title').innerText = titles[t] || 'EVRIKA EMS';
       
       // Handle the active class for sidebar links
@@ -2797,6 +3168,8 @@ fbq('track', 'PageView');
       if(t==='finance') renderFinance();
       if(t==='epoint-reports') renderEpointReports();
       if(t==='call-center') fetchCalls();
+      if(t==='parent-voice') renderParentVoice();
+      if(t==='qr-generator') renderQrGenerator();
       if(t==='exam-results') renderExamResults();
       if(t==='kupon') renderKupon();
       if(t==='mezunlar') loadMezunlar();
@@ -2863,6 +3236,7 @@ fbq('track', 'PageView');
       const groups = {
         'ŞƏXSİ MƏLUMATLAR': [],
         'ƏLAQƏ VƏ TƏMAS': [],
+        'VALİDEYN SƏSİ (RƏY & SORĞU)': [],
         'TELEFONİYA & SƏS YAZISI': [],
         'TƏHSİL VƏ İSTİQAMƏT': [],
         'İŞ TƏCRÜBƏSİ': [],
@@ -2878,6 +3252,7 @@ fbq('track', 'PageView');
         const val = item[key];
         const upperKey = key.toLocaleUpperCase('az-AZ');
         if(upperKey === 'PAYMENT_STATUS' || upperKey === 'DAXILI ÖDƏNIŞ STATUSU') continue;
+        if(key === 'interest_areas_list' || key === 'is_parent_voice') continue;
         
         let cleanKey = key.replace(/\[.*?\]\s*/g, '').replace(/_/g, ' ');
         
@@ -2896,6 +3271,13 @@ fbq('track', 'PageView');
         // Translate some common English keys
         if (upperKey === 'PHONE') cleanKey = 'Telefon';
         if (upperKey === 'AD SOYAD') cleanKey = 'Ad Soyad';
+        if (upperKey === 'PARENT_NAME') cleanKey = 'Valideynin Adı və Soyadı';
+        if (upperKey === 'STUDENT_NAME') cleanKey = 'Şagirdin Adı və Soyadı';
+        if (upperKey === 'STUDENT_GRADE') cleanKey = 'Şagirdin Sinfi';
+        if (upperKey === 'FIRST_TOUCH_SOURCE') cleanKey = 'İlk Tanışlıq Mənbəyi';
+        if (upperKey === 'INTEREST_AREA') cleanKey = 'Maraq Sahələri';
+        if (upperKey === 'PARENT_FEEDBACK_TYPE') cleanKey = 'Müraciət Növü (Təklif / Rəy / Narazılıq)';
+        if (upperKey === 'PARENT_FEEDBACK_MESSAGE') cleanKey = 'Valideynin Mesajı / Qeydi';
         if (upperKey === 'EMAIL' || upperKey === 'E-MAIL') cleanKey = 'E-mail';
         if (upperKey === 'SOURCE') cleanKey = 'Mənbə';
         if (upperKey === 'STATUS') cleanKey = 'Status';
@@ -2929,6 +3311,8 @@ fbq('track', 'PageView');
           groups['FAYLLAR'].push({ rawKey: key, label: 'Bax / Yüklə (' + (item.cv_file_name || 'Fayl') + ')', value: val, isBase64: true, filename: item.cv_file_name || 'cv_file' });
         } else if (typeof val === 'string' && !upperKey.includes('FİLE_NAME') && !upperKey.includes('FILE_NAME') && (val.includes('supabase.co/storage') || val.match(/\.(jpg|jpeg|png|gif|pdf)/i))) {
           groups['FAYLLAR'].push(dataPair);
+        } else if (upperKey.includes('FEEDBACK') || upperKey.includes('FIRST_TOUCH') || upperKey.includes('INTEREST_AREA') || upperKey.includes('VALİDEYN SƏSİ')) {
+          groups['VALİDEYN SƏSİ (RƏY & SORĞU)'].push(dataPair);
         } else if (upperKey.includes('CHID') || upperKey.includes('CALL_') || upperKey.includes('RECORDING') || upperKey === 'AGENT' || upperKey === 'DURATION') {
           groups['TELEFONİYA & SƏS YAZISI'].push(dataPair);
         } else if (upperKey.includes('EPOINT') || upperKey.includes('EPOİNT') || upperKey === 'AMOUNT' || upperKey.includes('PAYMENT') || ['RRN', 'APPROVAL_CODE', 'CARD_NUMBER', 'CARDNAME', 'RESULT_CODE', '3DSECURE', 'RESULT_PS', 'RESULT'].includes(upperKey) || upperKey === 'DATE' || upperKey === 'TARIX' || upperKey === 'CREATED_AT' || upperKey === 'MƏNBƏ' || upperKey === 'STATUS' || upperKey === 'ORDER_ID') {
