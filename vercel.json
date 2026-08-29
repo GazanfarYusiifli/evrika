@@ -23,10 +23,10 @@
     { "source": "/register-eduhome", "destination": "/register-victory.html" },
     { "source": "/register-zumrud", "destination": "/register-zumrud.html" },
     { "source": "/valideyn-sesi", "destination": "/valideyn-sesi.html" },
-    { "source": "/parent-voice", "destination": "/valideyn-sesi.html" },
-    { "source": "/parent-survey", "destination": "/montessori-sorqu.html" },
-    { "source": "/montessori-survey", "destination": "/montessori-sorqu.html" },
-    { "source": "/montessori-sorqu", "destination": "/montessori-sorqu.html" },
+    { "source": "/parent-voice", "destination": "/parent-voice.html" },
+    { "source": "/parent-survey", "destination": "/parent-survey.html" },
+    { "source": "/montessori-survey", "destination": "/parent-survey.html" },
+    { "source": "/montessori-sorqu", "destination": "/parent-survey.html" },
     { "source": "/success", "destination": "/success.html" },
     { "source": "/error", "destination": "/error.html" }
   ]
