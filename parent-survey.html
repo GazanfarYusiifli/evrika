@@ -396,14 +396,6 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label>Müraciət Etdiyiniz Filial / Mərkəz <span class="req">*</span></label>
-          <select id="branch_select" class="form-control" required onchange="updateBranchSelection(this.value)">
-            <option value="MONT1">🌱 Evrika Montessori Kids (Filial 1)</option>
-            <option value="MONT2">🍃 Evrika Montessori Kids (Filial 2)</option>
-          </select>
-        </div>
-
         <!-- SECTION 2: Evrika ilə necə tanış oldunuz? -->
         <div class="section-title">
           <i class="fas fa-bullhorn"></i> 2. Evrika ilə necə tanış oldunuz?
@@ -525,40 +517,8 @@
     const SUPABASE_KEY = "sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP";
 
     // Branch resolution
-    const urlParams = new URLSearchParams(window.location.search);
-    const rawBranch = (urlParams.get('branch') || urlParams.get('b') || 'MONT1').toUpperCase();
-
     let branchKey = 'montessori';
-    let branchCode = 'MONT1';
-    let branchName = 'Montessori Kids Academy (Filial 1)';
-
-    if (rawBranch === 'MONT2' || rawBranch.includes('FILIAL2') || rawBranch.includes('FILIAL 2')) {
-      branchKey = 'montessori';
-      branchCode = 'MONT2';
-      branchName = 'Montessori Kids Academy (Filial 2)';
-    } else {
-      branchKey = 'montessori';
-      branchCode = 'MONT1';
-      branchName = 'Montessori Kids Academy (Filial 1)';
-    }
-
-    window.updateBranchSelection = (val) => {
-      if (val === 'MONT2') {
-        branchCode = 'MONT2';
-        branchName = 'Montessori Kids Academy (Filial 2)';
-      } else {
-        branchCode = 'MONT1';
-        branchName = 'Montessori Kids Academy (Filial 1)';
-      }
-      const bText = document.getElementById('branch-text');
-      if (bText) bText.innerText = branchName;
-      const bSelect = document.getElementById('branch_select');
-      if (bSelect && bSelect.value !== branchCode) bSelect.value = branchCode;
-    };
-
-    // Initialize
-    const bSelect = document.getElementById('branch_select');
-    if (bSelect) bSelect.value = branchCode;
+    let branchName = 'Evrika Montessori Uşaq Bağçası';
     const bText = document.getElementById('branch-text');
     if (bText) bText.innerText = branchName;
 

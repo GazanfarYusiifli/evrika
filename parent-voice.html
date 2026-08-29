@@ -358,11 +358,11 @@
     
     <div id="form-wrapper">
       <div class="form-header">
-        <div class="badge"><i class="fas fa-heart"></i> VALİDEYN SƏSİ</div>
-        <h1>Fikir və Təklifləriniz Bizim Üçün Dəyərlidir</h1>
-        <p>Qısa sorğunu cavablandıraraq Evrika ilə bağlı fikir, təklif və müraciətlərinizi bizimlə bölüşün.</p>
+        <div class="badge" id="form-badge"><i class="fas fa-heart"></i> 🔴 BETL NƏRİMANOV FİLİALI</div>
+        <h1 id="form-title">Valideyn Səsi — Nərimanov Filialı</h1>
+        <p>Sizin fikriniz bizim üçün önəmlidir. Qısa sorğunu cavablandıraraq Evrika ilə bağlı fikir, təklif və müraciətlərinizi bizimlə bölüşün.</p>
         
-        <div class="branch-tag-banner" id="branch-banner" style="display:none;">
+        <div class="branch-tag-banner" id="branch-banner" style="display:flex;">
           <i class="fas fa-map-marker-alt"></i> <span id="branch-text">EVRİKA BETL (Nərimanov filialı)</span>
         </div>
       </div>
@@ -371,7 +371,7 @@
         
         <!-- SECTION 1: Valideyn və Şagird -->
         <div class="section-title">
-          <i class="fas fa-user-friends"></i> 1. Əsas Məlumatlar
+          <i class="fas fa-user-friends"></i> 1. Valideyn və Şagird Məlumatları
         </div>
 
         <div class="grid-2">
@@ -380,7 +380,7 @@
             <input type="text" id="parent_name" class="form-control" placeholder="Məs: Aygün Məmmədova" required>
           </div>
           <div class="form-group">
-            <label>Əlaqə Telefon Nömrəsi <span class="req">*</span></label>
+            <label>Telefon Nömrəsi <span class="req">*</span></label>
             <input type="tel" id="parent_phone" class="form-control" placeholder="+994 (50) 000-00-00" required>
           </div>
         </div>
@@ -407,14 +407,6 @@
               <option value="XI sinif">XI sinif</option>
             </select>
           </div>
-        </div>
-
-        <div class="form-group">
-          <label>Müraciət Etdiyiniz Filial <span class="req">*</span></label>
-          <select id="branch_select" class="form-control" required onchange="updateBranchSelection(this.value)">
-            <option value="lisey1">🔴 EVRİKA BETL (Nərimanov filialı)</option>
-            <option value="lisey2">🔵 EVRİKA BETL (Gənclik filialı)</option>
-          </select>
         </div>
 
         <!-- SECTION 2: Evrika ilə necə tanış oldunuz? -->
@@ -540,33 +532,17 @@
     if (rawBranch === 'lis2' || rawBranch === 'lisey2' || rawBranch.includes('genclik')) {
       branchKey = 'lisey2';
       branchName = 'EVRİKA BETL (Gənclik filialı)';
+      document.getElementById('form-badge').innerHTML = '<i class="fas fa-heart"></i> 🔵 BETL GƏNCLİK FİLİALI';
+      document.getElementById('form-title').innerText = 'Valideyn Səsi — Gənclik Filialı';
+      document.getElementById('branch-text').innerText = 'EVRİKA BETL (Gənclik filialı)';
+      document.getElementById('branch-banner').style.borderColor = 'rgba(59, 130, 246, 0.3)';
     } else {
       branchKey = 'lisey1';
       branchName = 'EVRİKA BETL (Nərimanov filialı)';
-    }
-
-    window.updateBranchSelection = (val) => {
-      if (val === 'lisey2' || val === 'lis2') {
-        branchKey = 'lisey2';
-        branchName = 'EVRİKA BETL (Gənclik filialı)';
-      } else {
-        branchKey = 'lisey1';
-        branchName = 'EVRİKA BETL (Nərimanov filialı)';
-      }
-      const bText = document.getElementById('branch-text');
-      if (bText) bText.innerText = branchName;
-      const bSelect = document.getElementById('branch_select');
-      if (bSelect && bSelect.value !== branchKey) bSelect.value = branchKey;
-    };
-
-    // Initialize branch
-    const bSelect = document.getElementById('branch_select');
-    if (bSelect) bSelect.value = branchKey;
-    const bBanner = document.getElementById('branch-banner');
-    const bText = document.getElementById('branch-text');
-    if (bBanner && bText) {
-      bText.innerText = branchName;
-      bBanner.style.display = 'flex';
+      document.getElementById('form-badge').innerHTML = '<i class="fas fa-heart"></i> 🔴 BETL NƏRİMANOV FİLİALI';
+      document.getElementById('form-title').innerText = 'Valideyn Səsi — Nərimanov Filialı';
+      document.getElementById('branch-text').innerText = 'EVRİKA BETL (Nərimanov filialı)';
+      document.getElementById('branch-banner').style.borderColor = 'rgba(239, 68, 68, 0.3)';
     }
 
     // Phone Auto-formatter
