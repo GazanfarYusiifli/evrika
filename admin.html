@@ -539,13 +539,8 @@ fbq('track', 'PageView');
       <p style="font-size: 0.7rem; opacity: 0.5; margin-top: 5px; font-weight: 700; color: var(--text-muted);">PROFESSIONAL SYSTEM</p>
     </div>
     <div class="sb-nav">
-      <div class="sb-group-title" data-module="crm">FİLİAL CRM PANELLƏRİ</div>
-      <div class="sb-link active" data-module="crm" onclick="switchTab('apps')"><i class="fas fa-layer-group"></i> <span>🏢 BÜTÜN CRM</span></div>
-      <div class="sb-link" data-module="crm" onclick="switchTab('apps-lisey1')"><i class="fas fa-microscope" style="color: #ef4444;"></i> <span>🔴 BETL Nərimanov</span></div>
-      <div class="sb-link" data-module="crm" onclick="switchTab('apps-lisey2')"><i class="fas fa-atom" style="color: #3b82f6;"></i> <span>🔵 BETL Gənclik</span></div>
-      <div class="sb-link" data-module="crm" onclick="switchTab('apps-montessori')"><i class="fas fa-child" style="color: #10b981;"></i> <span>🟢 Montessori Kids</span></div>
-      <div class="sb-link" data-module="crm" onclick="switchTab('apps-victory')"><i class="fas fa-graduation-cap" style="color: #a855f7;"></i> <span>🟣 Victory Colleges</span></div>
-      <div class="sb-link" data-module="crm" onclick="switchTab('apps-zumrud')"><i class="fas fa-swimmer" style="color: #eab308;"></i> <span>🟡 Zümrüd İdman</span></div>
+      <div class="sb-group-title" data-module="crm">MÜŞTƏRİ XİDMƏTLƏRİ</div>
+      <div class="sb-link active" data-module="crm" onclick="switchTab('apps')"><i class="fas fa-users"></i> <span>Müraciətlər & CRM</span></div>
       <div class="sb-group-title" data-module="crm">CRM & ANALİTİKA</div>
       <div class="sb-link" data-module="crm" onclick="switchTab('dashboard')"><i class="fas fa-th-large"></i> <span>Dashboard</span></div>
       <a href="#" class="sb-link" data-module="crm" onclick="switchView('analytics')" style="text-decoration:none;"><i class="fas fa-chart-line"></i> <span>Analitika</span></a>
@@ -694,30 +689,16 @@ fbq('track', 'PageView');
     </div>
 
     <div id="view-apps" class="content" style="display: none;">
-        <!-- Dynamic Active Branch Header Banner -->
-        <div id="active-branch-banner" style="margin-bottom: 25px; padding: 18px 24px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
-          <div style="display: flex; align-items: center; gap: 15px;">
-            <div id="active-branch-icon" style="width: 45px; height: 45px; border-radius: 12px; background: rgba(139,26,43,0.2); color: var(--burgundy); display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
-              <i class="fas fa-layer-group"></i>
-            </div>
-            <div>
-              <h2 id="active-branch-name" style="font-size: 1.3rem; font-weight: 900; color: white; margin: 0;">BÜTÜN CRM MÜRACİƏTLƏRİ</h2>
-              <p id="active-branch-sub" style="font-size: 0.85rem; color: var(--text-muted); margin: 3px 0 0 0;">Bütün filial və xidmətlər üzrə ümumi idarəetmə</p>
-            </div>
-          </div>
-          <div style="display: flex; gap: 12px;">
-            <div style="background: rgba(0,0,0,0.3); padding: 8px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); text-align: right;">
-              <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Müraciət Sayı</div>
-              <div id="active-branch-count" style="font-size: 1.2rem; font-weight: 900; color: white;">0</div>
-            </div>
-          </div>
-        </div>
-
         <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 30px; flex-wrap: wrap;">
           <div style="position: relative; flex: 1; min-width: 300px;">
             <i class="fas fa-search" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
             <input type="text" id="search-input" placeholder="Ad və ya Telefon ilə axtarış..." class="admin-input" style="padding-left: 55px;" oninput="filterData()">
           </div>
+          <select id="filter-source" class="admin-input" style="width: 200px; cursor: pointer;" onchange="filterData()">
+            <option value="all">Bütün Mənbələr</option>
+            <option value="Vebsayt">Məktəb Qeydiyyatı</option>
+            <option value="Karyera">Karyera / İş</option>
+          </select>
           <select id="filter-status" class="admin-input" style="width: 200px; cursor: pointer;" onchange="filterData()">
             <option value="all">Bütün Statuslar</option>
             <option value="Yeni">Yeni</option>
@@ -1806,31 +1787,10 @@ fbq('track', 'PageView');
     };
 
     window.updateBranchCounts = () => {
-      const counts = { all: rawData.length, lisey1: 0, lisey2: 0, montessori: 0, victory: 0, zumrud: 0, career: 0, contact: 0 };
-      rawData.forEach(item => {
-        const s = getGranularSource(item) || '';
-        if (s === 'lisey1' || s.includes('Nərimanov')) counts.lisey1++;
-        else if (s === 'lisey2' || s.includes('Gənclik')) counts.lisey2++;
-        else if (s === 'montessori' || s.includes('Montessori')) counts.montessori++;
-        else if (s === 'victory' || s.includes('Victory')) counts.victory++;
-        else if (s === 'zumrud' || s.includes('Zümrüd') || s.includes('zumrud')) counts.zumrud++;
-        else if (s === 'career' || s.includes('Karyera') || !!item.position) counts.career++;
-        else if (s === 'contact' || s.includes('Əlaqə')) counts.contact++;
-      });
-      for (const k in counts) {
-        const el = document.getElementById('count-' + k);
-        if (el) el.innerText = counts[k];
-      }
-      const activeBranchCountEl = document.getElementById('active-branch-count');
-      if (activeBranchCountEl) {
-        activeBranchCountEl.innerText = filteredData.length;
-      }
-    };
-
     window.filterData = () => {
       const q = (document.getElementById('search-input')?.value || '').toLowerCase();
+      const source = document.getElementById('filter-source')?.value || 'all';
       const status = document.getElementById('filter-status')?.value || 'all';
-      const branch = window.currentBranchFilter || 'all';
 
       filteredData = rawData.filter(item => {
         const fullName = (item.fullName || item['Ad Soyad'] || item.name || 
@@ -1842,17 +1802,21 @@ fbq('track', 'PageView');
         
         const matchesSearch = fullName.includes(q) || phone.includes(q);
         
-        const s = getGranularSource(item) || '';
+        let s = getGranularSource(item);
+        const MAP = { 
+          'lisey1':'Nərimanov filialı', 'lisey2':'Gənclik filialı', 'montessori':'Montessori', 
+          'victory':'Victory', 'zumrud':'Zümrüd', 'contact':'Əlaqə', 
+          'career':'Karyera', 'whatsapp':'WhatsApp', 'instagram':'Instagram', 'email':'Email' 
+        };
+        const sourceLabel = MAP[s] || s || 'Email';
         
-        let matchesBranch = true;
-        if (branch !== 'all') {
-          if (branch === 'lisey1') matchesBranch = s === 'lisey1' || s.includes('Nərimanov');
-          else if (branch === 'lisey2') matchesBranch = s === 'lisey2' || s.includes('Gənclik');
-          else if (branch === 'montessori') matchesBranch = s === 'montessori' || s.includes('Montessori');
-          else if (branch === 'victory') matchesBranch = s === 'victory' || s.includes('Victory');
-          else if (branch === 'zumrud') matchesBranch = s === 'zumrud' || s.includes('Zümrüd') || s.includes('zumrud');
-          else if (branch === 'career') matchesBranch = s === 'career' || s.includes('Karyera') || !!item.position;
-          else if (branch === 'contact') matchesBranch = s === 'contact' || s.includes('Əlaqə');
+        let matchesSource = true;
+        if (source !== 'all') {
+          if (source === 'Vebsayt') {
+            matchesSource = ['Nərimanov filialı', 'Gənclik filialı', 'Montessori', 'Victory', 'Zümrüd', 'Əlaqə', 'Email'].includes(sourceLabel);
+          } else if (source === 'Karyera') {
+            matchesSource = sourceLabel === 'Karyera';
+          }
         }
         
         let matchesStatus = true;
@@ -1860,11 +1824,10 @@ fbq('track', 'PageView');
            matchesStatus = (item.status || 'Yeni') === status;
         }
         
-        return matchesSearch && matchesBranch && matchesStatus;
+        return matchesSearch && matchesSource && matchesStatus;
       });
 
       renderApps();
-      window.updateBranchCounts();
     };
 
     window.exportToCSV = () => {
@@ -2585,40 +2548,10 @@ fbq('track', 'PageView');
 
     window.switchTab = (t) => {
       localStorage.setItem('evrika_active_tab', t);
-      
-      const isBranchTab = ['apps', 'apps-lisey1', 'apps-lisey2', 'apps-montessori', 'apps-victory', 'apps-zumrud'].includes(t);
-      
       document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
-      
-      if (isBranchTab) {
-        if(document.getElementById('view-apps')) document.getElementById('view-apps').style.display = 'block';
-        
-        const branchMap = {
-          'apps': { key: 'all', title: 'BÜTÜN CRM MÜRACİƏTLƏRİ', sub: 'Bütün filial və xidmətlər üzrə ümumi idarəetmə', icon: 'fas fa-layer-group', color: 'var(--burgundy)' },
-          'apps-lisey1': { key: 'lisey1', title: '🔴 BETL NƏRİMANOV CRM', sub: 'Elm və Texnologiya Mərkəzi (Nərimanov filialı) müraciətləri', icon: 'fas fa-microscope', color: '#ef4444' },
-          'apps-lisey2': { key: 'lisey2', title: '🔵 BETL GƏNCLİK CRM', sub: 'Beynəlxalq Təhsil Kampusu (Gənclik filialı) müraciətləri', icon: 'fas fa-atom', color: '#3b82f6' },
-          'apps-montessori': { key: 'montessori', title: '🟢 MONTESSORİ KİDS CRM', sub: 'Bağça və Erkən İnkişaf Akademiyası müraciətləri', icon: 'fas fa-child', color: '#10b981' },
-          'apps-victory': { key: 'victory', title: '🟣 VİCTORY COLLEGES CRM', sub: 'Xaricdə Təhsil və Hazırlıq Mərkəzi müraciətləri', icon: 'fas fa-graduation-cap', color: '#a855f7' },
-          'apps-zumrud': { key: 'zumrud', title: '🟡 ZÜMRÜD İDMAN CRM', sub: 'Sağlam Həyat və İdman Mərkəzi müraciətləri', icon: 'fas fa-swimmer', color: '#eab308' }
-        };
-
-        const bInfo = branchMap[t] || branchMap['apps'];
-        window.currentBranchFilter = bInfo.key;
-        
-        document.getElementById('topbar-title').innerText = bInfo.title;
-        if(document.getElementById('active-branch-name')) document.getElementById('active-branch-name').innerText = bInfo.title;
-        if(document.getElementById('active-branch-sub')) document.getElementById('active-branch-sub').innerText = bInfo.sub;
-        if(document.getElementById('active-branch-icon')) {
-          document.getElementById('active-branch-icon').innerHTML = `<i class="${bInfo.icon}"></i>`;
-          document.getElementById('active-branch-icon').style.color = bInfo.color;
-        }
-
-        window.filterData();
-      } else {
-        if(document.getElementById('view-'+t)) document.getElementById('view-'+t).style.display = 'block';
-        const titles = { 'dashboard':'Dashboard',  'analytics':'Sayt Analitikası', 'speed':'Sayt Sürəti', 'exam-apps':'Müraciətlər (İmtahan)', 'exam-results':'Nəticələr & Rəylər', 'kanban':'Kanban Board', 'tasks':'Tapşırıqlar', 'employees':'Əməkdaşlar', 'hr-panel':'Vakansiyalar', 'finance':'Maliyyə Paneli', 'epoint-reports':'Köçürmələrin Tarixçəsi', 'kupon':'Kupon Alanlar', 'ugurlar':'Uğurlar & Məzun', 'news':'Xəbərlər', 'popup':'POP UP Yönətimi', 'leadership':'Rəhbərlik', 'settings':'Sistem Ayarları', 'parents':'Valideynlərimiz', 'partners':'Partnyorlar' };
-        document.getElementById('topbar-title').innerText = titles[t] || 'EVRIKA EMS';
-      }
+      if(document.getElementById('view-'+t)) document.getElementById('view-'+t).style.display = 'block';
+      const titles = { 'dashboard':'Dashboard',  'analytics':'Sayt Analitikası', 'speed':'Sayt Sürəti', 'apps':'Müraciətlər', 'exam-apps':'Müraciətlər (İmtahan)', 'exam-results':'Nəticələr & Rəylər', 'kanban':'Kanban Board', 'tasks':'Tapşırıqlar', 'employees':'Əməkdaşlar', 'hr-panel':'Vakansiyalar', 'finance':'Maliyyə Paneli', 'epoint-reports':'Köçürmələrin Tarixçəsi', 'kupon':'Kupon Alanlar', 'ugurlar':'Uğurlar & Məzun', 'news':'Xəbərlər', 'popup':'POP UP Yönətimi', 'leadership':'Rəhbərlik', 'settings':'Sistem Ayarları', 'parents':'Valideynlərimiz', 'partners':'Partnyorlar' };
+      document.getElementById('topbar-title').innerText = titles[t] || 'EVRIKA EMS';
       
       // Handle the active class for sidebar links
       document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
@@ -2626,6 +2559,7 @@ fbq('track', 'PageView');
       if (activeLink) activeLink.classList.add('active');
 
       if(t==='hr-panel') renderVacancyApps();
+      if(t==='apps') renderApps();
       if(t==='dashboard') renderDashboard();
       if(t==='analytics') renderAnalytics();
       if(t==='finance') renderFinance();
