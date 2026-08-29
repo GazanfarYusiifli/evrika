@@ -526,10 +526,10 @@
 
     // Auto branch detection from URL (?branch=LIS1 or ?branch=lisey1, etc.)
     const urlParams = new URLSearchParams(window.location.search);
-    const rawBranch = (urlParams.get('branch') || urlParams.get('b') || 'lisey1').toLowerCase();
+    const rawBranch = (urlParams.get('branch') || urlParams.get('b') || 'general').toLowerCase();
 
     let branchKey = 'lisey1';
-    let branchName = 'EVRİKA BETL (Nərimanov filialı)';
+    let branchName = 'Evrika Beynəlxalq Elm və Texnologiya Liseyi';
 
     if (rawBranch === 'lis1' || rawBranch === 'lisey1' || rawBranch.includes('nerimanov')) {
       branchKey = 'lisey1';
@@ -539,16 +539,10 @@
       branchName = 'EVRİKA BETL (Gənclik filialı)';
     } else if (rawBranch === 'mont' || rawBranch.includes('montessori')) {
       branchKey = 'montessori';
-      branchName = 'Montessori Kids Academy';
-    } else if (rawBranch === 'vic' || rawBranch.includes('victory')) {
-      branchKey = 'victory';
-      branchName = 'Victory Colleges';
-    } else if (rawBranch === 'zum' || rawBranch.includes('zumrud')) {
-      branchKey = 'zumrud';
-      branchName = 'Zümrüd İdman Mərkəzi';
-    } else if (rawBranch === 'all') {
+      branchName = 'Evrika Montessori Uşaq Bağçası';
+    } else if (rawBranch === 'general' || rawBranch === 'all') {
       branchKey = 'lisey1';
-      branchName = 'EVRİKA Beynəlxalq Təhsil Kompleksi';
+      branchName = 'Evrika Beynəlxalq Elm və Texnologiya Liseyi';
     }
 
     const bBanner = document.getElementById('branch-banner');

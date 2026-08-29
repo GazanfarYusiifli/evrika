@@ -2079,29 +2079,21 @@ fbq('track', 'PageView');
 
       const qrList = [
         {
-          id: 'lisey',
+          id: 'EVRIKA_LISEY_VALİDEYN_SESI_QR',
           name: '1. EVRİKA BEYNƏLXALQ ELM VƏ TEXNOLOGİYA LİSEYİ',
-          subtitle: 'VALİDEYN SƏSİ — CRM FORMU (I–XI SİNİF)',
-          desc: 'Valideynlərin rəy, təklif və müraciətlərini toplamaq, ilk tanışlıq kanalını və STEAM/Cambridge maraq sahələrini ölçmək üçün QR form.',
+          subtitle: 'VALİDEYN SƏSİ — CRM FORMU (LİSEY)',
+          desc: 'Evrika Liseyi üçün ümumi rəy, təklif və müraciət formu. Valideynlərin ilk tanışlıq mənbəyini və STEAM/Cambridge maraq sahələrini ölçür.',
           url: 'https://evrikaliseyi.edu.az/valideyn-sesi',
-          branches: [
-            { name: 'Nərimanov Filialı', url: 'https://evrikaliseyi.edu.az/valideyn-sesi?branch=lisey1' },
-            { name: 'Gənclik Filialı', url: 'https://evrikaliseyi.edu.az/valideyn-sesi?branch=lisey2' }
-          ],
           color: '#ef4444',
           bgGlow: 'rgba(239, 68, 68, 0.12)',
           icon: 'fas fa-school'
         },
         {
-          id: 'montessori',
+          id: 'EVRIKA_MONTESSORI_KIDS_VALİDEYN_SORQUSU_QR',
           name: '2. EVRİKA MONTESSORİ UŞAQ BAĞÇASI',
-          subtitle: 'VALİDEYN SORĞUSU — CRM İNTEQRASİYASI (1–6 YAŞ)',
-          desc: 'Bağça valideynlərinin rəyini öyrənmək, uşağın yaşını (1–6 yaş), Montessori inkişaf sahələrini və ilk tanışlıq kanalını ölçmək üçün QR sorğu.',
-          url: 'https://evrikaliseyi.edu.az/parent-survey?branch=MONT1',
-          branches: [
-            { name: 'Montessori Filial 1 (MONT1)', url: 'https://evrikaliseyi.edu.az/parent-survey?branch=MONT1' },
-            { name: 'Montessori Filial 2 (MONT2)', url: 'https://evrikaliseyi.edu.az/parent-survey?branch=MONT2' }
-          ],
+          subtitle: 'VALİDEYN SORĞUSU — MONTESSORI KIDS (BAĞÇA)',
+          desc: 'Evrika Montessori Kids uşaq bağçası üçün valideyn sorğusu. Uşağın yaşını (1–6 yaş), inkişaf sahələrini və ilk tanışlıq kanalını ölçür.',
+          url: 'https://evrikaliseyi.edu.az/parent-survey',
           color: '#10b981',
           bgGlow: 'rgba(16, 185, 129, 0.12)',
           icon: 'fas fa-child'
@@ -2109,12 +2101,7 @@ fbq('track', 'PageView');
       ];
 
       container.innerHTML = qrList.map((item, idx) => {
-        const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(item.url)}`;
-        const branchButtons = item.branches.map(b => `
-          <button onclick="copyQrLink('${b.url}')" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#94a3b8; padding:6px 12px; border-radius:8px; font-size:0.75rem; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:0.2s;" onmouseover="this.style.borderColor='${item.color}'; this.style.color='white';" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.color='#94a3b8';">
-            <i class="fas fa-link" style="color:${item.color};"></i> ${b.name} Linki
-          </button>
-        `).join('');
+        const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(item.url)}`;
 
         return `
           <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:24px; padding:35px 30px; text-align:center; position:relative; overflow:hidden; display:flex; flex-direction:column; align-items:center; transition:0.3s; box-shadow:0 15px 35px rgba(0,0,0,0.25);">
@@ -2129,24 +2116,23 @@ fbq('track', 'PageView');
             <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5; margin-bottom:20px; max-width:480px;">${item.desc}</p>
 
             <div style="background:white; padding:16px; border-radius:20px; box-shadow:0 12px 30px rgba(0,0,0,0.25); margin-bottom:22px;">
-              <img src="${qrImgUrl}" alt="QR Kod" style="width:200px; height:200px; display:block;">
+              <img src="${qrImgUrl}" alt="QR Kod" style="width:200px; height:200px; display:block;" onerror="this.src='https://quickchart.io/qr?text=${encodeURIComponent(item.url)}&size=300'">
             </div>
 
-            <div style="font-size:0.8rem; color:#60a5fa; font-family:monospace; background:rgba(255,255,255,0.03); padding:10px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.07); width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-bottom:15px;" title="${item.url}">
-              <i class="fas fa-globe" style="margin-right:6px;"></i> ${item.url}
+            <div style="font-size:0.85rem; color:#60a5fa; font-family:monospace; background:rgba(255,255,255,0.03); padding:10px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.07); width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-bottom:20px;" title="${item.url}">
+              <i class="fas fa-link" style="margin-right:6px;"></i> ${item.url}
             </div>
 
-            <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:20px; width:100%;">
-              ${branchButtons}
-            </div>
-
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; width:100%;">
-              <button onclick="copyQrLink('${item.url}')" class="btn-view" style="font-size:0.85rem; padding:12px; background:rgba(255,255,255,0.05); font-weight:700;">
-                <i class="fas fa-copy"></i> Linki Kopyala
-              </button>
-              <a href="${qrImgUrl}" download="EVRIKA_QR_${item.id}.png" target="_blank" class="btn-view" style="font-size:0.85rem; padding:12px; background:${item.color}; color:white; border:none; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; font-weight:800;">
-                <i class="fas fa-download"></i> QR Yüklə (HD)
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; width:100%;">
+              <a href="${item.url}" target="_blank" class="btn-view" style="font-size:0.8rem; padding:12px; background:rgba(255,255,255,0.05); color:white; border:1px solid rgba(255,255,255,0.1); text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:6px; font-weight:700;">
+                <i class="fas fa-external-link-alt"></i> Formu Aç
               </a>
+              <button onclick="copyQrLink('${item.url}')" class="btn-view" style="font-size:0.8rem; padding:12px; background:rgba(255,255,255,0.05); color:white; border:1px solid rgba(255,255,255,0.1); font-weight:700;">
+                <i class="fas fa-copy"></i> Kopyala
+              </button>
+              <button onclick="downloadQrImage('${item.url}', '${item.id}.png')" class="btn-view" style="font-size:0.8rem; padding:12px; background:${item.color}; color:white; border:none; font-weight:800; display:inline-flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;">
+                <i class="fas fa-download"></i> QR Yüklə
+              </button>
             </div>
           </div>
         `;
@@ -2157,6 +2143,24 @@ fbq('track', 'PageView');
       navigator.clipboard.writeText(url).then(() => {
         alert('QR Linki Kopyalandı:\n' + url);
       });
+    };
+
+    window.downloadQrImage = async (url, filename) => {
+      try {
+        const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=${encodeURIComponent(url)}`;
+        const res = await fetch(qrApiUrl);
+        const blob = await res.blob();
+        const bUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = bUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(bUrl);
+      } catch(e) {
+        window.open(`https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=${encodeURIComponent(url)}`, '_blank');
+      }
     };
     
     // Setup Supabase Realtime
