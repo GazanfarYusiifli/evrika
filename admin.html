@@ -1769,24 +1769,6 @@ fbq('track', 'PageView');
       } catch(e) {}
     }
 
-    window.currentBranchFilter = 'all';
-
-    window.selectBranchFilter = (branch, btn) => {
-      window.currentBranchFilter = branch;
-      document.querySelectorAll('.branch-pill-btn').forEach(b => {
-        b.style.background = 'rgba(255,255,255,0.03)';
-        b.style.color = 'var(--text-muted)';
-        b.style.fontWeight = '700';
-      });
-      if (btn) {
-        btn.style.background = 'var(--burgundy)';
-        btn.style.color = 'white';
-        btn.style.fontWeight = '800';
-      }
-      window.filterData();
-    };
-
-    window.updateBranchCounts = () => {
     window.filterData = () => {
       const q = (document.getElementById('search-input')?.value || '').toLowerCase();
       const source = document.getElementById('filter-source')?.value || 'all';
