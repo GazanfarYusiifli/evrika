@@ -1673,25 +1673,25 @@ fbq('track', 'PageView');
     const statusMap = { 'Yeni': { color:'#f59e0b', bg:'rgba(245,158,11,0.1)' }, 'Baxılıb': { color:'#3b82f6', bg:'rgba(59,130,246,0.1)' }, 'Əlaqə': { color:'#8b5cf6', bg:'rgba(139,92,246,0.1)' }, 'Qəbul': { color:'#10b981', bg:'rgba(16,185,129,0.1)' }, 'İmtina': { color:'#ef4444', bg:'rgba(239,68,68,0.1)' } };
 
     function getGranularSource(item) {
-      if(!item) return 'Bilinmir';
-      let s = item.source;
-      if (s === 'Qeydiyyat - Montessori') s = 'Qeydiyyat - Montessori Kids';
-      // Aggressive keyword scan across all application fields
-      if (!s || s === 'Vebsayt' || s === 'Veb' || s === 'Naməlum' || s === 'Əlaqə Səhifəsi') {
-        const allText = Object.values(item).join(' ').toLowerCase();
-        if (allText.includes('liseyi 1') || allText.includes('lisey 1')) s = 'lisey1';
-        else if (allText.includes('liseyi 2') || allText.includes('lisey 2')) s = 'lisey2';
-        else if (allText.includes('montessori')) s = 'montessori';
-        else if (allText.includes('victory') || allText.includes('eduhome')) s = 'victory';
-        else if (allText.includes('zümrüd') || allText.includes('zumrud')) s = 'zumrud';
-        else if (allText.includes('əlaqə') || allText.includes('contact')) s = 'contact';
-        else if (allText.includes('whatsapp')) s = 'whatsapp';
-        else if (allText.includes('instagram')) s = 'instagram';
-        else if (allText.includes('linkedin')) s = 'linkedin';
-        else if (allText.includes('facebook')) s = 'facebook';
-      }
-      if (item.position) s = 'career';
-      return s;
+      if(!item) return 'contact';
+      if (item.position || (item.source && (item.source.includes('Karyera') || item.source.includes('Vakansiya')))) return 'career';
+      
+      const s = String(item.source || '').toLowerCase();
+      const allText = Object.values(item).join(' ').toLowerCase();
+
+      if (s.includes('nərimanov') || s.includes('nerimanov') || s.includes('lisey 1') || s.includes('liseyi 1') || s === 'lisey1' || allText.includes('nərimanov') || allText.includes('nerimanov')) return 'lisey1';
+      if (s.includes('gənclik') || s.includes('genclik') || s.includes('lisey 2') || s.includes('liseyi 2') || s === 'lisey2' || allText.includes('gənclik') || allText.includes('genclik')) return 'lisey2';
+      if (s.includes('montessori') || allText.includes('montessori')) return 'montessori';
+      if (s.includes('victory') || s.includes('eduhome') || allText.includes('victory')) return 'victory';
+      if (s.includes('zümrüd') || s.includes('zumrud') || allText.includes('zümrüd') || allText.includes('zumrud')) return 'zumrud';
+      if (s.includes('phone') || s.includes('zəng') || s.includes('nexus') || item.is_call) return 'phone';
+      if (s.includes('whatsapp') || allText.includes('whatsapp')) return 'whatsapp';
+      if (s.includes('instagram') || allText.includes('instagram') || allText.includes('ig')) return 'instagram';
+      if (s.includes('facebook') || allText.includes('facebook') || allText.includes('fb')) return 'facebook';
+      if (s.includes('linkedin') || allText.includes('linkedin')) return 'linkedin';
+      if (s.includes('əlaqə') || s.includes('contact') || allText.includes('əlaqə')) return 'contact';
+      
+      return 'contact';
     }
 
     function formatPhone(phone) {
@@ -2677,7 +2677,8 @@ fbq('track', 'PageView');
               let kv = p.split(':');
               if (kv.length >= 2) {
                   let k = kv.shift().trim();
-                  item[k] = kv.join(':').trim();
+                  let v = kv.join(':').trim().replace(/<br\s*[\/]?>/gi, ' ');
+                  item[k] = v;
               }
           });
           delete item.note;
