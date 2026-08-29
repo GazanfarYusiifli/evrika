@@ -394,7 +394,6 @@
             <label>Şagirdin Sinfi <span class="req">*</span></label>
             <select id="student_grade" class="form-control" required>
               <option value="">Sinif seçin...</option>
-              <option value="Məktəbəqədər / Bağça">Məktəbəqədər / Bağça</option>
               <option value="I sinif">I sinif</option>
               <option value="II sinif">II sinif</option>
               <option value="III sinif">III sinif</option>
@@ -406,7 +405,6 @@
               <option value="IX sinif">IX sinif</option>
               <option value="X sinif">X sinif</option>
               <option value="XI sinif">XI sinif</option>
-              <option value="Digər">Digər</option>
             </select>
           </div>
         </div>
@@ -619,7 +617,9 @@
       const feedbackMsg = document.getElementById('feedback_message').value.trim();
 
       const payload = {
-        source: 'Valideyn Səsi (QR)',
+        source: 'Parent Voice QR',
+        form_type: 'Parent Feedback & Attribution',
+        school: 'Evrika Beynəlxalq Elm və Texnologiya Liseyi',
         is_parent_voice: true,
         branch: branchKey,
         branch_name: branchName,
