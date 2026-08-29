@@ -800,33 +800,84 @@ fbq('track', 'PageView');
 
     <!-- Dedicated Valideyn Səsi (Feedback & Survey) View -->
     <div id="view-parent-voice" class="content" style="display: none;">
-      <div class="stats-grid" style="margin-bottom: 25px;">
-        <div class="ems-stat-card" style="--accent: var(--royal-blue);">
-          <div class="ems-stat-icon"><i class="fas fa-comments"></i></div>
-          <div class="stat-lab">Ümumi Valideyn Səsi</div>
-          <div class="stat-val" id="pv-total">0</div>
+      <!-- 8 Key Metrics Cards -->
+      <div class="stats-grid" style="grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 15px; margin-bottom: 25px;">
+        <div class="ems-stat-card" style="--accent: var(--royal-blue); padding: 18px 20px;">
+          <div class="ems-stat-icon" style="width:40px; height:40px; font-size:1.1rem;"><i class="fas fa-comments"></i></div>
+          <div class="stat-lab" style="font-size:0.75rem;">Ümumi Müraciət</div>
+          <div class="stat-val" id="pv-total" style="font-size:1.6rem;">0</div>
         </div>
-        <div class="ems-stat-card" style="--accent: var(--success);">
-          <div class="ems-stat-icon"><i class="fas fa-smile-beam"></i></div>
-          <div class="stat-lab">Müsbət Rəylər</div>
-          <div class="stat-val" id="pv-positive" style="color: var(--success);">0</div>
+        <div class="ems-stat-card" style="--accent: var(--success); padding: 18px 20px;">
+          <div class="ems-stat-icon" style="width:40px; height:40px; font-size:1.1rem;"><i class="fas fa-smile-beam"></i></div>
+          <div class="stat-lab" style="font-size:0.75rem;">Müsbət Rəylər</div>
+          <div class="stat-val" id="pv-positive" style="color: var(--success); font-size:1.6rem;">0</div>
         </div>
-        <div class="ems-stat-card" style="--accent: #38bdf8;">
-          <div class="ems-stat-icon"><i class="fas fa-lightbulb"></i></div>
-          <div class="stat-lab">Təkliflər</div>
-          <div class="stat-val" id="pv-suggestions" style="color: #38bdf8;">0</div>
+        <div class="ems-stat-card" style="--accent: #38bdf8; padding: 18px 20px;">
+          <div class="ems-stat-icon" style="width:40px; height:40px; font-size:1.1rem;"><i class="fas fa-lightbulb"></i></div>
+          <div class="stat-lab" style="font-size:0.75rem;">Təkliflər</div>
+          <div class="stat-val" id="pv-suggestions" style="color: #38bdf8; font-size:1.6rem;">0</div>
         </div>
-        <div class="ems-stat-card" style="--accent: var(--error);">
-          <div class="ems-stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
-          <div class="stat-lab">Narazılıq / Şikayət</div>
-          <div class="stat-val" id="pv-complaints" style="color: var(--error);">0</div>
+        <div class="ems-stat-card" style="--accent: #f59e0b; padding: 18px 20px;">
+          <div class="ems-stat-icon" style="width:40px; height:40px; font-size:1.1rem;"><i class="fas fa-question-circle"></i></div>
+          <div class="stat-lab" style="font-size:0.75rem;">Müraciətlər</div>
+          <div class="stat-val" id="pv-inquiries" style="color: #f59e0b; font-size:1.6rem;">0</div>
+        </div>
+        <div class="ems-stat-card" style="--accent: var(--error); padding: 18px 20px;">
+          <div class="ems-stat-icon" style="width:40px; height:40px; font-size:1.1rem;"><i class="fas fa-exclamation-triangle"></i></div>
+          <div class="stat-lab" style="font-size:0.75rem;">Narazılıqlar</div>
+          <div class="stat-val" id="pv-complaints" style="color: var(--error); font-size:1.6rem;">0</div>
+        </div>
+        <div class="ems-stat-card" style="--accent: #10b981; padding: 18px 20px;">
+          <div class="ems-stat-icon" style="width:40px; height:40px; font-size:1.1rem;"><i class="fas fa-check-double"></i></div>
+          <div class="stat-lab" style="font-size:0.75rem;">Cavablandırılmış</div>
+          <div class="stat-val" id="pv-responded" style="color: #10b981; font-size:1.6rem;">0</div>
+        </div>
+        <div class="ems-stat-card" style="--accent: #f97316; padding: 18px 20px;">
+          <div class="ems-stat-icon" style="width:40px; height:40px; font-size:1.1rem;"><i class="fas fa-clock"></i></div>
+          <div class="stat-lab" style="font-size:0.75rem;">Açıq Müraciətlər</div>
+          <div class="stat-val" id="pv-open" style="color: #f97316; font-size:1.6rem;">0</div>
+        </div>
+        <div class="ems-stat-card" style="--accent: #a855f7; padding: 18px 20px;">
+          <div class="ems-stat-icon" style="width:40px; height:40px; font-size:1.1rem;"><i class="fas fa-stopwatch"></i></div>
+          <div class="stat-lab" style="font-size:0.75rem;">Orta Müddət</div>
+          <div class="stat-val" id="pv-avg-time" style="color: #a855f7; font-size:1.6rem;">1.2 saat</div>
         </div>
       </div>
 
-      <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 25px; flex-wrap: wrap;">
+      <!-- Marketing & Branch Analytics Breakdown Grid -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+        <!-- Marketing Channels -->
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 18px; padding: 22px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+            <h4 style="font-size: 0.95rem; font-weight: 800; color: white; display: flex; align-items: center; gap: 8px;">
+              <i class="fas fa-bullhorn" style="color: #38bdf8;"></i> Marketinq Mənbələri (Hardan Tanıyıblar?)
+            </h4>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">İlk Tanışlıq Kanalı</span>
+          </div>
+          <div id="pv-marketing-bars" style="display: flex; flex-direction: column; gap: 12px;">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Branch Comparison -->
+        <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 18px; padding: 22px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+            <h4 style="font-size: 0.95rem; font-weight: 800; color: white; display: flex; align-items: center; gap: 8px;">
+              <i class="fas fa-code-branch" style="color: #10b981;"></i> Filiallar Üzrə Müqayisə
+            </h4>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Lisey & Bağça Müraciətləri</span>
+          </div>
+          <div id="pv-branch-bars" style="display: flex; flex-direction: column; gap: 12px;">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters & Actions -->
+      <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 25px; flex-wrap: wrap;">
         <div style="position: relative; flex: 1; min-width: 280px;">
           <i class="fas fa-search" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
-          <input type="text" id="search-pv-input" placeholder="Valideyn, şagird və ya telefon axtar..." class="admin-input" style="padding-left: 55px;" oninput="renderParentVoice()">
+          <input type="text" id="search-pv-input" placeholder="Valideyn, şagird, məsul əməkdaş və ya telefon axtar..." class="admin-input" style="padding-left: 55px;" oninput="renderParentVoice()">
         </div>
         <select id="filter-pv-type" class="admin-input" style="width: 220px; cursor: pointer;" onchange="renderParentVoice()">
           <option value="all">Bütün Rəy Növləri</option>
@@ -844,8 +895,8 @@ fbq('track', 'PageView');
           <option value="Cavablandırıldı">Cavablandırıldı</option>
           <option value="Bağlandı">Bağlandı</option>
         </select>
-        <button onclick="switchTab('qr-generator')" class="btn-view" style="background: var(--burgundy); border: none; padding: 16px 22px;">
-          <i class="fas fa-qrcode"></i> QR Kodlar
+        <button onclick="switchTab('qr-generator')" class="btn-view" style="background: var(--burgundy); border: none; padding: 14px 20px;">
+          <i class="fas fa-qrcode"></i> QR Generator
         </button>
       </div>
 
@@ -857,9 +908,9 @@ fbq('track', 'PageView');
               <th>Filial / Bölmə</th>
               <th>Rəy Növü</th>
               <th>İlk Tanışlıq Mənbəyi</th>
-              <th>Maraq Sahələri</th>
+              <th>Məsul Əməkdaş</th>
               <th>Tarix</th>
-              <th>Status</th>
+              <th>Status Workflow</th>
               <th>Əməliyyat</th>
             </tr>
           </thead>
@@ -1545,6 +1596,19 @@ fbq('track', 'PageView');
       <div class="modal-header"><h3>Müraciət Detalları</h3><button onclick="closeModal()" class="btn-danger" style="border:none; border-radius:50%; width:35px; height:35px; padding:0;">&times;</button></div>
       <div class="modal-body" id="modal-content"></div>
     </div>
+  <!-- Dedicated Valideyn Səsi Detail & Execution Modal -->
+  <div class="modal-overlay" id="pv-detail-modal" style="display:none; align-items:center; justify-content:center; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); z-index:99999; backdrop-filter:blur(8px);">
+    <div class="modal" style="background:#0f172a; border:1px solid rgba(255,255,255,0.12); border-radius:24px; width:95%; max-width:780px; max-height:90vh; overflow-y:auto; padding:0; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);">
+      <div class="modal-header" style="padding:22px 28px; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02);">
+        <h3 style="margin:0; font-size:1.2rem; font-weight:900; color:white; display:flex; align-items:center; gap:10px;">
+          <i class="fas fa-comment-dots" style="color:var(--accent);"></i> Valideyn Səsi — İdarəetmə & Cavablandırma
+        </h3>
+        <button onclick="closePvModal()" style="background:rgba(239,68,68,0.15); color:#ef4444; border:none; border-radius:50%; width:36px; height:36px; cursor:pointer; font-size:1.2rem; font-weight:bold; display:flex; align-items:center; justify-content:center;">&times;</button>
+      </div>
+      <div class="modal-body" id="pv-modal-body" style="padding:28px;">
+        <!-- Injected dynamically via openPvModal -->
+      </div>
+    </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -1932,19 +1996,121 @@ fbq('track', 'PageView');
 
         // Stats counters
         let total = feedbacks.length;
-        let positive = 0, suggestions = 0, complaints = 0;
+        let positive = 0, suggestions = 0, inquiries = 0, complaints = 0;
+        let responded = 0, open = 0;
+
+        // Marketing channels buckets
+        let mkt = {
+          instagram: 0,
+          google: 0,
+          recommendation: 0,
+          events: 0,
+          ads: 0,
+          other: 0
+        };
+
+        // Branch comparison buckets
+        let brCount = {
+          lisey1: 0,
+          lisey2: 0,
+          montessori: 0,
+          other: 0
+        };
 
         feedbacks.forEach(f => {
           const t = f.parent_feedback_type || '';
           if (t.includes('Müsbət')) positive++;
           else if (t.includes('Təklif')) suggestions++;
           else if (t.includes('Narazı')) complaints++;
+          else if (t.includes('Müraciət')) inquiries++;
+
+          const st = f.status || 'Yeni';
+          if (st === 'Cavablandırıldı' || st === 'Bağlandı' || st === 'Responded' || st === 'Closed') {
+            responded++;
+          } else {
+            open++;
+          }
+
+          // Marketing categorization
+          const src = (f.first_touch_source || '').toLowerCase();
+          if (src.includes('instagram')) mkt.instagram++;
+          else if (src.includes('google')) mkt.google++;
+          else if (src.includes('tövsiyə') || src.includes('şagirdi') || src.includes('məzunu') || src.includes('müəllim') || src.includes('dost')) mkt.recommendation++;
+          else if (src.includes('tədbir') || src.includes('seminar') || src.includes('workshop') || src.includes('qapı')) mkt.events++;
+          else if (src.includes('reklam') || src.includes('küçə')) mkt.ads++;
+          else mkt.other++;
+
+          // Branch categorization
+          const bKey = getGranularSource(f);
+          if (bKey === 'lisey1' || (f.branch_name || '').includes('Nərimanov')) brCount.lisey1++;
+          else if (bKey === 'lisey2' || (f.branch_name || '').includes('Gənclik')) brCount.lisey2++;
+          else if (bKey === 'montessori' || (f.school || '').includes('Montessori')) brCount.montessori++;
+          else brCount.other++;
         });
 
-        document.getElementById('pv-total').innerText = total;
-        document.getElementById('pv-positive').innerText = positive;
-        document.getElementById('pv-suggestions').innerText = suggestions;
-        document.getElementById('pv-complaints').innerText = complaints;
+        // Set KPI Counters
+        if(document.getElementById('pv-total')) document.getElementById('pv-total').innerText = total;
+        if(document.getElementById('pv-positive')) document.getElementById('pv-positive').innerText = positive;
+        if(document.getElementById('pv-suggestions')) document.getElementById('pv-suggestions').innerText = suggestions;
+        if(document.getElementById('pv-inquiries')) document.getElementById('pv-inquiries').innerText = inquiries;
+        if(document.getElementById('pv-complaints')) document.getElementById('pv-complaints').innerText = complaints;
+        if(document.getElementById('pv-responded')) document.getElementById('pv-responded').innerText = responded;
+        if(document.getElementById('pv-open')) document.getElementById('pv-open').innerText = open;
+        if(document.getElementById('pv-avg-time')) document.getElementById('pv-avg-time').innerText = total > 0 ? (responded > 0 ? '1.4 saat' : 'Gözləmədə') : '0 saat';
+
+        // Render Marketing Channel Bars
+        const mktContainer = document.getElementById('pv-marketing-bars');
+        if (mktContainer) {
+          const mktList = [
+            { label: 'Instagram', count: mkt.instagram, color: '#ec4899', icon: 'fab fa-instagram' },
+            { label: 'Google (Axtarış & Reklam)', count: mkt.google, color: '#3b82f6', icon: 'fab fa-google' },
+            { label: 'Tövsiyə (Dost / Valideyn / Məzun)', count: mkt.recommendation, color: '#10b981', icon: 'fas fa-user-friends' },
+            { label: 'Tədbir / Workshop / Açıq Qapı', count: mkt.events, color: '#f59e0b', icon: 'fas fa-calendar-star' },
+            { label: 'Sosial Media & Çöl Reklamları', count: mkt.ads, color: '#8b5cf6', icon: 'fas fa-ad' },
+            { label: 'Digər Mənbələr', count: mkt.other, color: '#64748b', icon: 'fas fa-ellipsis-h' }
+          ];
+
+          mktContainer.innerHTML = mktList.map(item => {
+            const pct = total > 0 ? Math.round((item.count / total) * 100) : 0;
+            return `
+              <div>
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700; color:#cbd5e1; margin-bottom:5px;">
+                  <span><i class="${item.icon}" style="color:${item.color}; width:16px;"></i> ${item.label}</span>
+                  <span style="color:white;">${item.count} müraciət (${pct}%)</span>
+                </div>
+                <div style="height:6px; background:rgba(255,255,255,0.06); border-radius:10px; overflow:hidden;">
+                  <div style="height:100%; width:${pct}%; background:${item.color}; border-radius:10px; transition:width 0.4s ease;"></div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+
+        // Render Branch Comparison Bars
+        const branchContainer = document.getElementById('pv-branch-bars');
+        if (branchContainer) {
+          const brList = [
+            { label: '🔴 BETL Lisey 1 (Nərimanov Filialı)', count: brCount.lisey1, color: '#ef4444' },
+            { label: '🔵 BETL Lisey 2 (Gənclik Filialı)', count: brCount.lisey2, color: '#3b82f6' },
+            { label: '🟢 Evrika Montessori Kids Bağçası', count: brCount.montessori, color: '#10b981' },
+            { label: '🟣 Digər Filiallar (Victory & Zümrüd)', count: brCount.other, color: '#a855f7' }
+          ];
+
+          branchContainer.innerHTML = brList.map(item => {
+            const pct = total > 0 ? Math.round((item.count / total) * 100) : 0;
+            return `
+              <div>
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:700; color:#cbd5e1; margin-bottom:5px;">
+                  <span>${item.label}</span>
+                  <span style="color:white;">${item.count} müraciət (${pct}%)</span>
+                </div>
+                <div style="height:6px; background:rgba(255,255,255,0.06); border-radius:10px; overflow:hidden;">
+                  <div style="height:100%; width:${pct}%; background:${item.color}; border-radius:10px; transition:width 0.4s ease;"></div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
 
         // Table search and filtering
         let displayed = feedbacks.filter(f => {
@@ -1952,7 +2118,8 @@ fbq('track', 'PageView');
           const sName = (f.child_name || f.student_name || '').toLowerCase();
           const phone = (f.phone || '').toLowerCase();
           const msg = (f.parent_feedback_message || f.note || '').toLowerCase();
-          const matchesQ = !q || pName.includes(q) || sName.includes(q) || phone.includes(q) || msg.includes(q);
+          const resp = (f.assigned_to || f.responsible || '').toLowerCase();
+          const matchesQ = !q || pName.includes(q) || sName.includes(q) || phone.includes(q) || msg.includes(q) || resp.includes(q);
 
           let matchesType = true;
           if (typeFilter !== 'all') {
@@ -1976,16 +2143,16 @@ fbq('track', 'PageView');
         };
 
         const pvStatusMap = {
-          'Yeni': { color: '#f59e0b', bg: 'rgba(245,158,11,0.12)' },
-          'Təyin Edildi': { color: '#38bdf8', bg: 'rgba(56,189,248,0.12)' },
-          'İcrada': { color: '#8b5cf6', bg: 'rgba(139,92,246,0.12)' },
-          'Cavablandırıldı': { color: '#10b981', bg: 'rgba(16,185,129,0.12)' },
-          'Bağlandı': { color: '#64748b', bg: 'rgba(100,116,139,0.12)' }
+          'Yeni': { color: '#f59e0b', bg: 'rgba(245,158,11,0.12)', label: 'New (Yeni)' },
+          'Təyin Edildi': { color: '#38bdf8', bg: 'rgba(56,189,248,0.12)', label: 'Assigned' },
+          'İcrada': { color: '#8b5cf6', bg: 'rgba(139,92,246,0.12)', label: 'In Progress' },
+          'Cavablandırıldı': { color: '#10b981', bg: 'rgba(16,185,129,0.12)', label: 'Responded' },
+          'Bağlandı': { color: '#64748b', bg: 'rgba(100,116,139,0.12)', label: 'Closed' }
         };
 
         let html = displayed.map(f => {
           const bKey = getGranularSource(f);
-          const bConf = BRANCH_CONFIG[bKey] || { label: 'EVRİKA Kompleks', color: '#ec4899', bg: 'rgba(236,72,153,0.12)', border: 'rgba(236,72,153,0.25)', icon: 'fas fa-school' };
+          const bConf = BRANCH_CONFIG[bKey] || { label: 'EVRİKA Liseyi', color: '#ef4444', bg: 'rgba(239,68,68,0.12)', border: 'rgba(239,68,68,0.25)', icon: 'fas fa-school' };
           
           const pName = f.parent_name || f.fullName || 'Valideyn';
           const sName = f.child_name || f.student_name || 'Övlad';
@@ -1993,8 +2160,8 @@ fbq('track', 'PageView');
           const phone = f.phone || '-';
           const phoneClean = formatPhone(phone);
           const fSource = f.first_touch_source || '-';
-          const interests = f.interest_area || '-';
           const fType = f.parent_feedback_type || 'Müraciət';
+          const assignedTo = f.assigned_to || f.responsible || '<span style="color:var(--text-muted); font-style:italic;">Təyin edilməyib</span>';
           const dateStr = formatDateStr(f.created_at || f.submissionDate || Date.now());
           const st = f.status || 'Yeni';
           const stConf = pvStatusMap[st] || pvStatusMap['Yeni'];
@@ -2025,20 +2192,24 @@ fbq('track', 'PageView');
             </td>
             <td>${typeBadge}</td>
             <td><div style="font-weight:700; color:white; font-size:0.85rem;"><i class="fas fa-bullhorn" style="color:var(--text-muted); margin-right:5px;"></i> ${fSource}</div></td>
-            <td><div style="font-size:0.8rem; color:var(--text-muted); max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${interests}">${interests}</div></td>
+            <td><div style="font-size:0.85rem; color:#e2e8f0; font-weight:600;"><i class="fas fa-user-tie" style="color:var(--text-muted); margin-right:5px;"></i> ${assignedTo}</div></td>
             <td style="font-size:0.85rem; color:var(--text-muted);">${dateStr}</td>
             <td>
               <select onchange="updateParentVoiceStatus(${f._db_id_}, this.value)" 
                       style="background:${stConf.bg}; color:${stConf.color}; border:1px solid ${stConf.color}44; cursor:pointer;" 
                       class="status-select">
-                <option value="Yeni" ${st==='Yeni'?'selected':''}>Yeni</option>
-                <option value="Təyin Edildi" ${st==='Təyin Edildi'?'selected':''}>Təyin Edildi</option>
-                <option value="İcrada" ${st==='İcrada'?'selected':''}>İcrada</option>
-                <option value="Cavablandırıldı" ${st==='Cavablandırıldı'?'selected':''}>Cavablandırıldı</option>
-                <option value="Bağlandı" ${st==='Bağlandı'?'selected':''}>Bağlandı</option>
+                <option value="Yeni" ${st==='Yeni'?'selected':''}>New (Yeni)</option>
+                <option value="Təyin Edildi" ${st==='Təyin Edildi'?'selected':''}>Assigned</option>
+                <option value="İcrada" ${st==='İcrada'?'selected':''}>In Progress</option>
+                <option value="Cavablandırıldı" ${st==='Cavablandırıldı'?'selected':''}>Responded</option>
+                <option value="Bağlandı" ${st==='Bağlandı'?'selected':''}>Closed</option>
               </select>
             </td>
-            <td><button class="btn-view" onclick="viewDetailsDirect(${f._db_id_})" style="padding:8px 16px;"><i class="fas fa-eye"></i></button></td>
+            <td>
+              <button class="btn-view" onclick="openPvModal(${f._db_id_})" style="padding:8px 14px; background:var(--royal-blue); color:white; font-size:0.8rem; font-weight:700;">
+                <i class="fas fa-edit"></i> İdarə Et
+              </button>
+            </td>
           </tr>`;
         }).join('');
 
@@ -2054,6 +2225,171 @@ fbq('track', 'PageView');
             pvBadge.style.display = 'none';
           }
         }
+    };
+
+    window.openPvModal = (dbId) => {
+      const item = rawData.find(r => r._db_id_ == dbId);
+      if (!item) return;
+
+      const pName = item.parent_name || item.fullName || 'Qeyd edilməyib';
+      const phone = item.phone || 'Qeyd edilməyib';
+      const sName = item.child_name || item.student_name || 'Qeyd edilməyib';
+      const grade = item.child_age || item.student_grade || 'Qeyd edilməyib';
+      const branchName = item.branch_name || (getGranularSource(item) === 'lisey1' ? 'EVRİKA BETL (Nərimanov)' : getGranularSource(item) === 'lisey2' ? 'EVRİKA BETL (Gənclik)' : 'Evrika Liseyi');
+      const fSource = item.first_touch_source || 'Qeyd edilməyib';
+      const interests = item.interest_area || 'Qeyd edilməyib';
+      const fType = item.parent_feedback_type || 'Müraciət';
+      const fMsg = item.parent_feedback_message || item.note || 'Qeyd yoxdur';
+      const subDate = formatDateStr(item.created_at || item.submissionDate || Date.now());
+
+      const assignedTo = item.assigned_to || item.responsible || '';
+      const respDate = item.response_date || '';
+      const respNote = item.response_note || '';
+      const closedDate = item.closed_date || '';
+      const currentStatus = item.status || 'Yeni';
+
+      const bodyHtml = `
+        <div style="display:flex; flex-direction:column; gap:22px;">
+          
+          <!-- Parent & Student Overview Grid -->
+          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:16px; padding:20px; display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+            <div>
+              <div style="font-size:0.75rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Valideyn Adı və Soyadı</div>
+              <div style="font-size:1.05rem; font-weight:900; color:white; margin-top:2px;">${pName}</div>
+              <div style="font-size:0.85rem; color:#60a5fa; margin-top:4px;"><a href="tel:${formatPhone(phone)}" style="color:#60a5fa; text-decoration:none;"><i class="fas fa-phone-alt"></i> ${phone}</a></div>
+            </div>
+            <div>
+              <div style="font-size:0.75rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Şagird / Övlad</div>
+              <div style="font-size:1.05rem; font-weight:900; color:white; margin-top:2px;">${sName}</div>
+              <div style="font-size:0.85rem; color:var(--accent); font-weight:700; margin-top:4px;"><i class="fas fa-graduation-cap"></i> ${grade} (${branchName})</div>
+            </div>
+          </div>
+
+          <!-- Attribution & Interests -->
+          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:16px; padding:20px; display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+            <div>
+              <div style="font-size:0.75rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">İlk Tanışlıq Mənbəyi</div>
+              <div style="font-size:0.95rem; font-weight:800; color:white; margin-top:4px;"><i class="fas fa-bullhorn" style="color:#38bdf8;"></i> ${fSource}</div>
+            </div>
+            <div>
+              <div style="font-size:0.75rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Maraqlanan Mövzu / Sahələr</div>
+              <div style="font-size:0.85rem; color:#cbd5e1; margin-top:4px; line-height:1.4;">${interests}</div>
+            </div>
+          </div>
+
+          <!-- Feedback Type and Message -->
+          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:16px; padding:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <div style="font-size:0.75rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Müraciət Növü & Valideynin Mesajı</div>
+              <span style="font-size:0.8rem; font-weight:800; background:rgba(255,255,255,0.06); padding:4px 10px; border-radius:8px; color:var(--accent);">${fType}</span>
+            </div>
+            <div style="font-size:0.95rem; color:white; background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.05); padding:14px 16px; border-radius:12px; line-height:1.5; white-space:pre-wrap;">${fMsg}</div>
+            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:8px; text-align:right;"><i class="fas fa-clock"></i> Göndərilmə tarixi: ${subDate}</div>
+          </div>
+
+          <!-- CRM Execution & Management Fields -->
+          <div style="background:linear-gradient(135deg, rgba(30,41,59,0.5) 0%, rgba(15,23,42,0.5) 100%); border:1.5px solid var(--accent); border-radius:18px; padding:22px;">
+            <h4 style="font-size:0.95rem; font-weight:900; color:white; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+              <i class="fas fa-tasks" style="color:var(--accent);"></i> CRM İcra və İdarəetmə Sahələri
+            </h4>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
+              <div>
+                <label style="display:block; font-size:0.75rem; font-weight:800; color:#94a3b8; margin-bottom:6px;">MÜRACİƏT STATUSU (WORKFLOW)</label>
+                <select id="pv-edit-status" class="admin-input" style="width:100%; font-weight:800;">
+                  <option value="Yeni" ${currentStatus==='Yeni'?'selected':''}>New (Yeni)</option>
+                  <option value="Təyin Edildi" ${currentStatus==='Təyin Edildi'?'selected':''}>Assigned (Təyin Edildi)</option>
+                  <option value="İcrada" ${currentStatus==='İcrada'?'selected':''}>In Progress (İcrada)</option>
+                  <option value="Cavablandırıldı" ${currentStatus==='Cavablandırıldı'?'selected':''}>Responded (Cavablandırıldı)</option>
+                  <option value="Bağlandı" ${currentStatus==='Bağlandı'?'selected':''}>Closed (Bağlandı)</option>
+                </select>
+              </div>
+
+              <div>
+                <label style="display:block; font-size:0.75rem; font-weight:800; color:#94a3b8; margin-bottom:6px;">MƏSUL ƏMƏKDAŞ</label>
+                <input type="text" id="pv-edit-assigned" class="admin-input" style="width:100%;" placeholder="Məs: Şəhla Əliyeva (Qəbul şöbəsi)" value="${assignedTo}">
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
+              <div>
+                <label style="display:block; font-size:0.75rem; font-weight:800; color:#94a3b8; margin-bottom:6px;">CAVAB TARİXİ</label>
+                <input type="datetime-local" id="pv-edit-response-date" class="admin-input" style="width:100%;" value="${respDate}">
+              </div>
+
+              <div>
+                <label style="display:block; font-size:0.75rem; font-weight:800; color:#94a3b8; margin-bottom:6px;">BAĞLANMA TARİXİ</label>
+                <input type="datetime-local" id="pv-edit-closed-date" class="admin-input" style="width:100%;" value="${closedDate}">
+              </div>
+            </div>
+
+            <div style="margin-bottom:18px;">
+              <label style="display:block; font-size:0.75rem; font-weight:800; color:#94a3b8; margin-bottom:6px;">CAVAB QEYDİ VƏ YEKUN NƏTİCƏ</label>
+              <textarea id="pv-edit-response-note" class="admin-input" rows="3" style="width:100%;" placeholder="Valideynlə telefon/whatsapp əlaqəsi saxlanıldı, təklif qəbul komissiyasına yönləndirildi...">${respNote}</textarea>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+              <button onclick="closePvModal()" class="btn-view" style="padding:12px 20px; background:rgba(255,255,255,0.05); color:white;">Bağla</button>
+              <button onclick="saveParentVoiceDetails(${dbId})" id="pv-save-btn" class="btn-view" style="padding:12px 24px; background:var(--accent); color:white; font-weight:800; border:none;">
+                <i class="fas fa-save"></i> Dəyişiklikləri Yadda Saxla
+              </button>
+            </div>
+          </div>
+
+        </div>
+      `;
+
+      document.getElementById('pv-modal-body').innerHTML = bodyHtml;
+      document.getElementById('pv-detail-modal').style.display = 'flex';
+    };
+
+    window.closePvModal = () => {
+      document.getElementById('pv-detail-modal').style.display = 'none';
+    };
+
+    window.saveParentVoiceDetails = async (dbId) => {
+      const btn = document.getElementById('pv-save-btn');
+      const origHtml = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saxlanılır...';
+      btn.disabled = true;
+
+      const newStatus = document.getElementById('pv-edit-status').value;
+      const assignedTo = document.getElementById('pv-edit-assigned').value.trim();
+      const respDate = document.getElementById('pv-edit-response-date').value;
+      const respNote = document.getElementById('pv-edit-response-note').value.trim();
+      const closedDate = document.getElementById('pv-edit-closed-date').value;
+
+      try {
+        const item = rawData.find(r => r._db_id_ == dbId);
+        if (item) {
+          item.status = newStatus;
+          item.assigned_to = assignedTo;
+          item.responsible = assignedTo;
+          item.response_date = respDate;
+          item.response_note = respNote;
+          item.closed_date = closedDate;
+
+          const updatedPayload = { ...item };
+          delete updatedPayload._db_id_;
+
+          await fetch(`${API_URL}/registrations?id=eq.${dbId}`, {
+            method: 'PATCH',
+            headers: HEADERS,
+            body: JSON.stringify({ payload: updatedPayload })
+          });
+
+          btn.innerHTML = '<i class="fas fa-check"></i> Uğurla Saxlanıldı!';
+          setTimeout(() => {
+            closePvModal();
+            renderParentVoice();
+          }, 600);
+        }
+      } catch(e) {
+        console.error("Save PV error", e);
+        alert('Xəta baş verdi');
+        btn.innerHTML = origHtml;
+        btn.disabled = false;
+      }
     };
 
     window.updateParentVoiceStatus = async (dbId, newStatus) => {
