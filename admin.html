@@ -2909,8 +2909,19 @@ fbq('track', 'PageView');
       const res = await fetch(`${API_URL}/ugurlar?select=*`, { headers: HEADERS });
       if(res.ok) { ugurlarData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id })).sort((a,b) => b._db_id_ - a._db_id_); }
       const tb = document.getElementById('ug-tbody'); if(tb) tb.innerHTML = ugurlarData.map((u, i) => `<tr><td><img src="${u.img}" style="width:40px;height:40px;object-fit:cover;border-radius:8px;"></td><td>${u.name}</td><td>${u.uni}</td><td><div style="display:flex; gap:8px;"><button class="btn-view" style="padding:8px 12px; background:rgba(255,255,255,0.05);" onclick="editUgur(${i})"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:8px 12px;" onclick="deleteUgur('${u._db_id_}')"><i class="fas fa-trash"></i></button></div></td></tr>`).join('');
-      if(document.getElementById('dash-ugur')) document.getElementById('dash-ugur').innerText = ugurlarData.length;
-    }
+      const dashList = document.getElementById('dash-ugur-list');
+      if (dashList) {
+        dashList.innerHTML = ugurlarData.slice(0, 4).map(u => `
+          <div style="background:rgba(255,255,255,0.02); padding:15px; border-radius:12px; border:1px solid rgba(255,255,255,0.05); display:flex; align-items:center; gap:12px;">
+            <img src="${u.img}" style="width:45px; height:45px; object-fit:cover; border-radius:8px;">
+            <div>
+              <div style="font-weight:700; color:white; font-size:0.85rem;">${u.name}</div>
+              <div style="font-size:0.75rem; color:var(--text-muted);">${u.uni}</div>
+            </div>
+          </div>
+        `).join('');
+      }
+    };
 
     window.editUgur = (idx) => {
         const u = ugurlarData[idx];
@@ -3557,12 +3568,13 @@ fbq('track', 'PageView');
       const b = window.selectedCrmBranch || 'all';
       if (!b || b === 'all') return rawData;
       return rawData.filter(i => {
-        const s = getGranularSource(i) || '';
-        if (b === 'lisey1') return s === 'lisey1' || s.includes('Nərimanov');
-        if (b === 'lisey2') return s === 'lisey2' || s.includes('Gənclik');
-        if (b === 'montessori') return s === 'montessori' || s.includes('Montessori');
-        if (b === 'victory') return s === 'victory' || s.includes('Victory');
-        if (b === 'zumrud') return s === 'zumrud' || s.includes('Zümrüd') || s.includes('zumrud');
+        const s = (getGranularSource(i) || '').toLowerCase();
+        const allText = Object.values(i).join(' ').toLowerCase();
+        if (b === 'lisey1') return s === 'lisey1' || s.includes('nərimanov') || s.includes('nerimanov') || s.includes('lisey 1') || s.includes('liseyi 1') || allText.includes('nərimanov') || allText.includes('nerimanov');
+        if (b === 'lisey2') return s === 'lisey2' || s.includes('gənclik') || s.includes('genclik') || s.includes('lisey 2') || s.includes('liseyi 2') || allText.includes('gənclik') || allText.includes('genclik');
+        if (b === 'montessori') return s === 'montessori' || s.includes('montessori') || allText.includes('montessori');
+        if (b === 'victory') return s === 'victory' || s.includes('victory') || s.includes('eduhome') || allText.includes('victory');
+        if (b === 'zumrud') return s === 'zumrud' || s.includes('zümrüd') || s.includes('zumrud') || allText.includes('zümrüd') || allText.includes('zumrud');
         return true;
       });
     }
@@ -3650,16 +3662,43 @@ fbq('track', 'PageView');
     }
 
     function renderDashboard() {
-      if(document.getElementById('dash-total')) document.getElementById('dash-total').innerText = rawData.length;
-      if(document.getElementById('dash-new')) document.getElementById('dash-new').innerText = rawData.filter(i=>(i.status||'Yeni')==='Yeni').length;
+      const bData = getBranchFilteredData();
+      const b = window.selectedCrmBranch || 'all';
+
+      // 1. Ümumi müraciət
+      if(document.getElementById('dash-total')) {
+        document.getElementById('dash-total').innerText = bData.length;
+      }
+
+      // 2. Baxılmayan (Yeni)
+      if(document.getElementById('dash-new')) {
+        document.getElementById('dash-new').innerText = bData.filter(i => (i.status || 'Yeni').toLowerCase() === 'yeni').length;
+      }
+
+      // 3. Kupon Alan Sayı
       if(document.getElementById('dash-ugur')) {
-         const kuponCount = rawData.filter(i => (i.epoint_amount || i.amount) && i.payment_status === 'Ödənilib').length;
+         const kuponCount = bData.filter(i => (i.epoint_amount || i.amount) && i.payment_status === 'Ödənilib').length;
          document.getElementById('dash-ugur').innerText = kuponCount;
       }
-      if(document.getElementById('dash-vac')) document.getElementById('dash-vac').innerText = vacanciesData.filter(v => v.status === 'Aktiv').length || vacanciesData.length;
+
+      // 4. Aktiv Vakansiya
+      if(document.getElementById('dash-vac')) {
+         let filteredVacancies = vacanciesData;
+         if (b !== 'all') {
+           const BRANCH_NAMES = { 'lisey1':'Nərimanov', 'lisey2':'Gənclik', 'montessori':'Montessori', 'victory':'Victory', 'zumrud':'Zümrüd' };
+           const branchKw = (BRANCH_NAMES[b] || '').toLowerCase();
+           filteredVacancies = vacanciesData.filter(v => {
+             const vText = ((v.title || '') + ' ' + (v.location || '') + ' ' + (v.branch || '')).toLowerCase();
+             return vText.includes(branchKw);
+           });
+         }
+         const activeCount = filteredVacancies.filter(v => v.status === 'Aktiv').length || (b === 'all' ? vacanciesData.length : 0);
+         document.getElementById('dash-vac').innerText = activeCount;
+      }
       
+      // 5. Son Ödəniş Edən
       if(document.getElementById('dash-last-payer')) {
-         const latestPayment = rawData.filter(i => (i.epoint_amount || i.amount) && i.payment_status === 'Ödənilib')
+         const latestPayment = bData.filter(i => (i.epoint_amount || i.amount) && i.payment_status === 'Ödənilib')
                                      .sort((a,b) => new Date(b.epoint_date || b.submissionDate || 0) - new Date(a.epoint_date || a.submissionDate || 0))[0];
          if(latestPayment) {
              const name = latestPayment.fullName || latestPayment['Ad Soyad'] || latestPayment.name || (latestPayment['[2.Şagird] Adı'] ? latestPayment['[2.Şagird] Adı'] + ' ' + (latestPayment['[2.Şagird] Soyadı']||'') : 'Adsız');
