@@ -409,6 +409,14 @@
           </div>
         </div>
 
+        <div class="form-group">
+          <label>Müraciət Etdiyiniz Filial <span class="req">*</span></label>
+          <select id="branch_select" class="form-control" required onchange="updateBranchSelection(this.value)">
+            <option value="lisey1">🔴 EVRİKA BETL (Nərimanov filialı)</option>
+            <option value="lisey2">🔵 EVRİKA BETL (Gənclik filialı)</option>
+          </select>
+        </div>
+
         <!-- SECTION 2: Evrika ilə necə tanış oldunuz? -->
         <div class="section-title">
           <i class="fas fa-bullhorn"></i> 2. Evrika ilə necə tanış oldunuz?
@@ -522,27 +530,38 @@
     const SUPABASE_URL = "https://gziuhrlvagflokivfgwt.supabase.co";
     const SUPABASE_KEY = "sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP";
 
-    // Auto branch detection from URL (?branch=LIS1 or ?branch=lisey1, etc.)
+    // Branch resolution
     const urlParams = new URLSearchParams(window.location.search);
-    const rawBranch = (urlParams.get('branch') || urlParams.get('b') || 'general').toLowerCase();
+    const rawBranch = (urlParams.get('branch') || urlParams.get('b') || 'lisey1').toLowerCase();
 
     let branchKey = 'lisey1';
-    let branchName = 'Evrika Beynəlxalq Elm və Texnologiya Liseyi';
+    let branchName = 'EVRİKA BETL (Nərimanov filialı)';
 
-    if (rawBranch === 'lis1' || rawBranch === 'lisey1' || rawBranch.includes('nerimanov')) {
-      branchKey = 'lisey1';
-      branchName = 'EVRİKA BETL (Nərimanov filialı)';
-    } else if (rawBranch === 'lis2' || rawBranch === 'lisey2' || rawBranch.includes('genclik')) {
+    if (rawBranch === 'lis2' || rawBranch === 'lisey2' || rawBranch.includes('genclik')) {
       branchKey = 'lisey2';
       branchName = 'EVRİKA BETL (Gənclik filialı)';
-    } else if (rawBranch === 'mont' || rawBranch.includes('montessori')) {
-      branchKey = 'montessori';
-      branchName = 'Evrika Montessori Uşaq Bağçası';
-    } else if (rawBranch === 'general' || rawBranch === 'all') {
+    } else {
       branchKey = 'lisey1';
-      branchName = 'Evrika Beynəlxalq Elm və Texnologiya Liseyi';
+      branchName = 'EVRİKA BETL (Nərimanov filialı)';
     }
 
+    window.updateBranchSelection = (val) => {
+      if (val === 'lisey2' || val === 'lis2') {
+        branchKey = 'lisey2';
+        branchName = 'EVRİKA BETL (Gənclik filialı)';
+      } else {
+        branchKey = 'lisey1';
+        branchName = 'EVRİKA BETL (Nərimanov filialı)';
+      }
+      const bText = document.getElementById('branch-text');
+      if (bText) bText.innerText = branchName;
+      const bSelect = document.getElementById('branch_select');
+      if (bSelect && bSelect.value !== branchKey) bSelect.value = branchKey;
+    };
+
+    // Initialize branch
+    const bSelect = document.getElementById('branch_select');
+    if (bSelect) bSelect.value = branchKey;
     const bBanner = document.getElementById('branch-banner');
     const bText = document.getElementById('branch-text');
     if (bBanner && bText) {
