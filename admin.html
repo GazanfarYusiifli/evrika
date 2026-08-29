@@ -693,16 +693,39 @@ fbq('track', 'PageView');
     </div>
 
     <div id="view-apps" class="content" style="display: none;">
+        <!-- Branch Selector Tabs (Filiallar üzrə CRM) -->
+        <div class="branch-filter-bar" style="display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 5px;">
+          <button class="branch-pill-btn active" data-branch="all" onclick="selectBranchFilter('all', this)" style="padding: 10px 18px; border-radius: 12px; font-weight: 800; font-size: 0.85rem; cursor: pointer; border: 1px solid var(--border); background: var(--burgundy); color: white; transition: 0.2s; white-space: nowrap; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-layer-group"></i> Bütün Bölmələr <span id="count-all" style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 20px; font-size: 0.75rem;">0</span>
+          </button>
+          <button class="branch-pill-btn" data-branch="lisey1" onclick="selectBranchFilter('lisey1', this)" style="padding: 10px 18px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; cursor: pointer; border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: var(--text-muted); transition: 0.2s; white-space: nowrap; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-microscope" style="color: #ef4444;"></i> BETL Nərimanov <span id="count-lisey1" style="background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 20px; font-size: 0.75rem;">0</span>
+          </button>
+          <button class="branch-pill-btn" data-branch="lisey2" onclick="selectBranchFilter('lisey2', this)" style="padding: 10px 18px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; cursor: pointer; border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: var(--text-muted); transition: 0.2s; white-space: nowrap; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-atom" style="color: #3b82f6;"></i> BETL Gənclik <span id="count-lisey2" style="background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 20px; font-size: 0.75rem;">0</span>
+          </button>
+          <button class="branch-pill-btn" data-branch="montessori" onclick="selectBranchFilter('montessori', this)" style="padding: 10px 18px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; cursor: pointer; border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: var(--text-muted); transition: 0.2s; white-space: nowrap; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-child" style="color: #10b981;"></i> Montessori Kids <span id="count-montessori" style="background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 20px; font-size: 0.75rem;">0</span>
+          </button>
+          <button class="branch-pill-btn" data-branch="victory" onclick="selectBranchFilter('victory', this)" style="padding: 10px 18px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; cursor: pointer; border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: var(--text-muted); transition: 0.2s; white-space: nowrap; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-graduation-cap" style="color: #a855f7;"></i> Victory Colleges <span id="count-victory" style="background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 20px; font-size: 0.75rem;">0</span>
+          </button>
+          <button class="branch-pill-btn" data-branch="zumrud" onclick="selectBranchFilter('zumrud', this)" style="padding: 10px 18px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; cursor: pointer; border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: var(--text-muted); transition: 0.2s; white-space: nowrap; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-swimmer" style="color: #eab308;"></i> Zümrüd İdman <span id="count-zumrud" style="background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 20px; font-size: 0.75rem;">0</span>
+          </button>
+          <button class="branch-pill-btn" data-branch="career" onclick="selectBranchFilter('career', this)" style="padding: 10px 18px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; cursor: pointer; border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: var(--text-muted); transition: 0.2s; white-space: nowrap; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-briefcase" style="color: #06b6d4;"></i> Karyera / CV <span id="count-career" style="background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 20px; font-size: 0.75rem;">0</span>
+          </button>
+          <button class="branch-pill-btn" data-branch="contact" onclick="selectBranchFilter('contact', this)" style="padding: 10px 18px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; cursor: pointer; border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: var(--text-muted); transition: 0.2s; white-space: nowrap; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-envelope" style="color: #94a3b8;"></i> Əlaqə Forması <span id="count-contact" style="background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 20px; font-size: 0.75rem;">0</span>
+          </button>
+        </div>
+
         <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 30px; flex-wrap: wrap;">
           <div style="position: relative; flex: 1; min-width: 300px;">
             <i class="fas fa-search" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
             <input type="text" id="search-input" placeholder="Ad və ya Telefon ilə axtarış..." class="admin-input" style="padding-left: 55px;" oninput="filterData()">
           </div>
-          <select id="filter-source" class="admin-input" style="width: 200px; cursor: pointer;" onchange="filterData()">
-            <option value="all">Bütün Mənbələr</option>
-            <option value="Vebsayt">Məktəb Qeydiyyatı</option>
-            <option value="Karyera">Karyera / İş</option>
-          </select>
           <select id="filter-status" class="admin-input" style="width: 200px; cursor: pointer;" onchange="filterData()">
             <option value="all">Bütün Statuslar</option>
             <option value="Yeni">Yeni</option>
@@ -1773,10 +1796,45 @@ fbq('track', 'PageView');
       } catch(e) {}
     }
 
+    window.currentBranchFilter = 'all';
+
+    window.selectBranchFilter = (branch, btn) => {
+      window.currentBranchFilter = branch;
+      document.querySelectorAll('.branch-pill-btn').forEach(b => {
+        b.style.background = 'rgba(255,255,255,0.03)';
+        b.style.color = 'var(--text-muted)';
+        b.style.fontWeight = '700';
+      });
+      if (btn) {
+        btn.style.background = 'var(--burgundy)';
+        btn.style.color = 'white';
+        btn.style.fontWeight = '800';
+      }
+      window.filterData();
+    };
+
+    window.updateBranchCounts = () => {
+      const counts = { all: rawData.length, lisey1: 0, lisey2: 0, montessori: 0, victory: 0, zumrud: 0, career: 0, contact: 0 };
+      rawData.forEach(item => {
+        const s = getGranularSource(item) || '';
+        if (s === 'lisey1' || s.includes('Nərimanov')) counts.lisey1++;
+        else if (s === 'lisey2' || s.includes('Gənclik')) counts.lisey2++;
+        else if (s === 'montessori' || s.includes('Montessori')) counts.montessori++;
+        else if (s === 'victory' || s.includes('Victory')) counts.victory++;
+        else if (s === 'zumrud' || s.includes('Zümrüd') || s.includes('zumrud')) counts.zumrud++;
+        else if (s === 'career' || s.includes('Karyera') || !!item.position) counts.career++;
+        else if (s === 'contact' || s.includes('Əlaqə')) counts.contact++;
+      });
+      for (const k in counts) {
+        const el = document.getElementById('count-' + k);
+        if (el) el.innerText = counts[k];
+      }
+    };
+
     window.filterData = () => {
-      const q = document.getElementById('search-input').value.toLowerCase();
-      const source = document.getElementById('filter-source').value;
-      const status = document.getElementById('filter-status').value;
+      const q = (document.getElementById('search-input')?.value || '').toLowerCase();
+      const status = document.getElementById('filter-status')?.value || 'all';
+      const branch = window.currentBranchFilter || 'all';
 
       filteredData = rawData.filter(item => {
         const fullName = (item.fullName || item['Ad Soyad'] || item.name || 
@@ -1788,21 +1846,17 @@ fbq('track', 'PageView');
         
         const matchesSearch = fullName.includes(q) || phone.includes(q);
         
-        let s = getGranularSource(item);
-        const MAP = { 
-          'lisey1':'Nərimanov filialı', 'lisey2':'Gənclik filialı', 'montessori':'Montessori', 
-          'victory':'Victory', 'zumrud':'Zümrüd', 'contact':'Əlaqə', 
-          'career':'Karyera', 'whatsapp':'WhatsApp', 'instagram':'Instagram', 'email':'Email' 
-        };
-        const sourceLabel = MAP[s] || s || 'Email';
+        const s = getGranularSource(item) || '';
         
-        let matchesSource = true;
-        if (source !== 'all') {
-          if (source === 'Vebsayt') {
-            matchesSource = ['Nərimanov filialı', 'Gənclik filialı', 'Montessori', 'Victory', 'Zümrüd', 'Əlaqə', 'Email'].includes(sourceLabel);
-          } else if (source === 'Karyera') {
-            matchesSource = sourceLabel === 'Karyera';
-          }
+        let matchesBranch = true;
+        if (branch !== 'all') {
+          if (branch === 'lisey1') matchesBranch = s === 'lisey1' || s.includes('Nərimanov');
+          else if (branch === 'lisey2') matchesBranch = s === 'lisey2' || s.includes('Gənclik');
+          else if (branch === 'montessori') matchesBranch = s === 'montessori' || s.includes('Montessori');
+          else if (branch === 'victory') matchesBranch = s === 'victory' || s.includes('Victory');
+          else if (branch === 'zumrud') matchesBranch = s === 'zumrud' || s.includes('Zümrüd') || s.includes('zumrud');
+          else if (branch === 'career') matchesBranch = s === 'career' || s.includes('Karyera') || !!item.position;
+          else if (branch === 'contact') matchesBranch = s === 'contact' || s.includes('Əlaqə');
         }
         
         let matchesStatus = true;
@@ -1810,9 +1864,11 @@ fbq('track', 'PageView');
            matchesStatus = (item.status || 'Yeni') === status;
         }
         
-        return matchesSearch && matchesSource && matchesStatus;
+        return matchesSearch && matchesBranch && matchesStatus;
       });
+
       renderApps();
+      window.updateBranchCounts();
     };
 
     window.exportToCSV = () => {
@@ -1872,16 +1928,21 @@ fbq('track', 'PageView');
       const tb = document.getElementById('crm-tbody');
       const tbExam = document.getElementById('exam-apps-tbody');
       
+      const BRANCH_CONFIG = {
+        'lisey1': { label: 'BETL Nərimanov', color: '#ef4444', bg: 'rgba(239,68,68,0.12)', border: 'rgba(239,68,68,0.25)', icon: 'fas fa-microscope' },
+        'lisey2': { label: 'BETL Gənclik', color: '#3b82f6', bg: 'rgba(59,130,246,0.12)', border: 'rgba(59,130,246,0.25)', icon: 'fas fa-atom' },
+        'montessori': { label: 'Montessori Kids', color: '#10b981', bg: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.25)', icon: 'fas fa-child' },
+        'victory': { label: 'Victory Colleges', color: '#a855f7', bg: 'rgba(168,85,247,0.12)', border: 'rgba(168,85,247,0.25)', icon: 'fas fa-graduation-cap' },
+        'zumrud': { label: 'Zümrüd İdman', color: '#eab308', bg: 'rgba(234,179,8,0.12)', border: 'rgba(234,179,8,0.25)', icon: 'fas fa-swimmer' },
+        'career': { label: 'Karyera / CV', color: '#06b6d4', bg: 'rgba(6,182,212,0.12)', border: 'rgba(6,182,212,0.25)', icon: 'fas fa-briefcase' },
+        'contact': { label: 'Əlaqə Formu', color: '#94a3b8', bg: 'rgba(148,163,184,0.12)', border: 'rgba(148,163,184,0.25)', icon: 'fas fa-envelope' }
+      };
+
       const html = filteredData.map((item, i) => {
         let st = item.status || 'Yeni';
         if (typeof statusMap !== 'undefined' && !statusMap[st]) st = 'Yeni';
         const s = getGranularSource(item);
-        const MAP = { 
-          'lisey1':'Nərimanov filialı', 'lisey2':'Gənclik filialı', 'montessori':'Montessori', 
-          'victory':'Victory', 'zumrud':'Zümrüd', 'contact':'Əlaqə', 
-          'career':'Karyera', 'whatsapp':'WhatsApp', 'instagram':'Instagram', 'email':'Email' 
-        };
-        const sourceLabel = MAP[s] || s || 'Email';
+        const bConf = BRANCH_CONFIG[s] || { label: s || 'Digər', color: '#94a3b8', bg: 'rgba(255,255,255,0.05)', border: 'rgba(255,255,255,0.1)', icon: 'fas fa-tag' };
 
         // Robust name extraction
         const fullName = item.fullName || item['Ad Soyad'] || item.name || 
@@ -1891,6 +1952,7 @@ fbq('track', 'PageView');
         
         // Robust phone extraction
         const phone = item.phone || item.tel || item['[1.Əlaqə] Əlaqə Nömrəsi'] || '-';
+        const phoneClean = formatPhone(phone);
 
         const utmCampaign = item.utm_campaign || '-';
 
@@ -1899,8 +1961,16 @@ fbq('track', 'PageView');
             <div style="font-weight:800; color:white; font-size:0.95rem;">${fullName}</div>
             <div style="font-size:0.7rem; color:var(--text-muted); opacity:0.7;">ID: #EV-${String(item._db_id_).padStart(4,'0')}</div>
           </td>
-          <td style="font-weight:600; font-size:0.9rem;">${phone}</td>
-          <td><span class="kanban-card-tag" style="background:rgba(139,26,43,0.1); color:var(--burgundy); border:1px solid rgba(139,26,43,0.2); padding:6px 12px; border-radius:8px; font-weight:700;">${sourceLabel}</span></td>
+          <td>
+            <a href="tel:${phoneClean}" style="font-weight:700; font-size:0.9rem; color:#60a5fa; text-decoration:none; display:inline-flex; align-items:center; gap:6px;" title="Zəng et">
+              <i class="fas fa-phone-alt" style="font-size:0.75rem;"></i> ${phone}
+            </a>
+          </td>
+          <td>
+            <span style="background:${bConf.bg}; color:${bConf.color}; border:1px solid ${bConf.border}; padding:6px 12px; border-radius:8px; font-weight:700; font-size:0.8rem; display:inline-flex; align-items:center; gap:6px;">
+              <i class="${bConf.icon}"></i> ${bConf.label}
+            </span>
+          </td>
           <td style="font-size:0.85rem; color:var(--accent); font-weight:600;">${utmCampaign}</td>
           <td>${item.payment_status ? `<span style="font-weight:bold; font-size:0.75rem; color:${item.payment_status==='Ödənilib' ? '#10B981' : '#EF4444'}; background:${item.payment_status==='Ödənilib' ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)'}; padding:4px 8px; border-radius:6px;">${item.payment_status}</span>` : '<span style="color:var(--text-muted); font-size:0.8rem;">-</span>'}</td>
           <td style="font-size:0.85rem; color:var(--text-muted);">${formatDateStr(item.created_at || item.submissionDate || Date.now())}</td>
@@ -1914,6 +1984,7 @@ fbq('track', 'PageView');
           <td><button class="btn-view" onclick="viewDetails(${i})" style="padding:10px 20px;"><i class="fas fa-eye"></i></button></td>
         </tr>`;
       }).join('');
+      if (tb) tb.innerHTML = html;
       if (tb) tb.innerHTML = html;
       if (tbExam) tbExam.innerHTML = html;
     }
