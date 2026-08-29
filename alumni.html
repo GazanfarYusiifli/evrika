@@ -356,10 +356,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
           async function fetchAlumni() {
             try {
-              const res = await fetch(`${API_URL}/mezunlar?select=*&order=id.desc`, { headers: HEADERS });
+              const res = await fetch(`${API_URL}/ugurlar?select=*&order=id.desc`, { headers: HEADERS });
               if (res.ok) {
                 const data = await res.json();
-                return data.map(r => r.payload);
+                if (data && data.length > 0) return data.map(r => r.payload).filter(p => p && p.img);
+              }
+            } catch (e) { console.error(e); }
+            try {
+              const res2 = await fetch(`${API_URL}/mezunlar?select=*&order=id.desc`, { headers: HEADERS });
+              if (res2.ok) {
+                const data2 = await res2.json();
+                return data2.map(r => r.payload).filter(p => p && p.img);
               }
             } catch (e) { console.error(e); }
             return [];
@@ -375,7 +382,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           grid.innerHTML = data.map((a, i) => `
             <div class="alg-card">
               <span class="alg-num">${String(i + 1).padStart(2, '0')}</span>
-              <img src="${a.img}" alt="Məzun">
+              <img src="${a.img}" alt="${a.name || 'Məzun'}">
+              ${(a.name && a.name !== 'Evrika Uğurları') ? `
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(7, 13, 31, 0.95) 0%, rgba(7, 13, 31, 0.6) 60%, transparent 100%); padding: 25px 15px 12px; color: white; text-align: center; border-radius: 0 0 20px 20px;">
+                  <div style="font-weight: 800; font-size: 1rem; color: #ffffff; margin-bottom: 3px;">${a.name}</div>
+                  ${a.uni ? `<div style="font-size: 0.75rem; color: #ffd1d1; font-weight: 600; line-height: 1.2;">${a.uni}</div>` : ''}
+                </div>
+              ` : ''}
             </div>
           `).join('');
         });
