@@ -1,204 +1,375 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-  <meta name="format-detection" content="telephone=no">
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Evrika | Ödəniş Portalı</title>
-    <meta name="description" content="Evrika – gələcəyin liderlərini yetişdirən müasir təhsil ekosistemi.">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Təhlükəsiz Ödəniş Portalı | EVRİKA</title>
+  <link rel="icon" href="/assets/loqoYeni.PNG" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    :root {
+      --bg-dark: #070913;
+      --card-bg: rgba(15, 23, 42, 0.8);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --primary: #8b1a2b;
+      --primary-glow: rgba(139, 26, 43, 0.45);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+
     body {
-      background: linear-gradient(135deg, #0f172a 0%, #020617 100%);
-      margin: 0; font-family: 'Inter', sans-serif; color: white;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 16px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .aurora-bg {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+    }
+    .orb {
+      position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.28;
+    }
+    .orb-1 { width: 450px; height: 450px; background: radial-gradient(circle, #8b1a2b 0%, #4c0519 70%); top: -100px; left: -100px; }
+    .orb-2 { width: 500px; height: 500px; background: radial-gradient(circle, #3b82f6 0%, #1e40af 70%); bottom: -120px; right: -120px; }
+
+    .laser-grid {
+      position: fixed; inset: 0; pointer-events: none; z-index: 1;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .main-wrap {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .brand-crest {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 24px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 100px;
+      backdrop-filter: blur(20px);
+    }
+    .brand-crest img { width: 32px; height: 32px; object-fit: contain; }
+    .brand-crest span { font-size: 0.85rem; font-weight: 800; letter-spacing: 2px; color: #cbd5e1; text-transform: uppercase; }
+
+    .pay-card {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 32px;
+      padding: 36px 30px;
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px);
+      box-shadow: 0 30px 70px -15px rgba(0,0,0,0.7);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .pay-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #8b1a2b, #e11d48, #3b82f6);
+    }
+
+    .pay-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 16px;
+    }
+
+    .amount-box {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+    }
+    .amount-box p {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+    .amount-box h2 {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .input-grp {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .input-grp label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #cbd5e1;
+    }
+    .custom-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s;
+    }
+    .custom-input:focus {
+      border-color: rgba(225, 29, 72, 0.6);
+      box-shadow: 0 0 15px rgba(225, 29, 72, 0.2);
+    }
+
+    .pay-btn {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #8b1a2b, #b91c1c);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      gap: 10px;
+      box-shadow: 0 10px 25px rgba(139, 26, 43, 0.4);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .mesh-bg {
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background: radial-gradient(circle at 0% 0%, rgba(225, 29, 72, 0.15), transparent 40%),
-                  radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.15), transparent 40%);
+    .pay-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 35px rgba(139, 26, 43, 0.6);
     }
-    .pay-card {
-      background: rgba(30, 41, 59, 0.7);
-      border: 1px solid rgba(255,255,255,0.1);
-      padding: 40px;
-      border-radius: 24px;
-      width: 100%;
-      max-width: 450px;
-      backdrop-filter: blur(40px);
-      -webkit-backdrop-filter: blur(40px);
-      box-shadow: 0 30px 60px -15px rgba(0,0,0,0.6);
-      position: relative;
-      z-index: 10;
+    .pay-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
     }
-    .pay-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-    .pay-amount-box { text-align: center; margin-bottom: 30px; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); }
-    .pay-amount-box p { margin: 0 0 10px 0; color: rgba(255,255,255,0.6); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
-    .pay-amount-box h2 { margin: 0; font-size: 2.5rem; font-weight: 800; color: #fff; }
-    
-    .pay-input-group { margin-bottom: 20px; }
-    .pay-input-group label { display: block; font-size: 0.8rem; font-weight: 600; color: rgba(255, 255, 255, 0.5); margin-bottom: 8px; }
-    .pay-input { width: 100%; padding: 14px 18px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; font-family: inherit; font-size: 1rem; color: white; transition: all 0.3s; box-sizing: border-box; }
-    .pay-input:focus { outline: none; border-color: rgba(255,255,255,0.4); background: rgba(0,0,0,0.5); }
-    .pay-input::placeholder { color: rgba(255,255,255,0.2); }
-    
-    .pay-btn { width: 100%; padding: 18px; background: #fff; color: #000; border: none; border-radius: 12px; font-size: 1.05rem; font-weight: 800; cursor: pointer; transition: all 0.3s; margin-top: 10px; }
-    .pay-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(255,255,255,0.2); }
-    .pay-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; box-shadow: none; }
   </style>
-
-  <link rel="stylesheet" crossorigin href="/src/style.css">
-
-<!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '315832961885795');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=315832961885795&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
-
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
-<!-- End Google Tag Manager -->
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-XXXXXXXX');
-</script>
-
-
-<!-- UTM Tracker -->
-<script>
-(function() {
-    var params = new URLSearchParams(window.location.search);
-    var utms = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
-    utms.forEach(function(utm) {
-        if (params.has(utm)) {
-            sessionStorage.setItem(utm, params.get(utm));
-        }
-    });
-})();
-</script>
-<!-- End UTM Tracker -->
-
 </head>
 <body>
 
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
+  <div class="aurora-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+  <div class="laser-grid"></div>
 
-
-<div class="mesh-bg"></div>
-
-<div class="pay-card">
-  <div class="pay-header">
-    <h4 style="font-weight: 900; font-size: 1.2rem; margin:0; color:#fff;">EPOINT SECURE</h4>
-    <div style="display: flex; gap: 10px;">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" style="height: 22px;" alt="Mastercard">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" style="height: 16px;" alt="Visa">
+  <div class="main-wrap">
+    <div class="brand-crest">
+      <img src="/assets/loqoYeni.PNG" alt="Evrika" />
+      <span>Evrika Təhsil Ekosistemi</span>
     </div>
-  </div>  <div class="pay-amount-box">
-    <p>İmtahan Kuponu</p>
-    <h2 id="payment-amount-display">20.00 AZN</h2>
-    <div id="student-name" style="margin-top: 10px; font-size: 0.85rem; color: #94a3b8; font-weight: 600;"></div>
+
+    <div class="pay-card">
+      <div class="pay-header">
+        <h4 style="font-weight: 900; font-size: 1.1rem; color:#fff; display:flex; align-items:center; gap:8px;">
+          <i class="fas fa-lock" style="color:#10b981;"></i> EPOINT SECURE
+        </h4>
+        <div style="display: flex; gap: 10px; align-items:center;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" style="height: 20px;" alt="Mastercard">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" style="height: 14px;" alt="Visa">
+        </div>
+      </div>
+
+      <div class="amount-box">
+        <p id="payment-purpose">İmtahana Giriş Kuponu</p>
+        <h2 id="amount-display">20.00 AZN</h2>
+        <div id="student-info-tag" style="margin-top: 6px; font-size: 0.85rem; color: #38bdf8; font-weight: 700;"></div>
+      </div>
+
+      <!-- Fallback fields if no regId is passed -->
+      <div id="extra-fields" style="display: none; flex-direction: column; gap: 14px;">
+        <div class="input-grp">
+          <label>Şagirdin Adı və Soyadı *</label>
+          <input type="text" id="manual_name" class="custom-input" placeholder="Məsələn: Əli Məmmədov">
+        </div>
+        <div class="input-grp">
+          <label>Şagirdin Sinfi *</label>
+          <select id="manual_grade" class="custom-input" style="background: #0f172a; cursor: pointer;">
+            <option value="I sinif">I sinif</option>
+            <option value="II sinif">II sinif</option>
+            <option value="III sinif">III sinif</option>
+            <option value="IV sinif">IV sinif</option>
+            <option value="V sinif" selected>V sinif</option>
+            <option value="VI sinif">VI sinif</option>
+            <option value="VII sinif">VII sinif</option>
+            <option value="VIII sinif">VIII sinif</option>
+            <option value="IX sinif">IX sinif</option>
+            <option value="X sinif">X sinif</option>
+            <option value="XI sinif">XI sinif</option>
+          </select>
+        </div>
+        <div class="input-grp">
+          <label>Əlaqə Nömrəsi *</label>
+          <input type="tel" id="manual_phone" class="custom-input" placeholder="050 123 45 67">
+        </div>
+        <div class="input-grp">
+          <label>Valideyn E-mail (Kuponun göndərilməsi üçün)</label>
+          <input type="email" id="manual_email" class="custom-input" placeholder="valideyn@example.com">
+        </div>
+      </div>
+
+      <button type="button" class="pay-btn" id="paySubmitBtn" onclick="processPayment()">
+        <i class="fas fa-credit-card"></i> KARTLA ÖDƏNİŞƏ KEÇ
+      </button>
+
+      <p style="text-align:center; font-size: 0.75rem; color: rgba(255,255,255,0.4);">
+        <i class="fas fa-shield-alt"></i> PashaBank & Epoint 3D-Secure ilə tam qorunur
+      </p>
+    </div>
   </div>
 
-  <div style="text-align:center; margin-bottom: 20px;">
-    <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem;">
-      Ödənişiniz tam təhlükəsiz şəkildə Epoint gateway vasitəsilə həyata keçiriləcək. Davam etmək üçün aşağıdakı düyməni sıxın.
-    </p>
-  </div>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    let regId = urlParams.get('id') || urlParams.get('regId');
+    let regName = urlParams.get('name') || '';
+    let amountParam = urlParams.get('amount') || '20';
+    let emailParam = urlParams.get('email') || '';
+    let gradeParam = urlParams.get('grade') || '';
 
-  <button type="button" class="pay-btn" id="paySubmitBtn" onclick="processPayment()">EPOINT İLƏ ÖDƏ</button>
-  <p style="text-align:center; font-size: 0.75rem; color: rgba(255,255,255,0.4); margin-top: 25px;"><i class="fas fa-lock"></i> AES-256 Şifrələnmə ilə qorunur</p>
-</div>
+    document.getElementById('amount-display').innerText = parseFloat(amountParam).toFixed(2) + ' AZN';
 
-<script>
-  const urlParams = new URLSearchParams(window.location.search);
-  const regId = urlParams.get('id');
-  const regName = urlParams.get('name');
-  const amountParam = urlParams.get('amount') || '20';
-  const emailParam = urlParams.get('email') || '';
-  
-  document.getElementById('payment-amount-display').innerText = amountParam + '.00 AZN';
-  
-  if (regName) {
-    document.getElementById('student-name').innerText = "Şagird: " + regName;
-  }
-
-  async function processPayment() {
-    if (!regId) {
-      alert("Xəta: Qeydiyyat ID tapılmadı.");
-      return;
+    if (regName) {
+      document.getElementById('student-info-tag').innerText = "Şagird: " + regName;
     }
 
-    const btn = document.getElementById('paySubmitBtn');
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> BAĞLANTI QURULUR...';
-    btn.disabled = true;
+    if (!regId) {
+      document.getElementById('extra-fields').style.display = 'flex';
+    }
 
-    try {
+    async function processPayment() {
+      const btn = document.getElementById('paySubmitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> BAĞLANTI QURULUR...';
+
+      let finalDbId = regId;
+      let finalName = regName;
+      let finalEmail = emailParam;
+
+      if (!finalDbId) {
+        finalName = document.getElementById('manual_name').value.trim();
+        const phoneVal = document.getElementById('manual_phone').value.trim();
+        const gradeVal = document.getElementById('manual_grade').value;
+        finalEmail = document.getElementById('manual_email').value.trim();
+
+        if (!finalName || !phoneVal) {
+          alert('Zəhmət olmasa şagirdin adını və əlaqə nömrəsini daxil edin.');
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fas fa-credit-card"></i> KARTLA ÖDƏNİŞƏ KEÇ';
+          return;
+        }
+
+        try {
+          const createRes = await fetch('https://gziuhrlvagflokivfgwt.supabase.co/rest/v1/registrations', {
+            method: 'POST',
+            headers: {
+              'apikey': 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP',
+              'Authorization': 'Bearer sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP',
+              'Content-Type': 'application/json',
+              'Prefer': 'return=representation'
+            },
+            body: JSON.stringify({
+              payload: {
+                fullName: finalName,
+                student_name: finalName,
+                student_grade: gradeVal,
+                phone: phoneVal,
+                email: finalEmail,
+                source: 'Birbaşa Ödəniş Portalı',
+                status: 'Yeni',
+                payment_status: 'Ödənilməyib',
+                amount: parseFloat(amountParam),
+                date: new Date().toISOString()
+              }
+            })
+          });
+
+          if (createRes.ok) {
+            const data = await createRes.json();
+            if (data && data.length > 0) {
+              finalDbId = data[0].id;
+            }
+          }
+        } catch(e) {
+          console.error("Auto registration error:", e);
+        }
+      }
+
+      const cleanDbId = finalDbId ? parseInt(String(finalDbId).replace(/\D/g, ''), 10) : Math.floor(1000 + Math.random() * 9000);
+      const targetOrderId = "EV-" + String(cleanDbId).padStart(4, '0');
+
+      try {
         const response = await fetch('/api/epoint', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             amount: parseFloat(amountParam),
-            order_id: "EV-" + String(regId).padStart(4, '0'),
-            description: "Evrika Təhsil Ekosistemi - Xidmət ödənişi | Sifariş №: EV-" + String(regId).padStart(4, '0'),
-            regId: regId,
-            email: emailParam,
-            name: regName
+            order_id: targetOrderId,
+            description: "Evrika Təhsil Ekosistemi | Şagird: " + (finalName || 'Şagird') + " | Sifariş №: " + targetOrderId,
+            regId: cleanDbId,
+            email: finalEmail,
+            name: finalName
           })
         });
 
         const data = await response.json();
-        
+
         if (data.redirect_url) {
-            btn.innerHTML = 'EPOINT-Ə YÖNLƏNDIRILIR...';
-            setTimeout(() => {
-               window.location.href = data.redirect_url;
-            }, 1000);
+          localStorage.setItem('last_regId', cleanDbId);
+          localStorage.setItem('last_email', finalEmail);
+          localStorage.setItem('last_name', finalName);
+          btn.innerHTML = '<i class="fas fa-check"></i> EPOINT-Ə YÖNLƏNDİRİLİR...';
+          setTimeout(() => {
+            window.location.href = data.redirect_url;
+          }, 800);
         } else {
-            alert('Xəta baş verdi: ' + (data.message || data.error || 'Server Xətası') + '\\n\\nQeyd: Əməliyyatda xəta oldu.');
-            btn.innerHTML = 'YENİDƏN CƏHD ET';
-            btn.disabled = false;
+          alert('Xəta baş verdi: ' + (data.message || data.error || 'Server Xətası'));
+          btn.innerHTML = 'YENİDƏN CƏHD ET';
+          btn.disabled = false;
         }
-
-    } catch(e) { 
-        console.error('Fetch failed:', e);
-        alert('Serverlə əlaqə qurulmadı. Zəhmət olmasa Vercel-ə deploy etdiyinizə əmin olun!');
-        btn.innerHTML = 'EPOINT İLƏ ÖDƏ';
+      } catch (err) {
+        console.error('Payment fetch error:', err);
+        alert('Serverlə əlaqə qurulmadı. Zəhmət olmasa internet bağlantınızı yoxlayın.');
+        btn.innerHTML = '<i class="fas fa-credit-card"></i> KARTLA ÖDƏNİŞƏ KEÇ';
         btn.disabled = false;
+      }
     }
-  }
-</script>
-
-    
-
+  </script>
 </body>
 </html>

@@ -94,23 +94,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' };
 
     const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id');
+    const rawId = urlParams.get('id') || '';
+    const dbId = parseInt(rawId.replace(/\D/g, ''), 10);
 
     async function verifyTicket() {
-        if(!id) {
+        if(!dbId || isNaN(dbId)) {
             showError("Keçərsiz QR Kod", "Bu QR kodun tərkibində düzgün məlumat tapılmadı.");
             return;
         }
 
         // Local device lock for immediate feedback
-        if(localStorage.getItem('scanned_' + id)) {
-            showError("İSTİFADƏ EDİLİB", "Bu QR Kod artıq istifadə edilib (Cihaz Yaddaşı).");
+        if(localStorage.getItem('scanned_' + dbId)) {
+            showError("İSTİFADƏ EDİLİB", `EV-${String(dbId).padStart(4, '0')} kodlu kupon artıq bu cihazda oxudulub.`);
             return;
         }
 
         try {
             // Fetch registration (no cache)
-            const res = await fetch(`${API_URL}/registrations?id=eq.${id}`, { headers: HEADERS, cache: 'no-store' });
+            const res = await fetch(`${API_URL}/registrations?id=eq.${dbId}`, { headers: HEADERS, cache: 'no-store' });
             if(!res.ok) throw new Error("Məlumatı yükləmək mümkün olmadı");
             const data = await res.json();
 
@@ -119,20 +120,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 return;
             }
 
-            let payload = data[0].payload;
+            let payload = data[0].payload || {};
             
             // Check if already scanned
             if (payload.status === "QR İstifadə Edilib") {
-                showError("İSTİFADƏ EDİLİB", "Bu QR Kod artıq sistemdə istifadə edilib.");
+                showError("İSTİFADƏ EDİLİB", `Bu QR Kod artıq sistemdə istifadə edilib (Status: İstifadə Edilib).`);
                 return;
             }
 
             // Update existing row directly using PATCH (now allowed by RLS)
             payload.status = "QR İstifadə Edilib";
             if(!payload.note) payload.note = "";
-            payload.note += " | QR KOD OXUDULDU: " + new Date().toLocaleString();
+            payload.note += " | QR KOD OXUDULDU: " + new Date().toLocaleString('az-AZ');
 
-            const updateRes = await fetch(`${API_URL}/registrations?id=eq.${id}`, {
+            const updateRes = await fetch(`${API_URL}/registrations?id=eq.${dbId}`, {
                 method: 'PATCH',
                 headers: HEADERS,
                 body: JSON.stringify({ payload })
@@ -141,9 +142,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             if(!updateRes.ok) throw new Error("Sistemə yazmaq mümkün olmadı");
             
             // Mark as scanned locally
-            localStorage.setItem('scanned_' + id, 'true');
+            localStorage.setItem('scanned_' + dbId, 'true');
             
-            showSuccess("TƏSDİQLƏNDİ", `${payload.name || payload.fullName || 'İştirakçı'} üçün giriş təsdiqləndi! Xoş gəlmisiniz.`);
+            const studentName = payload.student_name || payload.fullName || payload.name || payload['Ad Soyad'] || 'Şagird';
+            const grade = payload.student_grade || payload.grade || payload['Sinif'] || '';
+            showSuccess("TƏSDİQLƏNDİ", `<b>${studentName}</b> ${grade ? `(${grade})` : ''} üçün imtahana giriş təsdiqləndi! Xoş gəlmisiniz.`);
 
         } catch(e) {
             showError("Xəta", "Sistemdə problem yarandı: " + e.message);
