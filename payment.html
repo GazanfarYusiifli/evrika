@@ -208,8 +208,8 @@
       </div>
 
       <div class="amount-box">
-        <p id="payment-purpose">İmtahana Giriş Kuponu (Test Rejimi)</p>
-        <h2 id="amount-display">0.01 AZN</h2>
+        <p id="payment-purpose">İmtahana Giriş Kuponu</p>
+        <h2 id="amount-display">35.00 AZN</h2>
         <div id="student-info-tag" style="margin-top: 6px; font-size: 0.85rem; color: #38bdf8; font-weight: 700;"></div>
       </div>
 
@@ -221,18 +221,19 @@
         </div>
         <div class="input-grp">
           <label>Şagirdin Sinfi *</label>
-          <select id="manual_grade" class="custom-input" style="background: #0f172a; cursor: pointer;">
-            <option value="I sinif">I sinif</option>
-            <option value="II sinif">II sinif</option>
-            <option value="III sinif">III sinif</option>
-            <option value="IV sinif">IV sinif</option>
-            <option value="V sinif" selected>V sinif</option>
-            <option value="VI sinif">VI sinif</option>
-            <option value="VII sinif">VII sinif</option>
-            <option value="VIII sinif">VIII sinif</option>
-            <option value="IX sinif">IX sinif</option>
-            <option value="X sinif">X sinif</option>
-            <option value="XI sinif">XI sinif</option>
+          <select id="manual_grade" class="custom-input" style="background: #0f172a; cursor: pointer;" onchange="handleGradeChange(this.value)">
+            <option value="Məktəbəqədər">Məktəbəqədər (25 AZN)</option>
+            <option value="I sinif">I sinif (35 AZN)</option>
+            <option value="II sinif">II sinif (35 AZN)</option>
+            <option value="III sinif">III sinif (35 AZN)</option>
+            <option value="IV sinif">IV sinif (35 AZN)</option>
+            <option value="V sinif" selected>V sinif (35 AZN)</option>
+            <option value="VI sinif">VI sinif (35 AZN)</option>
+            <option value="VII sinif">VII sinif (35 AZN)</option>
+            <option value="VIII sinif">VIII sinif (35 AZN)</option>
+            <option value="IX sinif">IX sinif (35 AZN)</option>
+            <option value="X sinif">X sinif (35 AZN)</option>
+            <option value="XI sinif">XI sinif (35 AZN)</option>
           </select>
         </div>
         <div class="input-grp">
@@ -259,9 +260,13 @@
     const urlParams = new URLSearchParams(window.location.search);
     let regId = urlParams.get('id') || urlParams.get('regId');
     let regName = urlParams.get('name') || '';
-    let amountParam = urlParams.get('amount') || '0.01';
+    let amountParam = urlParams.get('amount') || '35';
     let emailParam = urlParams.get('email') || '';
     let gradeParam = urlParams.get('grade') || '';
+
+    if (gradeParam && (gradeParam.includes('Məktəbəqədər') || gradeParam.includes('5-6'))) {
+      amountParam = '25';
+    }
 
     document.getElementById('amount-display').innerText = parseFloat(amountParam).toFixed(2) + ' AZN';
 
@@ -271,6 +276,15 @@
 
     if (!regId) {
       document.getElementById('extra-fields').style.display = 'flex';
+    }
+
+    function handleGradeChange(val) {
+      if (val === 'Məktəbəqədər') {
+        amountParam = '25';
+      } else {
+        amountParam = '35';
+      }
+      document.getElementById('amount-display').innerText = parseFloat(amountParam).toFixed(2) + ' AZN';
     }
 
     async function processPayment() {
