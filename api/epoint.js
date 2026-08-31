@@ -14,11 +14,11 @@ export default async function handler(req, res) {
 
   const orderData = {
     public_key: PUBLIC_KEY,
-    amount: amount || 20,
+    amount: amount !== undefined ? amount : 0.01,
     currency: "AZN",
     language: "az",
     order_id: finalOrderId,
-    description: description || ("Evrika Təhsil Ekosistemi - İmtahan Kuponu | Sifariş №: " + finalOrderId),
+    description: description || ("Evrika Təhsil Ekosistemi - İmtahan Kuponu (Test) | Sifariş №: " + finalOrderId),
     success_redirect_url: `https://evrikaliseyi.edu.az/success?regId=${dbId}&order_id=${encodeURIComponent(finalOrderId)}&email=${encodeURIComponent(email || '')}&name=${encodeURIComponent(name || '')}`,
     error_redirect_url: `https://evrikaliseyi.edu.az/error?regId=${dbId}&order_id=${encodeURIComponent(finalOrderId)}`,
     result_url: "https://evrikaliseyi.edu.az/api/epoint-callback"
