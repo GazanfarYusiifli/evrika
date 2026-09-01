@@ -3767,7 +3767,10 @@ fbq('track', 'PageView');
                 <div style="color:var(--text-muted); font-size:0.9rem; margin-bottom: 5px; display:flex; align-items:center; flex-wrap:wrap; gap:8px;">
                   <span>Ödəniş Statusu:</span>
                   <span style="color:${item.payment_status === 'Ödənilib' ? '#10b981' : '#ef4444'}; font-weight:800; background:${item.payment_status === 'Ödənilib' ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)'}; padding:4px 8px; border-radius:6px;">${item.payment_status || 'Ödənilməyib'}</span>
-                  ${item.payment_status !== 'Ödənilib' ? `<button onclick="syncEpointPayment(${item._db_id_}, this)" style="background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid #10b981; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;"><i class="fas fa-sync-alt"></i> Epoint-lə Yoxla</button>` : ''}
+                  ${item.payment_status !== 'Ödənilib' ? `
+                    <button onclick="syncEpointPayment(${item._db_id_}, this)" style="background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid #10b981; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;"><i class="fas fa-sync-alt"></i> Epoint-lə Yoxla</button>
+                    <button onclick="navigator.clipboard.writeText('https://evrikaliseyi.edu.az/payment.html?id=${item._db_id_}&name=${encodeURIComponent(item.fullName || item.name || '')}&amount=${encodeURIComponent(item.amount || '35')}&email=${encodeURIComponent(item.email || '')}'); alert('Ödəniş linki kopyalandı! Valideynə göndərə bilərsiniz:\\nhttps://evrikaliseyi.edu.az/payment.html?id=${item._db_id_}');" style="background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid #38bdf8; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;"><i class="fas fa-link"></i> Ödəniş Linkini Kopyala</button>
+                  ` : ''}
                 </div>
                 ${isScanned ? '<div style="color:#ef4444; font-weight:900; font-size:0.9rem;"><i class="fas fa-check-double"></i> Bu kodla giriş edilib</div>' : ''}
               </div>

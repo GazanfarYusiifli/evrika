@@ -18,9 +18,9 @@ export default async function handler(req, res) {
     currency: "AZN",
     language: "az",
     order_id: finalOrderId,
-    description: description || ("Evrika Təhsil Ekosistemi - İmtahan Kuponu | Sifariş №: " + finalOrderId),
-    success_redirect_url: `https://evrikaliseyi.edu.az/success?regId=${dbId}&order_id=${encodeURIComponent(finalOrderId)}&email=${encodeURIComponent(email || '')}&name=${encodeURIComponent(name || '')}`,
-    error_redirect_url: `https://evrikaliseyi.edu.az/error?regId=${dbId}&order_id=${encodeURIComponent(finalOrderId)}`,
+    description: "Evrika Imtahan Kuponu " + finalOrderId,
+    success_redirect_url: `https://evrikaliseyi.edu.az/success.html?regId=${dbId}&order_id=${encodeURIComponent(finalOrderId)}&email=${encodeURIComponent(email || '')}&name=${encodeURIComponent(name || '')}`,
+    error_redirect_url: `https://evrikaliseyi.edu.az/error.html?regId=${dbId}&order_id=${encodeURIComponent(finalOrderId)}`,
     result_url: "https://evrikaliseyi.edu.az/api/epoint-callback"
   };
 
