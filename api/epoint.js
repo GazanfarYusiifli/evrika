@@ -14,7 +14,7 @@ export default async function handler(req, res) {
 
   const orderData = {
     public_key: PUBLIC_KEY,
-    amount: amount !== undefined ? amount : 35,
+    amount: amount !== undefined ? amount : 0.01,
     currency: "AZN",
     language: "az",
     order_id: finalOrderId,
