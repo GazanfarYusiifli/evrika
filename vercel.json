@@ -5,6 +5,14 @@
   "cleanUrls": true,
   "rewrites": [
     {
+      "source": "/result",
+      "destination": "/api/result"
+    },
+    {
+      "source": "/api/epoint-callback",
+      "destination": "/api/result"
+    },
+    {
       "source": "/about",
       "destination": "/about.html"
     },

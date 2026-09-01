@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   }
 
   const dbId = regId ? parseInt(String(regId).replace(/\D/g, ''), 10) : parseInt(String(orderIdParam).replace(/\D/g, ''), 10);
-  const targetOrderId = orderIdParam || ("EV-" + String(dbId).padStart(4, '0'));
+  const targetOrderId = orderIdParam || (dbId ? ("EV-" + String(dbId).padStart(4, '0')) : "");
 
   try {
     // 1. Epoint-dən statusu yoxlayırıq
@@ -41,40 +41,61 @@ export default async function handler(req, res) {
     console.log(`Check status for ${targetOrderId}:`, epointData);
 
     // 2. Supabase-də həmin qeydi tapırıq
-    const getRes = await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${dbId}&select=payload`, {
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`
+    let targetRow = null;
+    if (dbId) {
+      const getRes = await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${dbId}&select=id,payload`, {
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`
+        }
+      });
+      if (getRes.ok) {
+        const records = await getRes.json();
+        if (records && records.length > 0) targetRow = records[0];
       }
-    });
-
-    if (!getRes.ok) {
-      return res.status(500).json({ message: 'Supabase oxuma xətası' });
     }
 
-    const records = await getRes.json();
-    if (!records || records.length === 0) {
-      return res.status(404).json({ message: 'Müraciət tapılmadı' });
+    if (!targetRow && targetOrderId) {
+      const searchRes = await fetch(`${SUPABASE_URL}/rest/v1/registrations?payload->>order_id=eq.${targetOrderId}&select=id,payload`, {
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`
+        }
+      });
+      if (searchRes.ok) {
+        const records = await searchRes.json();
+        if (records && records.length > 0) targetRow = records[0];
+      }
     }
 
-    let payload = records[0].payload || {};
+    if (!targetRow) {
+      return res.status(200).json({
+        status: epointData.status,
+        epointData,
+        isPaid: epointData.status === 'success'
+      });
+    }
+
+    let payload = targetRow.payload || {};
+    const rowId = targetRow.id;
     let updated = false;
 
     if (epointData.status === 'success') {
       if (payload.payment_status !== 'Ödənilib') {
         payload.status = 'Yeni';
         payload.payment_status = 'Ödənilib';
-        payload.order_id = "EV-" + String(dbId).padStart(4, '0');
+        payload.order_id = "EV-" + String(rowId).padStart(4, '0');
         payload.epoint_amount = epointData.amount;
-        payload.epoint_currency = epointData.currency;
-        payload.epoint_card_number = epointData.card_number || epointData.CARD_NUMBER || "";
-        payload.epoint_card_name = epointData.cardname || epointData.CARDNAME || epointData.card_name || "Bilinmir";
+        payload.epoint_currency = epointData.currency || 'AZN';
+        payload.epoint_card_number = epointData.card_mask || epointData.card_number || epointData.CARD_NUMBER || "";
+        payload.epoint_card_name = epointData.card_name || epointData.cardname || epointData.CARDNAME || "Bilinmir";
         payload.epoint_approval_code = epointData.approval_code || epointData.APPROVAL_CODE || "";
-        payload.epoint_result_code = epointData.result_code || epointData.RESULT_CODE || "000";
+        payload.epoint_result_code = epointData.code || epointData.result_code || epointData.RESULT_CODE || "000";
         payload.epoint_3dsecure = epointData.secure || epointData['3dsecure'] || "AUTHENTICATED";
         payload.epoint_bank_response = epointData.bank_response || epointData.bankResponse || "RESULT: OK";
         payload.epoint_transaction = epointData.transaction;
         payload.epoint_rrn = epointData.rrn;
+        payload.epoint_date = epointData.date || new Date().toISOString();
 
         if (!payload.note || !payload.note.includes('EPOINT VASİTƏSİLƏ ÖDƏNİLDİ')) {
           payload.note = (payload.note ? payload.note + ' | ' : '') + 'EPOINT VASİTƏSİLƏ ÖDƏNİLDİ. İmtahan giriş kuponu göndərildi.';
@@ -96,7 +117,7 @@ export default async function handler(req, res) {
               }
             });
 
-            const verifyUrl = encodeURIComponent(`https://evrikaliseyi.edu.az/verify.html?id=EV-${String(dbId).padStart(4, '0')}`);
+            const verifyUrl = encodeURIComponent(`https://evrikaliseyi.edu.az/verify.html?id=EV-${String(rowId).padStart(4, '0')}`);
             const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${verifyUrl}`;
 
             const mailOptions = {
@@ -117,7 +138,7 @@ export default async function handler(req, res) {
                       <div style="text-align: center; margin: 30px 0; padding: 20px; background: #f8fafc; border-radius: 12px; border: 1px dashed #cbd5e1;">
                           <img src="${qrUrl}" alt="QR Code" style="width: 150px; height: 150px; display: block; margin: 0 auto;">
                           <div style="margin-top: 15px; font-weight: bold; color: #0f172a; font-size: 14px; letter-spacing: 2px;">
-                              KOD: EV-${String(dbId).padStart(4, '0')}
+                              KOD: EV-${String(rowId).padStart(4, '0')}
                           </div>
                       </div>
                   </div>
@@ -132,13 +153,13 @@ export default async function handler(req, res) {
     } else {
       if (payload.payment_status !== 'Ödənilib') {
         payload.epoint_bank_response = epointData.bank_response || epointData.bankResponse || epointData.message || `Status: ${epointData.status}`;
-        payload.epoint_result_code = epointData.result_code || epointData.RESULT_CODE || "";
+        payload.epoint_result_code = epointData.code || epointData.result_code || epointData.RESULT_CODE || "";
         updated = true;
       }
     }
 
     if (updated) {
-      await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${dbId}`, {
+      await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${rowId}`, {
         method: 'PATCH',
         headers: {
           'apikey': SUPABASE_KEY,
