@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   const dbId = regId ? parseInt(String(regId).replace(/\D/g, ''), 10) : '';
   const finalOrderId = order_id || (dbId ? ("EV-" + String(dbId).padStart(4, '0')) : ("EV-" + Date.now()));
 
-  const parsedAmount = amount !== undefined && !isNaN(parseFloat(amount)) ? parseFloat(amount) : 35;
+  const parsedAmount = amount !== undefined && !isNaN(parseFloat(amount)) ? parseFloat(amount) : 0.01;
 
   const orderData = {
     public_key: PUBLIC_KEY,

@@ -551,8 +551,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               var currentSector = document.getElementById('mf_currentSector') ? document.getElementById('mf_currentSector').value : '';
               var previousSchool = document.getElementById('mf_previousSchool').value;
 
-              // Həqiqi qiymətlər: Məktəbəqədər - 25 AZN, 1-11 siniflər - 35 AZN
-              var amountNum = (grade === 'Məktəbəqədər' || grade === 'Məktəbəqədər (5-6 yaş)') ? '25' : '35';
+              // Test rejimi: 1 qəpik (0.01 AZN)
+              var amountNum = '0.01';
 
               var note = "Filial: EVRİKA Beynəlxalq<br>Elm və Texnologiya Liseyi<br>(Gənclik filialı) | Bölmə: " + sectorText + " | Sinif: " + grade + " | E-mail: " + email + " | Əvvəlki müəssisə: " + previousSchool + " | Hazırda oxuduğu sinif: " + currentClass + " | Hazırda oxuduğu bölmə: " + currentSector + " | Ödəniş Məbləği: " + amountNum + " AZN";
 
