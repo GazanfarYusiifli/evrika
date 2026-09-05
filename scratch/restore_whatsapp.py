@@ -5,8 +5,8 @@ import re
 # Target Settings
 WA_PHONE = "994555945300"
 WA_MSG = "Salam necə müraciət edə bilərəm?"
-API_URL = 'https://gziuhrlvagflokivfgwt.supabase.co/rest/v1'
-API_KEY = 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP'
+API_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1'
+API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE'
 
 final_button_html = f"""
     <!-- Global WhatsApp Direct Tracker -->

@@ -35,9 +35,9 @@ wa_snippet = """    <script>
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Göndərilir...';
         
         try {
-          await fetch('https://gziuhrlvagflokivfgwt.supabase.co/rest/v1/registrations', {
+          await fetch('https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/registrations', {
             method: 'POST',
-            headers: { 'apikey': 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP', 'Authorization': 'Bearer sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP', 'Content-Type': 'application/json' },
+            headers: { 'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE', 'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE', 'Content-Type': 'application/json' },
             body: JSON.stringify({ payload: { name: "Rəsmi WhatsApp", source: "whatsapp", status: "Yeni", note: "Salam, mən Evrika Təhsil Ekosistemi ilə maraqlanıram. Qəbul və qeydiyyat şərtləri barədə ətraflı məlumat almaq üçün müraciət edirəm.", date: new Date().toISOString() } })
           });
         } catch(e) {}

@@ -267,7 +267,7 @@
       
       // 2-ci dərəcə: Supabase-dən çəkib üzərinə əlavə etməyə (və ya yeniləməyə) cəhd edir
       try {
-          const res = await fetch('https://gziuhrlvagflokivfgwt.supabase.co/rest/v1/registrations?select=*&order=id.desc', {
+          const res = await fetch('https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/registrations?select=*&order=id.desc', {
               headers: {
                   'apikey': 'sb_publishable_2ze6sA6QRtBJos9jGIuKpA_08oDul8x',
                   'Authorization': 'Bearer sb_publishable_2ze6sA6QRtBJos9jGIuKpA_08oDul8x'
@@ -403,7 +403,7 @@
         // Məlumat Supabase-dən gəlibsə və ID-si varsa API-yə delete atırıq
         if(item._db_id_) {
             try {
-                await fetch('https://gziuhrlvagflokivfgwt.supabase.co/rest/v1/registrations?id=eq.' + item._db_id_, {
+                await fetch('https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/registrations?id=eq.' + item._db_id_, {
                     method: 'DELETE',
                     headers: {
                         'apikey': 'sb_publishable_2ze6sA6QRtBJos9jGIuKpA_08oDul8x',

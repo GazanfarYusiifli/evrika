@@ -26,8 +26,8 @@ new_content = """        function renderPartners(partners) {
         }
 
         async function initPartners() {
-          const API_URL = 'https://gziuhrlvagflokivfgwt.supabase.co/rest/v1';
-          const API_KEY = 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP';
+          const API_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1';
+          const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
           const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY };
           try {
             const res = await fetch(`${API_URL}/partners?select=*&order=sort_order.asc`, { headers: HEADERS });

@@ -3,8 +3,8 @@ import json
 
 ugurlar = [
     { "payload": { "name": "Evrika Uğurları", "uni": "", "img": "./assets/ugur1.jpeg" } },
-    { "payload": { "name": "Evrika Uğurları", "uni": "", "img": "https://gziuhrlvagflokivfgwt.supabase.co/storage/v1/object/public/ems-documents/uploads/1783333509288_0_WhatsApp_Image_2026-07-06_at_12.56.19.jpeg" } },
-    { "payload": { "name": "Evrika Uğurları", "uni": "", "img": "https://gziuhrlvagflokivfgwt.supabase.co/storage/v1/object/public/ems-documents/uploads/1783333448814_0_WhatsApp_Image_2026-07-06_at_12.56.20.jpeg" } },
+    { "payload": { "name": "Evrika Uğurları", "uni": "", "img": "https://osicmnagzeqkhwticiqp.supabase.co/storage/v1/object/public/ems-documents/uploads/1783333509288_0_WhatsApp_Image_2026-07-06_at_12.56.19.jpeg" } },
+    { "payload": { "name": "Evrika Uğurları", "uni": "", "img": "https://osicmnagzeqkhwticiqp.supabase.co/storage/v1/object/public/ems-documents/uploads/1783333448814_0_WhatsApp_Image_2026-07-06_at_12.56.20.jpeg" } },
     { "payload": { "name": "Evrika Uğurları", "uni": "", "img": "./assets/ugur2.jpeg" } },
     { "payload": { "name": "Evrika Uğurları", "uni": "", "img": "./assets/ugur3.jpeg" } },
     { "payload": { "name": "Evrika Uğurları", "uni": "", "img": "./assets/ugur4.jpeg" } },
@@ -13,10 +13,10 @@ ugurlar = [
     { "payload": { "name": "Evrika Uğurları", "uni": "", "img": "./assets/ugur7.jpeg" } }
 ]
 
-url = 'https://gziuhrlvagflokivfgwt.supabase.co/rest/v1/ugurlar'
+url = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/ugurlar'
 headers = {
-    'apikey': 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP',
-    'Authorization': 'Bearer sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP',
+    'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
+    'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
     'Content-Type': 'application/json',
     'Prefer': 'return=representation'
 }

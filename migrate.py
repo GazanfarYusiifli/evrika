@@ -2,11 +2,11 @@ import requests
 import json
 import time
 
-OLD_URL = 'https://gziuhrlvagflokivfgwt.supabase.co/rest/v1'
-OLD_KEY = 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP'
+OLD_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1'
+OLD_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE'
 
-NEW_URL = 'https://gziuhrlvagflokivfgwt.supabase.co/rest/v1'
-NEW_KEY = 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP'
+NEW_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1'
+NEW_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE'
 
 TABLES = ['registrations', 'news', 'ugurlar', 'partners', 'vacancies']
 

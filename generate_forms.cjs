@@ -153,11 +153,11 @@ function getHtml(branchTitle, sectors, sourceName, hasPayment) {
               };
 
               try {
-                const res = await fetch('https://gziuhrlvagflokivfgwt.supabase.co/rest/v1/registrations', {
+                const res = await fetch('https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/registrations', {
                   method: 'POST',
                   headers: {
-                    'apikey': 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP',
-                    'Authorization': 'Bearer sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP',
+                    'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
+                    'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
                     'Content-Type': 'application/json',
                     'Prefer': 'return=representation'
                   },

@@ -10,10 +10,10 @@ partners = [
     { "payload": { "name": 'Elm və Təhsil Nazirliyi', "logo_url": 'assets/partners/tehsilnazirliyi.png', "description": '', "sort_order": 6 } }
 ]
 
-url = 'https://gziuhrlvagflokivfgwt.supabase.co/rest/v1/partners'
+url = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/partners'
 headers = {
-    'apikey': 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP',
-    'Authorization': 'Bearer sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP',
+    'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
+    'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
     'Content-Type': 'application/json',
     'Prefer': 'return=representation'
 }

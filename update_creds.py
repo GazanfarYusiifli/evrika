@@ -4,8 +4,8 @@ import glob
 OLD_URL = 'gziuhrlvagflokivfgwt'
 NEW_URL = 'gziuhrlvagflokivfgwt'
 
-OLD_KEY = 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP'
-NEW_KEY = 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP'
+OLD_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE'
+NEW_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE'
 
 def replace_in_file(filepath):
     try:

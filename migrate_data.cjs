@@ -1,9 +1,9 @@
 const fs = require('fs');
-const OLD_URL = 'https://gziuhrlvagflokivfgwt.supabase.co/rest/v1';
-const OLD_KEY = 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP';
+const OLD_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1';
+const OLD_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
 
-const NEW_URL = 'https://gziuhrlvagflokivfgwt.supabase.co/rest/v1';
-const NEW_KEY = 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP';
+const NEW_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1';
+const NEW_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
 
 const TABLES = ['registrations', 'news', 'ugurlar', 'partners', 'vacancies'];
 

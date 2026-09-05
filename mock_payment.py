@@ -2,8 +2,8 @@ import requests
 import json
 import datetime
 
-SUPABASE_URL = "https://gziuhrlvagflokivfgwt.supabase.co"
-SUPABASE_KEY = "sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP"
+SUPABASE_URL = "https://osicmnagzeqkhwticiqp.supabase.co"
+SUPABASE_KEY = "sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE"
 
 payload = {
     "name": "TEST ŞAGİRD (Epoint Simulyasiya)",

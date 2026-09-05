@@ -4,8 +4,8 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Only POST allowed' });
   }
 
-  const SUPABASE_URL = "https://gziuhrlvagflokivfgwt.supabase.co";
-  const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || "sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP";
+  const SUPABASE_URL = "https://osicmnagzeqkhwticiqp.supabase.co";
+  const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || "sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE";
 
   const eventData = req.body || {};
   const eventStatus = eventData.status || req.headers['x-nexus-event'] || 'unknown';

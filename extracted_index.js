@@ -36,8 +36,8 @@ window.dataLayer = window.dataLayer || [];
 })();
 
 // Optimization: Start fetching data immediately, in parallel with DOM parsing
-        const ALUMNI_API_URL = 'https://gziuhrlvagflokivfgwt.supabase.co/rest/v1';
-        const ALUMNI_API_KEY = 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP';
+        const ALUMNI_API_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1';
+        const ALUMNI_API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
 
         // Define static fallback array first
         const STATIC_ALUMNI = [
@@ -202,11 +202,11 @@ window.updateSector = function() {
                   };
 
                   try {
-                    await fetch('https://gziuhrlvagflokivfgwt.supabase.co/rest/v1/registrations', {
+                    await fetch('https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/registrations', {
                       method: 'POST',
                       headers: {
-                        'apikey': 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP',
-                        'Authorization': 'Bearer sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP',
+                        'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
+                        'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
                         'Content-Type': 'application/json'
                       },
                       body: JSON.stringify({ payload: payloadData })
@@ -487,8 +487,8 @@ window.updateSector = function() {
 
         // Initialize Swiper for Parent Testimonials
         async function initParentTestimonials() {
-          const API_URL = 'https://gziuhrlvagflokivfgwt.supabase.co/rest/v1';
-          const API_KEY = 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP';
+          const API_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1';
+          const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
           const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY };
           
           const wrapper = document.getElementById('parent-testimonials-wrapper');
@@ -603,8 +603,8 @@ window.updateSector = function() {
         }
 
         async function initPartners() {
-          const API_URL = 'https://gziuhrlvagflokivfgwt.supabase.co/rest/v1';
-          const API_KEY = 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP';
+          const API_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1';
+          const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
           const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY };
           try {
             const res = await fetch(`${API_URL}/partners?select=*&order=sort_order.asc`, { headers: HEADERS });
@@ -618,8 +618,8 @@ window.updateSector = function() {
         }
 
         async function initNews() {
-          const API_URL = 'https://gziuhrlvagflokivfgwt.supabase.co/rest/v1';
-          const API_KEY = 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP';
+          const API_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1';
+          const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
           const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY };
           const container = document.getElementById('dynamic-news-container');
           if (!container) return;
@@ -671,8 +671,8 @@ window.updateSector = function() {
         }
 
         async function initPopups() {
-          const API_URL = 'https://gziuhrlvagflokivfgwt.supabase.co/rest/v1';
-          const API_KEY = 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP';
+          const API_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1';
+          const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
           const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY };
           
           if (sessionStorage.getItem('evrika_popup_seen')) return;
@@ -897,8 +897,8 @@ document.addEventListener("DOMContentLoaded", async function() {
         const grid = document.getElementById('home-news-grid');
         if(!grid) return;
         try {
-            const API_URL = 'https://gziuhrlvagflokivfgwt.supabase.co/rest/v1';
-            const API_KEY = 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP';
+            const API_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1';
+            const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
             const res = await fetch(`${API_URL}/news?select=*&order=id.desc&limit=3`, {
                 headers: { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY }
             });

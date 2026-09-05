@@ -151,13 +151,13 @@ window.onerror = function(msg, url, line, col, err) {
         if (e.key === 'Enter') attemptUnlock();
     });
 
-    const API_URL='https://gziuhrlvagflokivfgwt.supabase.co/rest/v1', API_KEY='sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP', HEADERS={ 'apikey':API_KEY, 'Authorization':'Bearer '+API_KEY, 'Content-Type':'application/json' };
+    const API_URL='https://osicmnagzeqkhwticiqp.supabase.co/rest/v1', API_KEY='sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE', HEADERS={ 'apikey':API_KEY, 'Authorization':'Bearer '+API_KEY, 'Content-Type':'application/json' };
     let rawData=[], filteredData=[], vacanciesData=[], newsData=[], ugurlarData=[], rawCalls=[], tasksData=JSON.parse(localStorage.getItem('evrika_tasks'))||[];
 
     // --- CALL CENTER LOGIC ---
     let supabaseClient = null;
     if (window.supabase) {
-        supabaseClient = window.supabase.createClient('https://gziuhrlvagflokivfgwt.supabase.co', API_KEY);
+        supabaseClient = window.supabase.createClient('https://osicmnagzeqkhwticiqp.supabase.co', API_KEY);
     }
     
     window.fetchCalls = async () => {
@@ -967,7 +967,7 @@ window.onerror = function(msg, url, line, col, err) {
                      let fileUrl = '';
                      try {
                          const fileName = `neticeler/${dbId}-${Date.now()}.pdf`;
-                         const uploadUrl = `https://gziuhrlvagflokivfgwt.supabase.co/storage/v1/object/ems-documents/${fileName}`;
+                         const uploadUrl = `https://osicmnagzeqkhwticiqp.supabase.co/storage/v1/object/ems-documents/${fileName}`;
                          
                          const uploadRes = await fetch(uploadUrl, {
                              method: 'POST',
@@ -980,7 +980,7 @@ window.onerror = function(msg, url, line, col, err) {
                          });
                          
                          if (uploadRes.ok) {
-                             fileUrl = `https://gziuhrlvagflokivfgwt.supabase.co/storage/v1/object/public/ems-documents/${fileName}`;
+                             fileUrl = `https://osicmnagzeqkhwticiqp.supabase.co/storage/v1/object/public/ems-documents/${fileName}`;
                          }
                      } catch(err) {
                          console.error("PDF upload error:", err);
@@ -1588,14 +1588,14 @@ window.onerror = function(msg, url, line, col, err) {
             
             const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
             const fileName = `uploads/${Date.now()}_${i}_${safeName}`;
-            const res = await fetch(`https://gziuhrlvagflokivfgwt.supabase.co/storage/v1/object/ems-documents/${fileName}`, {
+            const res = await fetch(`https://osicmnagzeqkhwticiqp.supabase.co/storage/v1/object/ems-documents/${fileName}`, {
                 method: 'POST',
                 headers: { 'apikey': API_KEY, 'Authorization': 'Bearer '+API_KEY },
                 body: file
             });
             
             if(res.ok) {
-                uploadedUrls.push(`https://gziuhrlvagflokivfgwt.supabase.co/storage/v1/object/public/ems-documents/${fileName}`);
+                uploadedUrls.push(`https://osicmnagzeqkhwticiqp.supabase.co/storage/v1/object/public/ems-documents/${fileName}`);
             } else {
                 console.error("Upload failed for", file.name, await res.text());
                 alert(`Xəta: ${file.name} yüklənə bilmədi.`);

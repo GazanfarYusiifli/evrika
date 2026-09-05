@@ -44,10 +44,10 @@ with open(file_admin, 'w', encoding='utf-8') as f:
 
 # 3. Update Supabase data to include description for the current popup
 # Find the active popup and patch it
-url = 'https://gziuhrlvagflokivfgwt.supabase.co/rest/v1/popups?select=*'
+url = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/popups?select=*'
 headers = {
-    'apikey': 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP',
-    'Authorization': 'Bearer sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP',
+    'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
+    'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
     'Content-Type': 'application/json'
 }
 req = urllib.request.Request(url, headers=headers)
@@ -59,7 +59,7 @@ try:
             payload = data[0]['payload']
             payload['desc'] = "2026/27-ci tədris ili üzrə şagird qəbulu davam edir."
             
-            patch_url = f"https://gziuhrlvagflokivfgwt.supabase.co/rest/v1/popups?id=eq.{popup_id}"
+            patch_url = f"https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/popups?id=eq.{popup_id}"
             patch_data = {"payload": payload}
             patch_req = urllib.request.Request(patch_url, data=json.dumps(patch_data).encode('utf-8'), headers=headers, method='PATCH')
             urllib.request.urlopen(patch_req)

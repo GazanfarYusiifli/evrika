@@ -308,7 +308,7 @@ const validateEmail = (email) => {
 // --- Unified Production-Grade Supabase Submission ---
 window.submitToSupabase = async (formData, btn, originalText) => {
   const SUBG_ID = 'gziuhrlvagflokivfgwt';
-  const API_KEY = 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP';
+  const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
   const STORAGE_URL = `https://${SUBG_ID}.supabase.co/storage/v1/object/ems-documents`;
   const DB_URL = `https://${SUBG_ID}.supabase.co/rest/v1/registrations`;
 
@@ -465,7 +465,7 @@ window.showPaymentModal = (crmForm, dbId) => {
             // Update CRM Payment Status
             crmForm['payment_status'] = 'Ödənilib';
             const SUBG_ID = 'gziuhrlvagflokivfgwt';
-            const API_KEY = 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP';
+            const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
             
             await fetch(`https://${SUBG_ID}.supabase.co/rest/v1/registrations?id=eq.${dbId}`, {
                 method: 'PATCH',
@@ -2326,10 +2326,10 @@ console.log('💎 Evrika Pro Optimized v4.0 Initialized');
 // --- Vacancy Notification Badge ---
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const res = await fetch('https://gziuhrlvagflokivfgwt.supabase.co/rest/v1/vacancies?select=id&limit=1', {
+        const res = await fetch('https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/vacancies?select=id&limit=1', {
             headers: {
-                'apikey': 'sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP',
-                'Authorization': 'Bearer sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP'
+                'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
+                'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE'
             }
         });
         if (res.ok) {

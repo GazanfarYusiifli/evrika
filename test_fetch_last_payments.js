@@ -1,6 +1,6 @@
 async function check() {
-  const SUPABASE_URL = "https://gziuhrlvagflokivfgwt.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_EaIB3Yv2CUyukO5l2KSaVw_9mF9n7HP";
+  const SUPABASE_URL = "https://osicmnagzeqkhwticiqp.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE";
   const res = await fetch(`${SUPABASE_URL}/rest/v1/registrations?select=id,created_at,payload&order=id.desc&limit=5`, {
     headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
   });
