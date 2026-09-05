@@ -3702,80 +3702,57 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           }
         });
 
-        // Initialize Swiper for Parent Testimonials
-        async function initParentTestimonials() {
-          const API_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1';
-          const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
-          const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY };
-          
+        // Static Parent Testimonials
+        const STATIC_PARENTS = [
+          {
+            name: "Zaur İsmayılov",
+            status: "2019-cu ildən bəri Evrika Liseyi valideynidir",
+            quote: "Evrika Liseyini seçdiyimiz üçün çox məmnunuq. Burada uşaqlara həm savadlı təhsil verilir, həm də onların fərdi inkişafına xüsusi diqqət yetirilir. Müəllimlər çox qayğıkeş və peşəkardırlar. Övladım dərslərə marağı artıb, özünü daha rahat və inamlı hiss edir. Məktəbdə yaradılan təhlükəsiz və nizamlı mühit də valideyn olaraq bizi rahat edir.",
+            avatar: "assets/parents/zauraliyev.png",
+            type: "text"
+          },
+          {
+            name: "Şahbaz Xuduoğlu",
+            status: "Evrika Liseyi valideyni",
+            quote: "Övladımızın təhsil və inkişafı üçün Evrika Liseyini seçdiyimiz üçün çox məmnunuq. Burada uşaqlara yalnız yüksək səviyyədə təhsil deyil, həm də onların fərdi inkişafına xüsusi diqqət göstərilir. Müəllimlərin peşəkarlığı və uşaqlara yanaşması bizi xüsusilə qane edir. Övladımızın dərslərə marağının artdığını və özünəinamının daha da gücləndiyini görürük. Evrika Liseyində yaradılan təhlükəsiz və sağlam mühit valideyn olaraq bizə böyük rahatlıq verir.",
+            avatar: "assets/parents/shahbaz.png",
+            type: "text"
+          }
+        ];
+
+        function renderParentTestimonials(parents) {
           const wrapper = document.getElementById('parent-testimonials-wrapper');
           if (!wrapper) return;
 
-          try {
-            const res = await fetch(`${API_URL}/parent_testimonials?select=*&order=id.desc`, { headers: HEADERS });
-            if (res.ok) {
-              const data = await res.json();
-              if (data.length > 0) {
-                let instagramCount = 0;
-                wrapper.innerHTML = data.map((item, idx) => {
-                  const p = item.payload;
-                  const isVideo = p.type === 'video';
-                  const isDark = idx % 2 !== 0;
-                  
-                  // Extract YouTube or Instagram ID for the cover if it's a video
-                  let coverImg = p.thumbnail_url || p.avatar || 'https://via.placeholder.com/400';
-                  if (isVideo && p.media_url) {
-                      const ytMatch = p.media_url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/);
-                      if (ytMatch && ytMatch[1]) {
-                          coverImg = `https://img.youtube.com/vi/${ytMatch[1]}/maxresdefault.jpg`;
-                      }
-                      
-                      const igMatch = p.media_url.match(/(?:instagram\.com\/(?:p|reel|tv)\/)([^/?#&]+)/);
-                      if (igMatch && igMatch[1]) {
-                          instagramCount++;
-                          // Alternating between cover 1 and cover 2 for variety
-                          coverImg = (instagramCount % 2 === 1) ? 'assets/parent_video_cover.png' : 'assets/parent_video_cover_2.png';
-                      }
-                  }
+          wrapper.innerHTML = parents.map((p, idx) => {
+            const isDark = idx % 2 !== 0;
+            const coverImg = p.avatar || p.thumbnail_url || 'https://via.placeholder.com/400';
+            const isVideo = p.type === 'video';
 
-
-                  // Auto-format status if it's just a year
-                  let displayStatus = p.status || '';
-                  if (/^\d{4}$/.test(displayStatus.trim())) {
-                      displayStatus = `${displayStatus}-cu ildən bəri Evrika Liseyi valideynidir`;
-                  }
-
-                  return `
-                    <div class="swiper-slide">
-                      <div class="parent-testimonial-card ${isDark ? 'card-dark' : ''}">
-                        <div class="parent-card-media">
-                          <img src="${coverImg}" alt="${p.name}">
-                          ${isVideo ? `
-                            <div class="play-btn-small" onclick="openParentVideo('${p.media_url}')">
-                              <i class="fas fa-play"></i>
-                            </div>
-                          ` : ''}
-                        </div>
-                        <div class="parent-card-text">
-                           <div class="parent-quote-wrapper">
-                             <div class="parent-quote">"${p.quote || ''}"</div>
-                           </div>
-                           <div class="parent-meta-box">
-                             <h4 style="margin: 0; font-size: 1.2rem; font-weight: 800;">${p.name}</h4>
-                             <p style="margin: 5px 0 0; font-size: 0.85rem; font-weight: 600;">${displayStatus}</p>
-                           </div>
-                        </div>
+            return `
+              <div class="swiper-slide">
+                <div class="parent-testimonial-card ${isDark ? 'card-dark' : ''}">
+                  <div class="parent-card-media">
+                    <img src="${coverImg}" alt="${p.name}">
+                    ${isVideo ? `
+                      <div class="play-btn-small" onclick="openParentVideo('${p.media_url}')">
+                        <i class="fas fa-play"></i>
                       </div>
-                    </div>
-                  `;
-                }).join('');
-              } else {
-                wrapper.innerHTML = '<div class="swiper-slide"><div class="parent-testimonial-card">Hələ ki rəy əlavə edilməyib.</div></div>';
-              }
-            }
-          } catch (e) {
-            console.error(e);
-          }
+                    ` : ''}
+                  </div>
+                  <div class="parent-card-text">
+                     <div class="parent-quote-wrapper">
+                       <div class="parent-quote">"${p.quote || ''}"</div>
+                     </div>
+                     <div class="parent-meta-box">
+                       <h4 style="margin: 0; font-size: 1.2rem; font-weight: 800;">${p.name}</h4>
+                       <p style="margin: 5px 0 0; font-size: 0.85rem; font-weight: 600;">${p.status || ''}</p>
+                     </div>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
 
           new Swiper('.parentTestimonialSwiper', {
             slidesPerView: 1,
@@ -3790,6 +3767,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               1024: { slidesPerView: 1.5 }
             }
           });
+        }
+
+        function initParentTestimonials() {
+          renderParentTestimonials(STATIC_PARENTS);
         }
 
         const STATIC_PARTNERS = [
