@@ -13,6 +13,22 @@
       "destination": "/api/result"
     },
     {
+      "source": "/nexus/webhook",
+      "destination": "/api/nexus-webhook"
+    },
+    {
+      "source": "/nexus/recording",
+      "destination": "/api/nexus-webhook"
+    },
+    {
+      "source": "/HMC/nexus/webhook",
+      "destination": "/api/nexus-webhook"
+    },
+    {
+      "source": "/HMC/nexus/recording",
+      "destination": "/api/nexus-webhook"
+    },
+    {
       "source": "/about",
       "destination": "/about.html"
     },
