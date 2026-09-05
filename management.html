@@ -105,6 +105,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <span class="dropdown-item-desc">Ən son xəbərlər</span>
               </div>
             </a>
+            <a href="management.html" class="dropdown-item">
+              <div class="item-icon"><i class="fas fa-users-cog"></i></div>
+              <div class="dropdown-item-text">
+                <span class="dropdown-item-title" data-i18n="nav-management">Rəhbərlik və İdarə Heyəti</span>
+                <span class="dropdown-item-desc" data-i18n="nav-management-desc">Peşəkar komandamız</span>
+              </div>
+            </a>
         </div>
       </div>
         <div class="nav-item-has-dropdown">
@@ -477,44 +484,255 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 
     <script>
-      const API_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1';
-      const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
-      const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY };
+      const STATIC_MANAGEMENT = [
+        {
+          category: 'leadership',
+          name: 'Xudaqulu Rzayev',
+          role: 'Evrika Təhsil Ekosistemi Üzrə Təsisçi',
+          img: './ffounder.jpeg',
+          quote: '«Evrika Təhsil Ekosistemi» hər bir şagirdin potensialını gələcəyə çevirən inkişaf mühitidir.'
+        },
+        {
+          category: 'leadership',
+          name: 'Ofeliya Muradova',
+          role: 'Evrika Beynəlxalq Elm və Texnologiya Liseyi ( Nərimanov filialı üzrə) Direktor',
+          img: './assets/loqoYeni.PNG'
+        },
+        {
+          category: 'leadership',
+          name: 'Elvin Bədirov',
+          role: 'Evrika Beynəlxalq Elm və Texnologiya Liseyi ( Gənclik filialı üzrə ) Direktor',
+          img: './assets/loqoYeni.PNG'
+        },
+        {
+          category: 'board',
+          name: 'Bahar İsgəndərova',
+          role: 'Təmayül işləri üzrə direktor müavini',
+          img: './assets/loqoYeni.PNG'
+        },
+        {
+          category: 'board',
+          name: 'Könül Mustafayeva',
+          role: 'Maliyyə Direktoru',
+          img: './assets/loqoYeni.PNG'
+        },
+        {
+          category: 'board',
+          name: 'Lalə Mürsalzadə',
+          role: 'İnsan Resursları üzrə departament rəhbəri',
+          img: './assets/loqoYeni.PNG'
+        },
+        {
+          category: 'board',
+          name: 'Günel Qafarova',
+          role: 'Valideynlərlə İş üzrə direktor müavini',
+          img: './assets/loqoYeni.PNG'
+        },
+        {
+          category: 'board',
+          name: 'Elnarə Əmiraslanova',
+          role: 'İbtidai təhsil üzrə direktor müavini',
+          img: './assets/loqoYeni.PNG'
+        },
+        {
+          category: 'board',
+          name: 'Sevda İbrahimova',
+          role: 'Ümumi Orta Təhsil üzrə direktor müavini',
+          img: './assets/loqoYeni.PNG'
+        },
+        {
+          category: 'board',
+          name: 'Kəmalə Cavadova',
+          role: 'İngilis bölməsi rəhbəri',
+          img: './assets/loqoYeni.PNG'
+        },
+        {
+          category: 'board',
+          name: 'Nazan Akkoyun',
+          role: 'Türk bölməsi üzrə dir. müavini',
+          img: './assets/loqoYeni.PNG'
+        },
+        {
+          category: 'board',
+          name: 'Gülnar Piroğlanova',
+          role: 'İbtidai tərbiyə işləri müavini',
+          img: './assets/loqoYeni.PNG'
+        },
+        {
+          category: 'board',
+          name: 'Aygün Həmzəyeva',
+          role: 'Yuxarı sinif tərbiyə işləri müavini',
+          img: './assets/loqoYeni.PNG'
+        },
+        {
+          category: 'board',
+          name: 'Orxan Əsgərov',
+          role: 'İdman və Dərnəklər müavini',
+          img: './assets/loqoYeni.PNG'
+        },
+        {
+          category: 'board',
+          name: 'Aygül Mirzəyeva',
+          role: 'Təhsil Nazirliyi üzrə koordinator',
+          img: './assets/loqoYeni.PNG'
+        },
+        {
+          category: 'board',
+          name: 'Vəfa Xıdırova',
+          role: 'Həkim',
+          img: './assets/loqoYeni.PNG'
+        },
+        {
+          category: 'board',
+          name: 'Afaq Alıyeva',
+          role: 'Psixoloq',
+          img: './assets/loqoYeni.PNG'
+        },
+        {
+          category: 'board',
+          name: 'Elməddin Musayev',
+          role: 'STEAM rəhbəri',
+          img: './assets/loqoYeni.PNG'
+        }
+      ];
 
-      async function fetchManagement() {
-        try {
-          const res = await fetch(`${API_URL}/management?select=*&order=id.asc`, { headers: HEADERS });
-          if (!res.ok) return;
-          const data = await res.json();
-          renderMembers(data.map(r => r.payload));
-        } catch (e) { console.error(e); }
-      }
+      const dicts = {
+        en: {
+            "Təmayül işləri üzrə direktor müavini": "DEPUTY DIRECTOR FOR SPECIALIZED AFFAIRS",
+            "Maliyyə Direktoru": "FINANCE DIRECTOR",
+            "İnsan Resursları üzrə departament rəhbəri": "HEAD OF HUMAN RESOURCES",
+            "Valideynlərlə İş üzrə direktor müavini": "DEPUTY DIRECTOR FOR PARENT AFFAIRS",
+            "İbtidai təhsil üzrə direktor müavini": "DEPUTY DIRECTOR FOR PRIMARY EDUCATION",
+            "Ümumi Orta Təhsil üzrə direktor müavini": "DEPUTY DIRECTOR FOR GENERAL SECONDARY EDUCATION",
+            "İngilis bölməsi rəhbəri": "HEAD OF ENGLISH DEPARTMENT",
+            "Türk bölməsi üzrə dir. müavini": "DEPUTY DIRECTOR FOR TURKISH DEPARTMENT",
+            "İbtidai tərbiyə işləri müavini": "DEPUTY DIRECTOR FOR PRIMARY UPBRINGING",
+            "Yuxarı sinif tərbiyə işləri müavini": "DEPUTY DIRECTOR FOR UPPER GRADES UPBRINGING",
+            "İdman və Dərnəklər müavini": "DEPUTY DIRECTOR FOR SPORTS AND CLUBS",
+            "Təhsil Nazirliyi üzrə koordinator": "COORDINATOR FOR THE MINISTRY OF EDUCATION",
+            "Həkim": "DOCTOR",
+            "Psixoloq": "PSYCHOLOGIST",
+            "STEAM rəhbəri": "STEAM LEADER",
+            "Evrika Təhsil Ekosistemi Üzrə Təsisçi": "FOUNDER OF EVRIKA EDUCATION ECOSYSTEM",
+            "Evrika Beynəlxalq Elm və Texnologiya Liseyi ( Nərimanov filialı üzrə) Direktor": "DIRECTOR OF EVRIKA INT. LYCEUM OF SCIENCE AND TECHNOLOGY (NARIMANOV)",
+            "Evrika Beynəlxalq Elm və Texnologiya Liseyi ( Gənclik filialı üzrə ) Direktor": "DIRECTOR OF EVRIKA INT. LYCEUM OF SCIENCE AND TECHNOLOGY (GANJLIK)",
+            "Xudaqulu Rzayev": "Khudaqulu Rzayev",
+            "Ofeliya Muradova": "Ofeliya Muradova",
+            "Elvin Bədirov": "Elvin Badirov",
+            "Bahar İsgəndərova": "Bahar Isgandarova",
+            "Könül Mustafayeva": "Konul Mustafayeva",
+            "Lalə Mürsalzadə": "Lala Mursalzada",
+            "Günel Qafarova": "Gunel Qafarova",
+            "Elnarə Əmiraslanova": "Elnara Amiraslanova",
+            "Sevda İbrahimova": "Sevda Ibrahimova",
+            "Kəmalə Cavadova": "Kamala Javadova",
+            "Nazan Akkoyun": "Nazan Akkoyun",
+            "Gülnar Piroğlanova": "Gulnar Piroghlanova",
+            "Aygün Həmzəyeva": "Aygun Hamzayeva",
+            "Orxan Əsgərov": "Orkhan Asgarov",
+            "Aygül Mirzəyeva": "Aygul Mirzayeva",
+            "Vəfa Xıdırova": "Vafa Khidirova",
+            "Afaq Alıyeva": "Afaq Aliyeva",
+            "Elməddin Musayev": "Elmaddin Musayev"
+        },
+        ru: {
+            "Təmayül işləri üzrə direktor müavini": "ЗАМЕСТИТЕЛЬ ДИРЕКТОРА ПО ПРОФИЛЬНЫМ ДЕЛАМ",
+            "Maliyyə Direktoru": "ФИНАНСОВЫЙ ДИРЕКТОР",
+            "İnsan Resursları üzrə departament rəhbəri": "РУКОВОДИТЕЛЬ ОТДЕЛА КАДРОВ",
+            "Valideynlərlə İş üzrə direktor müavini": "ЗАМЕСТИТЕЛЬ ДИРЕКТОРА ПО РАБОТЕ С РОДИТЕЛЯМИ",
+            "İbtidai təhsil üzrə direktor müavini": "ЗАМЕСТИТЕЛЬ ДИРЕКТОРА ПО НАЧАЛЬНОМУ ОБРАЗОВАНИЮ",
+            "Ümumi Orta Təhsil üzrə direktor müavini": "ЗАМЕСТИТЕЛЬ ДИРЕКТОРА ПО ОБЩЕМУ СРЕДНЕМУ ОБРАЗОВАНИЮ",
+            "İngilis bölməsi rəhbəri": "ЗАВЕДУЮЩИЙ АНГЛИЙСКИМ ОТДЕЛЕНИЕМ",
+            "Türk bölməsi üzrə dir. müavini": "ЗАМЕСТИТЕЛЬ ДИРЕКТОРА ПО ТУРЕЦКОМУ ОТДЕЛЕНИЮ",
+            "İbtidai tərbiyə işləri müavini": "ЗАМЕСТИТЕЛЬ ДИРЕКТОРА ПО ВОСПИТАТЕЛЬНОЙ РАБОТЕ",
+            "Yuxarı sinif tərbiyə işləri müavini": "ЗАМЕСТИТЕЛЬ ДИРЕКТОРА ПО ВОСПИТАТЕЛЬНОЙ РАБОТЕ (СТАРШИЕ КЛАССЫ)",
+            "İdman və Dərnəklər müavini": "ЗАМЕСТИТЕЛЬ ДИРЕКТОРА ПО СПОРТУ И КРУЖКАМ",
+            "Təhsil Nazirliyi üzrə koordinator": "КООРДИНАТОР ПО ЛИНИИ МИНИСТЕРСТВА ОБРАЗОВАНИЯ",
+            "Həkim": "ВРАЧ",
+            "Psixoloq": "ПСИХОЛОГ",
+            "STEAM rəhbəri": "РУКОВОДИТЕЛЬ STEAM",
+            "Evrika Təhsil Ekosistemi Üzrə Təsisçi": "УЧРЕДИТЕЛЬ ОБРАЗОВАТЕЛЬНОЙ ЭКОСИСТЕМЫ ЭВРИКА",
+            "Evrika Beynəlxalq Elm və Texnologiya Liseyi ( Nərimanov filialı üzrə) Direktor": "ДИРЕКТОР МЕЖДУНАРОДНОГО ЛИЦЕЯ (НАРИМАНОВ)",
+            "Evrika Beynəlxalq Elm və Texnologiya Liseyi ( Gənclik filialı üzrə ) Direktor": "ДИРЕКТОР МЕЖДУНАРОДНОГО ЛИЦЕЯ (ГЯНДЖЛИК)",
+            "Xudaqulu Rzayev": "Худагулу Рзаев",
+            "Ofeliya Muradova": "Офелия Мурадова",
+            "Elvin Bədirov": "Эльвин Бадиров",
+            "Bahar İsgəndərova": "Бахар Искендерова",
+            "Könül Mustafayeva": "Кенюль Мустафаева",
+            "Lalə Mürsalzadə": "Лала Мурсалзаде",
+            "Günel Qafarova": "Гюнель Гафарова",
+            "Elnarə Əmiraslanova": "Эльнара Амирасланова",
+            "Sevda İbrahimova": "Севда Ибрагимова",
+            "Kəmalə Cavadova": "Кямаля Джавадова",
+            "Nazan Akkoyun": "Назан Аккоюн",
+            "Gülnar Piroğlanova": "Гюльнар Пирогланова",
+            "Aygün Həmzəyeva": "Айгюн Гамзаева",
+            "Orxan Əsgərov": "Орхан Аскеров",
+            "Aygül Mirzəyeva": "Айгюль Мирзаева",
+            "Vəfa Xıdırova": "Вафа Хидирова",
+            "Afaq Alıyeva": "Афаг Алыева",
+            "Elməddin Musayev": "Эльмаддин Мусаев"
+        }
+      };
+
+      let currentMembers = STATIC_MANAGEMENT;
 
       function renderMembers(members) {
+        if (members) currentMembers = members;
         const leadCont = document.getElementById('leadership-container');
         const boardCont = document.getElementById('board-container');
         if (!leadCont || !boardCont) return;
         leadCont.innerHTML = ''; boardCont.innerHTML = '';
-        members.forEach(m => {
+        
+        const currentLang = localStorage.getItem('evrika-lang') || 'az';
+        const dict = dicts[currentLang] || {};
+
+        const dataToRender = (currentMembers && currentMembers.length > 0) ? currentMembers : STATIC_MANAGEMENT;
+
+        dataToRender.forEach(m => {
+          const translatedName = dict[m.name] || window.translations?.[currentLang]?.[m.name] || m.name;
+          const translatedRole = dict[m.role] || window.translations?.[currentLang]?.[m.role] || m.role;
+          const isLead = m.category === 'leadership';
+          
           const html = `
-            <div class="team-card" style="${m.category === 'leadership' ? 'aspect-ratio: 1/1.2;' : ''}">
-              <div class="team-card-img"><img src="${m.img}" alt="${m.name}"></div>
-              <div class="team-overlay" style="${m.category === 'leadership' ? 'padding: 15px 8px 12px;' : ''}">
-                <div class="team-name" style="${m.category === 'leadership' ? 'font-size: 0.9rem; margin-bottom: 2px;' : ''}">${m.name}</div>
-                <div class="team-role" style="${m.category === 'leadership' ? 'font-size: 0.65rem;' : ''}">${m.role}</div>
-                ${m.category === 'leadership' && m.quote ? `<div class="team-quote" style="font-size: 0.6rem; margin-top: 5px;">${m.quote}</div>` : ''}
+            <div class="team-card" style="${isLead ? 'aspect-ratio: 1/1.2;' : ''}">
+              <div class="team-card-img"><img src="${m.img}" alt="${m.name}" loading="lazy" onerror="this.src='./assets/loqoYeni.PNG'"></div>
+              <div class="team-overlay" style="${isLead ? 'padding: 15px 8px 12px;' : ''}">
+                <div class="team-name" style="${isLead ? 'font-size: 0.95rem; margin-bottom: 2px;' : ''}">${translatedName}</div>
+                <div class="team-role" style="${isLead ? 'font-size: 0.7rem;' : ''}">${translatedRole}</div>
+                ${isLead && m.quote ? `<div class="team-quote" style="font-size: 0.65rem; margin-top: 5px;">${m.quote}</div>` : ''}
               </div>
             </div>`;
-          if (m.category === 'leadership') leadCont.innerHTML += html;
+          if (isLead) leadCont.innerHTML += html;
           else boardCont.innerHTML += html;
         });
       }
 
+      async function initManagement() {
+        renderMembers(STATIC_MANAGEMENT);
+        try {
+          const API_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1';
+          const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
+          const res = await fetch(`${API_URL}/management?select=*&order=id.asc`, { 
+            headers: { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY },
+            cache: 'no-store'
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.length > 0) {
+              renderMembers(data.map(r => r.payload || r));
+            }
+          }
+        } catch (e) {
+          console.warn('Using static management data fallback:', e);
+        }
+      }
+
       document.addEventListener('DOMContentLoaded', () => {
-        fetchManagement();
-        setTimeout(() => { document.querySelectorAll('.reveal').forEach(r => r.classList.add('visible')); }, 100);
+        initManagement();
+        window.addEventListener('languageChanged', () => renderMembers());
       });
-    </script>
+</script>
 
     
 

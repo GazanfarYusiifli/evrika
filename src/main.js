@@ -749,6 +749,8 @@ const translations = {
     "modal-desc": "2026/27-ci tədris ili üzrə şagird qəbulu davam edir.",
     "modal-btn": "Qeydiyyatdan keç",
     "nav-about": "Haqqımızda",
+    "nav-management": "Rəhbərlik və İdarə Heyəti",
+    "nav-management-desc": "Peşəkar komandamız",
     "nav-academic": "Akademik İstiqamətlər",
     "nav-vacancy": "Vakansiya & Təcrübə",
     "nav-journal": "Evrika Jurnalı",
@@ -1330,6 +1332,8 @@ const translations = {
     "modal-desc": "Student admission for the 2026/27 academic year is ongoing.",
     "modal-btn": "Register now",
     "nav-about": "About Us",
+    "nav-management": "Leadership & Management",
+    "nav-management-desc": "Our leadership team",
     "nav-academic": "Academic Branches",
     "nav-vacancy": "Careers & Internship",
     "nav-journal": "Evrika Journal",
@@ -1911,6 +1915,8 @@ const translations = {
     "modal-desc": "Продолжается прием учащихся на 2026/27 учебный год.",
     "modal-btn": "Зарегистрироваться",
     "nav-about": "О нас",
+    "nav-management": "Руководство и Правление",
+    "nav-management-desc": "Наша профессиональная команда",
     "nav-academic": "Академические направления",
     "nav-vacancy": "Вакансии и Стажировки",
     "nav-journal": "Журнал Эврика",
@@ -2241,6 +2247,7 @@ window.updateContent = function(lang) {
   document.querySelectorAll('.lang-text').forEach(e => {
     e.innerText = lang.toUpperCase();
   });
+  window.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
 };
 
 window.toggleLang = function(btn) {
