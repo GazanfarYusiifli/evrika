@@ -307,7 +307,7 @@ const validateEmail = (email) => {
 
 // --- Unified Production-Grade Supabase Submission ---
 window.submitToSupabase = async (formData, btn, originalText) => {
-  const SUBG_ID = 'gziuhrlvagflokivfgwt';
+  const SUBG_ID = 'osicmnagzeqkhwticiqp';
   const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
   const STORAGE_URL = `https://${SUBG_ID}.supabase.co/storage/v1/object/ems-documents`;
   const DB_URL = `https://${SUBG_ID}.supabase.co/rest/v1/registrations`;
@@ -464,7 +464,7 @@ window.showPaymentModal = (crmForm, dbId) => {
         setTimeout(async () => {
             // Update CRM Payment Status
             crmForm['payment_status'] = 'Ödənilib';
-            const SUBG_ID = 'gziuhrlvagflokivfgwt';
+            const SUBG_ID = 'osicmnagzeqkhwticiqp';
             const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
             
             await fetch(`https://${SUBG_ID}.supabase.co/rest/v1/registrations?id=eq.${dbId}`, {

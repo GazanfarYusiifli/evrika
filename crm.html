@@ -343,11 +343,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   // Destruktiv yazılmanı sildim. Yəni Supabase-dən gələn məlumatlarla Locally var olanlar birləşdirilir, üst-üstə yazmır!
                   // Yalnız Supabase-də olub Local-da olmayanları əlavə edirik (ID yoxlayırıq).
                   supabaseData.forEach(sbItem => {
-                      const exists = rawData.some(localItem => localItem.submissionDate === sbItem.submissionDate);
+                      const exists = rawData.some(localItem => 
+                          (localItem._db_id_ && sbItem._db_id_ && localItem._db_id_ === sbItem._db_id_) ||
+                          (localItem.submissionDate && sbItem.submissionDate && localItem.submissionDate === sbItem.submissionDate) ||
+                          (localItem.date && sbItem.date && localItem.date === sbItem.date)
+                      );
                       if(!exists) rawData.push(sbItem);
                   });
                   // Tarixə görə yenidən düzürük
-                  rawData.sort((a,b) => new Date(b.submissionDate) - new Date(a.submissionDate));
+                  rawData.sort((a,b) => {
+                      const dateA = new Date(a.date || a.submissionDate || a.created_at || 0);
+                      const dateB = new Date(b.date || b.submissionDate || b.created_at || 0);
+                      return dateB - dateA;
+                  });
                   localStorage.setItem('evrika_crm_data', JSON.stringify(rawData));
               }
           }
@@ -362,7 +370,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       document.getElementById('total-count').innerText = rawData.length;
       
       const todayStr = new Date().toISOString().split('T')[0];
-      const todayCount = rawData.filter(item => item.submissionDate && item.submissionDate.startsWith(todayStr)).length;
+      const todayCount = rawData.filter(item => {
+        const d = (item.date || item.submissionDate || item.created_at || '');
+        return typeof d === 'string' && d.startsWith(todayStr);
+      }).length;
       document.getElementById('today-count').innerText = todayCount;
 
       const tbody = document.getElementById('crm-tbody');
@@ -376,13 +387,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       rawData.forEach((item, index) => {
         let sdName = item['[2.Şagird] Adı'];
         let demoName = item['[Demo Qeydiyyat] Ad Soyad'];
-        const studentName = (sdName ? sdName + ' ' + (item['[2.Şagird] Soyadı']||'') : (demoName || 'Naməlum'));
+        const studentName = item.name || item.fullName || (sdName ? sdName + ' ' + (item['[2.Şagird] Soyadı']||'') : '') || demoName || item['[1.Əlaqə] Valideyn Adı'] || 'Naməlum';
         
-        const parentPhone = item['[1.Əlaqə] Əlaqə Nömrəsi'] || item['[3.Ata] Nömrəsi'] || item['[Demo Qeydiyyat] Telefon Nömrəsi'] || '-';
-        const section = item['[2.Şagird] Təhsil Növü'] || item['[2.Şagird] Müraciət Bölməsi'] || (item['[Demo Qeydiyyat] Email'] ? 'Demo Müraciət' : '-');
+        const parentPhone = item.phone || item.tel || item['[1.Əlaqə] Əlaqə Nömrəsi'] || item['[3.Ata] Nömrəsi'] || item['[Demo Qeydiyyat] Telefon Nömrəsi'] || '-';
+        const section = item.source || item.student_grade || item['[2.Şagird] Təhsil Növü'] || item['[2.Şagird] Müraciət Bölməsi'] || (item['[Demo Qeydiyyat] Email'] ? 'Demo Müraciət' : '-');
         
-        const dateObj = new Date(item.submissionDate || Date.now());
-        const dateStr = dateObj.toLocaleDateString('az-AZ') + ' ' + dateObj.toLocaleTimeString('az-AZ', {hour: '2-digit', minute:'2-digit'});
+        const rawDate = item.date || item.submissionDate || item.created_at || Date.now();
+        const dateObj = new Date(rawDate);
+        const dateStr = !isNaN(dateObj.getTime()) ? (dateObj.toLocaleDateString('az-AZ') + ' ' + dateObj.toLocaleTimeString('az-AZ', {hour: '2-digit', minute:'2-digit'})) : '-';
+
+        let statusText = item.status || 'Yeni';
+        let statusBadgeClass = 'badge new';
+        if (item.payment_status === 'Ödənilib') {
+          statusText = 'Ödənilib (' + (item.amount || 'Kart') + ')';
+        }
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -390,7 +408,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <td>${parentPhone}</td>
           <td><span style="opacity:0.8;">${section}</span></td>
           <td style="color: var(--text-muted); font-size:0.9rem;">${dateStr}</td>
-          <td><span class="badge new">${item.status || 'Yeni'}</span></td>
+          <td><span class="${statusBadgeClass}">${statusText}</span></td>
           <td>
             <button class="btn-view" onclick="viewDetails(${index})"><i class="fas fa-eye"></i> Bax</button>
             <button class="btn-danger" onclick="deleteItem(${index})"><i class="fas fa-trash"></i></button>
@@ -407,6 +425,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       // Categorize fields broadly based on keys
       const groups = {
+        'Müraciət Məlumatları': {},
         'Şagird Məlumatları': {},
         'Ata / Qəyyum Məlumatları': {},
         'Ana Məlumatları': {},
@@ -421,10 +440,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         let label = key.replace(/\[.*?\]\s*/, ''); // Remove the prefixes
         let val = item[key] || '-';
 
-        if(key.includes('[2.Şagird]')) groups['Şagird Məlumatları'][label] = val;
-        else if(key.includes('[3.Ata]') || key.includes('[1.Əlaqə]')) groups['Ata / Qəyyum Məlumatları'][label] = val;
-        else if(key.includes('[3.Ana]')) groups['Ana Məlumatları'][label] = val;
-        else groups['Digər / Əlavə'][label] = val;
+        if(key === 'name' || key === 'fullName' || key === 'student_grade' || key.includes('[2.Şagird]')) {
+          groups['Şagird Məlumatları'][label] = val;
+        } else if(key.includes('[3.Ata]') || key.includes('[1.Əlaqə]')) {
+          groups['Ata / Qəyyum Məlumatları'][label] = val;
+        } else if(key.includes('[3.Ana]')) {
+          groups['Ana Məlumatları'][label] = val;
+        } else if(['source', 'payment_status', 'amount', 'date', 'order_id'].includes(key)) {
+          groups['Müraciət Məlumatları'][label] = val;
+        } else {
+          groups['Digər / Əlavə'][label] = val;
+        }
       }
 
       for(let g in groups) {
