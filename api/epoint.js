@@ -10,7 +10,20 @@ export default async function handler(req, res) {
 
   const { amount, order_id, description, regId, email, name } = req.body;
   const dbId = regId ? parseInt(String(regId).replace(/\D/g, ''), 10) : '';
-  const finalOrderId = order_id || (dbId ? ("EV-" + String(dbId).padStart(4, '0')) : ("EV-" + Date.now()));
+  
+  // Hər yeni cəhd üçün unikal order_id generasiya edirik (məsələn: EV-5074-8391)
+  // Beləliklə istifadəçi bank səhifəsini bağlayıb yenidən daxil olduqda Epoint "Duplicate order_id" xətası vermir
+  let finalOrderId = order_id;
+  if (!finalOrderId) {
+    if (dbId) {
+      finalOrderId = `EV-${String(dbId).padStart(4, '0')}-${Date.now().toString().slice(-4)}`;
+    } else {
+      finalOrderId = `EV-${Date.now()}`;
+    }
+  } else if (!finalOrderId.includes('-') || finalOrderId.split('-').length === 2) {
+    // Əgər sırf EV-5074 göndərilibsə, cəhd vaxtı əlavə edirik
+    finalOrderId = `${finalOrderId}-${Date.now().toString().slice(-4)}`;
+  }
 
   const parsedAmount = amount !== undefined && !isNaN(parseFloat(amount)) ? parseFloat(amount) : 35;
 
@@ -20,7 +33,7 @@ export default async function handler(req, res) {
     currency: "AZN",
     language: "az",
     order_id: finalOrderId,
-    description: description || ("Evrika Imtahan Kuponu " + finalOrderId),
+    description: description || ("Evrika Imtahan Kuponu " + (dbId ? `EV-${String(dbId).padStart(4, '0')}` : finalOrderId)),
     success_redirect_url: `https://evrikaliseyi.edu.az/success?regId=${dbId}&order_id=${encodeURIComponent(finalOrderId)}&email=${encodeURIComponent(email || '')}&name=${encodeURIComponent(name || '')}`,
     error_redirect_url: `https://evrikaliseyi.edu.az/error?regId=${dbId}&order_id=${encodeURIComponent(finalOrderId)}`,
     result_url: "https://evrikaliseyi.edu.az/result"

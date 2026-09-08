@@ -373,14 +373,15 @@ window.submitToSupabase = async (formData, btn, originalText) => {
       const responseData = await res.json();
       const insertedRow = responseData[0];
 
-      if (window.location.pathname.includes('register-lisey')) {
-          // Trigger simulated payment flow
+      if (window.location.pathname.includes('register-lisey') || window.location.pathname.includes('register-ptim')) {
+          const studentName = crmForm['[2.Şagird] Adı'] || crmForm.name || '';
+          const studentGrade = crmForm['[3.Təhsil] Qeydiyyat Səviyyəsi'] || '';
+          const targetAmount = (studentGrade.includes('Məktəbəqədər') || studentGrade.includes('5-6')) ? '25' : '35';
+          const emailVal = crmForm.email || '';
           setTimeout(() => {
-              btn.innerHTML = originalText; btn.style.background = ''; btn.disabled = false;
-              if (window.showPaymentModal) {
-                  window.showPaymentModal(crmForm, insertedRow.id);
-              }
-          }, 1000);
+              btn.innerHTML = '<i class="fas fa-lock"></i> ÖDƏNİŞƏ KEÇİLİR...';
+              window.location.href = `/payment.html?id=${insertedRow.id}&name=${encodeURIComponent(studentName)}&amount=${targetAmount}&email=${encodeURIComponent(emailVal)}&autostart=1`;
+          }, 800);
           return true;
       }
 

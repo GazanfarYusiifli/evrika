@@ -244,9 +244,13 @@
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
-    const regId = urlParams.get('regId') || urlParams.get('id') || localStorage.getItem('last_regId');
+    const regId = urlParams.get('regId') || urlParams.get('id') || localStorage.getItem('last_regId') || '';
+    const email = urlParams.get('email') || localStorage.getItem('last_email') || '';
+    const name = urlParams.get('name') || localStorage.getItem('last_name') || '';
     if (regId) {
-      document.getElementById('retry-link').href = '/payment?id=' + regId;
+      document.getElementById('retry-link').href = `/payment.html?id=${encodeURIComponent(regId)}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&retry=1`;
+    } else {
+      document.getElementById('retry-link').href = '/schools.html';
     }
   </script>
 </body>

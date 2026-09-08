@@ -258,11 +258,12 @@
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
-    let regId = urlParams.get('id') || urlParams.get('regId');
-    let regName = urlParams.get('name') || '';
+    let regId = urlParams.get('id') || urlParams.get('regId') || localStorage.getItem('last_regId') || '';
+    let regName = urlParams.get('name') || localStorage.getItem('last_name') || '';
     let amountParam = urlParams.get('amount') || '35';
-    let emailParam = urlParams.get('email') || '';
+    let emailParam = urlParams.get('email') || localStorage.getItem('last_email') || '';
     let gradeParam = urlParams.get('grade') || '';
+    let autostart = urlParams.get('autostart') === '1';
 
     if (gradeParam && (gradeParam.includes('Məktəbəqədər') || gradeParam.includes('5-6'))) {
       amountParam = '25';
@@ -274,9 +275,63 @@
       document.getElementById('student-info-tag').innerText = "Şagird: " + regName;
     }
 
-    if (!regId) {
-      document.getElementById('extra-fields').style.display = 'flex';
+    // Əgər ID varsa amma ad və ya detallar yoxdursa, Supabase-dən dərhal gətirək
+    async function loadStudentDataIfAvailable() {
+      if (!regId) {
+        document.getElementById('extra-fields').style.display = 'flex';
+        return;
+      }
+
+      try {
+        const cleanDbId = parseInt(String(regId).replace(/\D/g, ''), 10);
+        if (!cleanDbId) {
+          document.getElementById('extra-fields').style.display = 'flex';
+          return;
+        }
+
+        const res = await fetch(`https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/registrations?id=eq.${cleanDbId}&select=id,payload`, {
+          headers: {
+            'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
+            'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE'
+          }
+        });
+        const rows = await res.json();
+        if (rows && rows.length > 0) {
+          const item = rows[0].payload || {};
+          const candidateName = item.fullName || item.name || item['[2.Şagird] Adı'] || regName;
+          const candidateEmail = item.email || item['E-mail'] || emailParam;
+          const candidateGrade = item.student_grade || item['[3.Təhsil] Qeydiyyat Səviyyəsi'] || item['Sinif'] || gradeParam;
+          
+          if (candidateName) {
+            regName = candidateName;
+            document.getElementById('student-info-tag').innerText = "Şagird: " + regName + (candidateGrade ? ` (${candidateGrade})` : '');
+          }
+          if (candidateEmail) emailParam = candidateEmail;
+          if (item.amount) {
+            const parsed = parseFloat(String(item.amount).replace(/[^0-9.]/g, ''));
+            if (!isNaN(parsed) && parsed > 0) amountParam = String(parsed);
+          } else if (candidateGrade && (candidateGrade.includes('Məktəbəqədər') || candidateGrade.includes('5-6'))) {
+            amountParam = '25';
+          }
+          document.getElementById('amount-display').innerText = parseFloat(amountParam).toFixed(2) + ' AZN';
+
+          if (item.payment_status === 'Ödənilib') {
+            document.getElementById('student-info-tag').innerHTML = `<span style="color:#10b981; font-weight:800;">✓ Bu qeydiyyat üzrə ödəniş artıq tamamlanıb</span>`;
+            document.getElementById('paySubmitBtn').innerText = 'ƏSAS SƏHİFƏYƏ KEÇ';
+            document.getElementById('paySubmitBtn').onclick = () => window.location.href = '/';
+            return;
+          }
+        }
+      } catch (err) {
+        console.error("Supabase fetch error:", err);
+      }
+
+      if (autostart) {
+        processPayment();
+      }
     }
+
+    loadStudentDataIfAvailable();
 
     function handleGradeChange(val) {
       if (val === 'Məktəbəqədər') {
