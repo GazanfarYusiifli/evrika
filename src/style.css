@@ -345,7 +345,8 @@ h2 {
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
+  margin-left: auto;
 }
 
 .nav-btn {
@@ -3392,7 +3393,7 @@ a[href^="tel"], a[href^="tel"]:hover {
     flex-shrink: 0 !important;
   }
 
-  /* Both buttons pushed to the right as a group */
+  /* Header buttons pushed to the right as a group */
   .nav-actions,
   .modern-floating-nav.scrolled .nav-actions,
   .modern-floating-nav.nav-hidden .nav-actions {
@@ -3400,33 +3401,53 @@ a[href^="tel"], a[href^="tel"]:hover {
     align-items: center !important;
     margin-left: auto !important;
     margin-right: 0 !important;
+    gap: 6px !important;
     flex-shrink: 0 !important;
   }
   
-  /* Hide non-primary buttons like E-jurnal in header on mobile */
-  .nav-actions > a:not(.nav-btn) {
+  /* Hide non-primary buttons like E-jurnal, but KEEP .nav-phone-btn (*1808) and .nav-btn (Qeydiyyat) */
+  .nav-actions > a:not(.nav-btn):not(.nav-phone-btn) {
     display: none !important;
+  }
+
+  /* Show and style *1808 phone button on mobile header (to the left of Qeydiyyat) */
+  .nav-actions > a.nav-phone-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    padding: 7px 11px !important;
+    font-size: 0.8rem !important;
+    font-weight: 800 !important;
+    margin: 0 !important;
+    border-radius: 10px !important;
+    white-space: nowrap !important;
+    background: rgba(30, 58, 138, 0.08) !important;
+    border: 1px solid rgba(30, 58, 138, 0.15) !important;
+    color: #1e3a8a !important;
+    text-decoration: none !important;
+    flex-shrink: 0 !important;
   }
   
   /* Style Qeydiyyat button for mobile */
   .nav-actions > a.nav-btn {
-    padding: 8px 16px !important;
-    font-size: 0.82rem !important;
+    padding: 7px 14px !important;
+    font-size: 0.8rem !important;
     margin: 0 !important;
     border-radius: 10px !important;
     white-space: nowrap !important;
+    flex-shrink: 0 !important;
   }
   
   .nav-actions > a.nav-btn:hover {
     transform: none !important;
   }
 
-  /* Hamburger: sits right after Qeydiyyat with 8px gap, 10px from screen edge */
+  /* Hamburger: sits right after Qeydiyyat with 6px gap */
   .mobile-menu-btn,
   .modern-floating-nav.scrolled .mobile-menu-btn,
   .modern-floating-nav.nav-hidden .mobile-menu-btn {
-    margin-left: 8px !important;
-    margin-right: 10px !important;
+    margin-left: 6px !important;
+    margin-right: 5px !important;
     flex-shrink: 0 !important;
     position: relative !important;
     right: auto !important;
