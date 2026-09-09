@@ -2269,7 +2269,7 @@ img, video {
 @media (max-width: 1024px) {
   .section { padding: 80px 0 !important; }
   main > .section:first-of-type, .ptim-hero { padding-top: 180px !important; }
-  .nav-links, .nav-actions { display: none !important; }
+  .nav-links { display: none !important; }
   .mobile-menu-btn { display: flex !important; }
   
   .nav-glass-container, 
@@ -2319,12 +2319,13 @@ img, video {
     color: var(--navy) !important;
     border: 1px solid rgba(0,0,0,0.1) !important;
     border-radius: 10px !important;
-    width: 38px !important;
-    height: 38px !important;
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    font-size: 1.2rem !important;
+    font-size: 1rem !important;
     position: relative !important;
     top: auto !important;
     right: auto !important;
