@@ -422,7 +422,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <td><span class="${statusBadgeClass}">${statusText}</span></td>
           <td>
             <button class="btn-view" onclick="viewDetails(${index})"><i class="fas fa-eye"></i> Bax</button>
-            <button class="btn-danger" onclick="deleteItem(${index})"><i class="fas fa-trash"></i></button>
+            <button class="btn-danger" style="background:#dc2626; padding:8px 14px; border-radius:6px; font-weight:600;" onclick="deleteItem(${index})" title="Müraciəti sil"><i class="fas fa-trash-alt"></i> Sil</button>
           </td>
         `;
         tbody.appendChild(tr);
@@ -484,6 +484,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         `;
       }
 
+      content.innerHTML += `
+        <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px; padding-top:20px; border-top:1px solid var(--border);">
+          <button class="btn-danger" style="padding:10px 20px; font-size:0.9rem; display:inline-flex; align-items:center; gap:8px;" onclick="closeModal(); deleteItem(${index});">
+            <i class="fas fa-trash-alt"></i> Bu müraciəti birdəfəlik sil
+          </button>
+        </div>
+      `;
       document.getElementById('detail-modal').classList.add('active');
     }
 
