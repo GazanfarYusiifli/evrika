@@ -3428,9 +3428,9 @@ a[href^="tel"], a[href^="tel"]:hover {
     flex-shrink: 0 !important;
   }
   
-  /* Qeydiyyat button */
+  /* Qeydiyyat button — same size as *1808 */
   .nav-actions > a.nav-btn {
-    padding: 7px 14px !important;
+    padding: 7px 11px !important;
     font-size: 0.8rem !important;
     margin: 0 !important;
     border-radius: 10px !important;
