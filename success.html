@@ -420,13 +420,18 @@
     });
 
     const urlParams = new URLSearchParams(window.location.search);
-    const rawRegId = urlParams.get('regId') || urlParams.get('id') || localStorage.getItem('last_regId') || '';
-    const orderIdParam = urlParams.get('order_id') || '';
-    const nameParam = urlParams.get('name') || localStorage.getItem('last_name') || '';
-    const emailParam = urlParams.get('email') || localStorage.getItem('last_email') || '';
+    let rawRegId = urlParams.get('regId') || urlParams.get('id') || localStorage.getItem('last_regId') || '';
+    let orderIdParam = urlParams.get('order_id') || localStorage.getItem('last_order_id') || '';
+    let nameParam = urlParams.get('name') || localStorage.getItem('last_name') || '';
+    let emailParam = urlParams.get('email') || localStorage.getItem('last_email') || '';
 
-    const dbId = parseInt(String(rawRegId || orderIdParam).replace(/\D/g, ''), 10);
-    const finalOrderId = orderIdParam || (dbId ? ("EV-" + String(dbId).padStart(4, '0')) : "EV-0000");
+    // ID parsing: either pure number or EV-1234
+    let dbId = parseInt(String(rawRegId).replace(/\D/g, ''), 10);
+    if ((!dbId || isNaN(dbId)) && orderIdParam) {
+      dbId = parseInt(String(orderIdParam).replace(/\D/g, ''), 10);
+    }
+
+    const finalOrderId = dbId ? ("EV-" + String(dbId).padStart(4, '0')) : (orderIdParam || "EV-0000");
 
     document.getElementById('ticket-order-id').innerText = finalOrderId;
     document.getElementById('ticket-date').innerText = new Date().toLocaleString('az-AZ', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
@@ -435,33 +440,90 @@
       document.getElementById('ticket-student-name').innerText = nameParam;
     }
 
-    const verifyUrl = `https://evrikaliseyi.edu.az/verify.html?id=${finalOrderId}`;
-    document.getElementById('ticket-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(verifyUrl)}`;
+    // QR kod verify.html səhifəsinə yönləndirir
+    const verifyUrl = dbId ? `https://evrikaliseyi.edu.az/verify.html?id=${dbId}` : `https://evrikaliseyi.edu.az/verify.html?id=${encodeURIComponent(finalOrderId)}`;
+    document.getElementById('ticket-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(verifyUrl)}`;
 
     async function syncPaymentDetails() {
-      if (!dbId || isNaN(dbId)) return;
+      // Əgər dbId yoxdursa, localStorage-dən axtar
+      if (!dbId || isNaN(dbId)) {
+        const storedId = localStorage.getItem('last_regId');
+        if (storedId) {
+          dbId = parseInt(String(storedId).replace(/\D/g, ''), 10);
+        }
+      }
+
+      if (!dbId || isNaN(dbId)) {
+        // Əgər heç bir ID yoxdursa ən son ödənilmiş və ya qeydiyyatı çəkməyə cəhd edək
+        try {
+          const latestRes = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations');
+          if (latestRes.ok) {
+            const all = await latestRes.json();
+            if (all && all.length > 0) {
+              const latest = all[0];
+              renderTicketData(latest);
+              return;
+            }
+          }
+        } catch(e) {}
+        return;
+      }
 
       try {
+        // Status yoxlamasını arxa planda trigger et
         fetch(`/api/check-epoint-status?regId=${dbId}&order_id=${finalOrderId}`).catch(() => {});
 
         const res = await fetch(`https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations?id=${dbId}`);
 
         if (res.ok) {
-          const row = await res.json();
-          const p = (row && (row.payload || row)) || {};
-          const studentName = p.student_name || p.fullName || p.name || nameParam || 'Şagird';
-          const grade = p.student_grade || p.grade || p['Sinif'] || '';
-          const branch = p.branch_name || p.school || 'EVRİKA Liseyi';
-            const amount = p.epoint_amount || p.amount || '20.00';
-
-            document.getElementById('ticket-student-name').innerText = studentName;
-            document.getElementById('ticket-branch').innerText = `${branch} ${grade ? `(${grade})` : ''}`;
-            document.getElementById('ticket-amount').innerText = `${parseFloat(amount).toFixed(2)} AZN (Ödənilib)`;
+          const data = await res.json();
+          // Diqqət: Cloudflare API array qaytarır: [ { id: ..., payload: ... } ]
+          const row = Array.isArray(data) ? data[0] : data;
+          if (row) {
+            renderTicketData(row);
           }
         }
       } catch (err) {
         console.warn('Sync status error:', err);
       }
+    }
+
+    function renderTicketData(row) {
+      const p = row.payload || row || {};
+      const currentId = row.id || row._db_id_ || p.id || dbId;
+      if (currentId) {
+        const fullOrderId = "EV-" + String(currentId).padStart(4, '0');
+        document.getElementById('ticket-order-id').innerText = fullOrderId;
+        const vUrl = `https://evrikaliseyi.edu.az/verify.html?id=${currentId}`;
+        document.getElementById('ticket-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(vUrl)}`;
+      }
+
+      const sdName = p['[2.Şagird] Adı'];
+      const sdSurname = p['[2.Şagird] Soyadı'] || '';
+      const fullSdName = sdName ? (sdName + ' ' + sdSurname).trim() : null;
+      const studentName = row.name || p.student_name || p.fullName || fullSdName || p.name || nameParam || 'Şagird';
+      
+      const grade = p.student_grade || p.grade || p['Sinif'] || p['[3.Təhsil] Qeydiyyat Səviyyəsi'] || '';
+      
+      // Filial təyini
+      let branch = 'EVRİKA Liseyi';
+      const src = (row.source || p.source || '').toLowerCase();
+      if (src.includes('nərimanov') || src.includes('nerimanov')) {
+        branch = 'EVRİKA BETL (Nərimanov filialı)';
+      } else if (src.includes('gənclik') || src.includes('genclik')) {
+        branch = 'EVRİKA BETL (Gənclik filialı)';
+      } else if (src.includes('montessori')) {
+        branch = 'EVRİKA Montessori Kids';
+      } else if (src.includes('zumrud') || src.includes('zümrüd')) {
+        branch = 'Zümrüd İdman Kompleksi';
+      }
+
+      const amtRaw = p.epoint_amount || p.amount || row.amount || '0.01';
+      const amtNum = parseFloat(String(amtRaw).replace(/[^0-9.]/g, '')) || 0.01;
+
+      document.getElementById('ticket-student-name').innerText = studentName;
+      document.getElementById('ticket-branch').innerText = `${branch} ${grade ? `— ${grade}` : ''}`;
+      document.getElementById('ticket-amount').innerText = `${amtNum.toFixed(2)} AZN (Ödənilib)`;
     }
 
     syncPaymentDetails();

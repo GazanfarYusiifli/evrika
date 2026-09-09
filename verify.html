@@ -89,9 +89,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <script>
-    const API_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1';
-    const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
-    const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation' };
+    const CF_API_URL = 'https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations';
 
     const urlParams = new URLSearchParams(window.location.search);
     const rawId = urlParams.get('id') || '';
@@ -110,33 +108,35 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
 
         try {
-            // Fetch registration (no cache)
-            const res = await fetch(`${API_URL}/registrations?id=eq.${dbId}`, { headers: HEADERS, cache: 'no-store' });
+            // Fetch registration from Cloudflare API
+            const res = await fetch(`${CF_API_URL}?id=${dbId}`, { cache: 'no-store' });
             if(!res.ok) throw new Error("Məlumatı yükləmək mümkün olmadı");
             const data = await res.json();
+            const record = Array.isArray(data) ? data[0] : data;
 
-            if(data.length === 0) {
+            if(!record || (!record.id && !record._db_id_)) {
                 showError("Tapılmadı", "Sistemdə belə bir imtahan iştirakçısı yoxdur.");
                 return;
             }
 
-            let payload = data[0].payload || {};
+            let payload = record.payload || {};
+            const currentStatus = record.status || payload.status || '';
             
             // Check if already scanned
-            if (payload.status === "QR İstifadə Edilib") {
+            if (currentStatus === "QR İstifadə Edilib") {
                 showError("İSTİFADƏ EDİLİB", `Bu QR Kod artıq sistemdə istifadə edilib (Status: İstifadə Edilib).`);
                 return;
             }
 
-            // Update existing row directly using PATCH (now allowed by RLS)
+            // Update row status
             payload.status = "QR İstifadə Edilib";
             if(!payload.note) payload.note = "";
             payload.note += " | QR KOD OXUDULDU: " + new Date().toLocaleString('az-AZ');
 
-            const updateRes = await fetch(`${API_URL}/registrations?id=eq.${dbId}`, {
-                method: 'PATCH',
-                headers: HEADERS,
-                body: JSON.stringify({ payload })
+            const updateRes = await fetch(`${CF_API_URL}?id=${dbId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: 'QR İstifadə Edilib', ...payload })
             });
 
             if(!updateRes.ok) throw new Error("Sistemə yazmaq mümkün olmadı");
@@ -144,9 +144,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             // Mark as scanned locally
             localStorage.setItem('scanned_' + dbId, 'true');
             
-            const studentName = payload.student_name || payload.fullName || payload.name || payload['Ad Soyad'] || 'Şagird';
-            const grade = payload.student_grade || payload.grade || payload['Sinif'] || '';
-            showSuccess("TƏSDİQLƏNDİ", `<b>${studentName}</b> ${grade ? `(${grade})` : ''} üçün imtahana giriş təsdiqləndi! Xoş gəlmisiniz.`);
+            const studentName = record.name || payload.student_name || payload.fullName || payload.name || payload['Ad Soyad'] || payload['[2.Şagird] Adı'] || 'Şagird';
+            const grade = payload.student_grade || payload.grade || payload['Sinif'] || payload['[3.Təhsil] Qeydiyyat Səviyyəsi'] || '';
+            const paymentStatus = record.payment_status || payload.payment_status || '';
+            showSuccess("TƏSDİQLƏNDİ", `<b>${studentName}</b> ${grade ? `(${grade})` : ''} üçün imtahana giriş təsdiqləndi!<br><br><span style="color:#10b981; font-size:0.95rem; font-weight:700;"><i class="fas fa-check-circle"></i> Ödəniş: ${paymentStatus || 'Ödənilib'}</span>`);
 
         } catch(e) {
             showError("Xəta", "Sistemdə problem yarandı: " + e.message);
