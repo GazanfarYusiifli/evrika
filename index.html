@@ -3784,24 +3784,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
 
         async function initNews() {
-          const API_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1';
-          const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
-          const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY };
           const container = document.getElementById('dynamic-news-container');
           if (!container) return;
           try {
-            const res = await fetch(`${API_URL}/news?select=*&order=id.desc&limit=3`, { headers: HEADERS });
+            const res = await fetch('/news.json');
             if (res.ok) {
               const data = await res.json();
               if (data.length > 0) {
-                container.innerHTML = data.map(item => {
-                  const n = item.payload;
-                  const firstImg = n.img ? n.img.split(',')[0].trim() : '';
+                container.innerHTML = data.slice(0, 3).map(n => {
+                  let firstImg = n.img ? n.img.split(',')[0].trim() : '/assets/hero-main.jpg';
+                  if (firstImg.includes('supabase.co/storage')) firstImg = '/assets/hero-main.jpg';
                   const dateStr = n.date || "";
                   const parts = dateStr.split(/[-./]/);
                   const months = ["Yan", "Fev", "Mar", "Apr", "May", "İyn", "İyl", "Avq", "Sen", "Okt", "Noy", "Dek"];
                   
-                  let day = "13", month = "Apr";
+                  let day = "12", month = "Avq";
                   if(parts.length === 3) {
                       if(parts[0].length === 4) {
                           day = parts[2];
@@ -3813,7 +3810,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   }
                   
                   return `
-                  <a href="news-detail.html?id=${item.id}" class="news-card" style="text-decoration:none;">
+                  <a href="news-detail.html?id=${n.id}" class="news-card" style="text-decoration:none;">
                       <div class="card-media">
                           <img src="${firstImg}" alt="${n.title}" loading="lazy">
                           <div class="date-badge">
@@ -3824,7 +3821,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                       <div class="card-body">
                           <div class="card-cat">${n.category || 'Xəbər'}</div>
                           <h3 class="card-title">${n.title}</h3>
-                          <p class="card-desc">${n.text || ''}</p>
+                          <p class="card-desc">${n.shortDesc || n.text || ''}</p>
                           <div class="card-footer">
                               <span data-i18n="news-read-more">Ətraflı Oxu</span> <i class="fas fa-arrow-right"></i>
                           </div>
@@ -4149,24 +4146,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const grid = document.getElementById('home-news-grid');
         if(!grid) return;
         try {
-            const API_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1';
-            const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
-            const res = await fetch(`${API_URL}/news?select=*&order=id.desc&limit=3`, {
-                headers: { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY }
-            });
+            const res = await fetch('/news.json');
             if(res.ok) {
                 const data = await res.json();
                 if(!data.length) {
                     grid.innerHTML = '<div style="text-align:center; width:100%; grid-column:1/-1; opacity:0.5; font-size:1.2rem;">Hələ ki, heç bir xəbər yoxdur.</div>';
                     return;
                 }
-                grid.innerHTML = data.map(row => {
-                    const n = row.payload;
+                grid.innerHTML = data.slice(0, 3).map(n => {
                     const dateStr = n.date || "";
                     const parts = dateStr.split(/[-./]/);
                     const months = ["Yan", "Fev", "Mar", "Apr", "May", "İyn", "İyl", "Avq", "Sen", "Okt", "Noy", "Dek"];
                     
-                    let day = "13", month = "Apr";
+                    let day = "12", month = "Avq";
                     if(parts.length === 3) {
                         if(parts[0].length === 4) {
                             day = parts[2];
@@ -4176,9 +4168,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             month = months[parseInt(parts[1]) - 1] || "Ay";
                         }
                     }
-                    const firstImg = (n.img || "").split(',')[0].trim();
+                    let firstImg = (n.img || "").split(',')[0].trim();
+                    if(firstImg.includes('supabase.co/storage')) firstImg = '/assets/hero-main.jpg';
                     return `
-                        <a href="news-detail.html?id=${row.id}" class="news-card">
+                        <a href="news-detail.html?id=${n.id}" class="news-card">
                             <div class="card-media">
                                 <img src="${firstImg}" alt="${n.title}" loading="lazy">
                                 <div class="date-badge">

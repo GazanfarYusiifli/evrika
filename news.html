@@ -443,39 +443,39 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const grid = document.getElementById('news-grid');
         if(!grid) return;
         try {
-            const API_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1';
-            const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
-            const res = await fetch(`${API_URL}/news?select=*&order=id.desc`, {
-                headers: { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY }
-            });
+            const res = await fetch('/news.json');
+            let data = [];
             if(res.ok) {
-                const data = await res.json();
-                if(!data.length) {
-                    grid.innerHTML = '<div style="text-align:center; width:100%; grid-column:1/-1; opacity:0.5; font-size:1.2rem;"><span data-i18n="news-empty">Hələ ki, heç bir xəbər yoxdur.</span></div>';
-                    return;
-                }
-                grid.innerHTML = data.map(row => {
-                    const n = row.payload;
-                    const dateStr = n.date || "";
-                    const parts = dateStr.split(/[-./]/);
-                    const months = ["Yan", "Fev", "Mar", "Apr", "May", "İyn", "İyl", "Avq", "Sen", "Okt", "Noy", "Dek"];
-                    
-                    let day = "13", month = "Apr";
-                    if(parts.length === 3) {
-                        if(parts[0].length === 4) {
-                            day = parts[2];
-                            month = months[parseInt(parts[1]) - 1] || "Ay";
-                        } else {
-                            day = parts[0];
-                            month = months[parseInt(parts[1]) - 1] || "Ay";
-                        }
+                data = await res.json();
+            }
+            if(!data.length) {
+                grid.innerHTML = '<div style="text-align:center; width:100%; grid-column:1/-1; opacity:0.5; font-size:1.2rem;"><span data-i18n="news-empty">Hələ ki, heç bir xəbər yoxdur.</span></div>';
+                return;
+            }
+            grid.innerHTML = data.map(n => {
+                const dateStr = n.date || "";
+                const parts = dateStr.split(/[-./]/);
+                const months = ["Yan", "Fev", "Mar", "Apr", "May", "İyn", "İyl", "Avq", "Sen", "Okt", "Noy", "Dek"];
+                
+                let day = "12", month = "Avq";
+                if(parts.length === 3) {
+                    if(parts[0].length === 4) {
+                        day = parts[2];
+                        month = months[parseInt(parts[1]) - 1] || "Ay";
+                    } else {
+                        day = parts[0];
+                        month = months[parseInt(parts[1]) - 1] || "Ay";
                     }
-                    
-                    const imgArr = (n.img || "").split(',');
-                    const firstImg = imgArr[0].trim();
+                }
+                
+                const imgArr = (n.img || "").split(',');
+                let firstImg = imgArr[0].trim();
+                if(firstImg.includes('supabase.co/storage')) {
+                    firstImg = '/assets/hero-main.jpg';
+                }
                     
                     return `
-                        <a href="news-detail.html?id=${row.id}" class="news-card">
+                        <a href="news-detail.html?id=${n.id}" class="news-card">
                             <div class="card-media">
                                 <img src="${firstImg}" alt="${n.title}" loading="lazy">
                                 <div class="date-badge">

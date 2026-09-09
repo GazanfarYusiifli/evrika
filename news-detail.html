@@ -442,72 +442,64 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const API_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1';
         const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
         const urlParams = new URLSearchParams(window.location.search);
-        const newsId = urlParams.get('id');
+        const newsId = parseInt(urlParams.get('id'), 10) || 1;
 
         async function loadDetail() {
-            if(!newsId) return window.location.href = 'news.html';
-            
             try {
-                // Load Current News
-                const res = await fetch(`${API_URL}/news?id=eq.${newsId}&select=*`, {
-                    headers: { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY }
-                });
-                if(res.ok) {
-                    const data = await res.json();
-                    if(data.length) {
-                        const n = data[0].payload;
-                        document.title = n.title + " | Evrika";
-                        const imgArr = (n.img || "").split(',').map(s => s.trim()).filter(Boolean);
-                        const firstImg = imgArr[0] || '';
-                        
-                        let galleryHtml = '';
-                        if(imgArr.length > 1) {
-                            galleryHtml = `<div style="display:flex; overflow-x:auto; gap:15px; margin-top:15px; margin-bottom:20px; padding-bottom:10px; scrollbar-width:thin;">`;
-                            for(let i=1; i<imgArr.length; i++) {
-                                galleryHtml += `
-                                <div style="flex:0 0 auto; width:180px; height:120px; border-radius:12px; overflow:hidden; cursor:zoom-in; box-shadow:0 4px 10px rgba(0,0,0,0.1); border:1px solid rgba(0,0,0,0.05);" onclick="document.getElementById('image-modal').style.display='flex'; document.getElementById('modal-image').src='${imgArr[i]}';">
-                                    <img loading="lazy" decoding="async" src="${imgArr[i]}" style="width:100%; height:100%; object-fit:cover; transition:0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" alt="Gallery image">
-                                </div>`;
-                            }
-                            galleryHtml += `</div>`;
-                        }
+                const res = await fetch('/news.json');
+                if(!res.ok) return;
+                const allNews = await res.json();
+                
+                const item = allNews.find(x => x.id === newsId) || allNews[0];
+                if(!item) return;
 
-                        document.getElementById('article-view').innerHTML = `
-                            ${firstImg ? `
-                            <div class="article-hero" onclick="document.getElementById('image-modal').style.display='flex'; document.getElementById('modal-image').src='${firstImg}';">
-                                <img loading="lazy" decoding="async" src="${firstImg}" alt="${n.title}">
-                                <div class="article-zoom-btn"><i class="fas fa-expand"></i> Böyüt</div>
-                            </div>
-                            ` : ''}
-                            ${galleryHtml}
-                            <article class="article-content" style="padding-top: 10px;">
-                                <span class="article-date">${n.date}</span>
-                                <h1 class="article-title">${n.title}</h1>
-                                <div class="article-text">${n.text}</div>
-                            </article>
-                        `;
+                document.title = item.title + " | Evrika";
+                const imgArr = (item.img || "").split(',').map(s => s.trim()).filter(Boolean);
+                const firstImg = imgArr[0] || '/assets/hero-main.jpg';
+                
+                let galleryHtml = '';
+                if(imgArr.length > 1) {
+                    galleryHtml = `<div style="display:flex; overflow-x:auto; gap:15px; margin-top:15px; margin-bottom:20px; padding-bottom:10px; scrollbar-width:thin;">`;
+                    for(let i=1; i<imgArr.length; i++) {
+                        galleryHtml += `
+                        <div style="flex:0 0 auto; width:180px; height:120px; border-radius:12px; overflow:hidden; cursor:zoom-in; box-shadow:0 4px 10px rgba(0,0,0,0.1); border:1px solid rgba(0,0,0,0.05);" onclick="document.getElementById('image-modal').style.display='flex'; document.getElementById('modal-image').src='${imgArr[i]}';">
+                            <img loading="lazy" decoding="async" src="${imgArr[i]}" style="width:100%; height:100%; object-fit:cover; transition:0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" alt="Gallery image">
+                        </div>`;
                     }
+                    galleryHtml += `</div>`;
                 }
+
+                document.getElementById('article-view').innerHTML = `
+                    ${firstImg ? `
+                    <div class="article-hero" onclick="document.getElementById('image-modal').style.display='flex'; document.getElementById('modal-image').src='${firstImg}';">
+                        <img loading="lazy" decoding="async" src="${firstImg}" alt="${item.title}">
+                        <div class="article-zoom-btn"><i class="fas fa-expand"></i> Böyüt</div>
+                    </div>
+                    ` : ''}
+                    ${galleryHtml}
+                    <article class="article-content" style="padding-top: 10px;">
+                        <span class="article-date">${item.date}</span>
+                        <h1 class="article-title">${item.title}</h1>
+                        <div class="article-text">${item.text.replace(/\n\n/g, '<br><br>')}</div>
+                    </article>
+                `;
 
                 // Load Others
-                const resOthers = await fetch(`${API_URL}/news?id=neq.${newsId}&select=*&limit=3`, {
-                    headers: { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY }
-                });
-                if(resOthers.ok) {
-                    const others = await resOthers.json();
-                    document.getElementById('other-news-grid').innerHTML = others.map(row => {
-                        const rowImg = (row.payload.img || "").split(',')[0].trim();
-                        return `
-                        <a href="news-detail.html?id=${row.id}" class="small-card">
-                            <img loading="lazy" decoding="async" src="${rowImg}">
-                            <div class="small-card-body">
-                                <h4 class="small-card-title">${row.payload.title}</h4>
-                            </div>
-                        </a>
-                        `;
-                    }).join('');
-                }
-            } catch(e) {}
+                const others = allNews.filter(x => x.id !== item.id).slice(0, 3);
+                document.getElementById('other-news-grid').innerHTML = others.map(row => {
+                    const rowImg = (row.img || "").split(',')[0].trim() || '/assets/hero-main.jpg';
+                    return `
+                    <a href="news-detail.html?id=${row.id}" class="small-card">
+                        <img loading="lazy" decoding="async" src="${rowImg}">
+                        <div class="small-card-body">
+                            <h4 class="small-card-title">${row.title}</h4>
+                        </div>
+                    </a>
+                    `;
+                }).join('');
+            } catch(e) {
+                console.error("Detail error:", e);
+            }
         }
 
         loadDetail();
