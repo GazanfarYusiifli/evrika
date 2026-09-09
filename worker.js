@@ -169,29 +169,17 @@ export default {
           authAmount = 0.01;
         }
 
-        // Check for active PENDING order created within the last 5 minutes to prevent duplicates
-        const existingOrder = await env.DB.prepare(
-          "SELECT * FROM orders WHERE registration_id = ? AND status = 'PENDING' AND created_at > datetime('now', '-5 minutes') ORDER BY id DESC LIMIT 1"
-        ).bind(dbId).first();
+        // Hər ödəniş cəhdi üçün banka həmişə unikal təzə order_number veririk.
+        // Bu, Epoint-in "Linkin müddəti bitib" (TIMEOUT) və köhnə sessiyaya ilişmə xətasının qarşısını alır.
+        const randSuffix = Math.random().toString(36).substring(2, 7).toUpperCase();
+        const orderNumber = `EVR-${dbId}-${Date.now().toString(36).toUpperCase()}-${randSuffix}`;
 
-        let orderNumber;
-        let orderId;
+        const orderDesc = description || `Evrika Imtahan Kuponu EV-${String(dbId).padStart(4, '0')}`;
+        const orderInsert = await env.DB.prepare(
+          "INSERT INTO orders (registration_id, order_number, amount, currency, status, description) VALUES (?, ?, ?, 'AZN', 'PENDING', ?)"
+        ).bind(dbId, orderNumber, authAmount, orderDesc).run();
 
-        if (existingOrder && !body.force_new) {
-          orderNumber = existingOrder.order_number;
-          orderId = existingOrder.id;
-        } else {
-          // Generate unique order number: EVR-85-TIMESTAMP-RANDOM
-          const randSuffix = Math.random().toString(36).substring(2, 6).toUpperCase();
-          orderNumber = `EVR-${dbId}-${Date.now().toString(36).toUpperCase()}-${randSuffix}`;
-
-          const orderDesc = description || `Evrika Imtahan Kuponu EV-${String(dbId).padStart(4, '0')}`;
-          const orderInsert = await env.DB.prepare(
-            "INSERT INTO orders (registration_id, order_number, amount, currency, status, description) VALUES (?, ?, ?, 'AZN', 'PENDING', ?)"
-          ).bind(dbId, orderNumber, authAmount, orderDesc).run();
-
-          orderId = orderInsert.meta.last_row_id;
-        }
+        const orderId = orderInsert.meta.last_row_id;
 
         // Determine attempt number
         const attemptsCount = await env.DB.prepare(
@@ -549,54 +537,73 @@ export default {
         }
 
         const payload = safeJsonParse(reg.payload);
-        const latestOrder = await env.DB.prepare("SELECT * FROM orders WHERE registration_id = ? ORDER BY id DESC LIMIT 1").bind(dbId).first();
+        
+        // Find order to check: if reqOrderNumber provided, search by it; otherwise take latest
+        let targetOrder = null;
+        if (reqOrderNumber) {
+          targetOrder = await env.DB.prepare("SELECT * FROM orders WHERE order_number = ?").bind(reqOrderNumber).first();
+        }
+        if (!targetOrder) {
+          targetOrder = await env.DB.prepare("SELECT * FROM orders WHERE registration_id = ? ORDER BY id DESC LIMIT 1").bind(dbId).first();
+        }
+
+        const latestOrder = targetOrder;
         const latestPayment = latestOrder ? await env.DB.prepare("SELECT * FROM payments WHERE order_id = ? ORDER BY id DESC LIMIT 1").bind(latestOrder.id).first() : null;
 
         // Active Fallback: Check Epoint if not marked as paid in D1
-        if (reg.payment_status !== "Ödənilib" && latestOrder && latestOrder.order_number) {
-          try {
-            const checkData = { public_key: PUBLIC_KEY, order_id: latestOrder.order_number };
-            const checkB64 = utf8ToBase64(JSON.stringify(checkData));
-            const checkSig = await calculateEpointSignature(privateKey, checkB64);
+        // Əgər D1-də hələ Ödənilib deyilsə, Epoint-dən statusu birbaşa sorğulayırıq (Reconciliation)
+        if (reg.payment_status !== "Ödənilib") {
+          // Əgər xüsusi order nömrəsi gəlibsə və ya sonuncu cəhdlər varsa
+          const ordersToCheck = [];
+          if (latestOrder && latestOrder.order_number) ordersToCheck.push(latestOrder);
+          
+          for (const ord of ordersToCheck) {
+            if (reg.payment_status === "Ödənilib") break;
+            try {
+              const checkData = { public_key: PUBLIC_KEY, order_id: ord.order_number };
+              const checkB64 = utf8ToBase64(JSON.stringify(checkData));
+              const checkSig = await calculateEpointSignature(privateKey, checkB64);
 
-            const epCheckRes = await fetch("https://epoint.az/api/1/get-status", {
-              method: "POST",
-              headers: { "Content-Type": "application/x-www-form-urlencoded" },
-              body: new URLSearchParams({ data: checkB64, signature: checkSig })
-            });
+              const epCheckRes = await fetch("https://epoint.az/api/1/get-status", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({ data: checkB64, signature: checkSig })
+              });
 
-            if (epCheckRes.ok) {
-              const epStatusData = await epCheckRes.json();
-              if (epStatusData.status === "success") {
-                const couponCode = `EV-${String(dbId).padStart(4, '0')}`;
-                await env.DB.prepare("UPDATE payments SET status = 'PAID', paid_at = CURRENT_TIMESTAMP WHERE id = ?").bind(latestPayment ? latestPayment.id : 0).run();
-                await env.DB.prepare("UPDATE orders SET status = 'PAID', paid_at = CURRENT_TIMESTAMP WHERE id = ?").bind(latestOrder.id).run();
+              if (epCheckRes.ok) {
+                const epStatusData = await epCheckRes.json();
+                if (epStatusData.status === "success") {
+                  const couponCode = `EV-${String(dbId).padStart(4, '0')}`;
+                  await env.DB.prepare("UPDATE payments SET status = 'PAID', paid_at = CURRENT_TIMESTAMP WHERE order_id = ?").bind(ord.id).run();
+                  await env.DB.prepare("UPDATE orders SET status = 'PAID', paid_at = CURRENT_TIMESTAMP WHERE id = ?").bind(ord.id).run();
 
-                payload.payment_status = "Ödənilib";
-                payload.coupon_code = couponCode;
-                payload.paid_at = new Date().toISOString();
-                payload.epoint_amount = epStatusData.amount || reg.amount;
-                payload.epoint_transaction = epStatusData.transaction || "";
+                  payload.payment_status = "Ödənilib";
+                  payload.coupon_code = couponCode;
+                  payload.paid_at = new Date().toISOString();
+                  payload.epoint_amount = epStatusData.amount || reg.amount;
+                  payload.epoint_transaction = epStatusData.transaction || "";
 
-                await env.DB.prepare("UPDATE registrations SET payment_status = 'Ödənilib', coupon_code = ?, paid_at = CURRENT_TIMESTAMP, payload = ? WHERE id = ?")
-                  .bind(couponCode, JSON.stringify(payload), dbId).run();
+                  await env.DB.prepare("UPDATE registrations SET payment_status = 'Ödənilib', coupon_code = ?, paid_at = CURRENT_TIMESTAMP, payload = ? WHERE id = ?")
+                    .bind(couponCode, JSON.stringify(payload), dbId).run();
 
-                await logPaymentEvent(env.DB, {
-                  registration_id: dbId,
-                  order_id: latestOrder.id,
-                  payment_id: latestPayment ? latestPayment.id : null,
-                  event: "PAYMENT_STATUS_RECONCILED",
-                  status: "PAID",
-                  details: epStatusData
-                });
+                  await logPaymentEvent(env.DB, {
+                    registration_id: dbId,
+                    order_id: ord.id,
+                    payment_id: latestPayment ? latestPayment.id : null,
+                    event: "PAYMENT_STATUS_RECONCILED",
+                    status: "PAID",
+                    details: epStatusData
+                  });
 
-                reg.payment_status = "Ödənilib";
-                reg.coupon_code = couponCode;
-                latestOrder.status = "PAID";
+                  reg.payment_status = "Ödənilib";
+                  reg.coupon_code = couponCode;
+                  ord.status = "PAID";
+                  break;
+                }
               }
+            } catch (e) {
+              console.warn("Fallback check error:", e);
             }
-          } catch (e) {
-            console.warn("Fallback check error:", e);
           }
         }
 
