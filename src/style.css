@@ -2317,11 +2317,11 @@ img, video {
   .mobile-menu-btn {
     background: #f8f9fa !important;
     color: var(--navy) !important;
-    border: 1px solid rgba(0,0,0,0.1) !important;
+    border: 1.5px solid rgba(0,0,0,0.12) !important;
     border-radius: 10px !important;
-    width: 34px !important;
-    height: 34px !important;
-    min-width: 34px !important;
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -3411,49 +3411,56 @@ a[href^="tel"], a[href^="tel"]:hover {
     display: none !important;
   }
 
-  /* *1808 phone button */
+  /* *1808 phone button — matches desktop style */
   .nav-actions > a.nav-phone-btn {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     gap: 5px !important;
-    padding: 0 11px !important;
-    height: 34px !important;
-    min-width: 88px !important;
-    font-size: 0.8rem !important;
+    padding: 0 12px !important;
+    height: 36px !important;
+    width: auto !important;
+    min-width: unset !important;
+    font-size: 0.78rem !important;
     font-weight: 800 !important;
     margin: 0 !important;
     border-radius: 10px !important;
     white-space: nowrap !important;
-    background: rgba(30, 58, 138, 0.08) !important;
-    border: 1px solid rgba(30, 58, 138, 0.15) !important;
+    background: rgba(30, 58, 138, 0.07) !important;
+    border: 1.5px solid rgba(30, 58, 138, 0.18) !important;
     color: #1e3a8a !important;
     text-decoration: none !important;
     flex-shrink: 0 !important;
     box-sizing: border-box !important;
   }
   
-  /* Qeydiyyat button — same size as *1808 */
+  /* Qeydiyyat button — matches desktop style (burgundy) */
   .nav-actions > a.nav-btn {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    padding: 0 11px !important;
-    height: 34px !important;
-    min-width: 88px !important;
-    font-size: 0.8rem !important;
+    padding: 0 12px !important;
+    height: 36px !important;
+    width: auto !important;
+    min-width: unset !important;
+    font-size: 0.78rem !important;
+    font-weight: 800 !important;
     margin: 0 !important;
     border-radius: 10px !important;
     white-space: nowrap !important;
     flex-shrink: 0 !important;
     box-sizing: border-box !important;
+    background: var(--burgundy, #8B1A2E) !important;
+    color: #fff !important;
+    border: none !important;
   }
   
   .nav-actions > a.nav-btn:hover {
     transform: none !important;
+    opacity: 0.9 !important;
   }
 
-  /* Hamburger — now inside nav-actions, inherits gap from parent */
+  /* Hamburger — same height as buttons, square */
   .nav-actions > .mobile-menu-btn,
   .modern-floating-nav.scrolled .nav-actions > .mobile-menu-btn,
   .modern-floating-nav.nav-hidden .nav-actions > .mobile-menu-btn {
@@ -3463,6 +3470,9 @@ a[href^="tel"], a[href^="tel"]:hover {
     right: auto !important;
     top: auto !important;
     transform: none !important;
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
   }
 }
 
