@@ -3414,8 +3414,11 @@ a[href^="tel"], a[href^="tel"]:hover {
   .nav-actions > a.nav-phone-btn {
     display: inline-flex !important;
     align-items: center !important;
+    justify-content: center !important;
     gap: 5px !important;
-    padding: 7px 11px !important;
+    padding: 0 11px !important;
+    height: 34px !important;
+    min-width: 88px !important;
     font-size: 0.8rem !important;
     font-weight: 800 !important;
     margin: 0 !important;
@@ -3426,16 +3429,23 @@ a[href^="tel"], a[href^="tel"]:hover {
     color: #1e3a8a !important;
     text-decoration: none !important;
     flex-shrink: 0 !important;
+    box-sizing: border-box !important;
   }
   
   /* Qeydiyyat button — same size as *1808 */
   .nav-actions > a.nav-btn {
-    padding: 7px 11px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 11px !important;
+    height: 34px !important;
+    min-width: 88px !important;
     font-size: 0.8rem !important;
     margin: 0 !important;
     border-radius: 10px !important;
     white-space: nowrap !important;
     flex-shrink: 0 !important;
+    box-sizing: border-box !important;
   }
   
   .nav-actions > a.nav-btn:hover {
