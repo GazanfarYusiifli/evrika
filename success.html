@@ -444,20 +444,14 @@
       try {
         fetch(`/api/check-epoint-status?regId=${dbId}&order_id=${finalOrderId}`).catch(() => {});
 
-        const res = await fetch(`https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/registrations?id=eq.${dbId}&select=payload`, {
-          headers: {
-            'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
-            'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE'
-          }
-        });
+        const res = await fetch(`https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations?id=${dbId}`);
 
         if (res.ok) {
-          const rows = await res.json();
-          if (rows && rows.length > 0) {
-            const p = rows[0].payload || {};
-            const studentName = p.student_name || p.fullName || p.name || nameParam || 'Şagird';
-            const grade = p.student_grade || p.grade || p['Sinif'] || '';
-            const branch = p.branch_name || p.school || 'EVRİKA Liseyi';
+          const row = await res.json();
+          const p = (row && (row.payload || row)) || {};
+          const studentName = p.student_name || p.fullName || p.name || nameParam || 'Şagird';
+          const grade = p.student_grade || p.grade || p['Sinif'] || '';
+          const branch = p.branch_name || p.school || 'EVRİKA Liseyi';
             const amount = p.epoint_amount || p.amount || '20.00';
 
             document.getElementById('ticket-student-name').innerText = studentName;

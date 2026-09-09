@@ -1,0 +1,8 @@
+name = "evrika-api"
+main = "worker.js"
+compatibility_date = "2024-09-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "evrika-db"
+database_id = "2c6f4d1c-d3d2-413f-9a4b-42c6854b51b0"

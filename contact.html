@@ -804,16 +804,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           localStorage.setItem('evrika_crm_data', JSON.stringify(crmData));
 
           try {
-              // Post to Supabase
-              let res = await fetch('https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/registrations', {
+              // Post to Cloudflare D1
+              let res = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations', {
                   method: 'POST',
                   headers: {
-                      'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
-                      'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
-                      'Content-Type': 'application/json',
-                      'Prefer': 'return=minimal'
+                      'Content-Type': 'application/json'
                   },
-                  body: JSON.stringify({ payload: contactData })
+                  body: JSON.stringify(contactData)
               });
               
               if (res.ok) {
@@ -821,7 +818,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 this.reset();
               } else {
                 const errorText = await res.text();
-                console.error("Supabase Error:", errorText);
+                console.error("API Error:", errorText);
                 alert("Müraciətiniz qəbul edildi (Local), lakin serverlə sinxronlaşmadı.");
                 this.reset();
               }

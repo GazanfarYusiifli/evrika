@@ -60,31 +60,13 @@ export default async function handler(req, res) {
 
     let targetRow = null;
 
+    const CF_API_URL = "https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations";
+
     // 1. Mövcud datanı ID ilə axtarırıq
     if (dbId) {
-      const getResponse = await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${dbId}&select=id,payload`, {
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`
-        }
-      });
-      const rows = await getResponse.json();
-      if (rows && rows.length > 0) {
-        targetRow = rows[0];
-      }
-    }
-
-    // Əgər ID ilə tapılmadısa, payload->>order_id ilə axtarırıq
-    if (!targetRow && order_id) {
-      const searchRes = await fetch(`${SUPABASE_URL}/rest/v1/registrations?payload->>order_id=eq.${order_id}&select=id,payload`, {
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`
-        }
-      });
-      const rows = await searchRes.json();
-      if (rows && rows.length > 0) {
-        targetRow = rows[0];
+      const getResponse = await fetch(`${CF_API_URL}?id=${dbId}`);
+      if (getResponse.ok) {
+        targetRow = await getResponse.json();
       }
     }
 
@@ -92,7 +74,7 @@ export default async function handler(req, res) {
       let existingPayload = targetRow.payload || {};
       const rowId = targetRow.id;
 
-      // Əgər ödəniş uğurludursa Supabase bazasında statusu yeniləyirik
+      // Əgər ödəniş uğurludursa bazada statusu yeniləyirik
       if (status === 'success') {
         existingPayload.status = 'Yeni';
         existingPayload.payment_status = 'Ödənilib';
@@ -117,16 +99,17 @@ export default async function handler(req, res) {
           existingPayload.note = (existingPayload.note ? existingPayload.note + ' | ' : '') + 'EPOINT VASİTƏSİLƏ ÖDƏNİLDİ. İmtahan giriş kuponu göndərildi.';
         }
 
-        // Update Supabase
-        await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${rowId}`, {
-          method: 'PATCH',
+        // Update Cloudflare D1
+        await fetch(`${CF_API_URL}?id=${rowId}`, {
+          method: 'PUT',
           headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${SUPABASE_KEY}`,
-            'Content-Type': 'application/json',
-            'Prefer': 'return=representation'
+            'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ payload: existingPayload })
+          body: JSON.stringify({
+            payment_status: 'Ödənilib',
+            amount: result.amount || existingPayload.amount,
+            ...existingPayload
+          })
         });
 
         // Email göndərilməsini asinxron başladırıq
@@ -180,14 +163,12 @@ export default async function handler(req, res) {
           existingPayload.epoint_bank_response = result.bank_response || result.bankResponse || result.message || `Status: ${status}`;
           existingPayload.epoint_result_code = result.code || result.result_code || "";
           
-          await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${rowId}`, {
-            method: 'PATCH',
+          await fetch(`${CF_API_URL}?id=${rowId}`, {
+            method: 'PUT',
             headers: {
-              'apikey': SUPABASE_KEY,
-              'Authorization': `Bearer ${SUPABASE_KEY}`,
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ payload: existingPayload })
+            body: JSON.stringify(existingPayload)
           });
         }
       }

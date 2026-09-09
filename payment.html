@@ -289,15 +289,10 @@
           return;
         }
 
-        const res = await fetch(`https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/registrations?id=eq.${cleanDbId}&select=id,payload`, {
-          headers: {
-            'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
-            'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE'
-          }
-        });
-        const rows = await res.json();
-        if (rows && rows.length > 0) {
-          const item = rows[0].payload || {};
+        const res = await fetch(`https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations?id=${cleanDbId}`);
+        if (res.ok) {
+          const row = await res.json();
+          const item = row.payload || {};
           const candidateName = item.fullName || item.name || item['[2.Şagird] Adı'] || regName;
           const candidateEmail = item.email || item['E-mail'] || emailParam;
           const candidateGrade = item.student_grade || item['[3.Təhsil] Qeydiyyat Səviyyəsi'] || item['Sinif'] || gradeParam;
@@ -323,7 +318,7 @@
           }
         }
       } catch (err) {
-        console.error("Supabase fetch error:", err);
+        console.error("Registration fetch error:", err);
       }
 
       if (autostart) {
@@ -365,34 +360,29 @@
         }
 
         try {
-          const createRes = await fetch('https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/registrations', {
+          const createRes = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations', {
             method: 'POST',
             headers: {
-              'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
-              'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
-              'Content-Type': 'application/json',
-              'Prefer': 'return=representation'
+              'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              payload: {
-                fullName: finalName,
-                student_name: finalName,
-                student_grade: gradeVal,
-                phone: phoneVal,
-                email: finalEmail,
-                source: 'Birbaşa Ödəniş Portalı',
-                status: 'Yeni',
-                payment_status: 'Ödənilməyib',
-                amount: parseFloat(amountParam),
-                date: new Date().toISOString()
-              }
+              fullName: finalName,
+              student_name: finalName,
+              student_grade: gradeVal,
+              phone: phoneVal,
+              email: finalEmail,
+              source: 'Birbaşa Ödəniş Portalı',
+              status: 'Yeni',
+              payment_status: 'Ödənilməyib',
+              amount: parseFloat(amountParam),
+              date: new Date().toISOString()
             })
           });
 
           if (createRes.ok) {
             const data = await createRes.json();
-            if (data && data.length > 0) {
-              finalDbId = data[0].id;
+            if (data && data.id) {
+              finalDbId = data.id;
             }
           }
         } catch(e) {

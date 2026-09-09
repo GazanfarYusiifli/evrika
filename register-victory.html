@@ -491,20 +491,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               };
 
               try {
-                const res = await fetch('https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/registrations', {
+                const res = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations', {
                   method: 'POST',
                   headers: {
-                    'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
-                    'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
-                    'Content-Type': 'application/json',
-                    'Prefer': 'return=representation'
+                    'Content-Type': 'application/json'
                   },
-                  body: JSON.stringify({ payload: payloadData })
+                  body: JSON.stringify(payloadData)
                 });
                 
                 const data = await res.json();
-                if(data && data.length > 0) {
-                    window.currentRegistrationId = data[0].id;
+                if(data && data.id) {
+                    window.currentRegistrationId = data.id;
                     window.currentPayloadData = payloadData;
                 }
                 

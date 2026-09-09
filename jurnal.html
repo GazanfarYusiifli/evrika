@@ -495,16 +495,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
         async function fetchVacancies() {
           try {
-            const res = await fetch('https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/vacancies?select=*&order=id.desc', {
-              headers: {
-                'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
-                'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE'
-              }
-            });
+            const res = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/vacancies');
             
             if(res.ok) {
               const data = await res.json();
-              const vacancies = data.map(row => row.payload);
+              const vacancies = data.map(row => (row.payload ? (typeof row.payload === 'string' ? JSON.parse(row.payload) : row.payload) : row));
               renderVacancies(vacancies);
             } else {
               renderVacancies([]);
@@ -603,14 +598,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             };
 
             try {
-                const res = await fetch('https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/registrations', {
+                const res = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations', {
                     method: 'POST',
                     headers: {
-                        'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
-                        'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ payload: payload })
+                    body: JSON.stringify(payload)
                 });
 
                 if(res.ok) {

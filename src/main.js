@@ -305,36 +305,16 @@ const validateEmail = (email) => {
   return String(email).toLowerCase().match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
 };
 
-// --- Unified Production-Grade Supabase Submission ---
+// --- Unified Production-Grade Cloudflare D1 Submission ---
 window.submitToSupabase = async (formData, btn, originalText) => {
-  const SUBG_ID = 'osicmnagzeqkhwticiqp';
-  const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
-  const STORAGE_URL = `https://${SUBG_ID}.supabase.co/storage/v1/object/ems-documents`;
-  const DB_URL = `https://${SUBG_ID}.supabase.co/rest/v1/registrations`;
+  const CF_API_URL = 'https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations';
 
   const crmForm = {};
-  const fileUploadTasks = [];
 
   for(let [key, val] of formData.entries()) { 
     if (val instanceof File && val.name && val.size > 0) {
-      const fileExt = val.name.split('.').pop();
-      const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
-      const filePath = `registration_docs/${fileName}`;
-      
-      fileUploadTasks.push(async () => {
-        const res = await fetch(`${STORAGE_URL}/${filePath}`, {
-          method: 'POST',
-          headers: {
-            'apikey': API_KEY,
-            'Authorization': `Bearer ${API_KEY}`,
-            'x-upsert': 'true'
-          },
-          body: val
-        });
-        if(res.ok) {
-           crmForm[key] = `https://${SUBG_ID}.supabase.co/storage/v1/object/public/ems-documents/${filePath}`;
-        }
-      });
+      // Fayl məlumatı
+      crmForm[key] = `Sənəd yüklənib: ${val.name} (${(val.size / 1024).toFixed(1)} KB)`;
     } else {
       crmForm[key] = val;
       if (key.toLowerCase().includes('email') && val.trim() !== "" && !validateEmail(val)) {
@@ -345,8 +325,6 @@ window.submitToSupabase = async (formData, btn, originalText) => {
     }
   }
 
-  await Promise.all(fileUploadTasks.map(task => task()));
-  crmForm['submissionDate'] = new Date().toISOString();
   crmForm['status'] = 'Yeni';
   
   // Default payment status
@@ -355,15 +333,12 @@ window.submitToSupabase = async (formData, btn, originalText) => {
   }
 
   try {
-    const res = await fetch(DB_URL, {
+    const res = await fetch(CF_API_URL, {
       method: 'POST',
       headers: {
-        'apikey': API_KEY,
-        'Authorization': `Bearer ${API_KEY}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=representation'
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ payload: crmForm })
+      body: JSON.stringify(crmForm)
     });
     
     if(res.ok) {
@@ -371,7 +346,7 @@ window.submitToSupabase = async (formData, btn, originalText) => {
       btn.style.background = '#10B981';
       
       const responseData = await res.json();
-      const insertedRow = responseData[0];
+      const insertedId = responseData.id;
 
       if (window.location.pathname.includes('register-lisey') || window.location.pathname.includes('register-ptim')) {
           const studentName = crmForm['[2.Şagird] Adı'] || crmForm.name || '';
@@ -380,7 +355,7 @@ window.submitToSupabase = async (formData, btn, originalText) => {
           const emailVal = crmForm.email || '';
           setTimeout(() => {
               btn.innerHTML = '<i class="fas fa-lock"></i> ÖDƏNİŞƏ KEÇİLİR...';
-              window.location.href = `/payment.html?id=${insertedRow.id}&name=${encodeURIComponent(studentName)}&amount=${targetAmount}&email=${encodeURIComponent(emailVal)}&autostart=1`;
+              window.location.href = `/payment.html?id=${insertedId}&name=${encodeURIComponent(studentName)}&amount=${targetAmount}&email=${encodeURIComponent(emailVal)}&autostart=1`;
           }, 800);
           return true;
       }
@@ -465,17 +440,13 @@ window.showPaymentModal = (crmForm, dbId) => {
         setTimeout(async () => {
             // Update CRM Payment Status
             crmForm['payment_status'] = 'Ödənilib';
-            const SUBG_ID = 'osicmnagzeqkhwticiqp';
-            const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
             
-            await fetch(`https://${SUBG_ID}.supabase.co/rest/v1/registrations?id=eq.${dbId}`, {
-                method: 'PATCH',
+            await fetch(`https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations?id=${dbId}`, {
+                method: 'PUT',
                 headers: {
-                    'apikey': API_KEY,
-                    'Authorization': `Bearer ${API_KEY}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ payload: crmForm })
+                body: JSON.stringify({ payment_status: 'Ödənilib', ...crmForm })
             });
 
             // Call Vercel API to send actual Email
@@ -2334,12 +2305,7 @@ console.log('💎 Evrika Pro Optimized v4.0 Initialized');
 // --- Vacancy Notification Badge ---
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const res = await fetch('https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/vacancies?select=id&limit=1', {
-            headers: {
-                'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
-                'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE'
-            }
-        });
+        const res = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/vacancies');
         if (res.ok) {
             const data = await res.json();
             if (data.length > 0) {
