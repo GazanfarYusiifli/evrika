@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <style>
     :root {
@@ -110,7 +111,20 @@
       background: linear-gradient(90deg, #10b981, #3b82f6, #8b1a2b);
     }
 
-    .success-badge-wrap {
+    /* STATES: PAID, PENDING, FAILED, EXPIRED, CANCELLED */
+    .state-section {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+    }
+
+    .state-section.active {
+      display: flex;
+    }
+
+    .badge-wrap {
       text-align: center;
       display: flex;
       flex-direction: column;
@@ -118,19 +132,33 @@
       gap: 12px;
     }
 
-    .success-icon-box {
+    .status-icon-box {
       width: 72px;
       height: 72px;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, rgba(16, 185, 129, 0.05) 70%);
-      border: 2px solid #10b981;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 2rem;
+    }
+    .status-icon-box.paid {
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, rgba(16, 185, 129, 0.05) 70%);
+      border: 2px solid #10b981;
       color: #10b981;
       box-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
       animation: pulseGreen 2.5s infinite;
+    }
+    .status-icon-box.pending {
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.25) 0%, rgba(245, 158, 11, 0.05) 70%);
+      border: 2px solid #f59e0b;
+      color: #f59e0b;
+      box-shadow: 0 0 30px rgba(245, 158, 11, 0.4);
+    }
+    .status-icon-box.failed {
+      background: radial-gradient(circle, rgba(239, 68, 68, 0.25) 0%, rgba(239, 68, 68, 0.05) 70%);
+      border: 2px solid #ef4444;
+      color: #ef4444;
+      box-shadow: 0 0 30px rgba(239, 68, 68, 0.4);
     }
 
     @keyframes pulseGreen {
@@ -138,20 +166,22 @@
       50% { transform: scale(1.05); box-shadow: 0 0 45px rgba(16, 185, 129, 0.6); }
     }
 
-    .success-title {
+    .state-title {
       font-size: 1.65rem;
       font-weight: 900;
       color: #ffffff;
       letter-spacing: -0.5px;
     }
-    .success-sub {
+    .state-sub {
       font-size: 0.92rem;
       color: var(--text-muted);
       line-height: 1.5;
       max-width: 480px;
+      text-align: center;
     }
 
     .voucher-box {
+      width: 100%;
       background: rgba(0, 0, 0, 0.4);
       border: 1px dashed rgba(255, 255, 255, 0.18);
       border-radius: 20px;
@@ -262,11 +292,9 @@
       .actions-wrap { flex-direction: column; }
     }
 
-    .btn-print {
+    .btn-action {
       flex: 1;
       padding: 16px 22px;
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: white;
       border: none;
       border-radius: 16px;
       font-size: 0.95rem;
@@ -277,53 +305,45 @@
       justify-content: center;
       gap: 8px;
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.35);
       text-decoration: none;
     }
-    .btn-print:hover {
+    .btn-action.green {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.35);
+    }
+    .btn-action.green:hover {
       transform: translateY(-2px);
       box-shadow: 0 15px 35px rgba(16, 185, 129, 0.5);
     }
-
-    .btn-home {
-      flex: 1;
-      padding: 16px 22px;
+    .btn-action.red {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white;
+      box-shadow: 0 10px 25px rgba(239, 68, 68, 0.35);
+    }
+    .btn-action.red:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 35px rgba(239, 68, 68, 0.5);
+    }
+    .btn-action.secondary {
       background: rgba(255, 255, 255, 0.06);
       color: white;
       border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 16px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.3s;
-      text-decoration: none;
     }
-    .btn-home:hover {
+    .btn-action.secondary:hover {
       background: rgba(255, 255, 255, 0.12);
       transform: translateY(-2px);
     }
 
-    @media print {
-      body { background: white !important; color: black !important; padding: 0 !important; }
-      .aurora-bg, .laser-grid, .brand-crest, .actions-wrap, .success-badge-wrap { display: none !important; }
-      .ticket-card {
-        border: 2px solid black !important;
-        background: white !important;
-        color: black !important;
-        box-shadow: none !important;
-        padding: 20px !important;
-      }
-      .voucher-box { background: #f8fafc !important; border: 1px solid #000 !important; color: black !important; }
-      .v-label { color: #555 !important; }
-      .v-value { color: black !important; }
-      .voucher-order { background: #eee !important; color: black !important; }
-      .qr-container { border: 1px solid #ccc !important; }
-      .qr-info h5, .qr-info p { color: black !important; }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(245, 158, 11, 0.2);
+      border-top: 4px solid #f59e0b;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
     }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -340,193 +360,334 @@
       <span>Evrika Təhsil Ekosistemi</span>
     </div>
 
-    <div class="ticket-card" id="printable-ticket">
-      <div class="success-badge-wrap">
-        <div class="success-icon-box">
-          <i class="fas fa-check"></i>
+    <div class="ticket-card">
+
+      <!-- ================= STATE: PAID ================= -->
+      <div id="state-paid" class="state-section">
+        <div class="badge-wrap">
+          <div class="status-icon-box paid">
+            <i class="fas fa-check"></i>
+          </div>
+          <h1 class="state-title">Ödənişiniz Uğurla Tamamlandı!</h1>
+          <p class="state-sub">Ödənişiniz təsdiqləndi və imtahana giriş kuponunuz hazırdır.</p>
         </div>
-        <h1 class="success-title">Ödənişiniz Uğurla Tamamlandı!</h1>
-        <p class="success-sub">Müraciətiniz təsdiqləndi. İmtahana giriş kuponunuz və elektron qəbziniz aşağıda təqdim olunur.</p>
+
+        <div class="voucher-box" id="printable-voucher">
+          <div class="voucher-header">
+            <span class="voucher-type"><i class="fas fa-id-card"></i> İmtahana Giriş Kuponu</span>
+            <span class="voucher-order" id="ticket-order-id">EV-0000</span>
+          </div>
+
+          <div class="voucher-details-grid">
+            <div class="v-field">
+              <span class="v-label">İştirakçı (Şagird)</span>
+              <span class="v-value" id="ticket-student-name">--</span>
+            </div>
+            <div class="v-field">
+              <span class="v-label">Məbləğ & Status</span>
+              <span class="v-value" style="color: #10b981;" id="ticket-amount">-- AZN (ÖDƏNİLİB)</span>
+            </div>
+            <div class="v-field">
+              <span class="v-label">Sinif & Filial</span>
+              <span class="v-value" id="ticket-branch">EVRİKA Liseyi</span>
+            </div>
+            <div class="v-field">
+              <span class="v-label">Tarix & Saat</span>
+              <span class="v-value" id="ticket-date">--</span>
+            </div>
+          </div>
+
+          <div class="qr-container">
+            <img loading="lazy" decoding="async" id="ticket-qr" src="" alt="QR Kod" class="qr-img" />
+            <div class="qr-info">
+              <h5><i class="fas fa-shield-alt" style="color:#10b981;"></i> Rəsmi Yoxlanış QR Kodu</h5>
+              <p>İmtahan günü bu QR kodu nəzarətçiyə təqdim edin. QR kod skan edildikdə iştirakçı statusu avtomatik təsdiqlənəcəkdir.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions-wrap">
+          <button class="btn-action green" id="btnDownloadPdf" onclick="downloadPdfCoupon()">
+            <i class="fas fa-file-pdf"></i> Kuponu yüklə (PDF)
+          </button>
+          <a href="/" class="btn-action secondary">
+            <i class="fas fa-arrow-left"></i> Ana Səhifəyə Qayıt
+          </a>
+        </div>
       </div>
 
-      <div class="voucher-box">
-        <div class="voucher-header">
-          <span class="voucher-type"><i class="fas fa-id-card"></i> İmtahana Giriş Kuponu</span>
-          <span class="voucher-order" id="ticket-order-id">EV-0000</span>
+      <!-- ================= STATE: PENDING ================= -->
+      <div id="state-pending" class="state-section active">
+        <div class="badge-wrap">
+          <div class="spinner"></div>
+          <h1 class="state-title" style="font-size: 1.4rem;">Ödənişiniz yoxlanılır...</h1>
+          <p class="state-sub">Bank və Epoint şlüzündən təsdiq gözlənilir. Zəhmət olmasa səhifəni bağlamayın, avtomatik yenilənəcəkdir.</p>
         </div>
-
-        <div class="voucher-details-grid">
-          <div class="v-field">
-            <span class="v-label">İştirakçı (Şagird)</span>
-            <span class="v-value" id="ticket-student-name">Yüklənir...</span>
-          </div>
-          <div class="v-field">
-            <span class="v-label">Məbləğ & Status</span>
-            <span class="v-value" style="color: #10b981;" id="ticket-amount">20.00 AZN (Ödənilib)</span>
-          </div>
-          <div class="v-field">
-            <span class="v-label">Sinif & Filial</span>
-            <span class="v-value" id="ticket-branch">EVRİKA Liseyi</span>
-          </div>
-          <div class="v-field">
-            <span class="v-label">Tarix & Saat</span>
-            <span class="v-value" id="ticket-date">--</span>
-          </div>
-        </div>
-
-        <div class="qr-container">
-          <img loading="lazy" decoding="async" id="ticket-qr" src="" alt="QR Kod" class="qr-img" />
-          <div class="qr-info">
-            <h5><i class="fas fa-shield-alt" style="color:#10b981;"></i> Rəsmi Yoxlanış QR Kodu</h5>
-            <p>İmtahan günü bu QR kodu nəzarətçiyə təqdim edin. QR kod skan edildikdə iştirakçı statusu avtomatik təsdiqlənəcəkdir.</p>
-          </div>
+        <div style="font-size: 0.82rem; color: #94a3b8; text-align: center;">
+          <i class="fas fa-sync-alt fa-spin"></i> Status yoxlanışı aparılır...
         </div>
       </div>
 
-      <div class="actions-wrap">
-        <button class="btn-print" onclick="window.print()">
-          <i class="fas fa-print"></i> Kuponu Çap Et / PDF
-        </button>
-        <a href="/" class="btn-home">
-          <i class="fas fa-arrow-left"></i> Ana Səhifəyə Qayıt
-        </a>
+      <!-- ================= STATE: FAILED ================= -->
+      <div id="state-failed" class="state-section">
+        <div class="badge-wrap">
+          <div class="status-icon-box failed">
+            <i class="fas fa-times"></i>
+          </div>
+          <h1 class="state-title">Ödəniş tamamlanmadı</h1>
+          <p class="state-sub">Ödəniş həyata keçirilmədi. Zəhmət olmasa kart məlumatlarını yoxlayın və yenidən cəhd edin.</p>
+        </div>
+        <div class="actions-wrap">
+          <a id="retryBtn" href="/payment.html" class="btn-action red">
+            <i class="fas fa-redo"></i> Yenidən ödə
+          </a>
+          <a href="/" class="btn-action secondary">
+            Ana Səhifəyə Qayıt
+          </a>
+        </div>
       </div>
+
+      <!-- ================= STATE: EXPIRED ================= -->
+      <div id="state-expired" class="state-section">
+        <div class="badge-wrap">
+          <div class="status-icon-box failed" style="border-color:#f59e0b; color:#f59e0b;">
+            <i class="fas fa-clock"></i>
+          </div>
+          <h1 class="state-title">Ödəniş sessiyasının müddəti bitib</h1>
+          <p class="state-sub">Təhlükəsizlik səbəbilə ödəniş sessiyasının vaxtı başa çatıb.</p>
+        </div>
+        <div class="actions-wrap">
+          <a id="newPaymentBtn" href="/schools.html" class="btn-action green">
+            <i class="fas fa-plus"></i> Yeni ödəniş yarat
+          </a>
+          <a href="/" class="btn-action secondary">
+            Ana Səhifəyə Qayıt
+          </a>
+        </div>
+      </div>
+
+      <!-- ================= STATE: CANCELLED ================= -->
+      <div id="state-cancelled" class="state-section">
+        <div class="badge-wrap">
+          <div class="status-icon-box failed">
+            <i class="fas fa-ban"></i>
+          </div>
+          <h1 class="state-title">Ödəniş ləğv edildi</h1>
+          <p class="state-sub">Əməliyyat istifadəçi və ya bank tərəfindən ləğv edilmişdir.</p>
+        </div>
+        <div class="actions-wrap">
+          <a id="cancelRetryBtn" href="/payment.html" class="btn-action red">
+            <i class="fas fa-redo"></i> Yenidən ödə
+          </a>
+          <a href="/" class="btn-action secondary">
+            Ana Səhifəyə Qayıt
+          </a>
+        </div>
+      </div>
+
     </div>
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      try {
-        confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { y: 0.6 }
-        });
-        setTimeout(() => {
-          confetti({
-            particleCount: 50,
-            angle: 60,
-            spread: 55,
-            origin: { x: 0 }
-          });
-          confetti({
-            particleCount: 50,
-            angle: 120,
-            spread: 55,
-            origin: { x: 1 }
-          });
-        }, 300);
-      } catch(e) {}
-    });
-
+    const API_BASE = 'https://evrika-api.yusifliqezenfer90.workers.dev';
     const urlParams = new URLSearchParams(window.location.search);
     let rawRegId = urlParams.get('regId') || urlParams.get('id') || localStorage.getItem('last_regId') || '';
     let orderIdParam = urlParams.get('order_id') || localStorage.getItem('last_order_id') || '';
-    let nameParam = urlParams.get('name') || localStorage.getItem('last_name') || '';
-    let emailParam = urlParams.get('email') || localStorage.getItem('last_email') || '';
 
-    // ID parsing: either pure number or EV-1234
     let dbId = parseInt(String(rawRegId).replace(/\D/g, ''), 10);
     if ((!dbId || isNaN(dbId)) && orderIdParam) {
-      dbId = parseInt(String(orderIdParam).replace(/\D/g, ''), 10);
+      const match = String(orderIdParam).match(/EVR-(\d+)/i) || String(orderIdParam).match(/EV-(\d+)/i) || String(orderIdParam).match(/^(\d+)$/);
+      if (match) dbId = parseInt(match[1], 10);
     }
 
-    const finalOrderId = dbId ? ("EV-" + String(dbId).padStart(4, '0')) : (orderIdParam || "EV-0000");
+    let pollInterval = null;
+    let pollCount = 0;
+    const MAX_POLLS = 15; // Poll every 2.5s for up to ~38 seconds
 
-    document.getElementById('ticket-order-id').innerText = finalOrderId;
-    document.getElementById('ticket-date').innerText = new Date().toLocaleString('az-AZ', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-    
-    if (nameParam) {
-      document.getElementById('ticket-student-name').innerText = nameParam;
+    let loadedTicketData = null;
+
+    function showState(state) {
+      document.querySelectorAll('.state-section').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById('state-' + state.toLowerCase());
+      if (target) target.classList.add('active');
     }
 
-    // QR kod verify.html səhifəsinə yönləndirir
-    const verifyUrl = dbId ? `https://evrikaliseyi.edu.az/verify.html?id=${dbId}` : `https://evrikaliseyi.edu.az/verify.html?id=${encodeURIComponent(finalOrderId)}`;
-    document.getElementById('ticket-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(verifyUrl)}`;
-
-    async function syncPaymentDetails() {
-      // Əgər dbId yoxdursa, localStorage-dən axtar
+    async function checkStatus() {
       if (!dbId || isNaN(dbId)) {
-        const storedId = localStorage.getItem('last_regId');
-        if (storedId) {
-          dbId = parseInt(String(storedId).replace(/\D/g, ''), 10);
-        }
-      }
-
-      if (!dbId || isNaN(dbId)) {
-        // Əgər heç bir ID yoxdursa ən son ödənilmiş və ya qeydiyyatı çəkməyə cəhd edək
-        try {
-          const latestRes = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations');
-          if (latestRes.ok) {
-            const all = await latestRes.json();
-            if (all && all.length > 0) {
-              const latest = all[0];
-              renderTicketData(latest);
-              return;
-            }
-          }
-        } catch(e) {}
+        showState('failed');
         return;
       }
 
       try {
-        // Status yoxlamasını arxa planda trigger et
-        fetch(`/api/check-epoint-status?regId=${dbId}&order_id=${finalOrderId}`).catch(() => {});
+        const res = await fetch(`${API_BASE}/api/payment-status?id=${dbId}${orderIdParam ? '&order_id=' + encodeURIComponent(orderIdParam) : ''}`, {
+          cache: 'no-store'
+        });
 
-        const res = await fetch(`https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations?id=${dbId}`);
+        if (!res.ok) {
+          throw new Error("HTTP error " + res.status);
+        }
 
-        if (res.ok) {
-          const data = await res.json();
-          // Diqqət: Cloudflare API array qaytarır: [ { id: ..., payload: ... } ]
-          const row = Array.isArray(data) ? data[0] : data;
-          if (row) {
-            renderTicketData(row);
+        const json = await res.json();
+        const data = json.data || {};
+
+        if (data.isPaid || data.status === 'PAID') {
+          if (pollInterval) clearInterval(pollInterval);
+          loadedTicketData = data;
+          renderPaidTicket(data);
+          showState('paid');
+          triggerConfetti();
+        } else if (data.status === 'FAILED') {
+          if (pollInterval) clearInterval(pollInterval);
+          setupRetryLinks();
+          showState('failed');
+        } else if (data.status === 'CANCELLED') {
+          if (pollInterval) clearInterval(pollInterval);
+          setupRetryLinks();
+          showState('cancelled');
+        } else if (data.status === 'EXPIRED') {
+          if (pollInterval) clearInterval(pollInterval);
+          setupRetryLinks();
+          showState('expired');
+        } else {
+          // Still PENDING
+          showState('pending');
+          pollCount++;
+          if (pollCount >= MAX_POLLS) {
+            clearInterval(pollInterval);
+            // After max polls, don't say failed: keep friendly pending guidance
+            document.querySelector('#state-pending .state-sub').innerText = 
+              "Bankdan cavab bir qədər gecikir. Kartınızdan vəsait çıxılıbsa narahat olmayın, sistem avtomatik təsdiqləyəcəkdir. Zəhmət olmasa bir neçə dəqiqə sonra səhifəni yeniləyin.";
           }
         }
       } catch (err) {
-        console.warn('Sync status error:', err);
+        console.warn("Status check failed:", err);
       }
     }
 
-    function renderTicketData(row) {
-      const p = row.payload || row || {};
-      const currentId = row.id || row._db_id_ || p.id || dbId;
-      if (currentId) {
-        const fullOrderId = "EV-" + String(currentId).padStart(4, '0');
-        document.getElementById('ticket-order-id').innerText = fullOrderId;
-        const vUrl = `https://evrikaliseyi.edu.az/verify.html?id=${currentId}`;
-        document.getElementById('ticket-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(vUrl)}`;
-      }
+    function renderPaidTicket(data) {
+      const coupon = data.coupon_code || ("EV-" + String(dbId).padStart(4, '0'));
+      document.getElementById('ticket-order-id').innerText = coupon;
+      document.getElementById('ticket-student-name').innerText = data.student_name || 'Şagird';
+      
+      const amtNum = parseFloat(data.amount) || 0.01;
+      document.getElementById('ticket-amount').innerText = `${amtNum.toFixed(2)} AZN (ÖDƏNİLİB)`;
 
-      const sdName = p['[2.Şagird] Adı'];
-      const sdSurname = p['[2.Şagird] Soyadı'] || '';
-      const fullSdName = sdName ? (sdName + ' ' + sdSurname).trim() : null;
-      const studentName = row.name || p.student_name || p.fullName || fullSdName || p.name || nameParam || 'Şagird';
-      
-      const grade = p.student_grade || p.grade || p['Sinif'] || p['[3.Təhsil] Qeydiyyat Səviyyəsi'] || '';
-      
-      // Filial təyini
       let branch = 'EVRİKA Liseyi';
-      const src = (row.source || p.source || '').toLowerCase();
-      if (src.includes('nərimanov') || src.includes('nerimanov')) {
-        branch = 'EVRİKA BETL (Nərimanov filialı)';
-      } else if (src.includes('gənclik') || src.includes('genclik')) {
-        branch = 'EVRİKA BETL (Gənclik filialı)';
-      } else if (src.includes('montessori')) {
-        branch = 'EVRİKA Montessori Kids';
-      } else if (src.includes('zumrud') || src.includes('zümrüd')) {
-        branch = 'Zümrüd İdman Kompleksi';
-      }
+      const src = (data.source || '').toLowerCase();
+      if (src.includes('nərimanov') || src.includes('nerimanov')) branch = 'EVRİKA BETL (Nərimanov filialı)';
+      else if (src.includes('gənclik') || src.includes('genclik')) branch = 'EVRİKA BETL (Gənclik filialı)';
+      else if (src.includes('montessori')) branch = 'EVRİKA Montessori Kids';
+      else if (src.includes('zumrud') || src.includes('zümrüd')) branch = 'Zümrüd İdman Kompleksi';
 
-      const amtRaw = p.epoint_amount || p.amount || row.amount || '0.01';
-      const amtNum = parseFloat(String(amtRaw).replace(/[^0-9.]/g, '')) || 0.01;
+      const grade = data.grade ? ` — ${data.grade}` : '';
+      document.getElementById('ticket-branch').innerText = branch + grade;
 
-      document.getElementById('ticket-student-name').innerText = studentName;
-      document.getElementById('ticket-branch').innerText = `${branch} ${grade ? `— ${grade}` : ''}`;
-      document.getElementById('ticket-amount').innerText = `${amtNum.toFixed(2)} AZN (Ödənilib)`;
+      const dateStr = data.paid_at ? new Date(data.paid_at).toLocaleString('az-AZ', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : new Date().toLocaleString('az-AZ', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      document.getElementById('ticket-date').innerText = dateStr;
+
+      const verifyUrl = `https://evrikaliseyi.edu.az/verify.html?id=${dbId}`;
+      document.getElementById('ticket-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(verifyUrl)}`;
     }
 
-    syncPaymentDetails();
+    function setupRetryLinks() {
+      const retryUrl = `/payment.html?id=${dbId}&retry=1`;
+      if (document.getElementById('retryBtn')) document.getElementById('retryBtn').href = retryUrl;
+      if (document.getElementById('cancelRetryBtn')) document.getElementById('cancelRetryBtn').href = retryUrl;
+    }
+
+    function triggerConfetti() {
+      try {
+        confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+      } catch(e) {}
+    }
+
+    // Professional PDF Generator
+    async function downloadPdfCoupon() {
+      if (!loadedTicketData) return;
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a5' });
+
+      const coupon = loadedTicketData.coupon_code || ("EV-" + String(dbId).padStart(4, '0'));
+      const student = loadedTicketData.student_name || 'Şagird';
+      const amtNum = (parseFloat(loadedTicketData.amount) || 0.01).toFixed(2) + ' AZN';
+
+      let branch = 'EVRİKA Liseyi';
+      const src = (loadedTicketData.source || '').toLowerCase();
+      if (src.includes('nərimanov') || src.includes('nerimanov')) branch = 'EVRİKA BETL (Nərimanov filialı)';
+      else if (src.includes('gənclik') || src.includes('genclik')) branch = 'EVRİKA BETL (Gənclik filialı)';
+
+      const dateStr = new Date().toLocaleString('az-AZ');
+
+      // Colors
+      doc.setFillColor(139, 26, 43); // Evrika burgundy
+      doc.rect(0, 0, 148, 30, 'F');
+
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      doc.text("EVRIKA LISEYI", 74, 13, { align: 'center' });
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.text("IMTAHANA GIRIS KUPONU", 74, 22, { align: 'center' });
+
+      // Body Details
+      doc.setTextColor(15, 23, 42);
+      doc.setFontSize(11);
+
+      doc.setDrawColor(226, 232, 240);
+      doc.roundedRect(12, 38, 124, 72, 3, 3);
+
+      doc.setFont('helvetica', 'bold');
+      doc.text("Kupon No:", 18, 48);
+      doc.setFont('helvetica', 'normal');
+      doc.text(coupon, 65, 48);
+
+      doc.setFont('helvetica', 'bold');
+      doc.text("Istirakci (Sagird):", 18, 58);
+      doc.setFont('helvetica', 'normal');
+      doc.text(student, 65, 58);
+
+      doc.setFont('helvetica', 'bold');
+      doc.text("Filial & Sinif:", 18, 68);
+      doc.setFont('helvetica', 'normal');
+      doc.text(branch + (loadedTicketData.grade ? ` (${loadedTicketData.grade})` : ''), 65, 68);
+
+      doc.setFont('helvetica', 'bold');
+      doc.text("Odenis Statusu:", 18, 78);
+      doc.setTextColor(16, 185, 129);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`${amtNum} - ODENILIB`, 65, 78);
+
+      doc.setTextColor(15, 23, 42);
+      doc.setFont('helvetica', 'bold');
+      doc.text("Tarix:", 18, 88);
+      doc.setFont('helvetica', 'normal');
+      doc.text(dateStr, 65, 88);
+
+      doc.setFont('helvetica', 'bold');
+      doc.text("Tesdiq:", 18, 98);
+      doc.setFont('helvetica', 'normal');
+      doc.text("PashaBank / Epoint Elektron Qebz", 65, 98);
+
+      // Add QR Code Image
+      const qrImg = document.getElementById('ticket-qr');
+      if (qrImg && qrImg.src) {
+        try {
+          doc.addImage(qrImg.src, 'PNG', 49, 116, 50, 50);
+        } catch(e) {}
+      }
+
+      doc.setFontSize(8);
+      doc.setTextColor(100, 116, 139);
+      doc.text("Imtahan gunu bu kuponu ve QR kodu nezaretciye teqdim edin.", 74, 174, { align: 'center' });
+      doc.text(`https://evrikaliseyi.edu.az/verify.html?id=${dbId}`, 74, 180, { align: 'center' });
+
+      doc.save(`Evrika_Kupon_${coupon}.pdf`);
+    }
+
+    // Initial check and auto-polling
+    checkStatus();
+    pollInterval = setInterval(checkStatus, 2500);
   </script>
 </body>
 </html>

@@ -53,7 +53,11 @@
     .badge { padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
     .badge.new { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
     .badge.paid { background: rgba(16, 185, 129, 0.2); color: #10b981; font-weight: 700; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .badge.pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; font-weight: 700; border: 1px solid rgba(245, 158, 11, 0.4); }
     .badge.unpaid { background: rgba(239, 68, 68, 0.15); color: #ef4444; font-weight: 700; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .badge.failed { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; font-weight: 700; border: 1px solid rgba(148, 163, 184, 0.4); }
+    .badge.refunded { background: rgba(59, 130, 246, 0.2); color: #3b82f6; font-weight: 700; border: 1px solid rgba(59, 130, 246, 0.4); }
+    .badge.cancelled { background: rgba(71, 85, 105, 0.3); color: #94a3b8; font-weight: 700; border: 1px solid rgba(71, 85, 105, 0.5); }
     .btn-view { background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: 0.3s; }
     .btn-view:hover { background: #2563eb; }
     .btn-danger { background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: 0.3s; margin-left: 10px; }
@@ -276,6 +280,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="stat-title" style="color: #f59e0b;">Baxılmayan (Yeni)</div>
           <div class="stat-value" id="new-count" style="color: #f59e0b;">0</div>
         </div>
+        <div class="stat-card" style="border-left: 4px solid #3b82f6;">
+          <div class="stat-title" style="color: #3b82f6;">Toplanmış Vəsait</div>
+          <div class="stat-value" id="total-revenue" style="color: #3b82f6;">0.00 AZN</div>
+        </div>
       </div>
 
       <div class="table-wrapper">
@@ -397,8 +405,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }).length;
       document.getElementById('today-count').innerText = todayCount;
 
-      const paidCount = rawData.filter(item => item.payment_status === 'Ödənilib').length;
+      const paidItems = rawData.filter(item => {
+        const s = String(item.payment_status || '').toLowerCase();
+        return s === 'ödənilib' || s === 'paid';
+      });
+      const paidCount = paidItems.length;
       if (document.getElementById('paid-count')) document.getElementById('paid-count').innerText = paidCount;
+
+      let totalRev = 0;
+      paidItems.forEach(item => {
+        const amt = parseFloat(String(item.amount || '0').replace(/[^0-9.]/g, ''));
+        if (!isNaN(amt)) totalRev += amt;
+      });
+      if (document.getElementById('total-revenue')) {
+        document.getElementById('total-revenue').innerText = totalRev.toFixed(2) + ' AZN';
+      }
 
       const newCount = rawData.filter(item => (item.status || 'Yeni').toLowerCase() === 'yeni').length;
       if (document.getElementById('new-count')) document.getElementById('new-count').innerText = newCount;
@@ -426,12 +447,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         let statusText = item.status || 'Yeni';
         let statusBadgeClass = 'badge new';
 
-        // Payment status check
+        // Multi-State Payment Status Check
         let paymentBadgeHtml = `<span style="color:var(--text-muted); font-size:0.85rem;">-</span>`;
-        if (item.payment_status === 'Ödənilib') {
-          paymentBadgeHtml = `<span class="badge paid"><i class="fas fa-check-circle"></i> Ödənilib</span>`;
+        const pStat = String(item.payment_status || '').toLowerCase();
+        if (pStat === 'ödənilib' || pStat === 'paid') {
+          paymentBadgeHtml = `<span class="badge paid"><i class="fas fa-check-circle"></i> ÖDƏNİLİB</span>`;
+        } else if (pStat === 'gözləyir' || pStat === 'pending') {
+          paymentBadgeHtml = `<span class="badge pending"><i class="fas fa-clock"></i> GÖZLƏYİR</span>`;
+        } else if (pStat === 'uğursuz' || pStat === 'failed') {
+          paymentBadgeHtml = `<span class="badge failed"><i class="fas fa-times"></i> UĞURSUZ</span>`;
+        } else if (pStat === 'ləğv edilib' || pStat === 'cancelled') {
+          paymentBadgeHtml = `<span class="badge cancelled"><i class="fas fa-ban"></i> LƏĞV EDİLİB</span>`;
+        } else if (pStat === 'geri qaytarılıb' || pStat === 'refunded') {
+          paymentBadgeHtml = `<span class="badge refunded"><i class="fas fa-undo"></i> GERİ QAYTARILIB</span>`;
         } else if (isPaymentReg(item)) {
-          paymentBadgeHtml = `<span class="badge unpaid">Ödənilməyib</span>`;
+          paymentBadgeHtml = `<span class="badge unpaid"><i class="fas fa-exclamation-circle"></i> ÖDƏNİLMƏYİB</span>`;
         }
 
         const tr = document.createElement('tr');
@@ -514,6 +544,39 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
           </div>
         `;
+      }
+
+      // Add Payment Event Timeline if available
+      const regDbId = item._db_id_ || item.id;
+      if (regDbId) {
+        content.innerHTML += `
+          <div class="data-group" style="border-color: rgba(59, 130, 246, 0.4);">
+            <h4 style="color: #38bdf8;"><i class="fas fa-history"></i> Ödəniş və Audit Tarixçəsi</h4>
+            <div id="payment-timeline-${regDbId}" style="font-size:0.85rem; color:#94a3b8;">
+              <i class="fas fa-spinner fa-spin"></i> Tarixçə yüklənir...
+            </div>
+          </div>
+        `;
+
+        fetch(`https://evrika-api.yusifliqezenfer90.workers.dev/api/admin/payment-events?registration_id=${regDbId}`)
+          .then(r => r.json())
+          .then(res => {
+            const tlBox = document.getElementById(`payment-timeline-${regDbId}`);
+            if (!tlBox) return;
+            if (res.events && res.events.length > 0) {
+              tlBox.innerHTML = res.events.map(ev => `
+                <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05);">
+                  <div><strong style="color:#fff;">${ev.event}</strong> <span style="font-size:0.75rem; color:#38bdf8;">(${ev.status || '-'})</span></div>
+                  <div style="font-size:0.75rem; color:#64748b;">${ev.created_at || ''}</div>
+                </div>
+              `).join('');
+            } else {
+              tlBox.innerHTML = '<span style="color:#64748b;">Hələ qeydə alınmış əməliyyat hadisəsi yoxdur.</span>';
+            }
+          }).catch(() => {
+            const tlBox = document.getElementById(`payment-timeline-${regDbId}`);
+            if (tlBox) tlBox.innerHTML = '<span style="color:#64748b;">Tarixçə əlçatan deyil.</span>';
+          });
       }
 
       content.innerHTML += `

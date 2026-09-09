@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="format-detection" content="telephone=no">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Təhlükəsiz Ödəniş Portalı | EVRİKA</title>
-  <link rel="icon" href="/assets/loqoYeni.PNG" type="image/png">
+  <link rel="icon" href="/assets/loqoYeni.PNG" type="image/png" />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
   <style>
     :root {
       --bg-dark: #070913;
-      --card-bg: rgba(15, 23, 42, 0.8);
+      --card-bg: rgba(15, 23, 42, 0.75);
       --card-border: rgba(255, 255, 255, 0.12);
       --primary: #8b1a2b;
-      --primary-glow: rgba(139, 26, 43, 0.45);
+      --primary-glow: rgba(139, 26, 43, 0.4);
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
     }
@@ -41,7 +45,7 @@
       position: absolute; border-radius: 50%; filter: blur(120px); opacity: 0.28;
     }
     .orb-1 { width: 450px; height: 450px; background: radial-gradient(circle, #8b1a2b 0%, #4c0519 70%); top: -100px; left: -100px; }
-    .orb-2 { width: 500px; height: 500px; background: radial-gradient(circle, #3b82f6 0%, #1e40af 70%); bottom: -120px; right: -120px; }
+    .orb-2 { width: 500px; height: 500px; background: radial-gradient(circle, #1e3a8a 0%, #0f172a 70%); bottom: -120px; right: -120px; }
 
     .laser-grid {
       position: fixed; inset: 0; pointer-events: none; z-index: 1;
@@ -55,7 +59,7 @@
       position: relative;
       z-index: 10;
       width: 100%;
-      max-width: 500px;
+      max-width: 480px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -123,9 +127,10 @@
       font-weight: 700;
     }
     .amount-box h2 {
-      font-size: 2.4rem;
+      font-size: 2.2rem;
       font-weight: 900;
-      color: #fff;
+      color: #10b981;
+      letter-spacing: -1px;
     }
 
     .input-grp {
@@ -134,17 +139,17 @@
       gap: 6px;
     }
     .input-grp label {
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       font-weight: 700;
-      color: #cbd5e1;
+      color: #94a3b8;
     }
     .custom-input {
       width: 100%;
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 12px;
-      padding: 12px 16px;
-      color: white;
+      padding: 14px 16px;
+      color: #ffffff;
       font-size: 0.95rem;
       outline: none;
       transition: all 0.3s;
@@ -209,7 +214,7 @@
 
       <div class="amount-box">
         <p id="payment-purpose">İmtahana Giriş Kuponu</p>
-        <h2 id="amount-display">35.00 AZN</h2>
+        <h2 id="amount-display">0.01 AZN</h2>
         <div id="student-info-tag" style="margin-top: 6px; font-size: 0.85rem; color: #38bdf8; font-weight: 700;"></div>
       </div>
 
@@ -221,7 +226,7 @@
         </div>
         <div class="input-grp">
           <label>Şagirdin Sinfi *</label>
-          <select id="manual_grade" class="custom-input" style="background: #0f172a; cursor: pointer;" onchange="handleGradeChange(this.value)">
+          <select id="manual_grade" class="custom-input" style="background: #0f172a; cursor: pointer;">
             <option value="Məktəbəqədər">Məktəbəqədər (25 AZN)</option>
             <option value="I sinif">I sinif (35 AZN)</option>
             <option value="II sinif">II sinif (35 AZN)</option>
@@ -257,64 +262,49 @@
   </div>
 
   <script>
+    const API_BASE = 'https://evrika-api.yusifliqezenfer90.workers.dev';
     const urlParams = new URLSearchParams(window.location.search);
     let regId = urlParams.get('id') || urlParams.get('regId') || localStorage.getItem('last_regId') || '';
     let regName = urlParams.get('name') || localStorage.getItem('last_name') || '';
-    // TEST REJİMİ: 0.01 AZN (1 qəpik)
-    let amountParam = urlParams.get('amount') || '0.01';
     let emailParam = urlParams.get('email') || localStorage.getItem('last_email') || '';
-    let gradeParam = urlParams.get('grade') || '';
     let autostart = urlParams.get('autostart') === '1';
 
-    // Test üçün hər zaman 0.01 AZN
-    amountParam = '0.01';
+    let isSubmitting = false;
 
-    document.getElementById('amount-display').innerText = parseFloat(amountParam).toFixed(2) + ' AZN';
-
-    if (regName) {
-      document.getElementById('student-info-tag').innerText = "Şagird: " + regName;
-    }
-
-    // Əgər ID varsa amma ad və ya detallar yoxdursa, Supabase-dən dərhal gətirək
     async function loadStudentDataIfAvailable() {
       if (!regId) {
         document.getElementById('extra-fields').style.display = 'flex';
         return;
       }
 
+      const cleanDbId = parseInt(String(regId).replace(/\D/g, ''), 10);
+      if (!cleanDbId) {
+        document.getElementById('extra-fields').style.display = 'flex';
+        return;
+      }
+
       try {
-        const cleanDbId = parseInt(String(regId).replace(/\D/g, ''), 10);
-        if (!cleanDbId) {
-          document.getElementById('extra-fields').style.display = 'flex';
-          return;
-        }
-
-        const res = await fetch(`https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations?id=${cleanDbId}`);
+        const res = await fetch(`${API_BASE}/api/payment-status?id=${cleanDbId}`, { cache: 'no-store' });
         if (res.ok) {
-          const row = await res.json();
-          const item = row.payload || {};
-          const candidateName = item.fullName || item.name || item['[2.Şagird] Adı'] || regName;
-          const candidateEmail = item.email || item['E-mail'] || emailParam;
-          const candidateGrade = item.student_grade || item['[3.Təhsil] Qeydiyyat Səviyyəsi'] || item['Sinif'] || gradeParam;
-          
-          if (candidateName) {
-            regName = candidateName;
-            document.getElementById('student-info-tag').innerText = "Şagird: " + regName + (candidateGrade ? ` (${candidateGrade})` : '');
-          }
-          if (candidateEmail) emailParam = candidateEmail;
-          // Test rejimi üçün 0.01 AZN saxlanılır
-          amountParam = '0.01';
-          document.getElementById('amount-display').innerText = parseFloat(amountParam).toFixed(2) + ' AZN';
+          const json = await res.json();
+          if (json && json.data) {
+            const d = json.data;
+            regName = d.student_name || regName;
+            document.getElementById('student-info-tag').innerText = "Şagird: " + regName + (d.grade ? ` (${d.grade})` : '');
+            document.getElementById('amount-display').innerText = (d.amount || 0.01).toFixed(2) + ' AZN';
 
-          if (item.payment_status === 'Ödənilib') {
-            document.getElementById('student-info-tag').innerHTML = `<span style="color:#10b981; font-weight:800;">✓ Bu qeydiyyat üzrə ödəniş artıq tamamlanıb</span>`;
-            document.getElementById('paySubmitBtn').innerText = 'ƏSAS SƏHİFƏYƏ KEÇ';
-            document.getElementById('paySubmitBtn').onclick = () => window.location.href = '/';
-            return;
+            if (d.isPaid || d.status === 'PAID') {
+              document.getElementById('student-info-tag').innerHTML = `<span style="color:#10b981; font-weight:800;"><i class="fas fa-check-circle"></i> Bu qeydiyyat üzrə ödəniş artıq təsdiqlənib</span>`;
+              const btn = document.getElementById('paySubmitBtn');
+              btn.innerHTML = '<i class="fas fa-id-card"></i> KUPONA BAX / YÜKLƏ';
+              btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+              btn.onclick = () => window.location.href = `/success?regId=${cleanDbId}`;
+              return;
+            }
           }
         }
       } catch (err) {
-        console.error("Registration fetch error:", err);
+        console.warn("Status check warning:", err);
       }
 
       if (autostart) {
@@ -324,15 +314,13 @@
 
     loadStudentDataIfAvailable();
 
-    function handleGradeChange(val) {
-      amountParam = '0.01';
-      document.getElementById('amount-display').innerText = parseFloat(amountParam).toFixed(2) + ' AZN';
-    }
-
     async function processPayment() {
+      if (isSubmitting) return;
+
       const btn = document.getElementById('paySubmitBtn');
       btn.disabled = true;
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> BAĞLANTI QURULUR...';
+      isSubmitting = true;
 
       let finalDbId = regId;
       let finalName = regName;
@@ -348,15 +336,14 @@
           alert('Zəhmət olmasa şagirdin adını və əlaqə nömrəsini daxil edin.');
           btn.disabled = false;
           btn.innerHTML = '<i class="fas fa-credit-card"></i> KARTLA ÖDƏNİŞƏ KEÇ';
+          isSubmitting = false;
           return;
         }
 
         try {
-          const createRes = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations', {
+          const createRes = await fetch(`${API_BASE}/api/registrations`, {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               fullName: finalName,
               student_name: finalName,
@@ -366,7 +353,7 @@
               source: 'Birbaşa Ödəniş Portalı',
               status: 'Yeni',
               payment_status: 'Ödənilməyib',
-              amount: parseFloat(amountParam),
+              amount: '0.01',
               date: new Date().toISOString()
             })
           });
@@ -382,43 +369,56 @@
         }
       }
 
-      const cleanDbId = finalDbId ? parseInt(String(finalDbId).replace(/\D/g, ''), 10) : Math.floor(1000 + Math.random() * 9000);
-      const targetOrderId = "EV-" + String(cleanDbId).padStart(4, '0');
+      const cleanDbId = finalDbId ? parseInt(String(finalDbId).replace(/\D/g, ''), 10) : null;
+      if (!cleanDbId) {
+        alert('Qeydiyyat ID tapılmadı.');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-credit-card"></i> KARTLA ÖDƏNİŞƏ KEÇ';
+        isSubmitting = false;
+        return;
+      }
 
       try {
-        const response = await fetch('/api/epoint', {
+        btn.innerHTML = '<i class="fas fa-lock"></i> TƏHLÜKƏSİZ ÖDƏNİŞƏ YÖNLƏNDİRİLİRSİNİZ...';
+
+        const response = await fetch(`${API_BASE}/api/epoint-pay`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            amount: parseFloat(amountParam),
-            order_id: targetOrderId,
-            description: "Evrika Təhsil Ekosistemi | Şagird: " + (finalName || 'Şagird') + " | Sifariş №: " + targetOrderId,
             regId: cleanDbId,
-            email: finalEmail,
-            name: finalName
+            name: finalName,
+            email: finalEmail
           })
         });
 
-        const data = await response.json();
+        const resData = await response.json();
 
-        if (data.redirect_url) {
+        if (resData.already_paid) {
+          window.location.href = `/success?regId=${cleanDbId}`;
+          return;
+        }
+
+        if (resData.success && resData.redirect_url) {
           localStorage.setItem('last_regId', cleanDbId);
           localStorage.setItem('last_email', finalEmail);
           localStorage.setItem('last_name', finalName);
-          btn.innerHTML = '<i class="fas fa-check"></i> EPOINT-Ə YÖNLƏNDİRİLİR...';
-          setTimeout(() => {
-            window.location.href = data.redirect_url;
-          }, 800);
+          localStorage.setItem('last_order_id', resData.order_number);
+          
+          btn.innerHTML = '<i class="fas fa-check"></i> EPOINT ÇEKOUT AÇILIR...';
+          window.location.href = resData.redirect_url;
         } else {
-          alert('Xəta baş verdi: ' + (data.message || data.error || 'Server Xətası'));
+          const errMsg = (resData.error && resData.error.message) || resData.message || 'Ödəniş sessiyası yaradıla bilmədi.';
+          alert('Xəta: ' + errMsg);
           btn.innerHTML = 'YENİDƏN CƏHD ET';
           btn.disabled = false;
+          isSubmitting = false;
         }
       } catch (err) {
-        console.error('Payment fetch error:', err);
-        alert('Serverlə əlaqə qurulmadı. Zəhmət olmasa internet bağlantınızı yoxlayın.');
+        console.error('Payment error:', err);
+        alert('Serverlə əlaqə qurulmadı. İnternet bağlantınızı yoxlayın.');
         btn.innerHTML = '<i class="fas fa-credit-card"></i> KARTLA ÖDƏNİŞƏ KEÇ';
         btn.disabled = false;
+        isSubmitting = false;
       }
     }
   </script>

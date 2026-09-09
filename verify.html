@@ -89,7 +89,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <script>
-    const CF_API_URL = 'https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations';
+    const VERIFY_API_URL = 'https://evrika-api.yusifliqezenfer90.workers.dev/api/verify';
 
     const urlParams = new URLSearchParams(window.location.search);
     const rawId = urlParams.get('id') || '';
@@ -101,53 +101,41 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             return;
         }
 
-        // Local device lock for immediate feedback
-        if(localStorage.getItem('scanned_' + dbId)) {
-            showError("İSTİFADƏ EDİLİB", `EV-${String(dbId).padStart(4, '0')} kodlu kupon artıq bu cihazda oxudulub.`);
-            return;
-        }
-
         try {
-            // Fetch registration from Cloudflare API
-            const res = await fetch(`${CF_API_URL}?id=${dbId}`, { cache: 'no-store' });
-            if(!res.ok) throw new Error("Məlumatı yükləmək mümkün olmadı");
-            const data = await res.json();
-            const record = Array.isArray(data) ? data[0] : data;
-
-            if(!record || (!record.id && !record._db_id_)) {
-                showError("Tapılmadı", "Sistemdə belə bir imtahan iştirakçısı yoxdur.");
+            // First check public verification without exposing PII
+            const res = await fetch(`${VERIFY_API_URL}?id=${dbId}&action=confirm`, { cache: 'no-store' });
+            if(!res.ok) {
+                if (res.status === 404) {
+                    showError("Tapılmadı", "Sistemdə belə bir imtahan iştirakçısı qeydiyyatı tapılmadı.");
+                } else {
+                    throw new Error("Məlumatı yükləmək mümkün olmadı");
+                }
                 return;
             }
 
-            let payload = record.payload || {};
-            const currentStatus = record.status || payload.status || '';
-            
-            // Check if already scanned
-            if (currentStatus === "QR İstifadə Edilib") {
-                showError("İSTİFADƏ EDİLİB", `Bu QR Kod artıq sistemdə istifadə edilib (Status: İstifadə Edilib).`);
+            const resJson = await res.json();
+            const d = resJson.data || {};
+
+            if(!resJson.verified) {
+                showError("ÖDƏNİŞ TƏSDİQLƏNMƏYİB", `<b>${d.student_name || 'İştirakçı'}</b> üçün ödəniş tamamlanmamışdır. Kupon aktiv deyil.`);
                 return;
             }
 
-            // Update row status
-            payload.status = "QR İstifadə Edilib";
-            if(!payload.note) payload.note = "";
-            payload.note += " | QR KOD OXUDULDU: " + new Date().toLocaleString('az-AZ');
+            if (d.is_used && localStorage.getItem('scanned_' + dbId)) {
+                showError("İSTİFADƏ EDİLİB", `<b>${d.coupon_code}</b> kodlu kupon artıq nəzarətçi tərəfindən oxudulub.`);
+                return;
+            }
 
-            const updateRes = await fetch(`${CF_API_URL}?id=${dbId}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ status: 'QR İstifadə Edilib', ...payload })
-            });
-
-            if(!updateRes.ok) throw new Error("Sistemə yazmaq mümkün olmadı");
-            
-            // Mark as scanned locally
             localStorage.setItem('scanned_' + dbId, 'true');
-            
-            const studentName = record.name || payload.student_name || payload.fullName || payload.name || payload['Ad Soyad'] || payload['[2.Şagird] Adı'] || 'Şagird';
-            const grade = payload.student_grade || payload.grade || payload['Sinif'] || payload['[3.Təhsil] Qeydiyyat Səviyyəsi'] || '';
-            const paymentStatus = record.payment_status || payload.payment_status || '';
-            showSuccess("TƏSDİQLƏNDİ", `<b>${studentName}</b> ${grade ? `(${grade})` : ''} üçün imtahana giriş təsdiqləndi!<br><br><span style="color:#10b981; font-size:0.95rem; font-weight:700;"><i class="fas fa-check-circle"></i> Ödəniş: ${paymentStatus || 'Ödənilib'}</span>`);
+
+            showSuccess("GİRİŞƏ İCAZƏ VERİLDİ", `
+                <div style="text-align:left; margin-top:15px; font-size:0.92rem; line-height:1.8; background:rgba(255,255,255,0.05); padding:16px; border-radius:12px;">
+                    <div><b>Kupon:</b> <span style="color:#38bdf8;">${d.coupon_code}</span></div>
+                    <div><b>İştirakçı:</b> ${d.student_name}</div>
+                    <div><b>Filial / Sinif:</b> ${d.branch} ${d.grade ? '(' + d.grade + ')' : ''}</div>
+                    <div><b>Status:</b> <span style="color:#10b981; font-weight:700;"><i class="fas fa-check-circle"></i> ${d.payment_status || 'ÖDƏNİLİB'}</span></div>
+                </div>
+            `);
 
         } catch(e) {
             showError("Xəta", "Sistemdə problem yarandı: " + e.message);
