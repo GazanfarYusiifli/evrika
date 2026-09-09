@@ -354,48 +354,36 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
           const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY };
 
+          // Verified local alumni images
           const STATIC_ALUMNI = [
-            { img: "assets/mezunlar/mezun_1.png", name: "Evrika Məzunu", uni: "" },
-            { img: "assets/mezunlar/mezun_2.png", name: "Evrika Məzunu", uni: "" },
-            { img: "assets/mezunlar/mezun_3.png", name: "Evrika Məzunu", uni: "" },
-            { img: "assets/mezunlar/mezun_4.png", name: "Evrika Məzunu", uni: "" },
-            { img: "assets/mezunlar/mezun_5.jpeg", name: "Evrika Məzunu", uni: "" },
-            { img: "assets/mezunlar/mezun_6.jpeg", name: "Evrika Məzunu", uni: "" },
-            { img: "assets/mezunlar/mezun_7.jpeg", name: "Evrika Məzunu", uni: "" },
-            { img: "assets/mezunlar/mezun_8.jpeg", name: "Evrika Məzunu", uni: "" },
-            { img: "assets/mezunlar/mezun_9.jpeg", name: "Evrika Məzunu", uni: "" },
-            { img: "assets/mezunlar/mezun_10.jpeg", name: "Evrika Məzunu", uni: "" },
-            { img: "assets/mezunlar/mezun_11.jpeg", name: "Evrika Məzunu", uni: "" },
-            { img: "assets/mezunlar/mezun_12.jpeg", name: "Evrika Məzunu", uni: "" },
-            { img: "assets/mezunlar/mezun_13.jpeg", name: "Evrika Məzunu", uni: "" },
-            { img: "assets/mezunlar/mezun_14.jpeg", name: "Evrika Məzunu", uni: "" },
-            { img: "assets/mezunlar/mezun_15.jpeg", name: "Evrika Məzunu", uni: "" },
-            { img: "assets/mezunlar/mezun_16.jpeg", name: "Evrika Məzunu", uni: "" },
-            { img: "assets/mezunlar/mezun_17.jpeg", name: "Evrika Məzunu", uni: "" },
-            { img: "assets/mezunlar/mezun_18.jpeg", name: "Evrika Məzunu", uni: "" },
-            { img: "assets/mezunlar/mezun_19.jpeg", name: "Evrika Məzunu", uni: "" },
-            { img: "assets/mezunlar/mezun_20.jpeg", name: "Evrika Məzunu", uni: "" },
+            { img: "/mezunlar/Bayramov Əziz.JPG.jpeg", name: "Bayramov Əziz", uni: "Evrika Məzunu" },
+            { img: "/mezunlar/Bədəlzadə Kövsər.JPG.jpeg", name: "Bədəlzadə Kövsər", uni: "Evrika Məzunu" },
+            { img: "/mezunlar/Cavziyev  Polad.JPG.jpeg", name: "Cavziyev Polad", uni: "Evrika Məzunu" },
+            { img: "/mezunlar/Cəfərli Zeynəb.JPG.jpeg", name: "Cəfərli Zeynəb", uni: "Evrika Məzunu" },
+            { img: "/mezunlar/Hacızadə Seyla.JPG.jpeg", name: "Hacızadə Seyla", uni: "Evrika Məzunu" },
+            { img: "/mezunlar/Hüseynzadə Sona.JPG.jpeg", name: "Hüseynzadə Sona", uni: "Evrika Məzunu" },
+            { img: "/mezunlar/Həsənli Lamiyə.JPG.jpeg", name: "Həsənli Lamiyə", uni: "Evrika Məzunu" },
+            { img: "/mezunlar/Lətifli Riad.JPG.jpeg", name: "Lətifli Riad", uni: "Evrika Məzunu" },
+            { img: "/mezunlar/Musayev Ömər.JPG.jpeg", name: "Musayev Ömər", uni: "Evrika Məzunu" },
+            { img: "/mezunlar/Məmmədov Elcan.jpeg", name: "Məmmədov Elcan", uni: "Evrika Məzunu" },
+            { img: "/mezunlar/Məmmədov Çingiz.JPG.jpeg", name: "Məmmədov Çingiz", uni: "Evrika Məzunu" },
+            { img: "/mezunlar/Nəsirli İsmayıl.JPG.jpeg", name: "Nəsirli İsmayıl", uni: "Evrika Məzunu" },
+            { img: "/mezunlar/Salmanova Gülay.JPG.jpeg", name: "Salmanova Gülay", uni: "Evrika Məzunu" },
+            { img: "/mezunlar/Tarıverdiyeva Fatima.JPG.jpeg", name: "Tarıverdiyeva Fatima", uni: "Evrika Məzunu" },
+            { img: "/mezunlar/Vəliyeva Melisa.JPG.jpeg", name: "Vəliyeva Melisa", uni: "Evrika Məzunu" },
+            { img: "/mezunlar/İsmayılov Fərid.jpeg", name: "İsmayılov Fərid", uni: "Evrika Məzunu" },
+            { img: "/mezunlar/İsmayılova Arzu.JPG.jpeg", name: "İsmayılova Arzu", uni: "Evrika Məzunu" },
+            { img: "/mezunlar/İsmayılova Elmira.JPG.jpeg", name: "İsmayılova Elmira", uni: "Evrika Məzunu" },
+            { img: "/mezunlar/Şahbazlı Riyad.JPG.jpeg", name: "Şahbazlı Riyad", uni: "Evrika Məzunu" },
+            { img: "/mezunlar/Şeyxov Məhəmməd.JPG.jpeg", name: "Şeyxov Məhəmməd", uni: "Evrika Məzunu" },
+            { img: "/mezunlar/Şirinov Ruslan.JPG.jpeg", name: "Şirinov Ruslan", uni: "Evrika Məzunu" },
+            { img: "/mezunlar/Şəbiyeva Ayşən.JPG.jpeg", name: "Şəbiyeva Ayşən", uni: "Evrika Məzunu" },
+            { img: "/mezunlar/Ələkbərova Afaq.JPG.jpeg", name: "Ələkbərova Afaq", uni: "Evrika Məzunu" },
+            { img: "/mezunlar/Ələsgərli Əli.JPG.jpeg", name: "Ələsgərli Əli", uni: "Evrika Məzunu" }
           ];
 
           async function fetchAlumni() {
-            let dbAlumni = [];
-            try {
-              const res = await fetch(`${API_URL}/ugurlar?select=*&order=id.desc`, { headers: HEADERS });
-              if (res.ok) {
-                const data = await res.json();
-                if (data && data.length > 0) dbAlumni = data.map(r => r.payload).filter(p => p && p.img);
-              }
-            } catch (e) { console.error(e); }
-
-            const combined = [...dbAlumni];
-            STATIC_ALUMNI.forEach(st => {
-              const fileName = st.img.split('/').pop();
-              const alreadyExists = combined.some(c => c.img && c.img.endsWith(fileName));
-              if (!alreadyExists) {
-                combined.push(st);
-              }
-            });
-            return combined.length > 0 ? combined : STATIC_ALUMNI;
+            return STATIC_ALUMNI;
           }
 
           const data = await fetchAlumni();

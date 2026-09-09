@@ -545,6 +545,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               data.forEach(item => {
                 const u = item.payload;
                 if (!u || !u.img) return;
+                // Ignore blocked Supabase storage URLs
+                if (u.img.includes('supabase.co/storage')) return;
 
                 // Dublikat yoxlanışı (şəkil yolu və ya adına görə)
                 // Həm tam yolu, həm də sadəcə fayl adını yoxlayırıq ki, 2 dəfə paylanmasın
