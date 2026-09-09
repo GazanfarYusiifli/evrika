@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     finalOrderId = `${finalOrderId}-${Date.now().toString().slice(-4)}`;
   }
 
-  const parsedAmount = amount !== undefined && !isNaN(parseFloat(amount)) ? parseFloat(amount) : 35;
+  const parsedAmount = amount !== undefined && !isNaN(parseFloat(amount)) ? parseFloat(amount) : 0.01;
 
   const orderData = {
     public_key: PUBLIC_KEY,
