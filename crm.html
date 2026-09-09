@@ -51,7 +51,8 @@
     tr:hover td { background: rgba(255,255,255,0.02); }
     
     .badge { padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
-    .badge.new { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    .badge.new { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+    .badge.paid { background: rgba(16, 185, 129, 0.2); color: #10b981; font-weight: 700; border: 1px solid rgba(16, 185, 129, 0.4); }
     .btn-view { background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: 0.3s; }
     .btn-view:hover { background: #2563eb; }
     .btn-danger { background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: 0.3s; margin-left: 10px; }
@@ -266,6 +267,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="stat-title">Bugünkü Müraciətlər</div>
           <div class="stat-value" id="today-count">0</div>
         </div>
+        <div class="stat-card" style="border-left: 4px solid #10b981;">
+          <div class="stat-title" style="color: #10b981;">Ödəniş Edən (Kupon Alan)</div>
+          <div class="stat-value" id="paid-count" style="color: #10b981;">0</div>
+        </div>
+        <div class="stat-card" style="border-left: 4px solid #f59e0b;">
+          <div class="stat-title" style="color: #f59e0b;">Baxılmayan (Yeni)</div>
+          <div class="stat-value" id="new-count" style="color: #f59e0b;">0</div>
+        </div>
       </div>
 
       <div class="table-wrapper">
@@ -371,6 +380,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }).length;
       document.getElementById('today-count').innerText = todayCount;
 
+      const paidCount = rawData.filter(item => item.payment_status === 'Ödənilib').length;
+      if (document.getElementById('paid-count')) document.getElementById('paid-count').innerText = paidCount;
+
+      const newCount = rawData.filter(item => (item.status || 'Yeni').toLowerCase() === 'yeni').length;
+      if (document.getElementById('new-count')) document.getElementById('new-count').innerText = newCount;
+
       const tbody = document.getElementById('crm-tbody');
       tbody.innerHTML = '';
 
@@ -394,7 +409,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         let statusText = item.status || 'Yeni';
         let statusBadgeClass = 'badge new';
         if (item.payment_status === 'Ödənilib') {
-          statusText = 'Ödənilib (' + (item.amount || 'Kart') + ')';
+          statusText = '<i class="fas fa-check-circle"></i> Ödənilib (' + (item.amount || 'Kart') + ')';
+          statusBadgeClass = 'badge paid';
         }
 
         const tr = document.createElement('tr');

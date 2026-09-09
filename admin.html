@@ -2588,50 +2588,44 @@ fbq('track', 'PageView');
           document.getElementById('data-loading-text').innerText = 'Məlumatlar yüklənir...';
       }
       try {
-        const idRes = await fetch(`${API_URL}/registrations?select=id&order=id.desc`, { headers: HEADERS, cache: 'no-store' });
-        if(idRes.ok) { 
-            const ids = await idRes.json();
-            let allData = [];
-            for (let i = 0; i < ids.length; i += 15) {
-                const batchIds = ids.slice(i, i + 15).map(x => x.id).join(',');
-                const bRes = await fetch(`${API_URL}/registrations?id=in.(${batchIds})&select=*`, { headers: HEADERS });
-                if (bRes.ok) {
-                    allData.push(...await bRes.json());
-                    // Proqressiv yükləmə - məlumat gəldikcə ekrana çıxarır
-                    let partialData = allData
-                        .map(r => ({ ...r.payload, _db_id_: r.id, created_at: r.created_at, phone: formatPhone(r.payload.phone) }))
-                        .sort((a, b) => b._db_id_ - a._db_id_);
-                    
-                    window.allFetchedData = partialData;
-                    
-                    const isKaryera = (r) => {
-                        if (!r) return false;
-                        const s = r.source || '';
-                        return s.includes('Karyera') || s.includes('Vakansiya') || s === 'career' || !!r.position || getGranularSource(r) === 'career';
-                    };
-                    
-                    hrData = partialData.filter(r => isKaryera(r));
-                    rawData = partialData.filter(r => !r.is_scan_log && !isKaryera(r));
-                    
-                    window.filterData();
-                    if (window.renderVacancyApps) window.renderVacancyApps();
-                    
-                    const bData = getBranchFilteredData();
-                    const newCount = bData.filter(item => (item.status || '').toLowerCase() === 'yeni').length;
-                    const badge = document.getElementById('new-apps-badge');
-                    const badgeExam = document.getElementById('new-exam-apps-badge');
-                    if (badge) {
-                        badge.innerText = newCount;
-                        badge.style.display = newCount > 0 ? 'inline-block' : 'none';
-                    }
-                    if (badgeExam) {
-                        badgeExam.innerText = newCount;
-                        badgeExam.style.display = newCount > 0 ? 'inline-block' : 'none';
-                    }
-                }
-            }
+        const bRes = await fetch(`${API_URL}/registrations?select=*`, { headers: HEADERS, cache: "no-store" });
+        if (bRes.ok) {
+            const allData = await bRes.json();
+            let partialData = allData
+                .map(r => {
+                    const p = r.payload || {};
+                    return { ...p, ...r, _db_id_: r.id, created_at: r.created_at, phone: formatPhone(p.phone || r.phone) };
+                })
+                .sort((a, b) => b._db_id_ - a._db_id_);
             
-            if (loadingToast) {
+            window.allFetchedData = partialData;
+            
+            const isKaryera = (r) => {
+                if (!r) return false;
+                const s = r.source || "";
+                return s.includes("Karyera") || s.includes("Vakansiya") || s === "career" || !!r.position || getGranularSource(r) === "career";
+            };
+            
+            hrData = partialData.filter(r => isKaryera(r));
+            rawData = partialData.filter(r => !r.is_scan_log && !isKaryera(r));
+            
+            window.filterData();
+            if (window.renderVacancyApps) window.renderVacancyApps();
+            
+            const bData = getBranchFilteredData();
+            const newCount = bData.filter(item => (item.status || "").toLowerCase() === "yeni").length;
+            const badge = document.getElementById("new-apps-badge");
+            const badgeExam = document.getElementById("new-exam-apps-badge");
+            if (badge) {
+                badge.innerText = newCount;
+                badge.style.display = newCount > 0 ? "inline-block" : "none";
+            }
+            if (badgeExam) {
+                badgeExam.innerText = newCount;
+                badgeExam.style.display = newCount > 0 ? "inline-block" : "none";
+            }
+        }
+        if (loadingToast) {
                 loadingToast.style.background = 'var(--success)';
                 document.getElementById('data-loading-icon').className = 'fas fa-check-circle';
                 document.getElementById('data-loading-text').innerText = 'Məlumatlar yükləndi, tamamlandı';
@@ -2645,23 +2639,15 @@ fbq('track', 'PageView');
     async function refreshApps() {
       // Fetch latest data every 30s to ensure payment_statuses are up to date
       try {
-        const res = await fetch(`${API_URL}/registrations?select=id`, { headers: HEADERS, cache: 'no-store' });
-        let newIds = [];
-        if(res.ok) { 
-            newIds = await res.json();
-        }
-        
-        // Yeni data var, tam çək (batch ilə timeout olmasın)
+        const bRes = await fetch(`${API_URL}/registrations?select=*`, { headers: HEADERS, cache: "no-store" });
         let allData = [];
-        for (let i = 0; i < newIds.length; i += 15) {
-            const batchIds = newIds.slice(i, i + 15).map(x => x.id).join(',');
-            const bRes = await fetch(`${API_URL}/registrations?id=in.(${batchIds})&select=*`, { headers: HEADERS });
-            if (bRes.ok) allData.push(...await bRes.json());
-        }
-        
+        if (bRes.ok) allData = await bRes.json();
         if(allData.length > 0) {
             let fetchedData = allData
-                .map(r => ({ ...r.payload, _db_id_: r.id, created_at: r.created_at, phone: formatPhone(r.payload.phone) }))
+                .map(r => {
+                    const p = r.payload || {};
+                    return { ...p, ...r, _db_id_: r.id, created_at: r.created_at, phone: formatPhone(p.phone || r.phone) };
+                })
                 .sort((a, b) => b._db_id_ - a._db_id_);
             window.allFetchedData = fetchedData;
             

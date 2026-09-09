@@ -20,12 +20,17 @@ export default {
       path = path.replace("/rest/v1/", "/");
     }
 
-    // Helper to extract id from query (handles ?id=1, ?id=eq.1, ?id=in.(1,2))
-    const getIdFromQuery = () => {
+    // Helper to extract ids from query
+    const getIdsFromQuery = () => {
       for (const [k, v] of url.searchParams.entries()) {
         if (k === 'id' || k.startsWith('id=')) {
+          if (v.includes('in.(')) {
+            const inside = v.replace(/.*in\.\((.*?)\).*/, '$1');
+            const matches = inside.match(/\d+/g);
+            if (matches && matches.length > 0) return matches;
+          }
           const match = v.match(/\d+/);
-          if (match) return match[0];
+          if (match) return [match[0]];
         }
       }
       return null;
@@ -35,20 +40,23 @@ export default {
       // 1. REGISTRATIONS
       if (path === "/registrations") {
         if (request.method === "GET") {
-          const id = getIdFromQuery();
-          if (id) {
-            const row = await env.DB.prepare("SELECT * FROM registrations WHERE id = ?").bind(id).first();
-            if (!row) return new Response(JSON.stringify([]), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
-            let p = {};
-            if (row.payload) {
-              try { p = JSON.parse(row.payload); } catch(e) {}
-            }
-            p.id = row.id;
-            p._db_id_ = row.id;
-            p.created_at = row.created_at;
-            p.payment_status = row.payment_status;
-            p.amount = row.amount;
-            return new Response(JSON.stringify([{ ...row, payload: p, ...p }]), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+          const ids = getIdsFromQuery();
+          if (ids && ids.length > 0) {
+            const placeholders = ids.map(() => '?').join(',');
+            const { results } = await env.DB.prepare(`SELECT * FROM registrations WHERE id IN (${placeholders}) ORDER BY id DESC`).bind(...ids).all();
+            const parsed = results.map(row => {
+              let p = {};
+              if (row.payload) {
+                try { p = JSON.parse(row.payload); } catch(e) {}
+              }
+              p.id = row.id;
+              p._db_id_ = row.id;
+              p.created_at = row.created_at;
+              p.payment_status = row.payment_status;
+              p.amount = row.amount;
+              return { ...row, payload: p, ...p };
+            });
+            return new Response(JSON.stringify(parsed), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
           }
 
           const { results } = await env.DB.prepare("SELECT id, created_at, name, phone, source, payment_status, amount, payload FROM registrations ORDER BY id DESC").all();
@@ -98,16 +106,17 @@ export default {
         }
 
         if (request.method === "DELETE") {
-          const id = getIdFromQuery();
-          if (!id) return new Response(JSON.stringify({ error: "Missing id" }), { status: 400, headers: corsHeaders });
-          await env.DB.prepare("DELETE FROM registrations WHERE id = ?").bind(id).run();
+          const ids = getIdsFromQuery();
+          if (!ids || ids.length === 0) return new Response(JSON.stringify({ error: "Missing id" }), { status: 400, headers: corsHeaders });
+          await env.DB.prepare("DELETE FROM registrations WHERE id = ?").bind(ids[0]).run();
           return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
         }
 
         if (request.method === "PUT" || request.method === "PATCH") {
-          const id = getIdFromQuery();
+          const ids = getIdsFromQuery();
           const body = await request.json();
-          if (!id) return new Response(JSON.stringify({ error: "Missing id" }), { status: 400, headers: corsHeaders });
+          if (!ids || ids.length === 0) return new Response(JSON.stringify({ error: "Missing id" }), { status: 400, headers: corsHeaders });
+          const id = ids[0];
 
           const existing = await env.DB.prepare("SELECT * FROM registrations WHERE id = ?").bind(id).first();
           if (!existing) return new Response(JSON.stringify({ error: "Not found" }), { status: 404, headers: corsHeaders });
@@ -137,15 +146,18 @@ export default {
       if (dynamicTables.includes(tableName)) {
         // GET
         if (request.method === "GET") {
-          const id = getIdFromQuery();
-          if (id) {
-            const row = await env.DB.prepare(`SELECT * FROM ${tableName} WHERE id = ?`).bind(id).first();
-            if (!row) return new Response(JSON.stringify([]), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
-            let p = {};
-            if (row.payload) {
-              try { p = JSON.parse(row.payload); } catch(e) {}
-            }
-            return new Response(JSON.stringify([{ ...row, payload: p, ...p, id: row.id, _db_id_: row.id }]), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+          const ids = getIdsFromQuery();
+          if (ids && ids.length > 0) {
+            const placeholders = ids.map(() => '?').join(',');
+            const { results } = await env.DB.prepare(`SELECT * FROM ${tableName} WHERE id IN (${placeholders}) ORDER BY id DESC`).bind(...ids).all();
+            const parsed = results.map(row => {
+              let p = {};
+              if (row.payload) {
+                try { p = JSON.parse(row.payload); } catch(e) {}
+              }
+              return { ...row, payload: p, ...p, id: row.id, _db_id_: row.id };
+            });
+            return new Response(JSON.stringify(parsed), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
           }
 
           const { results } = await env.DB.prepare(`SELECT * FROM ${tableName} ORDER BY id DESC`).all();
@@ -174,19 +186,19 @@ export default {
 
         // PUT / PATCH
         if (request.method === "PUT" || request.method === "PATCH") {
-          const id = getIdFromQuery();
+          const ids = getIdsFromQuery();
           const body = await request.json();
           const payload = body.payload ? body.payload : body;
-          if (!id) return new Response(JSON.stringify({ error: "Missing id" }), { status: 400, headers: corsHeaders });
-          await env.DB.prepare(`UPDATE ${tableName} SET payload = ? WHERE id = ?`).bind(JSON.stringify(payload), id).run();
+          if (!ids || ids.length === 0) return new Response(JSON.stringify({ error: "Missing id" }), { status: 400, headers: corsHeaders });
+          await env.DB.prepare(`UPDATE ${tableName} SET payload = ? WHERE id = ?`).bind(JSON.stringify(payload), ids[0]).run();
           return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
         }
 
         // DELETE
         if (request.method === "DELETE") {
-          const id = getIdFromQuery();
-          if (!id) return new Response(JSON.stringify({ error: "Missing id" }), { status: 400, headers: corsHeaders });
-          await env.DB.prepare(`DELETE FROM ${tableName} WHERE id = ?`).bind(id).run();
+          const ids = getIdsFromQuery();
+          if (!ids || ids.length === 0) return new Response(JSON.stringify({ error: "Missing id" }), { status: 400, headers: corsHeaders });
+          await env.DB.prepare(`DELETE FROM ${tableName} WHERE id = ?`).bind(ids[0]).run();
           return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
         }
       }
