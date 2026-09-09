@@ -1355,7 +1355,7 @@ fbq('track', 'PageView');
               <div style="display:flex; gap:10px; align-items:center;">
                 <input type="text" id="ug-img" placeholder="Şəkil URL" required class="admin-input" style="flex:1;">
                 <label class="btn-view" style="cursor:pointer; padding:18px;"><i class="fas fa-upload"></i><input type="file" hidden accept="image/jpeg,image/png,image/webp" onchange="uploadImage(this, 'ug-img')"></label>
-                <img id="ug-img-preview" style="width:40px; height:40px; border-radius:8px; object-fit:cover; display:none;">
+                <img loading="lazy" decoding="async" id="ug-img-preview" style="width:40px; height:40px; border-radius:8px; object-fit:cover; display:none;">
               </div>
               <div style="display: flex; gap: 10px;">
                 <button type="submit" id="ug-submit-btn" class="btn-view" style="flex:2; justify-content: center; background: var(--burgundy); border: none; padding: 15px;">Yadda Saxla</button>
@@ -1381,7 +1381,7 @@ fbq('track', 'PageView');
               <div style="display:flex; gap:10px; align-items:center;">
                 <input type="text" id="mz-img" placeholder="Şəkil URL" required class="admin-input" style="flex:1;">
                 <label class="btn-view" style="cursor:pointer; padding:18px;"><i class="fas fa-upload"></i><input type="file" hidden accept="image/jpeg,image/png,image/webp" onchange="uploadImage(this, 'mz-img')"></label>
-                <img id="mz-img-preview" style="width:40px; height:40px; border-radius:50%; object-fit:cover; display:none;">
+                <img loading="lazy" decoding="async" id="mz-img-preview" style="width:40px; height:40px; border-radius:50%; object-fit:cover; display:none;">
               </div>
               <div style="display: flex; gap: 10px;">
                 <button type="submit" id="mz-submit-btn" class="btn-view" style="flex:2; justify-content: center; background: var(--success); border: none; padding: 15px;">Yadda Saxla</button>
@@ -1495,7 +1495,7 @@ fbq('track', 'PageView');
               <div style="display:flex; gap:10px; align-items:center;">
                 <input type="text" id="popup-img" placeholder="Şəkil URL" required class="admin-input" style="flex:1;">
                 <label class="btn-view" style="cursor:pointer; padding:18px;"><i class="fas fa-upload"></i><input type="file" hidden accept="image/jpeg,image/png,image/webp" id="popup-img-file" onchange="uploadImage(this, 'popup-img'); let i=0; let int=setInterval(()=>{let v=document.getElementById('popup-img').value; if(v && v.startsWith('http')){ let p=document.getElementById('popup-img-preview'); p.src=v; p.style.display='block'; clearInterval(int);} i++; if(i>30)clearInterval(int);}, 1000);"></label>
-                <img id="popup-img-preview" style="width:40px; height:40px; border-radius:5px; object-fit:cover; display:none;">
+                <img loading="lazy" decoding="async" id="popup-img-preview" style="width:40px; height:40px; border-radius:5px; object-fit:cover; display:none;">
               </div>
               <div style="display:flex; align-items:center; gap:10px; margin-top:5px; margin-bottom:10px;">
                  <input type="checkbox" id="popup-status" checked style="width:18px; height:18px; accent-color:var(--success);">
@@ -2464,7 +2464,7 @@ fbq('track', 'PageView');
             <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5; margin-bottom:20px; max-width:480px;">${item.desc}</p>
 
             <div style="background:white; padding:16px; border-radius:20px; box-shadow:0 12px 30px rgba(0,0,0,0.25); margin-bottom:22px;">
-              <img src="${qrImgUrl}" alt="QR Kod" style="width:200px; height:200px; display:block;" onerror="this.src='https://quickchart.io/qr?text=${encodeURIComponent(item.url)}&size=300'">
+              <img loading="lazy" decoding="async" src="${qrImgUrl}" alt="QR Kod" style="width:200px; height:200px; display:block;" onerror="this.src='https://quickchart.io/qr?text=${encodeURIComponent(item.url)}&size=300'">
             </div>
 
             <div style="font-size:0.85rem; color:#60a5fa; font-family:monospace; background:rgba(255,255,255,0.03); padding:10px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.07); width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-bottom:20px;" title="${item.url}">
@@ -3365,7 +3365,7 @@ fbq('track', 'PageView');
             <div style="padding:40px; font-family:sans-serif; color:#1e293b; max-width:800px; margin:auto;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px; border-bottom:2px solid #9c1c31; padding-bottom:20px;">
                     <h1 style="color:#9c1c31; margin:0; font-size:28px;">EVRİKA LİSEYİ</h1>
-                    <img src="https://evrikaliseyi.edu.az/assets/loqoYeni.PNG" style="height:60px;" alt="Evrika Loqo">
+                    <img decoding="async" src="https://evrikaliseyi.edu.az/assets/loqoYeni.PNG" style="height:60px;" alt="Evrika Loqo">
                 </div>
                 
                 <div style="background-color: #f8fafc; padding: 15px 20px; border-radius: 8px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
@@ -3714,7 +3714,7 @@ fbq('track', 'PageView');
                       const isImg = pair.value.startsWith('data:image/');
                       return `
                         <div class="detail-image-card" onclick="downloadBase64('${pair.value}', '${pair.filename}')">
-                          ${isImg ? `<img src="${pair.value}" alt="${pair.label}">` : `<div style="height:100%; display:flex; align-items:center; justify-content:center; color:white;"><i class="fas fa-file-pdf fa-2x"></i></div>`}
+                          ${isImg ? `<img loading="lazy" decoding="async" src="${pair.value}" alt="${pair.label}">` : `<div style="height:100%; display:flex; align-items:center; justify-content:center; color:white;"><i class="fas fa-file-pdf fa-2x"></i></div>`}
                           <div class="detail-image-label">${pair.label}</div>
                         </div>
                       `;
@@ -3722,7 +3722,7 @@ fbq('track', 'PageView');
                   const isImg = !pair.value.toLowerCase().endsWith('.pdf');
                   return `
                     <div class="detail-image-card" onclick="window.open('${pair.value}', '_blank')">
-                      ${isImg ? `<img src="${pair.value}" alt="${pair.label}">` : `<div style="height:100%; display:flex; align-items:center; justify-content:center; color:white;"><i class="fas fa-file-pdf fa-2x"></i></div>`}
+                      ${isImg ? `<img loading="lazy" decoding="async" src="${pair.value}" alt="${pair.label}">` : `<div style="height:100%; display:flex; align-items:center; justify-content:center; color:white;"><i class="fas fa-file-pdf fa-2x"></i></div>`}
                       <div class="detail-image-label">${pair.label}</div>
                     </div>
                   `;
@@ -3769,7 +3769,7 @@ fbq('track', 'PageView');
             <div style="display:flex; align-items:center; gap:20px; padding:20px; background:rgba(255,255,255,0.02); border-radius:12px; border:1px solid var(--border); position: relative;">
               ${isScanned ? '<div style="position:absolute; top:20px; right:20px; background:var(--error); color:white; padding:5px 10px; border-radius:8px; font-weight:900; font-size:0.8rem; letter-spacing:1px; animation: badgePulse 2s infinite;"><i class="fas fa-exclamation-triangle"></i> QR ARTIQ İSTİFADƏ EDİLİB!</div>' : ''}
               <div style="background:white; padding:10px; border-radius:10px; opacity:${isScanned ? '0.3' : '1'};">
-                <img src="${qrUrl}" alt="QR" style="width:100px; height:100px; display:block;">
+                <img loading="lazy" decoding="async" src="${qrUrl}" alt="QR" style="width:100px; height:100px; display:block;">
               </div>
               <div>
                 <div style="font-weight:900; font-size:1.2rem; margin-bottom:5px; color:white; letter-spacing:1px;">KOD: EV-${String(item._db_id_).padStart(4,'0')}</div>
@@ -3852,12 +3852,12 @@ fbq('track', 'PageView');
     window.loadUgurlar = async () => {
       const res = await fetch(`${API_URL}/ugurlar?select=*`, { headers: HEADERS });
       if(res.ok) { ugurlarData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id })).sort((a,b) => b._db_id_ - a._db_id_); }
-      const tb = document.getElementById('ug-tbody'); if(tb) tb.innerHTML = ugurlarData.map((u, i) => `<tr><td><img src="${u.img}" style="width:40px;height:40px;object-fit:cover;border-radius:8px;"></td><td>${u.name}</td><td>${u.uni}</td><td><div style="display:flex; gap:8px;"><button class="btn-view" style="padding:8px 12px; background:rgba(255,255,255,0.05);" onclick="editUgur(${i})"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:8px 12px;" onclick="deleteUgur('${u._db_id_}')"><i class="fas fa-trash"></i></button></div></td></tr>`).join('');
+      const tb = document.getElementById('ug-tbody'); if(tb) tb.innerHTML = ugurlarData.map((u, i) => `<tr><td><img loading="lazy" decoding="async" src="${u.img}" style="width:40px;height:40px;object-fit:cover;border-radius:8px;"></td><td>${u.name}</td><td>${u.uni}</td><td><div style="display:flex; gap:8px;"><button class="btn-view" style="padding:8px 12px; background:rgba(255,255,255,0.05);" onclick="editUgur(${i})"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:8px 12px;" onclick="deleteUgur('${u._db_id_}')"><i class="fas fa-trash"></i></button></div></td></tr>`).join('');
       const dashList = document.getElementById('dash-ugur-list');
       if (dashList) {
         dashList.innerHTML = ugurlarData.slice(0, 4).map(u => `
           <div style="background:rgba(255,255,255,0.02); padding:15px; border-radius:12px; border:1px solid rgba(255,255,255,0.05); display:flex; align-items:center; gap:12px;">
-            <img src="${u.img}" style="width:45px; height:45px; object-fit:cover; border-radius:8px;">
+            <img loading="lazy" decoding="async" src="${u.img}" style="width:45px; height:45px; object-fit:cover; border-radius:8px;">
             <div>
               <div style="font-weight:700; color:white; font-size:0.85rem;">${u.name}</div>
               <div style="font-size:0.75rem; color:var(--text-muted);">${u.uni}</div>
@@ -3970,7 +3970,7 @@ fbq('track', 'PageView');
       const res = await fetch(`${API_URL}/news?select=*`, { headers: HEADERS });
       if(res.ok) { newsData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id })).sort((a,b) => b._db_id_ - a._db_id_); }
       const tb = document.getElementById('news-tbody'); 
-      if(tb) tb.innerHTML = newsData.map((n, i) => `<tr><td><img src="${n.img}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;"></td><td>${n.title}</td><td>${n.date}</td><td><div style="display:flex; gap:8px;"><button class="btn-view" style="padding:8px 12px; background:rgba(255,255,255,0.05);" onclick="editNews(${i})"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:8px 12px;" onclick="deleteNews('${n._db_id_}')"><i class="fas fa-trash"></i></button></div></td></tr>`).join('');
+      if(tb) tb.innerHTML = newsData.map((n, i) => `<tr><td><img loading="lazy" decoding="async" src="${n.img}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;"></td><td>${n.title}</td><td>${n.date}</td><td><div style="display:flex; gap:8px;"><button class="btn-view" style="padding:8px 12px; background:rgba(255,255,255,0.05);" onclick="editNews(${i})"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:8px 12px;" onclick="deleteNews('${n._db_id_}')"><i class="fas fa-trash"></i></button></div></td></tr>`).join('');
     }
 
     window.editNews = (idx) => {
@@ -4022,7 +4022,7 @@ fbq('track', 'PageView');
        if(res.ok) { 
            mezunlarData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id })).sort((a,b) => b._db_id_ - a._db_id_);
        }
-       const tb = document.getElementById('mz-tbody'); if(tb) tb.innerHTML = mezunlarData.map((m, i) => `<tr><td><img src="${m.img}" style="width:40px;height:40px;object-fit:cover;border-radius:50%;"></td><td>${m.name}</td><td>${m.uni}</td><td><div style="display:flex; gap:8px;"><button class="btn-view" style="padding:8px 12px; background:rgba(255,255,255,0.05);" onclick="editMezun(${i})"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:8px 12px;" onclick="deleteMezun('${m._db_id_}')"><i class="fas fa-trash"></i></button></div></td></tr>`).join('');
+       const tb = document.getElementById('mz-tbody'); if(tb) tb.innerHTML = mezunlarData.map((m, i) => `<tr><td><img loading="lazy" decoding="async" src="${m.img}" style="width:40px;height:40px;object-fit:cover;border-radius:50%;"></td><td>${m.name}</td><td>${m.uni}</td><td><div style="display:flex; gap:8px;"><button class="btn-view" style="padding:8px 12px; background:rgba(255,255,255,0.05);" onclick="editMezun(${i})"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:8px 12px;" onclick="deleteMezun('${m._db_id_}')"><i class="fas fa-trash"></i></button></div></td></tr>`).join('');
        if(document.getElementById('dash-mz')) document.getElementById('dash-mz').innerText = mezunlarData.length;
     };
 
@@ -4086,7 +4086,7 @@ fbq('track', 'PageView');
          const res = await fetch(`${API_URL}/management?select=*`, { headers: HEADERS });
          if(res.ok) {
            managementData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id }));
-           const tb = document.getElementById('led-tbody'); if(tb) tb.innerHTML = managementData.map((m, i) => `<tr><td><img src="${m.img}" style="width:40px;height:40px;object-fit:cover;border-radius:50%;"></td><td>${m.name}</td><td>${m.role}</td><td><div style="display:flex; gap:8px;"><button class="btn-view" style="padding:8px 12px; background:rgba(255,255,255,0.05);" onclick="editManagement(${i})"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:8px 12px;" onclick="deleteManagement('${m._db_id_}')"><i class="fas fa-trash"></i></button></div></td></tr>`).join('');
+           const tb = document.getElementById('led-tbody'); if(tb) tb.innerHTML = managementData.map((m, i) => `<tr><td><img loading="lazy" decoding="async" src="${m.img}" style="width:40px;height:40px;object-fit:cover;border-radius:50%;"></td><td>${m.name}</td><td>${m.role}</td><td><div style="display:flex; gap:8px;"><button class="btn-view" style="padding:8px 12px; background:rgba(255,255,255,0.05);" onclick="editManagement(${i})"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:8px 12px;" onclick="deleteManagement('${m._db_id_}')"><i class="fas fa-trash"></i></button></div></td></tr>`).join('');
          } else if (res.status === 404) {
            console.error("Supabase Error: 'management' table not found.");
          }
@@ -4236,7 +4236,7 @@ fbq('track', 'PageView');
                 const tb = document.getElementById('popup-tbody');
                 if(tb) tb.innerHTML = popupData.map((p, i) => `
                     <tr>
-                        <td><img src="${p.img}" style="width:60px; height:auto; border-radius:4px;"></td>
+                        <td><img loading="lazy" decoding="async" src="${p.img}" style="width:60px; height:auto; border-radius:4px;"></td>
                         <td>${p.title}</td>
                         <td>
                             <select onchange="togglePopupStatus('${p._db_id_}', this.value, ${i})" style="background:${p.status==='active'?'rgba(16,185,129,0.1)':'rgba(239,68,68,0.1)'}; color:${p.status==='active'?'#10b981':'#ef4444'}; border:1px solid transparent; padding:5px; border-radius:5px;">
@@ -4424,7 +4424,7 @@ fbq('track', 'PageView');
                 if(tbody) tbody.innerHTML = partnerData.map((p, idx) => `
                     <tr>
                         <td>
-                            ${p.logo_url ? `<img src="${p.logo_url}" style="height:30px; max-width:80px; object-fit:contain; filter:brightness(1.5);">` : `<span style="opacity:0.3; font-size:0.7rem;">Yoxdur</span>`}
+                            ${p.logo_url ? `<img decoding="async" src="${p.logo_url}" style="height:30px; max-width:80px; object-fit:contain; filter:brightness(1.5);">` : `<span style="opacity:0.3; font-size:0.7rem;">Yoxdur</span>`}
                         </td>
                         <td><b style="color:white">${p.name}</b></td>
                         <td>${p.sort_order}</td>
@@ -4449,7 +4449,7 @@ fbq('track', 'PageView');
         if (nameLabel) nameLabel.innerText = name;
         if (logoBox) {
             if(logo) {
-                logoBox.innerHTML = `<img src="${logo}" style="max-height: 100%; max-width: 100%; object-fit: contain;">`;
+                logoBox.innerHTML = `<img decoding="async" src="${logo}" style="max-height: 100%; max-width: 100%; object-fit: contain;">`;
             } else {
                 logoBox.innerHTML = `<i class="fas fa-handshake" style="font-size: 2.5rem; color: #ddd;"></i>`;
             }
@@ -4668,7 +4668,7 @@ fbq('track', 'PageView');
                     <tr>
                         <td>
                             <div style="display:flex; align-items:center; gap:10px;">
-                                <img src="${p.avatar || 'https://via.placeholder.com/40'}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
+                                <img loading="lazy" decoding="async" src="${p.avatar || 'https://via.placeholder.com/40'}" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
                                 <div>
                                     <div style="font-weight:700; color:white;">${p.name}</div>
                                     <div style="font-size:0.7rem; color:var(--text-muted);">${p.status}</div>
