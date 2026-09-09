@@ -2631,7 +2631,6 @@ fbq('track', 'PageView');
                 document.getElementById('data-loading-text').innerText = 'Məlumatlar yükləndi, tamamlandı';
                 setTimeout(() => { loadingToast.style.opacity = '0'; setTimeout(() => loadingToast.style.display = 'none', 300); }, 3000);
             }
-        }
       } catch(e) {}
       renderDashboard(); window.filterData(); renderAnalytics(); renderFinance(); renderVacancyApps(); loadUgurlar(); loadVacancies(); loadNews(); loadManagement(); loadMezunlar();
     }
