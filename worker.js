@@ -91,8 +91,9 @@ export default {
           const name = pData.name || pData.fullName || pData['[2.Şagird] Adı'] || pData['[Demo Qeydiyyat] Ad Soyad'] || '';
           const phone = pData.phone || pData.tel || pData['[1.Əlaqə] Əlaqə Nömrəsi'] || pData['[3.Ata] Nömrəsi'] || '';
           const source = pData.source || pData.student_grade || pData['[2.Şagird] Təhsil Növü'] || 'Ümumi Müraciət';
-          const payment_status = pData.payment_status || 'Ödənilməyib';
-          const amount = pData.amount ? String(pData.amount) : '0';
+          const isPayableSource = /lisey|gənclik|nərimanov|ptim|imtahan|ödəniş|odenis/i.test(source);
+          const payment_status = pData.payment_status || (isPayableSource ? 'Ödənilməyib' : null);
+          const amount = pData.amount ? String(pData.amount) : (isPayableSource ? '35' : '0');
           const payloadStr = JSON.stringify(pData);
 
           const res = await env.DB.prepare(

@@ -2853,7 +2853,16 @@ fbq('track', 'PageView');
             </span>
           </td>
           <td style="font-size:0.85rem; color:var(--accent); font-weight:600;">${utmCampaign}</td>
-          <td>${item.payment_status ? `<span style="font-weight:bold; font-size:0.75rem; color:${item.payment_status==='Ödənilib' ? '#10B981' : '#EF4444'}; background:${item.payment_status==='Ödənilib' ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)'}; padding:4px 8px; border-radius:6px;">${item.payment_status}</span>` : '<span style="color:var(--text-muted); font-size:0.8rem;">-</span>'}</td>
+          <td>${(() => {
+            const isPayable = /lisey|gənclik|nərimanov|ptim|imtahan|ödəniş|odenis/i.test(s || '') || !!item.amount;
+            if (item.payment_status === 'Ödənilib') {
+              return `<span style="font-weight:bold; font-size:0.75rem; color:#10B981; background:rgba(16,185,129,0.1); padding:4px 8px; border-radius:6px;"><i class="fas fa-check-circle"></i> Ödənilib</span>`;
+            } else if (item.payment_status === 'Ödənilməyib' && isPayable) {
+              return `<span style="font-weight:bold; font-size:0.75rem; color:#EF4444; background:rgba(239,68,68,0.1); padding:4px 8px; border-radius:6px;">Ödənilməyib</span>`;
+            } else {
+              return `<span style="color:var(--text-muted); font-size:0.8rem;">-</span>`;
+            }
+          })()}</td>
           <td style="font-size:0.85rem; color:var(--text-muted);">${formatDateStr(item.created_at || item.submissionDate || Date.now())}</td>
           <td>
             <select onchange="updateStatus(${i}, this.value)" 

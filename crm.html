@@ -457,8 +457,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           groups['Ata / Qəyyum Məlumatları'][label] = val;
         } else if(key.includes('[3.Ana]')) {
           groups['Ana Məlumatları'][label] = val;
-        } else if(['source', 'payment_status', 'amount', 'date', 'order_id'].includes(key)) {
+        } else if(['source', 'date', 'order_id'].includes(key)) {
           groups['Müraciət Məlumatları'][label] = val;
+        } else if(['payment_status', 'amount'].includes(key)) {
+          const src = item.source || item.student_grade || '';
+          const isPayable = /lisey|gənclik|nərimanov|ptim|imtahan|ödəniş|odenis/i.test(src);
+          // Only include payment info if it is paid or if the application is actually a payable one
+          if (item.payment_status === 'Ödənilib' || isPayable) {
+            groups['Müraciət Məlumatları'][label] = val;
+          }
         } else {
           groups['Digər / Əlavə'][label] = val;
         }
