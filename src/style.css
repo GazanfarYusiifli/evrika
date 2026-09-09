@@ -2519,7 +2519,6 @@ img, video {
   
   /* Fix container padding for very small screens */
   .container { padding-left: 16px !important; padding-right: 16px !important; }
-  .nav-actions > a.nav-btn { padding: 6px 7px !important; font-size: 0.75rem !important; }
 }
 
 /* --- Mobile Menu System (Deep Fix) --- */
@@ -3429,15 +3428,14 @@ a[href^="tel"], a[href^="tel"]:hover {
     flex-shrink: 0 !important;
   }
   
-  /* Style Qeydiyyat button for mobile - compact horizontal padding so only text fits */
+  /* Style Qeydiyyat button for mobile */
   .nav-actions > a.nav-btn {
-    padding: 7px 8px !important;
-    font-size: 0.78rem !important;
+    padding: 7px 14px !important;
+    font-size: 0.8rem !important;
     margin: 0 !important;
-    border-radius: 8px !important;
+    border-radius: 10px !important;
     white-space: nowrap !important;
     flex-shrink: 0 !important;
-    letter-spacing: -0.2px !important;
   }
   
   .nav-actions > a.nav-btn:hover {
