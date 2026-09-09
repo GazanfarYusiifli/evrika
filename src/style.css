@@ -349,6 +349,26 @@ h2 {
   margin-left: auto;
 }
 
+.nav-phone-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #1e3a8a;
+  font-weight: 800;
+  font-size: 0.95rem;
+  text-decoration: none;
+  padding: 10px 18px;
+  border-radius: 100px;
+  background: rgba(30, 58, 138, 0.08);
+  border: 1px solid rgba(30, 58, 138, 0.15);
+  transition: 0.3s;
+}
+
+.nav-phone-btn:hover {
+  background: rgba(30, 58, 138, 0.15);
+  color: #1e3a8a;
+}
+
 .nav-btn {
   padding: 12px 32px !important;
   font-weight: 800 !important;
@@ -2269,7 +2289,7 @@ img, video {
 @media (max-width: 1024px) {
   .section { padding: 80px 0 !important; }
   main > .section:first-of-type, .ptim-hero { padding-top: 180px !important; }
-  .nav-links, .nav-actions { display: none !important; }
+  .nav-links { display: none !important; }
   .mobile-menu-btn { display: flex !important; }
   
   .nav-glass-container, 
@@ -2457,8 +2477,9 @@ img, video {
   
   /* Navbar Tweaks */
   .nav-glass-container {
-    width: 90% !important;
-    padding: 10px 15px !important;
+    width: 100% !important;
+    padding: 8px 12px !important;
+    box-sizing: border-box !important;
   }
   
   .logo { font-size: 1.5rem !important; }
@@ -3378,100 +3399,205 @@ a[href^="tel"], a[href^="tel"]:hover {
   text-decoration: none !important;
 }
 
-/* Mobile Nav Actions - show Qeydiyyat next to hamburger */
+/* Mobile Nav Actions - show *1808, Qeydiyyat and hamburger cleanly */
 @media (max-width: 1024px) {
   .nav-glass-container {
     display: flex !important;
     align-items: center !important;
+    justify-content: space-between !important;
     flex-direction: row !important;
+    flex-wrap: nowrap !important;
     width: 100% !important;
     box-sizing: border-box !important;
+    padding: 8px 16px !important;
+    gap: 10px !important;
   }
 
-  /* Logo stays left */
+  /* Constrain logo size so it leaves plenty of room for action buttons */
   .nav-glass-container .logo {
+    display: flex !important;
+    align-items: center !important;
     flex-shrink: 0 !important;
+    max-width: 130px !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  .logo img {
+    height: 48px !important;
+    width: auto !important;
+    max-width: 120px !important;
+    object-fit: contain !important;
+    transform: none !important;
   }
 
-  /* Header buttons pushed to the right as a group */
+  /* Header buttons pushed to the right as a single, non-overlapping flex row */
   .nav-actions,
   .modern-floating-nav.scrolled .nav-actions,
   .modern-floating-nav.nav-hidden .nav-actions {
     display: flex !important;
     align-items: center !important;
+    justify-content: flex-end !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
     margin-left: auto !important;
     margin-right: 0 !important;
-    gap: 6px !important;
+    gap: 8px !important;
     flex-shrink: 0 !important;
   }
   
-  /* Hide non-primary buttons like E-jurnal, but KEEP .nav-phone-btn (*1808) and .nav-btn (Qeydiyyat) */
-  .nav-actions > a:not(.nav-btn):not(.nav-phone-btn) {
+  /* Hide desktop-only links & language selector in header */
+  .nav-actions > a:not(.nav-btn):not(.nav-phone-btn),
+  .nav-actions .desktop-lang-wrapper,
+  .nav-actions .lang-dropdown-wrapper {
     display: none !important;
   }
 
-  /* Show and style *1808 phone button on mobile header (to the left of Qeydiyyat) */
+  /* Phone button (*1808) */
   .nav-actions > a.nav-phone-btn {
     display: inline-flex !important;
     align-items: center !important;
-    gap: 5px !important;
-    padding: 7px 11px !important;
-    font-size: 0.8rem !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    padding: 8px 14px !important;
+    font-size: 0.85rem !important;
     font-weight: 800 !important;
     margin: 0 !important;
-    border-radius: 10px !important;
+    border-radius: 50px !important;
     white-space: nowrap !important;
     background: rgba(30, 58, 138, 0.08) !important;
     border: 1px solid rgba(30, 58, 138, 0.15) !important;
     color: #1e3a8a !important;
     text-decoration: none !important;
     flex-shrink: 0 !important;
+    line-height: 1 !important;
+    box-sizing: border-box !important;
   }
-  
-  /* Style Qeydiyyat button for mobile */
+
+  /* Qeydiyyat button */
   .nav-actions > a.nav-btn {
-    padding: 7px 14px !important;
-    font-size: 0.8rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 8px 16px !important;
+    font-size: 0.85rem !important;
+    font-weight: 700 !important;
     margin: 0 !important;
-    border-radius: 10px !important;
+    border-radius: 50px !important;
     white-space: nowrap !important;
     flex-shrink: 0 !important;
+    line-height: 1 !important;
+    box-sizing: border-box !important;
   }
   
   .nav-actions > a.nav-btn:hover {
     transform: none !important;
   }
 
-  /* Hamburger: sits right after Qeydiyyat with 6px gap */
+  /* Hamburger Menu button: consistently aligned right after Qeydiyyat */
   .mobile-menu-btn,
   .modern-floating-nav.scrolled .mobile-menu-btn,
   .modern-floating-nav.nav-hidden .mobile-menu-btn {
-    margin-left: 6px !important;
-    margin-right: 5px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    border-radius: 10px !important;
+    margin: 0 !important;
+    padding: 0 !important;
     flex-shrink: 0 !important;
     position: relative !important;
     right: auto !important;
     top: auto !important;
     transform: none !important;
+    box-sizing: border-box !important;
   }
 }
 
-@media (max-width: 991px) {
+/* Specific optimizations for standard mobile screens (<= 768px) */
+@media (max-width: 768px) {
+  .nav-glass-container {
+    padding: 6px 12px !important;
+    gap: 8px !important;
+  }
+
+  .nav-glass-container .logo {
+    max-width: 110px !important;
+  }
+
   .logo img {
-    height: 90px !important;
-    width: 90px !important;
-    transform: translateY(-4px) !important;
+    height: 40px !important;
+    max-width: 100px !important;
+  }
+
+  .nav-actions,
+  .modern-floating-nav.scrolled .nav-actions,
+  .modern-floating-nav.nav-hidden .nav-actions {
+    gap: 6px !important;
+  }
+
+  .nav-actions > a.nav-phone-btn {
+    padding: 7px 11px !important;
+    font-size: 0.8rem !important;
+    gap: 4px !important;
+  }
+
+  .nav-actions > a.nav-btn {
+    padding: 7px 12px !important;
+    font-size: 0.8rem !important;
+  }
+
+  .mobile-menu-btn,
+  .modern-floating-nav.scrolled .mobile-menu-btn,
+  .modern-floating-nav.nav-hidden .mobile-menu-btn {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
   }
 }
 
-.logo img {
-  transform: translateY(-8px) !important;
-}
+/* Narrow & compact mobile screens (<= 480px / 360px) */
+@media (max-width: 480px) {
+  .nav-glass-container {
+    padding: 6px 8px !important;
+    gap: 6px !important;
+  }
 
-@media (max-width: 1024px) {
-  .nav-actions .desktop-lang-wrapper,
-  .nav-actions .lang-dropdown-wrapper {
-    display: none !important;
+  .nav-glass-container .logo {
+    max-width: 95px !important;
+  }
+
+  .logo img {
+    height: 36px !important;
+    max-width: 90px !important;
+  }
+
+  .nav-actions,
+  .modern-floating-nav.scrolled .nav-actions,
+  .modern-floating-nav.nav-hidden .nav-actions {
+    gap: 5px !important;
+  }
+
+  .nav-actions > a.nav-phone-btn {
+    padding: 6px 9px !important;
+    font-size: 0.75rem !important;
+  }
+
+  .nav-actions > a.nav-btn {
+    padding: 6px 10px !important;
+    font-size: 0.75rem !important;
+  }
+
+  .mobile-menu-btn,
+  .modern-floating-nav.scrolled .mobile-menu-btn,
+  .modern-floating-nav.nav-hidden .mobile-menu-btn {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    font-size: 1.05rem !important;
   }
 }
 
