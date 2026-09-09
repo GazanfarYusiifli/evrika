@@ -150,15 +150,22 @@ export default {
         }
 
         // Determine Authoritative Amount from D1 (Never trust frontend amount)
-        let authAmount = 0.01; // Default for test mode
+        // Official prices: Məktəbəqədər = 25 AZN, 1-11 siniflər = 35 AZN
+        let authAmount = 35;
+        const gradeStr = (regPayload.student_grade || regPayload.grade || regPayload['Sinif'] || regRow.source || '').toLowerCase();
+        if (gradeStr.includes('məktəbəqədər') || gradeStr.includes('məktəbə qədər') || gradeStr.includes('mektebeqeder')) {
+          authAmount = 25;
+        }
+
         if (regRow.amount) {
           const parsed = parseFloat(String(regRow.amount).replace(/[^0-9.]/g, ''));
-          if (!isNaN(parsed) && parsed > 0) {
+          if (!isNaN(parsed) && parsed >= 20) {
             authAmount = parsed;
           }
         }
-        // Force test amount 0.01 if configured or in test mode
-        if (body.test_mode || authAmount <= 0.05) {
+
+        // Only allow 0.01 if explicitly requested with test_mode: true
+        if (body.test_mode === true) {
           authAmount = 0.01;
         }
 
@@ -615,7 +622,7 @@ export default {
             student_name: studentName,
             grade,
             source: reg.source,
-            amount: latestOrder ? latestOrder.amount : (parseFloat(reg.amount) || 0.01),
+            amount: latestOrder ? latestOrder.amount : (parseFloat(reg.amount) || 35),
             currency: "AZN",
             paid_at: reg.paid_at || (latestOrder ? latestOrder.paid_at : null)
           }
@@ -775,7 +782,9 @@ export default {
           const source = pData.source || pData.student_grade || pData['[2.Şagird] Təhsil Növü'] || 'Ümumi Müraciət';
           const isPayableSource = /lisey|gənclik|nərimanov|ptim|imtahan|ödəniş|odenis/i.test(source);
           const payment_status = pData.payment_status || (isPayableSource ? 'Ödənilməyib' : null);
-          const amount = pData.amount ? String(pData.amount) : (isPayableSource ? '35' : '0');
+          const gradeVal = (pData.student_grade || pData.grade || pData['Sinif'] || '').toLowerCase();
+          const defaultPrice = (gradeVal.includes('məktəbəqədər') || gradeVal.includes('məktəbə qədər')) ? '25' : '35';
+          const amount = pData.amount ? String(pData.amount).replace(/[^0-9.]/g, '') : (isPayableSource ? defaultPrice : '0');
           const payloadStr = JSON.stringify(pData);
 
           const res = await env.DB.prepare(
