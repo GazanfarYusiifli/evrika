@@ -1986,11 +1986,22 @@ fbq('track', 'PageView');
         const statusFilter = document.getElementById('filter-pv-status')?.value || 'all';
 
         // Extract parent voice & survey records
-        let feedbacks = rawData.filter(r => r.is_parent_voice || (r.source && (r.source.includes('Valideyn Səsi') || r.source.includes('Parent Survey') || r.source.includes('Parent Voice'))));
+        let feedbacks = rawData.filter(r => {
+          if (!r) return false;
+          if (r.is_parent_voice === true || r.is_parent_voice === 'true') return true;
+          const s = String(r.source || '');
+          const ft = String(r.form_type || '');
+          const note = String(r.note || '');
+          return s.includes('Valideyn') || s.includes('Parent') || ft.includes('Valideyn') || ft.includes('Parent') || note.includes('Valideyn Sorğusu') || note.includes('Valideyn Səsi') || note.includes('Montessori Sorğusu');
+        });
 
         // Branch filter
         if (activeBranch !== 'all') {
           feedbacks = feedbacks.filter(r => {
+            const b = String(r.branch || '').toLowerCase();
+            if (activeBranch === 'lisey1' && (b === 'lisey1' || b === 'lis1' || (r.branch_name || '').includes('Nərimanov'))) return true;
+            if (activeBranch === 'lisey2' && (b === 'lisey2' || b === 'lis2' || (r.branch_name || '').includes('Gənclik'))) return true;
+            if (activeBranch === 'montessori' && (b === 'montessori' || (r.school || '').includes('Montessori') || (r.branch_name || '').includes('Montessori'))) return true;
             const s = getGranularSource(r);
             return s === activeBranch;
           });
@@ -2717,7 +2728,7 @@ fbq('track', 'PageView');
 
       filteredData = rawData.filter(item => {
         // Exclude call center & parent voice feedback records from online applications table
-        if (item.is_call || item.call_status || (item.source && item.source.includes('Zəng')) || item.is_parent_voice || (item.source && item.source.includes('Valideyn Səsi'))) return false;
+        if (item.is_call || item.call_status || (item.source && item.source.includes('Zəng')) || item.is_parent_voice || (item.source && (item.source.includes('Valideyn') || item.source.includes('Parent')))) return false;
 
         const fullName = (item.fullName || item['Ad Soyad'] || item.name || 
                           item['[1.Əlaqə] Valideyn Adı'] || 
