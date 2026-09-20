@@ -730,6 +730,7 @@ fbq('track', 'PageView');
             <option value="Qəbul">Qəbul</option>
             <option value="İmtina">İmtina</option>
           </select>
+          <button onclick="reconcileAllPendingPayments()" id="btn-sync-epoint" class="btn-view" style="background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.35); color: #60a5fa; padding: 18px 20px;" title="Epoint serveri ilə canlı status yoxlaması apar"><i class="fas fa-sync-alt" id="icon-sync-epoint"></i> Epoint Yoxla</button>
           <button onclick="exportToCSV()" class="btn-view" style="background: var(--success); border: none; padding: 18px 25px;"><i class="fas fa-file-excel"></i> Excel-ə çıxar</button>
         </div>
 
@@ -2605,7 +2606,15 @@ fbq('track', 'PageView');
             let partialData = allData
                 .map(r => {
                     const p = r.payload || {};
-                    return { ...p, ...r, _db_id_: r.id, created_at: r.created_at, phone: formatPhone(p.phone || r.phone) };
+                    const effectivePaymentStatus = (r.payment_status === 'Ödənilib' || p.payment_status === 'Ödənilib') ? 'Ödənilib' : (r.payment_status || p.payment_status || 'Ödənilməyib');
+                    return { 
+                      ...p, 
+                      ...r, 
+                      _db_id_: r.id, 
+                      created_at: r.created_at, 
+                      phone: formatPhone(p.phone || r.phone),
+                      payment_status: effectivePaymentStatus
+                    };
                 })
                 .sort((a, b) => b._db_id_ - a._db_id_);
             
@@ -2656,7 +2665,15 @@ fbq('track', 'PageView');
             let fetchedData = allData
                 .map(r => {
                     const p = r.payload || {};
-                    return { ...p, ...r, _db_id_: r.id, created_at: r.created_at, phone: formatPhone(p.phone || r.phone) };
+                    const effectivePaymentStatus = (r.payment_status === 'Ödənilib' || p.payment_status === 'Ödənilib') ? 'Ödənilib' : (r.payment_status || p.payment_status || 'Ödənilməyib');
+                    return { 
+                      ...p, 
+                      ...r, 
+                      _db_id_: r.id, 
+                      created_at: r.created_at, 
+                      phone: formatPhone(p.phone || r.phone),
+                      payment_status: effectivePaymentStatus
+                    };
                 })
                 .sort((a, b) => b._db_id_ - a._db_id_);
             window.allFetchedData = fetchedData;
@@ -2892,6 +2909,11 @@ fbq('track', 'PageView');
           <td>
             <div style="display:inline-flex; align-items:center; gap:6px;">
               <button class="btn-view" onclick="viewDetails(${i})" style="padding:10px 16px;" title="Ətraflı Bax"><i class="fas fa-eye"></i></button>
+              ${item.payment_status !== 'Ödənilib' ? `
+                <button class="btn-view" onclick="reconcileSinglePayment(${item._db_id_}, this)" style="padding:10px 12px; background:rgba(59,130,246,0.15); color:#60a5fa; border:1px solid rgba(59,130,246,0.3);" title="Epoint-də ödəniş statusunu dərhal yoxla">
+                  <i class="fas fa-sync-alt"></i>
+                </button>
+              ` : ''}
               ${item.payment_status !== 'Ödənilib' && phoneClean ? `
                 <a href="https://api.whatsapp.com/send?phone=${phoneClean}&text=${encodeURIComponent(`Hörmətli valideyn, qeydiyyatınız qəbul olunub. İmtahana giriş kuponunu əldə etmək üçün təhlükəsiz ödəniş linki: https://evrikaliseyi.edu.az/payment.html?id=${item._db_id_}&name=${encodeURIComponent(fullName)}`)}" target="_blank" style="background:rgba(37,211,102,0.15); color:#25d366; border:1px solid rgba(37,211,102,0.3); padding:10px 14px; border-radius:15px; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; transition:0.3s;" title="Valideynə WhatsApp-la ödəniş linki göndər">
                   <i class="fab fa-whatsapp" style="font-size:1rem;"></i>
@@ -2906,7 +2928,78 @@ fbq('track', 'PageView');
       if (tbExam) tbExam.innerHTML = html;
     }
 
-    
+    window.reconcileSinglePayment = async (dbId, btnEl) => {
+      if (!dbId) return;
+      let origHtml = '';
+      if (btnEl) {
+        origHtml = btnEl.innerHTML;
+        btnEl.disabled = true;
+        btnEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+      }
+      try {
+        const res = await fetch(`https://evrika-api.yusifliqezenfer90.workers.dev/api/payment-status?id=${dbId}`, { cache: 'no-store' });
+        const json = await res.json();
+        if (json.success && (json.data?.isPaid || json.data?.status === 'PAID')) {
+          alert(`✅ Təsdiqləndi!\nİştirakçı: ${json.data.student_name || 'Şagird'}\nStatus: Ödənilib\nKupon kodu: ${json.data.coupon_code || ('EV-' + String(dbId).padStart(4, '0'))}`);
+          await fetchAllData();
+        } else {
+          alert(`Məlumat: Bank sistemində bu müraciət üçün uğurlu ödəniş tapılmadı (Cari status: ${json.data?.status || 'Ödənilməyib'}).`);
+        }
+      } catch (err) {
+        console.error('Reconcile error:', err);
+        alert('Serverlə əlaqə xətası baş verdi.');
+      } finally {
+        if (btnEl) {
+          btnEl.disabled = false;
+          btnEl.innerHTML = origHtml;
+        }
+      }
+    };
+
+    window.reconcileAllPendingPayments = async () => {
+      const unpaidItems = (rawData || []).filter(item => {
+        if (item.payment_status === 'Ödənilib') return false;
+        const src = String(item.source || '').toLowerCase();
+        const isPayable = src.includes('qeydiyyat') || src.includes('lisey') || src.includes('ptim') || src.includes('ödəniş') || src.includes('odenis') || src.includes('imtahan');
+        const amt = String(item.amount || '').trim();
+        const hasAmount = Boolean(amt && !['0', '0.00', '0 azn', '0azn', 'null', 'undefined'].includes(amt.toLowerCase()));
+        return isPayable || hasAmount;
+      }).slice(0, 15); // Check top 15 most recent unpaid payable applications
+
+      if (unpaidItems.length === 0) {
+        alert('Yoxlanılacaq ödənilməmiş müraciət tapılmadı.');
+        return;
+      }
+
+      const syncBtn = document.getElementById('btn-sync-epoint');
+      const syncIcon = document.getElementById('icon-sync-epoint');
+      if (syncBtn) syncBtn.disabled = true;
+      if (syncIcon) syncIcon.className = 'fas fa-spinner fa-spin';
+
+      let updatedCount = 0;
+      for (const item of unpaidItems) {
+        try {
+          const res = await fetch(`https://evrika-api.yusifliqezenfer90.workers.dev/api/payment-status?id=${item._db_id_}`, { cache: 'no-store' });
+          const json = await res.json();
+          if (json.success && (json.data?.isPaid || json.data?.status === 'PAID')) {
+            updatedCount++;
+          }
+        } catch (e) {
+          console.warn('Sync error for item', item._db_id_, e);
+        }
+      }
+
+      if (syncBtn) syncBtn.disabled = false;
+      if (syncIcon) syncIcon.className = 'fas fa-sync-alt';
+
+      if (updatedCount > 0) {
+        alert(`🎉 Sinxronizasiya tamamlandı: ${updatedCount} yeni ödəniş təsdiqləndi və 'Ödənilib' statusuna keçirildi!`);
+        await fetchAllData();
+      } else {
+        alert('Sinxronizasiya tamamlandı. Epoint üzərində yeni təsdiqlənmiş ödəniş aşkar edilmədi.');
+      }
+    };
+
     window.switchFinanceTab = (tab) => {
         document.getElementById('finance-view-report').style.display = tab === 'report' ? 'block' : 'none';
         document.getElementById('finance-view-history').style.display = tab === 'history' ? 'block' : 'none';

@@ -3,27 +3,44 @@ export default async function handler(req, res) {
 
   try {
     let bodyData;
-    let headers = {
-      "Content-Type": req.headers["content-type"] || "application/json"
-    };
 
     if (req.method === "POST") {
-      if (typeof req.body === "string") {
-        bodyData = req.body;
-      } else if (typeof req.body === "object") {
-        bodyData = JSON.stringify(req.body);
-        headers["Content-Type"] = "application/json";
+      let data = "";
+      let signature = "";
+
+      if (typeof req.body === "object" && req.body !== null) {
+        data = req.body.data || "";
+        signature = req.body.signature || "";
+      } else if (typeof req.body === "string") {
+        try {
+          const parsed = JSON.parse(req.body);
+          data = parsed.data || "";
+          signature = parsed.signature || "";
+        } catch {
+          const params = new URLSearchParams(req.body);
+          data = params.get("data") || "";
+          signature = params.get("signature") || "";
+        }
       }
+
+      if (!data && req.query) {
+        data = req.query.data || "";
+        signature = req.query.signature || "";
+      }
+
+      bodyData = JSON.stringify({ data, signature });
     }
 
     const forwardRes = await fetch(CF_CALLBACK_URL, {
       method: req.method,
-      headers,
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: req.method === "POST" ? bodyData : undefined
     });
 
-    const data = await forwardRes.json();
-    return res.status(forwardRes.status).json(data);
+    const resJson = await forwardRes.json();
+    return res.status(forwardRes.status).json(resJson);
   } catch (err) {
     console.error("Callback proxy error:", err);
     return res.status(500).json({ error: err.message });
