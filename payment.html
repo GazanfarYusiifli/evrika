@@ -386,13 +386,14 @@
       try {
         btn.innerHTML = '<i class="fas fa-lock"></i> TƏHLÜKƏSİZ ÖDƏNİŞƏ YÖNLƏNDİRİLİRSİNİZ...';
 
-        const response = await fetch(`${API_BASE}/api/epoint-pay`, {
+        const response = await fetch(`/api/epoint`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             regId: cleanDbId,
             name: finalName,
-            email: finalEmail
+            email: finalEmail,
+            amount: 0.01
           })
         });
 

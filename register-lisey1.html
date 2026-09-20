@@ -588,13 +588,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ÖDƏNİŞƏ YÖNLƏNDİRİLİR...';
                 
                 try {
-                  const epointRes = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/epoint-pay', {
+                  const epointRes = await fetch('/api/epoint', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                       regId: data[0].id,
                       email: email,
-                      name: firstName + ' ' + lastName
+                      name: firstName + ' ' + lastName,
+                      amount: 0.01
                     })
                   });
 
