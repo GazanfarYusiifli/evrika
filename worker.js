@@ -149,19 +149,18 @@ export default {
           });
         }
 
-        // Test məqsədilə müvəqqəti 0.01 AZN (1 qəpik) təyin edilir
-        let authAmount = 0.01;
-        // Official prices: Məktəbəqədər = 25 AZN, 1-11 siniflər = 35 AZN
-        // const gradeStr = (regPayload.student_grade || regPayload.grade || regPayload['Sinif'] || regRow.source || '').toLowerCase();
-        // if (gradeStr.includes('məktəbəqədər') || gradeStr.includes('məktəbə qədər') || gradeStr.includes('mektebeqeder')) {
-        //   authAmount = 25;
-        // }
-        // if (regRow.amount) {
-        //   const parsed = parseFloat(String(regRow.amount).replace(/[^0-9.]/g, ''));
-        //   if (!isNaN(parsed) && parsed >= 20) {
-        //     authAmount = parsed;
-        //   }
-        // }
+        // Rəsmi qiymətlər: Məktəbəqədər = 25 AZN, 1-11 siniflər = 35 AZN
+        let authAmount = 35;
+        const gradeStr = (regPayload.student_grade || regPayload.grade || regPayload['Sinif'] || regRow.source || '').toLowerCase();
+        if (gradeStr.includes('məktəbəqədər') || gradeStr.includes('məktəbə qədər') || gradeStr.includes('mektebeqeder')) {
+          authAmount = 25;
+        }
+        if (regRow.amount) {
+          const parsed = parseFloat(String(regRow.amount).replace(/[^0-9.]/g, ''));
+          if (!isNaN(parsed) && parsed >= 20) {
+            authAmount = parsed;
+          }
+        }
 
         // Hər ödəniş cəhdi üçün banka həmişə unikal təzə order_number veririk.
         // Bu, Epoint-in "Linkin müddəti bitib" (TIMEOUT) və köhnə sessiyaya ilişmə xətasının qarşısını alır.

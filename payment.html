@@ -296,7 +296,7 @@
             const d = json.data;
             regName = d.student_name || regName;
             document.getElementById('student-info-tag').innerText = "Şagird: " + regName + (d.grade ? ` (${d.grade})` : '');
-            document.getElementById('amount-display').innerText = (d.amount || 0.01).toFixed(2) + ' AZN';
+            document.getElementById('amount-display').innerText = (d.amount || 35).toFixed(2) + ' AZN';
 
             if (d.isPaid || d.status === 'PAID') {
               document.getElementById('student-info-tag').innerHTML = `<span style="color:#10b981; font-weight:800;"><i class="fas fa-check-circle"></i> Bu qeydiyyat üzrə ödəniş artıq təsdiqlənib</span>`;
@@ -393,7 +393,7 @@
             regId: cleanDbId,
             name: finalName,
             email: finalEmail,
-            amount: 0.01
+            amount: regAmount || 35
           })
         });
 

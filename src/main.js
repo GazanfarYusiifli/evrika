@@ -351,8 +351,8 @@ window.submitToSupabase = async (formData, btn, originalText) => {
       if (window.location.pathname.includes('register-lisey') || window.location.pathname.includes('register-ptim')) {
           const studentName = crmForm['[2.Şagird] Adı'] || crmForm.name || '';
           const studentGrade = crmForm['[3.Təhsil] Qeydiyyat Səviyyəsi'] || '';
-          // TEST REJİMİ: 0.01 AZN (1 qəpik)
-          const targetAmount = '0.01';
+          const isPreschool = studentGrade.toLowerCase().includes('məktəbəqədər') || studentGrade.toLowerCase().includes('məktəbə qədər') || studentGrade.toLowerCase().includes('mektebeqeder');
+          const targetAmount = isPreschool ? '25' : '35';
           const emailVal = crmForm.email || '';
           setTimeout(() => {
               btn.innerHTML = '<i class="fas fa-lock"></i> ÖDƏNİŞƏ KEÇİLİR...';

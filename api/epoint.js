@@ -25,8 +25,14 @@ export default async function handler(req, res) {
     finalOrderId = `${finalOrderId}-${Date.now().toString().slice(-4)}`;
   }
 
-  // Test rejimi üçün məbləğ birbaşa 0.01 AZN (1 qəpik) təyin edilir
-  const parsedAmount = 0.01;
+  // Real qiymətlər: Məktəbəqədər = 25 AZN, digər siniflər = 35 AZN
+  let parsedAmount = 35;
+  if (amount) {
+    const p = parseFloat(String(amount).replace(/[^0-9.]/g, ''));
+    if (!isNaN(p) && p > 0) {
+      parsedAmount = p;
+    }
+  }
 
   const orderData = {
     public_key: PUBLIC_KEY,
