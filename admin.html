@@ -2606,7 +2606,9 @@ fbq('track', 'PageView');
             let partialData = allData
                 .map(r => {
                     const p = r.payload || {};
-                    const effectivePaymentStatus = (r.payment_status === 'Ödənilib' || p.payment_status === 'Ödənilib') ? 'Ödənilib' : (r.payment_status || p.payment_status || 'Ödənilməyib');
+                    const effectivePaymentStatus = (r.payment_status === 'Ödənilib' || p.payment_status === 'Ödənilib') 
+                      ? 'Ödənilib' 
+                      : (r.payment_status || p.payment_status || 'Ödəniş gözlənilir');
                     return { 
                       ...p, 
                       ...r, 
@@ -2665,7 +2667,9 @@ fbq('track', 'PageView');
             let fetchedData = allData
                 .map(r => {
                     const p = r.payload || {};
-                    const effectivePaymentStatus = (r.payment_status === 'Ödənilib' || p.payment_status === 'Ödənilib') ? 'Ödənilib' : (r.payment_status || p.payment_status || 'Ödənilməyib');
+                    const effectivePaymentStatus = (r.payment_status === 'Ödənilib' || p.payment_status === 'Ödənilib') 
+                      ? 'Ödənilib' 
+                      : (r.payment_status || p.payment_status || 'Ödəniş gözlənilir');
                     return { 
                       ...p, 
                       ...r, 
@@ -2885,6 +2889,9 @@ fbq('track', 'PageView');
             if (item.payment_status === 'Ödənilib') {
               return `<span style="font-weight:bold; font-size:0.75rem; color:#10B981; background:rgba(16,185,129,0.1); padding:4px 8px; border-radius:6px;"><i class="fas fa-check-circle"></i> Ödənilib</span>`;
             }
+            if (item.payment_status === 'Ödəniş gözlənilir' || item.payment_status === 'Gözləmədə' || item.payment_status === 'PENDING') {
+              return `<span style="font-weight:bold; font-size:0.75rem; color:#F59E0B; background:rgba(245,158,11,0.12); padding:4px 8px; border-radius:6px;"><i class="fas fa-clock"></i> Ödəniş gözlənilir</span>`;
+            }
             if (item.is_call || item.chid || item.position) return `<span style="color:var(--text-muted); font-size:0.8rem;">-</span>`;
             const src = String(item.source || '').toLowerCase();
             if (src === 'contact' || src === 'karyera' || src === 'career' || src.includes('zəng') || src.includes('phone') || src.includes('survey') || src.includes('səsi') || src.includes('sesi') || src.includes('montessori') || src.includes('zumrud') || src.includes('zümrüd')) {
@@ -2893,8 +2900,8 @@ fbq('track', 'PageView');
             const isPayable = src.includes('qeydiyyat') || src.includes('lisey') || src.includes('ptim') || src.includes('ödəniş') || src.includes('odenis') || src.includes('imtahan');
             const amt = String(item.amount || '').trim();
             const hasAmount = Boolean(amt && !['0', '0.00', '0 azn', '0azn', 'null', 'undefined'].includes(amt.toLowerCase()));
-            if (item.payment_status === 'Ödənilməyib' && (isPayable || hasAmount)) {
-              return `<span style="font-weight:bold; font-size:0.75rem; color:#EF4444; background:rgba(239,68,68,0.1); padding:4px 8px; border-radius:6px;">Ödənilməyib</span>`;
+            if (item.payment_status === 'Ödənilməyib' || (isPayable || hasAmount)) {
+              return `<span style="font-weight:bold; font-size:0.75rem; color:#EF4444; background:rgba(239,68,68,0.1); padding:4px 8px; border-radius:6px;"><i class="fas fa-times-circle"></i> Ödənilməyib</span>`;
             }
             return `<span style="color:var(--text-muted); font-size:0.8rem;">-</span>`;
           })()}</td>
@@ -3880,7 +3887,7 @@ fbq('track', 'PageView');
                 <div style="font-weight:900; font-size:1.2rem; margin-bottom:5px; color:white; letter-spacing:1px;">KOD: EV-${String(item._db_id_).padStart(4,'0')}</div>
                 <div style="color:var(--text-muted); font-size:0.9rem; margin-bottom: 5px; display:flex; align-items:center; flex-wrap:wrap; gap:8px;">
                   <span>Ödəniş Statusu:</span>
-                  <span style="color:${item.payment_status === 'Ödənilib' ? '#10b981' : '#ef4444'}; font-weight:800; background:${item.payment_status === 'Ödənilib' ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)'}; padding:4px 8px; border-radius:6px;">${item.payment_status || 'Ödənilməyib'}</span>
+                  <span style="color:${item.payment_status === 'Ödənilib' ? '#10b981' : (item.payment_status === 'Ödəniş gözlənilir' ? '#f59e0b' : '#ef4444')}; font-weight:800; background:${item.payment_status === 'Ödənilib' ? 'rgba(16,185,129,0.1)' : (item.payment_status === 'Ödəniş gözlənilir' ? 'rgba(245,158,11,0.12)' : 'rgba(239,68,68,0.1)')}; padding:4px 8px; border-radius:6px;">${item.payment_status || 'Ödəniş gözlənilir'}</span>
                   ${item.payment_status !== 'Ödənilib' ? `
                     <button onclick="syncEpointPayment(${item._db_id_}, this)" style="background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid #10b981; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;"><i class="fas fa-sync-alt"></i> Epoint-lə Yoxla</button>
                     <button onclick="navigator.clipboard.writeText('https://evrikaliseyi.edu.az/payment.html?id=${item._db_id_}&name=${encodeURIComponent(item.fullName || item.name || '')}&amount=${encodeURIComponent(item.amount || '35')}&email=${encodeURIComponent(item.email || '')}'); alert('Ödəniş linki kopyalandı! Valideynə göndərə bilərsiniz:\\nhttps://evrikaliseyi.edu.az/payment.html?id=${item._db_id_}');" style="background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid #38bdf8; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;"><i class="fas fa-link"></i> Ödəniş Linkini Kopyala</button>

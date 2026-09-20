@@ -796,7 +796,7 @@ export default {
           const phone = pData.phone || pData.tel || pData['[1.Əlaqə] Əlaqə Nömrəsi'] || pData['[3.Ata] Nömrəsi'] || '';
           const source = pData.source || pData.student_grade || pData['[2.Şagird] Təhsil Növü'] || 'Ümumi Müraciət';
           const isPayableSource = /lisey|gənclik|nərimanov|ptim|imtahan|ödəniş|odenis/i.test(source);
-          const payment_status = pData.payment_status || (isPayableSource ? 'Ödənilməyib' : null);
+          const payment_status = pData.payment_status || (isPayableSource ? 'Ödəniş gözlənilir' : null);
           const gradeVal = (pData.student_grade || pData.grade || pData['Sinif'] || '').toLowerCase();
           const defaultPrice = (gradeVal.includes('məktəbəqədər') || gradeVal.includes('məktəbə qədər')) ? '25' : '35';
           const amount = pData.amount ? String(pData.amount).replace(/[^0-9.]/g, '') : (isPayableSource ? defaultPrice : '0');
