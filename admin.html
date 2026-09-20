@@ -2584,7 +2584,68 @@ fbq('track', 'PageView');
         return p;
     }
 
+    function populateData(allData) {
+      if (!Array.isArray(allData) || allData.length === 0) return;
+      let partialData = allData
+          .map(r => {
+              const p = r.payload || {};
+              const effectivePaymentStatus = (r.payment_status === 'Ödənilib' || p.payment_status === 'Ödənilib') 
+                ? 'Ödənilib' 
+                : (r.payment_status || p.payment_status || 'Ödəniş gözlənilir');
+              return { 
+                ...p, 
+                ...r, 
+                _db_id_: r.id, 
+                created_at: r.created_at, 
+                phone: formatPhone(p.phone || r.phone),
+                payment_status: effectivePaymentStatus
+              };
+          })
+          .sort((a, b) => (b._db_id_ || 0) - (a._db_id_ || 0));
+      
+      window.allFetchedData = partialData;
+      
+      const isKaryera = (r) => {
+          if (!r) return false;
+          const s = r.source || "";
+          return s.includes("Karyera") || s.includes("Vakansiya") || s === "career" || !!r.position || getGranularSource(r) === "career";
+      };
+      
+      hrData = partialData.filter(r => isKaryera(r));
+      rawData = partialData.filter(r => !r.is_scan_log && !isKaryera(r));
+      
+      window.filterData();
+      if (window.renderVacancyApps) window.renderVacancyApps();
+      
+      const bData = getBranchFilteredData();
+      const newCount = bData.filter(item => (item.status || "").toLowerCase() === "yeni").length;
+      const badge = document.getElementById("new-apps-badge");
+      const badgeExam = document.getElementById("new-exam-apps-badge");
+      if (badge) {
+          badge.innerText = newCount;
+          badge.style.display = newCount > 0 ? "inline-block" : "none";
+      }
+      if (badgeExam) {
+          badgeExam.innerText = newCount;
+          badgeExam.style.display = newCount > 0 ? "inline-block" : "none";
+      }
+      renderDashboard();
+      renderAnalytics();
+      renderFinance();
+    }
+
     async function initialLoad() {
+      // 1. Instant render from local cache if available
+      try {
+        const cached = localStorage.getItem('evrika_cached_regs');
+        if (cached) {
+          const cachedJson = JSON.parse(cached);
+          if (Array.isArray(cachedJson) && cachedJson.length > 0) {
+            populateData(cachedJson);
+          }
+        }
+      } catch(e) {}
+
       let loadingToast = document.getElementById('data-loading-status');
       if (!loadingToast) {
           loadingToast = document.createElement('div');
@@ -2596,65 +2657,43 @@ fbq('track', 'PageView');
           loadingToast.style.display = 'flex';
           loadingToast.style.opacity = '1';
           loadingToast.style.background = 'var(--royal-blue)';
-          document.getElementById('data-loading-icon').className = 'fas fa-spinner fa-spin';
-          document.getElementById('data-loading-text').innerText = 'Məlumatlar yüklənir...';
+          const icon = document.getElementById('data-loading-icon');
+          const text = document.getElementById('data-loading-text');
+          if (icon) icon.className = 'fas fa-spinner fa-spin';
+          if (text) text.innerText = 'Məlumatlar yüklənir...';
       }
+
+      const hideToast = (success = true) => {
+        if (!loadingToast) return;
+        if (success) {
+          loadingToast.style.background = 'var(--success)';
+          const icon = document.getElementById('data-loading-icon');
+          const text = document.getElementById('data-loading-text');
+          if (icon) icon.className = 'fas fa-check-circle';
+          if (text) text.innerText = 'Məlumatlar yeniləndi';
+        }
+        setTimeout(() => {
+          loadingToast.style.opacity = '0';
+          setTimeout(() => { loadingToast.style.display = 'none'; }, 300);
+        }, 500);
+      };
+
       try {
         const bRes = await fetch(`${API_URL}/registrations?select=*`, { headers: HEADERS, cache: "no-store" });
         if (bRes.ok) {
             const allData = await bRes.json();
-            let partialData = allData
-                .map(r => {
-                    const p = r.payload || {};
-                    const effectivePaymentStatus = (r.payment_status === 'Ödənilib' || p.payment_status === 'Ödənilib') 
-                      ? 'Ödənilib' 
-                      : (r.payment_status || p.payment_status || 'Ödəniş gözlənilir');
-                    return { 
-                      ...p, 
-                      ...r, 
-                      _db_id_: r.id, 
-                      created_at: r.created_at, 
-                      phone: formatPhone(p.phone || r.phone),
-                      payment_status: effectivePaymentStatus
-                    };
-                })
-                .sort((a, b) => b._db_id_ - a._db_id_);
-            
-            window.allFetchedData = partialData;
-            
-            const isKaryera = (r) => {
-                if (!r) return false;
-                const s = r.source || "";
-                return s.includes("Karyera") || s.includes("Vakansiya") || s === "career" || !!r.position || getGranularSource(r) === "career";
-            };
-            
-            hrData = partialData.filter(r => isKaryera(r));
-            rawData = partialData.filter(r => !r.is_scan_log && !isKaryera(r));
-            
-            window.filterData();
-            if (window.renderVacancyApps) window.renderVacancyApps();
-            
-            const bData = getBranchFilteredData();
-            const newCount = bData.filter(item => (item.status || "").toLowerCase() === "yeni").length;
-            const badge = document.getElementById("new-apps-badge");
-            const badgeExam = document.getElementById("new-exam-apps-badge");
-            if (badge) {
-                badge.innerText = newCount;
-                badge.style.display = newCount > 0 ? "inline-block" : "none";
-            }
-            if (badgeExam) {
-                badgeExam.innerText = newCount;
-                badgeExam.style.display = newCount > 0 ? "inline-block" : "none";
-            }
+            populateData(allData);
+            try {
+              localStorage.setItem('evrika_cached_regs', JSON.stringify(allData));
+            } catch(e) {}
+            hideToast(true);
+        } else {
+            hideToast(false);
         }
-        if (loadingToast) {
-                loadingToast.style.background = 'var(--success)';
-                document.getElementById('data-loading-icon').className = 'fas fa-check-circle';
-                document.getElementById('data-loading-text').innerText = 'Məlumatlar yükləndi, tamamlandı';
-                setTimeout(() => { loadingToast.style.opacity = '0'; setTimeout(() => loadingToast.style.display = 'none', 300); }, 3000);
-            }
-      } catch(e) {}
-      renderDashboard(); window.filterData(); renderAnalytics(); renderFinance(); renderVacancyApps(); loadUgurlar(); loadVacancies(); loadNews(); loadManagement(); loadMezunlar();
+      } catch(e) {
+        console.error("Fetch error:", e);
+        hideToast(false);
+      }
     }
 
     async function refreshApps() {
