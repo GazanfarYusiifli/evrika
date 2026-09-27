@@ -746,9 +746,20 @@ export default {
           const ids = getIdsFromQuery();
           if (ids && ids.length > 0) {
             const placeholders = ids.map(() => '?').join(',');
-            const { results } = await env.DB.prepare(`SELECT * FROM registrations WHERE id IN (${placeholders}) ORDER BY id DESC`).bind(...ids).all();
+            let results;
+            try {
+              const q = await env.DB.prepare(`SELECT id, created_at, name, phone, source, payment_status, amount, coupon_code, paid_at, json_remove(payload, '$.cv_file_base64') AS payload FROM registrations WHERE id IN (${placeholders}) ORDER BY id DESC`).bind(...ids).all();
+              results = q.results;
+            } catch(e) {
+              const q = await env.DB.prepare(`SELECT * FROM registrations WHERE id IN (${placeholders}) ORDER BY id DESC`).bind(...ids).all();
+              results = q.results;
+            }
             const parsed = results.map(row => {
               let p = safeJsonParse(row.payload);
+              if (p.cv_file_base64 && p.cv_file_base64.length > 500) {
+                p.has_cv = true;
+                p.cv_file_base64 = "[CV faylı mövcuddur]";
+              }
               p.id = row.id;
               p._db_id_ = row.id;
               p.created_at = row.created_at;
@@ -761,9 +772,21 @@ export default {
             return jsonResponse(parsed);
           }
 
-          const { results } = await env.DB.prepare("SELECT id, created_at, name, phone, source, payment_status, amount, coupon_code, paid_at, payload FROM registrations ORDER BY id DESC").all();
+          let results;
+          try {
+            const q = await env.DB.prepare("SELECT id, created_at, name, phone, source, payment_status, amount, coupon_code, paid_at, json_remove(payload, '$.cv_file_base64') AS payload FROM registrations ORDER BY id DESC").all();
+            results = q.results;
+          } catch(e) {
+            const q = await env.DB.prepare("SELECT id, created_at, name, phone, source, payment_status, amount, coupon_code, paid_at, payload FROM registrations ORDER BY id DESC").all();
+            results = q.results;
+          }
+
           const parsed = results.map(r => {
             let p = safeJsonParse(r.payload);
+            if (p.cv_file_base64 && p.cv_file_base64.length > 500) {
+              p.has_cv = true;
+              p.cv_file_base64 = "[CV faylı mövcuddur]";
+            }
             p.id = r.id;
             p._db_id_ = r.id;
             p.created_at = r.created_at;
@@ -799,6 +822,12 @@ export default {
           const gradeVal = (pData.student_grade || pData.grade || pData['Sinif'] || '').toLowerCase();
           const defaultPrice = (gradeVal.includes('məktəbəqədər') || gradeVal.includes('məktəbə qədər')) ? '25' : '35';
           const amount = pData.amount ? String(pData.amount).replace(/[^0-9.]/g, '') : (isPayableSource ? defaultPrice : '0');
+          
+          // Prevent massive base64 files from overloading D1 payload
+          if (pData.cv_file_base64 && pData.cv_file_base64.length > 50000) {
+            pData.has_cv_file = true;
+            pData.cv_file_base64 = "[CV faylı qəbul edildi və arxivləşdirildi]";
+          }
           const payloadStr = JSON.stringify(pData);
 
           const res = await env.DB.prepare(
@@ -826,7 +855,20 @@ export default {
 
           let p = safeJsonParse(existing.payload);
           const incoming = body.payload ? body.payload : body;
+
+          // Prevent restoring massive base64 data through PUT/PATCH
+          if (incoming.cv_file_base64 && incoming.cv_file_base64.length > 500 && !incoming.cv_file_base64.startsWith('[')) {
+            incoming.has_cv_file = true;
+            incoming.cv_file_base64 = "[CV faylı qəbul edildi və arxivləşdirildi]";
+          }
+
           Object.assign(p, incoming);
+
+          // Also clean any residual cv_file_base64 in the merged payload
+          if (p.cv_file_base64 && p.cv_file_base64.length > 500 && !p.cv_file_base64.startsWith('[')) {
+            p.has_cv_file = true;
+            p.cv_file_base64 = "[CV faylı qəbul edildi və arxivləşdirildi]";
+          }
 
           const payment_status = incoming.payment_status || existing.payment_status;
           const amount = incoming.amount ? String(incoming.amount) : existing.amount;

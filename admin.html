@@ -730,6 +730,7 @@ fbq('track', 'PageView');
             <option value="Qəbul">Qəbul</option>
             <option value="İmtina">İmtina</option>
           </select>
+          <button onclick="initialLoad()" class="btn-view" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: white; padding: 18px 20px;" title="Məlumatları dərhal yenilə"><i class="fas fa-redo-alt"></i> Yenilə</button>
           <button onclick="reconcileAllPendingPayments()" id="btn-sync-epoint" class="btn-view" style="background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.35); color: #60a5fa; padding: 18px 20px;" title="Epoint serveri ilə canlı status yoxlaması apar"><i class="fas fa-sync-alt" id="icon-sync-epoint"></i> Epoint Yoxla</button>
           <button onclick="exportToCSV()" class="btn-view" style="background: var(--success); border: none; padding: 18px 25px;"><i class="fas fa-file-excel"></i> Excel-ə çıxar</button>
         </div>
@@ -1753,50 +1754,52 @@ fbq('track', 'PageView');
         localStorage.setItem('evrika_active_module', mk);
         history.pushState({module: mk}, '', '#module-' + mk);
         
-        // Immediately hide all views and reset content so NO other module info flickers
-        document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
-        
-        document.getElementById('hub-login-overlay').style.opacity = '0';
-        document.getElementById('ems-hub').style.opacity = '0';
-        
+        // Hide overlays immediately
+        const loginOverlay = document.getElementById('hub-login-overlay');
+        const emsHub = document.getElementById('ems-hub');
+        const crmOverlay = document.getElementById('hub-crm-branches-overlay');
+        if (loginOverlay) loginOverlay.style.display = 'none';
+        if (emsHub) emsHub.style.display = 'none';
+        if (crmOverlay) crmOverlay.style.display = 'none';
+
         // Filter sidebar links/titles for the specific module
         document.querySelectorAll('[data-module]').forEach(el => {
             el.style.display = (el.getAttribute('data-module') === mk ? 'flex' : 'none');
         });
 
-        setTimeout(() => {
-            document.getElementById('hub-login-overlay').style.display='none';
-            document.getElementById('ems-hub').style.display='none';
-            document.getElementById('main-sidebar').style.display='flex';
+        // Show sidebar
+        const sidebar = document.getElementById('main-sidebar');
+        if (sidebar) sidebar.style.display = 'flex';
+        
+        if (mk === 'crm') {
+            const branchTitles = {
+              'all': '🏢 BÜTÜN CRM DASHBOARD',
+              'lisey1': '🔴 BETL NƏRİMANOV DASHBOARD',
+              'lisey2': '🔵 BETL GƏNCLİK DASHBOARD',
+              'montessori': '🟢 MONTESSORİ KİDS DASHBOARD',
+              'victory': '🟣 VİCTORY COLLEGES DASHBOARD',
+              'zumrud': '🟡 ZÜMRÜD İDMAN DASHBOARD'
+            };
+            const bTitle = branchTitles[window.selectedCrmBranch || 'all'] || 'CRM & MÜŞTƏRİ XİDMƏTLƏRİ';
+            const sbCrmTitle = document.getElementById('sb-crm-title');
+            if (sbCrmTitle) sbCrmTitle.innerText = bTitle;
             
-            if (mk === 'crm') {
-                const branchTitles = {
-                  'all': '🏢 BÜTÜN CRM DASHBOARD',
-                  'lisey1': '🔴 BETL NƏRİMANOV DASHBOARD',
-                  'lisey2': '🔵 BETL GƏNCLİK DASHBOARD',
-                  'montessori': '🟢 MONTESSORİ KİDS DASHBOARD',
-                  'victory': '🟣 VİCTORY COLLEGES DASHBOARD',
-                  'zumrud': '🟡 ZÜMRÜD İDMAN DASHBOARD'
-                };
-                const bTitle = branchTitles[window.selectedCrmBranch || 'all'] || 'CRM & MÜŞTƏRİ XİDMƏTLƏRİ';
-                const sbCrmTitle = document.getElementById('sb-crm-title');
-                if (sbCrmTitle) sbCrmTitle.innerText = bTitle;
-                
-                // Show QR generator ONLY in BÜTÜN CRM (Ümumi İdarəetmə)
-                const qrLink = document.getElementById('sb-link-qr-generator');
-                if (qrLink) {
-                  qrLink.style.display = (window.selectedCrmBranch === 'all' ? 'flex' : 'none');
-                }
-
-                filteredData = getBranchFilteredData();
-                switchTab('dashboard');
-            } else {
-                const startTabs = { 'hr':'hr-panel', 'finance':'finance', 'site':'ugurlar', 'exam':'exam-results' };
-                switchTab(startTabs[mk]);
+            // Show QR generator ONLY in BÜTÜN CRM (Ümumi İdarəetmə)
+            const qrLink = document.getElementById('sb-link-qr-generator');
+            if (qrLink) {
+              qrLink.style.display = (window.selectedCrmBranch === 'all' ? 'flex' : 'none');
             }
-            initialLoad();
-            loadManagement();
-        }, 300);
+
+            filteredData = getBranchFilteredData();
+            switchTab('dashboard');
+        } else {
+            const startTabs = { 'hr':'hr-panel', 'finance':'finance', 'site':'ugurlar', 'exam':'exam-results' };
+            switchTab(startTabs[mk]);
+        }
+
+        // Trigger background data load
+        initialLoad();
+        if (typeof loadManagement === 'function') loadManagement();
     }
 
     // Enter key support
@@ -2558,7 +2561,8 @@ fbq('track', 'PageView');
       if (item.position || (item.source && (item.source.includes('Karyera') || item.source.includes('Vakansiya')))) return 'career';
       
       const s = String(item.source || '').toLowerCase();
-      const allText = Object.values(item).join(' ').toLowerCase();
+      // Only use relevant text fields (not ALL values - that's very expensive!)
+      const allText = (s + ' ' + String(item.note || '') + ' ' + String(item.description || '')).toLowerCase();
 
       if (s.includes('nərimanov') || s.includes('nerimanov') || s.includes('lisey 1') || s.includes('liseyi 1') || s === 'lisey1' || allText.includes('nərimanov') || allText.includes('nerimanov')) return 'lisey1';
       if (s.includes('gənclik') || s.includes('genclik') || s.includes('lisey 2') || s.includes('liseyi 2') || s === 'lisey2' || allText.includes('gənclik') || allText.includes('genclik')) return 'lisey2';
@@ -2637,7 +2641,7 @@ fbq('track', 'PageView');
     async function initialLoad() {
       // 1. Instant render from local cache if available
       try {
-        const cached = localStorage.getItem('evrika_cached_regs');
+        const cached = localStorage.getItem('evrika_cached_regs') || localStorage.getItem('evrika_crm_data');
         if (cached) {
           const cachedJson = JSON.parse(cached);
           if (Array.isArray(cachedJson) && cachedJson.length > 0) {
@@ -2645,6 +2649,11 @@ fbq('track', 'PageView');
           }
         }
       } catch(e) {}
+
+      // 2. Also load vacancies so "Aktiv Vakansiya" card is updated
+      if (typeof window.loadVacancies === 'function') {
+        window.loadVacancies().catch(() => {});
+      }
 
       let loadingToast = document.getElementById('data-loading-status');
       if (!loadingToast) {
@@ -2679,19 +2688,45 @@ fbq('track', 'PageView');
       };
 
       try {
-        const bRes = await fetch(`${API_URL}/registrations?select=*`, { headers: HEADERS, cache: "no-store" });
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 12000);
+        let bRes = await fetch(`${API_URL}/registrations?select=*`, { 
+          headers: HEADERS, 
+          cache: "no-store",
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        
+        if (!bRes.ok) {
+          bRes = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations', { cache: 'no-store' });
+        }
+
         if (bRes.ok) {
             const allData = await bRes.json();
             populateData(allData);
             try {
               localStorage.setItem('evrika_cached_regs', JSON.stringify(allData));
+              localStorage.setItem('evrika_crm_data', JSON.stringify(allData));
             } catch(e) {}
             hideToast(true);
         } else {
             hideToast(false);
         }
       } catch(e) {
-        console.error("Fetch error:", e);
+        console.warn("Fetch notice (trying fallback):", e);
+        try {
+          const fallbackRes = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations', { cache: 'no-store' });
+          if (fallbackRes.ok) {
+            const allData = await fallbackRes.json();
+            populateData(allData);
+            try {
+              localStorage.setItem('evrika_cached_regs', JSON.stringify(allData));
+              localStorage.setItem('evrika_crm_data', JSON.stringify(allData));
+            } catch(e) {}
+            hideToast(true);
+            return;
+          }
+        } catch(err2) {}
         hideToast(false);
       }
     }
@@ -2784,6 +2819,7 @@ fbq('track', 'PageView');
     window.filterData = () => {
       const q = (document.getElementById('search-input')?.value || '').toLowerCase();
       const status = document.getElementById('filter-status')?.value || 'all';
+      const sourceFilter = document.getElementById('filter-source')?.value || 'all';
       const branch = window.selectedCrmBranch || 'all';
 
       filteredData = rawData.filter(item => {
@@ -2814,8 +2850,17 @@ fbq('track', 'PageView');
         if (status !== 'all') {
            matchesStatus = (item.status || 'Yeni') === status;
         }
+
+        let matchesSource = true;
+        if (sourceFilter !== 'all') {
+          if (sourceFilter === 'Vebsayt') {
+            matchesSource = ['lisey1', 'lisey2', 'montessori', 'victory', 'zumrud', 'contact'].includes(s);
+          } else if (sourceFilter === 'Karyera') {
+            matchesSource = s === 'career';
+          }
+        }
         
-        return matchesSearch && matchesBranch && matchesStatus;
+        return matchesSearch && matchesBranch && matchesStatus && matchesSource;
       });
 
       renderApps();
@@ -2969,7 +3014,6 @@ fbq('track', 'PageView');
           </td>
         </tr>`;
       }).join('');
-      if (tb) tb.innerHTML = html;
       if (tb) tb.innerHTML = html;
       if (tbExam) tbExam.innerHTML = html;
     }
@@ -4111,11 +4155,35 @@ fbq('track', 'PageView');
     };
 
     window.loadVacancies = async () => {
-      const res = await fetch(`${API_URL}/vacancies?select=*`, { headers: HEADERS });
-      if(res.ok) { vacanciesData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id })).sort((a,b) => b._db_id_ - a._db_id_); }
-      const tb = document.getElementById('vac-tbody'); if(tb) tb.innerHTML = vacanciesData.map(v => `<tr><td>${v.title}</td><td>${v.location || v.dept || '-'}</td><td>${v.time}</td><td><button class="btn-danger" onclick="deleteVacancy('${v._db_id_}')">Sil</button></td></tr>`).join('');
-      renderDashboard();
-    }
+      try {
+        let res = await fetch(`${API_URL}/vacancies?select=*`, { headers: HEADERS });
+        if(!res.ok) res = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/vacancies');
+        if(res.ok) {
+          const list = await res.json();
+          vacanciesData = list.map(r => {
+            let descObj = {};
+            if (typeof r.description === 'string' && r.description.trim().startsWith('{')) {
+              try { descObj = JSON.parse(r.description); } catch(e) {}
+            }
+            const p = r.payload || {};
+            return {
+              ...descObj,
+              ...p,
+              ...r,
+              _db_id_: r.id,
+              title: r.title || descObj.title || p.title || 'Vakansiya',
+              location: r.location || descObj.location || p.location || '',
+              status: r.status || descObj.status || p.status || (r.is_active ? 'Aktiv' : 'Deaktiv') || 'Aktiv'
+            };
+          }).sort((a,b) => b._db_id_ - a._db_id_);
+        }
+        const tb = document.getElementById('vac-tbody'); 
+        if(tb) tb.innerHTML = vacanciesData.map(v => `<tr><td>${v.title}</td><td>${v.location || v.dept || '-'}</td><td>${v.time || '-'}</td><td><button class="btn-danger" onclick="deleteVacancy('${v._db_id_}')">Sil</button></td></tr>`).join('');
+        renderDashboard();
+      } catch(e) {
+        console.warn('loadVacancies error:', e);
+      }
+    };
 
     window.loadNews = async () => {
       const res = await fetch(`${API_URL}/news?select=*`, { headers: HEADERS });
@@ -4663,13 +4731,13 @@ fbq('track', 'PageView');
       const b = window.selectedCrmBranch || 'all';
       if (!b || b === 'all') return rawData;
       return rawData.filter(i => {
-        const s = (getGranularSource(i) || '').toLowerCase();
-        const allText = Object.values(i).join(' ').toLowerCase();
-        if (b === 'lisey1') return s === 'lisey1' || s.includes('nərimanov') || s.includes('nerimanov') || s.includes('lisey 1') || s.includes('liseyi 1') || allText.includes('nərimanov') || allText.includes('nerimanov');
-        if (b === 'lisey2') return s === 'lisey2' || s.includes('gənclik') || s.includes('genclik') || s.includes('lisey 2') || s.includes('liseyi 2') || allText.includes('gənclik') || allText.includes('genclik');
-        if (b === 'montessori') return s === 'montessori' || s.includes('montessori') || allText.includes('montessori');
-        if (b === 'victory') return s === 'victory' || s.includes('victory') || s.includes('eduhome') || allText.includes('victory');
-        if (b === 'zumrud') return s === 'zumrud' || s.includes('zümrüd') || s.includes('zumrud') || allText.includes('zümrüd') || allText.includes('zumrud');
+        // getGranularSource already checks source/note/description fields
+        const s = getGranularSource(i) || '';
+        if (b === 'lisey1') return s === 'lisey1';
+        if (b === 'lisey2') return s === 'lisey2';
+        if (b === 'montessori') return s === 'montessori';
+        if (b === 'victory') return s === 'victory';
+        if (b === 'zumrud') return s === 'zumrud';
         return true;
       });
     }
@@ -4983,7 +5051,7 @@ fbq('track', 'PageView');
 
         bData.forEach(item => {
           const s = (item.source || '').toLowerCase();
-          const allText = Object.values(item).join(' ').toLowerCase();
+          const allText = (s + ' ' + String(item.note || '') + ' ' + String(item.description || '')).toLowerCase();
           
           if (item.is_call || s.includes('phone') || s.includes('zəng') || s.includes('nexus')) {
             sourceCounts['Telefon / Zəng Mərkəzi']++;
@@ -5206,6 +5274,26 @@ fbq('track', 'PageView');
             window.location.reload();
         }
     });
+
+    // --- HASH-BASED AUTO MODULE OPEN ---
+    // URL-dəki #module-crm, #module-hr, etc. hash-larına görə avtomatik modulu aç
+    (function checkHashOnLoad() {
+        const hash = window.location.hash; // e.g. "#module-crm"
+        if (!hash || !hash.startsWith('#module-')) return;
+
+        const mk = hash.replace('#module-', ''); // e.g. "crm"
+        const validModules = ['crm', 'hr', 'finance', 'site', 'exam'];
+        if (!validModules.includes(mk)) return;
+
+        // CRM üçün xüsusi axın: filial seçimi overlay-ini göstər
+        setTimeout(() => {
+            if (mk === 'crm') {
+                window.unlockModule('crm');
+            } else {
+                window.unlockModule(mk);
+            }
+        }, 400);
+    })();
   </script>
 
     <script>
