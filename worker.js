@@ -739,7 +739,189 @@ export default {
       }
 
       // =========================================================================
-      // 6. EXISTING REGISTRATIONS HANDLER (GET, POST, PUT, DELETE /registrations)
+      // 6. NEXUS IP PBX WEBHOOK HANDLER  (POST /nexus-webhook or /call-webhook)
+      //    Implements Nexus Integration Guide §0-16
+      //    Correlation key: chid (unique per call, repeated on every event)
+      // =========================================================================
+      if (path === "/nexus-webhook" || path === "/call-webhook") {
+        if (request.method !== "POST") return jsonResponse({ ok: false, error: "POST only" }, 405);
+
+        // Optional Bearer token guard (set NEXUS_WEBHOOK_SECRET env var in Cloudflare Dashboard)
+        const NEXUS_SECRET = env.NEXUS_WEBHOOK_SECRET || '';
+        if (NEXUS_SECRET) {
+          const authHeader = request.headers.get('Authorization') || '';
+          if (!authHeader.startsWith('Bearer ') || authHeader.slice(7).trim() !== NEXUS_SECRET) {
+            return jsonResponse({ ok: false, error: "Unauthorized" }, 401);
+          }
+        }
+
+        let body;
+        try { body = await request.json(); } catch { return jsonResponse({ ok: false, error: "Invalid JSON" }, 400); }
+
+        const { status, chid, direction, timestamp } = body || {};
+        if (!chid || !status) return jsonResponse({ ok: false, error: "Missing chid or status" }, 400);
+
+        // §14: Skip transfer-consultation leg (outbound ended with transfer_consultation:true)
+        if (status === 'ended' && body.transfer_consultation === true) {
+          return jsonResponse({ ok: true, action: 'skipped', reason: 'transfer_consultation', chid });
+        }
+
+        // §15: recording_ready — attach recording URLs to existing call record
+        if (status === 'recording_ready') {
+          try {
+            const rec = await env.DB.prepare(
+              "SELECT id, payload FROM registrations WHERE json_extract(payload, '$.chid') = ? LIMIT 1"
+            ).bind(chid).first();
+            if (rec) {
+              const p = safeJsonParse(rec.payload);
+              p.recording_count    = body.recording_count || 0;
+              p.recording_urls     = body.download_urls   || null;
+              p.recording_expires  = body.download_expires_at || null;
+              p.recording_uploaded = body.uploaded !== undefined ? body.uploaded : false;
+              await env.DB.prepare("UPDATE registrations SET payload = ? WHERE id = ?")
+                .bind(JSON.stringify(p), rec.id).run();
+              return jsonResponse({ ok: true, action: 'recording_attached', id: rec.id, chid });
+            }
+          } catch (e) { console.error('recording_ready lookup:', e); }
+          return jsonResponse({ ok: true, action: 'recording_no_match', chid });
+        }
+
+        // Early/non-informative events: acknowledge only (no DB write unless record already exists)
+        const EARLY_STATUSES = new Set(['dialing', 'ringing', 'ringing_stopped']);
+
+        // §16 delivery_failed: real call data is nested in body.call
+        const isDeliveryFailed = status === 'delivery_failed';
+        const callData = isDeliveryFailed && body.call ? body.call : body;
+        const effectiveStatus = isDeliveryFailed
+          ? (callData.final_status || 'missed')
+          : status;
+
+        // Extract fields
+        const phone      = String(callData.external_number || body.external_number || '').trim();
+        const agentExt   = callData.agent_ext   || body.agent_ext   || '';
+        const agentName  = callData.agent_name  || body.agent_name  || '';
+        const inboundDid = callData.inbound_did || body.inbound_did || '';
+        const nexusMenu  = String(callData.nexus_menu || body.nexus_menu || '');
+        const isInbound  = (direction || callData.direction || 'inbound') === 'inbound';
+
+        // IVR menu → filial mapping (update keys to match your Nexus IVR config)
+        const IVR_BRANCH_MAP = { '1': 'lisey1', '2': 'lisey2', '3': 'montessori', '4': 'victory', '5': 'zumrud', '0': 'all' };
+        const BRANCH_LABELS  = { 'lisey1': 'EVRİKA BETL (Nərimanov filialı)', 'lisey2': 'EVRİKA BETL (Gənclik filialı)', 'montessori': 'Montessori Kids', 'victory': 'Victory Colleges', 'zumrud': 'Zümrüd İdman', 'all': 'EVRİKA' };
+        const branch      = IVR_BRANCH_MAP[nexusMenu] || 'all';
+        const branchLabel = BRANCH_LABELS[branch]     || 'EVRİKA';
+        const source      = `Zəng${isInbound ? '' : ' (Çıxış)'} - ${branchLabel}`;
+
+        const STATE_AZ = {
+          'ended':              'Cavablandırıldı',
+          'missed':             'Buraxılmış Zəng',
+          'abandoned':          'IVR-də tərk edildi',
+          'unanswered':         'Cavabsız (Çıxış)',
+          'callback_requested': 'Callback Tələb edildi',
+          'answered':           'Danışıqda',
+          'transferred':        'Yönləndirildi'
+        };
+        const callStateAz = STATE_AZ[effectiveStatus] || effectiveStatus;
+
+        // Duration helpers
+        const talkMs  = callData.talk_duration_ms  ?? body.talk_duration_ms  ?? 0;
+        const totalMs = callData.total_duration_ms ?? body.total_duration_ms ?? 0;
+        const waitMs  = callData.wait_time_ms      ?? body.wait_time_ms      ?? 0;
+        const dSec    = Math.round(talkMs / 1000);
+        const dStr    = dSec >= 60 ? `${Math.floor(dSec/60)} dəq ${dSec%60} san` : `${dSec} san`;
+
+        const FULLNAME_MAP = {
+          'ended':              `📞 Cavablandırıldı: ${phone}`,
+          'missed':             `📵 Buraxılmış: ${phone}`,
+          'callback_requested': `🔁 Callback: ${phone}`,
+          'abandoned':          `🚪 IVR tərki: ${phone}`,
+          'unanswered':         `📤 Cavabsız: ${phone}`,
+          'answered':           `📞 Danışıqda: ${phone}`,
+          'transferred':        `🔀 Yönləndirildi: ${phone}`
+        };
+        const fullName = FULLNAME_MAP[effectiveStatus] || `📞 Zəng: ${phone}`;
+
+        const noteParts = [
+          'Nexus IP PBX',
+          `| ${callStateAz}`,
+          talkMs > 0 ? `| Müddət: ${dStr}` : null,
+          agentName ? `| Operator: ${agentName}${agentExt ? ` (${agentExt})` : ''}` : null,
+          `| Filial: ${branchLabel}`,
+          inboundDid ? `| DID: *${inboundDid}` : null,
+          nexusMenu  ? `| IVR Menyu: ${nexusMenu}` : null,
+          status === 'callback_requested' ? '| ⚠️ CALLBACK LAZIMDIR' : null,
+          isDeliveryFailed ? `| [Gecikmiş çatdırılma: ${(body.failed_events || []).join(', ')}]` : null
+        ].filter(Boolean).join(' ');
+
+        const newPayload = {
+          chid,
+          call_id:                body.call_id || null,
+          phone,
+          fullName,
+          source,
+          branch,
+          direction:              direction || callData.direction || 'inbound',
+          is_call:                true,
+          call_status:            effectiveStatus,
+          call_state_az:          callStateAz,
+          agent:                  agentName,
+          agent_ext:              agentExt,
+          agent_history:          body.agent_history || callData.agent_history || null,
+          inbound_did:            inboundDid,
+          ivr_menu:               nexusMenu,
+          call_type:              direction || callData.direction || 'inbound',
+          submissionDate:         timestamp,
+          talk_duration_ms:       talkMs,
+          total_duration_ms:      totalMs,
+          wait_time_ms:           waitMs,
+          duration_seconds:       dSec,
+          duration:               dStr,
+          note:                   noteParts,
+          callback_requested:     status === 'callback_requested' || body.nexus_callback === '1' || callData.callback_requested === true,
+          recording_count:        body.recording_count || 0,
+          recording_urls:         body.download_urls   || null,
+          recording_expires:      body.download_expires_at || null,
+          recording_uploaded:     body.uploaded !== undefined ? body.uploaded : false,
+          transferred_to_external: body.transferred_to_external || callData.transferred_to_external || null,
+          transfer_type:          body.transfer_type || null,
+          from_ext:               body.from_ext || null,
+          to_ext:                 body.to_ext   || null,
+          status:                 'Yeni'
+        };
+
+        // §0.6 Idempotent upsert: look up by chid
+        let existing = null;
+        try {
+          existing = await env.DB.prepare(
+            "SELECT id, payload FROM registrations WHERE json_extract(payload, '$.chid') = ? LIMIT 1"
+          ).bind(chid).first();
+        } catch (e) { console.error('nexus chid lookup:', e); }
+
+        if (existing) {
+          // Merge: new data wins except preserved CRM fields
+          const existingP = safeJsonParse(existing.payload);
+          const merged = { ...existingP, ...newPayload };
+          if (existingP.crmNote)                           merged.crmNote = existingP.crmNote;
+          if (existingP.status && existingP.status !== 'Yeni') merged.status = existingP.status;
+          await env.DB.prepare("UPDATE registrations SET payload = ? WHERE id = ?")
+            .bind(JSON.stringify(merged), existing.id).run();
+          return jsonResponse({ ok: true, action: 'updated', id: existing.id, chid, status });
+        }
+
+        // No existing record — skip creating for non-informative early events
+        if (EARLY_STATUSES.has(status)) {
+          return jsonResponse({ ok: true, action: 'acknowledged_early', chid, status });
+        }
+
+        // Create new record
+        const res = await env.DB.prepare(
+          "INSERT INTO registrations (name, phone, source, payment_status, amount, payload) VALUES (?, ?, ?, ?, ?, ?)"
+        ).bind(agentName || phone, phone, source, null, '0', JSON.stringify(newPayload)).run();
+
+        return jsonResponse({ ok: true, action: 'created', id: res.meta.last_row_id, chid, status }, 201);
+      }
+
+      // =========================================================================
+      // 7. EXISTING REGISTRATIONS HANDLER (GET, POST, PUT, DELETE /registrations)
       // =========================================================================
       if (path === "/registrations") {
         if (request.method === "GET") {
