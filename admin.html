@@ -4189,7 +4189,10 @@ fbq('track', 'PageView');
       const res = await fetch(`${API_URL}/news?select=*`, { headers: HEADERS });
       if(res.ok) { newsData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id })).sort((a,b) => b._db_id_ - a._db_id_); }
       const tb = document.getElementById('news-tbody'); 
-      if(tb) tb.innerHTML = newsData.map((n, i) => `<tr><td><img loading="lazy" decoding="async" src="${n.img}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;"></td><td>${n.title}</td><td>${n.date}</td><td><div style="display:flex; gap:8px;"><button class="btn-view" style="padding:8px 12px; background:rgba(255,255,255,0.05);" onclick="editNews(${i})"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:8px 12px;" onclick="deleteNews('${n._db_id_}')"><i class="fas fa-trash"></i></button></div></td></tr>`).join('');
+      if(tb) tb.innerHTML = newsData.map((n, i) => {
+        const firstImg = (n.img || "").split(',')[0].trim();
+        return `<tr><td>${firstImg ? `<img loading="lazy" decoding="async" src="${firstImg}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;">` : `<span style="opacity:0.3;font-size:0.7rem;">Yoxdur</span>`}</td><td>${n.title}</td><td>${n.date}</td><td><div style="display:flex; gap:8px;"><button class="btn-view" style="padding:8px 12px; background:rgba(255,255,255,0.05);" onclick="editNews(${i})"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:8px 12px;" onclick="deleteNews('${n._db_id_}')"><i class="fas fa-trash"></i></button></div></td></tr>`;
+      }).join('');
     }
 
     window.editNews = (idx) => {
