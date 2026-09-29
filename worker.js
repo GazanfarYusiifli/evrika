@@ -739,7 +739,65 @@ export default {
       }
 
       // =========================================================================
-      // 6. NEXUS IP PBX WEBHOOK HANDLER  (POST /nexus-webhook or /call-webhook)
+      // 6. CLOUDFLARE IMAGES UPLOAD  (POST /upload-image)
+      //    Uploads image files to Cloudflare Images and returns delivery URL.
+      //    Requires env vars: CF_API_TOKEN, CF_ACCOUNT_ID
+      // =========================================================================
+      if (path === "/upload-image") {
+        if (request.method !== "POST") return jsonResponse({ ok: false, error: "POST only" }, 405);
+
+        const CF_TOKEN   = env.CF_API_TOKEN   || '';
+        const CF_ACCOUNT = env.CF_ACCOUNT_ID  || '0e36d7f920fbd6d21de587399cadf045';
+
+        if (!CF_TOKEN) {
+          return jsonResponse({ ok: false, error: "CF_API_TOKEN env var not set" }, 500);
+        }
+
+        // Receive the image from admin panel (multipart/form-data)
+        let formData;
+        try { formData = await request.formData(); } catch {
+          return jsonResponse({ ok: false, error: "Invalid form data" }, 400);
+        }
+
+        const file = formData.get('file');
+        if (!file || typeof file === 'string') {
+          return jsonResponse({ ok: false, error: "No file provided" }, 400);
+        }
+
+        // Build multipart upload for Cloudflare Images API
+        const cfForm = new FormData();
+        cfForm.append('file', file);
+        // Optional: set requireSignedURLs to false for public access
+        cfForm.append('requireSignedURLs', 'false');
+
+        const cfRes = await fetch(
+          `https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT}/images/v1`,
+          {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${CF_TOKEN}` },
+            body: cfForm
+          }
+        );
+
+        const cfData = await cfRes.json().catch(() => ({}));
+
+        if (!cfRes.ok || !cfData.success) {
+          console.error('CF Images upload error:', JSON.stringify(cfData));
+          return jsonResponse({ ok: false, error: cfData.errors?.[0]?.message || 'Upload failed' }, 502);
+        }
+
+        // Return the public delivery URL (variant: public)
+        const imageId  = cfData.result.id;
+        const variants = cfData.result.variants || [];
+        // Prefer /public variant, fallback to first variant
+        const url = variants.find(v => v.endsWith('/public')) || variants[0] ||
+          `https://imagedelivery.net/${CF_ACCOUNT}/${imageId}/public`;
+
+        return jsonResponse({ ok: true, url, imageId, variants });
+      }
+
+      // =========================================================================
+      // 7. NEXUS IP PBX WEBHOOK HANDLER  (POST /nexus-webhook or /call-webhook)
       //    Implements Nexus Integration Guide §0-16
       //    Correlation key: chid (unique per call, repeated on every event)
       // =========================================================================

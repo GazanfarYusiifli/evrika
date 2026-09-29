@@ -4366,7 +4366,7 @@ fbq('track', 'PageView');
 
     // --- REUSABLE IMAGE UPLOAD WITH AUTO BG REMOVAL ---
     window.uploadImage = async (input, targetId) => {
-        if(input.files.length === 0) return;
+        if (input.files.length === 0) return;
 
         const label = input.parentElement;
         const oldHtml = label.innerHTML;
@@ -4377,65 +4377,72 @@ fbq('track', 'PageView');
         for (let i = 0; i < input.files.length; i++) {
             let file = input.files[i];
 
-            // 1. Check File Size (Max 10MB)
+            // Max 10 MB check
             if (file.size > 10 * 1024 * 1024) {
                 alert(`Xəta: ${file.name} ölçüsü çox böyükdür (Maksimum 10MB).`);
                 continue;
             }
 
-            // --- BACKGROUND REMOVAL LOGIC (For white backgrounds) ---
+            // Background removal for partner logos and management photos
             try {
                 if (targetId === 'partner-logo' || targetId === 'led-img') {
                     const img = new Image();
                     img.src = URL.createObjectURL(file);
                     await new Promise(r => img.onload = r);
-                    
+
                     const canvas = document.createElement('canvas');
                     canvas.width = img.width;
                     canvas.height = img.height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0);
-                    
+
                     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                     const data = imageData.data;
-                    
-                    // Simple Chroma Key for White/Near-White
-                    // Also removes edges to improve transparency
                     for (let j = 0; j < data.length; j += 4) {
                         const avg = (data[j] + data[j+1] + data[j+2]) / 3;
-                        if (avg > 235) { // Threshold for "near white"
-                            data[j+3] = 0; 
-                        }
+                        if (avg > 235) data[j+3] = 0;
                     }
                     ctx.putImageData(imageData, 0, 0);
-                    
+
                     const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
                     file = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".png", { type: "image/png" });
                 }
             } catch(e) { console.error("BG removal failed, uploading original:", e); }
-            
-            const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
-            const fileName = `uploads/${Date.now()}_${i}_${safeName}`;
-            const res = await fetch(`https://osicmnagzeqkhwticiqp.supabase.co/storage/v1/object/ems-documents/${fileName}`, {
-                method: 'POST',
-                headers: { 'apikey': API_KEY, 'Authorization': 'Bearer '+API_KEY },
-                body: file
-            });
-            
-            if(res.ok) {
-                uploadedUrls.push(`https://osicmnagzeqkhwticiqp.supabase.co/storage/v1/object/public/ems-documents/${fileName}`);
-            } else {
-                console.error("Upload failed for", file.name, await res.text());
-                alert(`Xəta: ${file.name} yüklənə bilmədi.`);
+
+            // ── Upload to Cloudflare Images via Worker ────────────────────────
+            try {
+                const form = new FormData();
+                form.append('file', file);
+
+                const res = await fetch(`${API_URL}/upload-image`, {
+                    method: 'POST',
+                    body: form
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.ok && data.url) {
+                        uploadedUrls.push(data.url);
+                    } else {
+                        console.error("CF Images error:", data);
+                        alert(`Xəta: ${file.name} yüklənə bilmədi. ${data.error || ''}`);
+                    }
+                } else {
+                    const errText = await res.text();
+                    console.error("Upload failed:", res.status, errText);
+                    alert(`Xəta: ${file.name} yüklənə bilmədi (${res.status}).`);
+                }
+            } catch(e) {
+                console.error("Upload exception:", e);
+                alert(`Şəbəkə xətası: ${e.message}`);
             }
         }
-        
+
         if (uploadedUrls.length > 0) {
             const targetEl = document.getElementById(targetId);
-            if (input.multiple && targetEl.value) {
-                // If appending to existing multiple selections
+            if (input.multiple && targetEl && targetEl.value) {
                 targetEl.value = targetEl.value + ',' + uploadedUrls.join(',');
-            } else {
+            } else if (targetEl) {
                 targetEl.value = uploadedUrls.join(',');
             }
         }
