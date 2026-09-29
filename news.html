@@ -551,9 +551,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         </div>
                     </a>
                 `;
-                }).join('');
-                if(typeof updateContent === 'function') updateContent(localStorage.getItem('evrika-lang') || 'az');
-            }
+            }).join('');
+            if(typeof updateContent === 'function') updateContent(localStorage.getItem('evrika-lang') || 'az');
         } catch(e) {
             console.error(e);
             grid.innerHTML = '<div style="text-align:center; width:100%; grid-column:1/-1; color:red;"><span data-i18n="news-error">Xəbərlər yüklənərkən xəta baş verdi.</span></div>';
