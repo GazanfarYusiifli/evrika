@@ -4643,21 +4643,22 @@ fbq('track', 'PageView');
     let partnerData = [];
     window.loadPartners = async () => {
         try {
-            const res = await fetch(`${API_URL}/partners?select=*&order=sort_order.asc`, { headers: HEADERS });
+            const res = await fetch(`${API_URL}/partners?select=*`, { headers: HEADERS });
             if(res.ok) {
-                partnerData = await res.json();
+                const list = await res.json();
+                partnerData = list.map(r => ({ ...r.payload, ...r, _db_id_: r.id }));
                 const tbody = document.getElementById('partner-tbody');
                 if(tbody) tbody.innerHTML = partnerData.map((p, idx) => `
                     <tr>
                         <td>
-                            ${p.logo_url ? `<img decoding="async" src="${p.logo_url}" style="height:30px; max-width:80px; object-fit:contain; filter:brightness(1.5);">` : `<span style="opacity:0.3; font-size:0.7rem;">Yoxdur</span>`}
+                            ${(p.logo_url || p.logo) ? `<img decoding="async" src="${p.logo_url || p.logo}" style="height:30px; max-width:80px; object-fit:contain; filter:brightness(1.5);">` : `<span style="opacity:0.3; font-size:0.7rem;">Yoxdur</span>`}
                         </td>
                         <td><b style="color:white">${p.name}</b></td>
-                        <td>${p.sort_order}</td>
+                        <td>${p.sort_order || 0}</td>
                         <td>
                             <div style="display:flex; gap:8px;">
                                 <button onclick="editPartner(${idx})" class="btn-view" style="padding:8px 12px; background:rgba(255,255,255,0.05);"><i class="fas fa-edit"></i></button>
-                                <button onclick="deletePartner('${p.id}')" class="btn-danger" style="padding:8px 12px;"><i class="fas fa-trash"></i></button>
+                                <button onclick="deletePartner('${p._db_id_ || p.id}')" class="btn-danger" style="padding:8px 12px;"><i class="fas fa-trash"></i></button>
                             </div>
                         </td>
                     </tr>
@@ -4686,9 +4687,10 @@ fbq('track', 'PageView');
         e.preventDefault();
         const id = document.getElementById('partner-id').value;
         const btn = document.getElementById('partner-submit-btn');
-        const data = {
+        const payload = {
             name: document.getElementById('partner-name').value,
             logo_url: document.getElementById('partner-logo').value,
+            logo: document.getElementById('partner-logo').value,
             description: document.getElementById('partner-description').value,
             sort_order: parseInt(document.getElementById('partner-order').value) || 0
         };
@@ -4698,21 +4700,23 @@ fbq('track', 'PageView');
         const method = id ? 'PATCH' : 'POST';
         
         try {
-            const res = await fetch(url, { method, headers: HEADERS, body: JSON.stringify(data) });
+            const res = await fetch(url, { method, headers: HEADERS, body: JSON.stringify({ payload }) });
             if(res.ok) {
                 resetPartnerForm();
                 loadPartners();
                 alert("Uğurla yadda saxlanıldı!");
+            } else {
+                alert("Xəta baş verdi!");
             }
-        } catch(e) { alert("Xəta baş verdi!"); }
+        } catch(e) { alert("Xəta baş verdi: " + e.message); }
         btn.disabled = false;
     };
 
     window.editPartner = (idx) => {
         const p = partnerData[idx];
-        document.getElementById('partner-id').value = p.id;
+        document.getElementById('partner-id').value = p._db_id_ || p.id;
         document.getElementById('partner-name').value = p.name;
-        document.getElementById('partner-logo').value = p.logo_url || '';
+        document.getElementById('partner-logo').value = p.logo_url || p.logo || '';
         document.getElementById('partner-description').value = p.description || '';
         document.getElementById('partner-order').value = p.sort_order;
         document.getElementById('partner-form-title').innerText = "Partnyoru Redaktə Et";
