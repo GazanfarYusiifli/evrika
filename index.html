@@ -2089,6 +2089,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         ];
 
         async function fetchAlumniForHome() {
+          try {
+            const res = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/mezunlar', { cache: 'no-store' });
+            if (res.ok) {
+              const apiList = await res.json();
+              if (apiList && apiList.length > 0) {
+                const dbAlumni = apiList.map(item => item.payload || item);
+                const seen = new Set();
+                const merged = [];
+                for (const a of [...dbAlumni, ...STATIC_ALUMNI]) {
+                  const key = (a.name || '').trim().toLowerCase();
+                  if (key && !seen.has(key)) {
+                    seen.add(key);
+                    merged.push(a);
+                  }
+                }
+                return merged;
+              }
+            }
+          } catch(e) {
+            console.warn('Home alumni API fallback:', e);
+          }
           return STATIC_ALUMNI;
         }
 
@@ -3859,6 +3880,30 @@ Qeyd edək ki, Evrika Təhsil Ekosistemi 15 illik akademik təcrübəyə malik o
 
         async function initPartners() {
           renderPartners(STATIC_PARTNERS);
+          try {
+            const res = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/partners', { cache: 'no-store' });
+            if (res.ok) {
+              const apiPartners = await res.json();
+              if (apiPartners && apiPartners.length > 0) {
+                const dbPartners = apiPartners.map(p => {
+                  const item = p.payload || p;
+                  return {
+                    name: item.name || '',
+                    logo: item.logo_url || item.logo || item.img || '',
+                    description: item.description || ''
+                  };
+                }).filter(p => p.name || p.logo);
+                
+                if (dbPartners.length > 0) {
+                  // Merge DB partners with static
+                  const merged = [...dbPartners, ...STATIC_PARTNERS];
+                  renderPartners(merged);
+                }
+              }
+            }
+          } catch(e) {
+            console.warn('Partners live fetch fallback:', e);
+          }
         }
 
         async function initNews() {
@@ -3912,17 +3957,15 @@ Qeyd edək ki, Evrika Təhsil Ekosistemi 15 illik akademik təcrübəyə malik o
         }
 
         async function initPopups() {
-          const API_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1';
-          const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
-          const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY };
+          const API_URL = 'https://evrika-api.yusifliqezenfer90.workers.dev/api';
           
           if (sessionStorage.getItem('evrika_popup_seen')) return;
 
           try {
-            const res = await fetch(`${API_URL}/popups?select=*&order=id.desc`, { headers: HEADERS });
+            const res = await fetch(`${API_URL}/popups`, { cache: 'no-store' });
             if (res.ok) {
               const data = await res.json();
-              const activePopup = data.find(p => p.payload && p.payload.status === 'active');
+              const activePopup = data.find(p => (p.payload && p.payload.status === 'active') || p.status === 'active');
               if (activePopup) {
                 const p = activePopup.payload;
                 

@@ -533,12 +533,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         // Admin paneldən (admin.html) əlavə olunan yeni məlumatları yükləmək
         async function fetchMore() {
           try {
-            const res = await fetch('https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/ugurlar?select=*&order=id.desc', {
-              headers: { 
-                'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE', 
-                'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE' 
-              }
-            });
+            const res = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/ugurlar', { cache: 'no-store' });
             
             if (res.ok) {
               const data = await res.json();

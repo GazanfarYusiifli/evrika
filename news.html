@@ -493,10 +493,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const grid = document.getElementById('news-grid');
         if(!grid) return;
         try {
-            const res = await fetch('/news.json');
             let data = [];
-            if(res.ok) {
-                data = await res.json();
+            try {
+                const liveRes = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/news', { cache: 'no-store' });
+                if(liveRes.ok) {
+                    const list = await liveRes.json();
+                    if(list && list.length > 0) {
+                        data = list.map(item => item.payload || item);
+                    }
+                }
+            } catch(e) { console.warn('Live news fallback:', e); }
+
+            if(!data.length) {
+                const res = await fetch('/news.json');
+                if(res.ok) data = await res.json();
             }
             if(!data.length) {
                 grid.innerHTML = '<div style="text-align:center; width:100%; grid-column:1/-1; opacity:0.5; font-size:1.2rem;"><span data-i18n="news-empty">Hələ ki, heç bir xəbər yoxdur.</span></div>';

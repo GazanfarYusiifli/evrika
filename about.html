@@ -1328,12 +1328,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       async function initManagement() {
         renderMembers(STATIC_MANAGEMENT);
         try {
-          const API_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1';
-          const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
-          const res = await fetch(`${API_URL}/management?select=*&order=id.asc`, { 
-            headers: { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY },
-            cache: 'no-store'
-          });
+          const API_URL = 'https://evrika-api.yusifliqezenfer90.workers.dev/api';
+          const res = await fetch(`${API_URL}/management`, { cache: 'no-store' });
           if (res.ok) {
             const data = await res.json();
             if (data && data.length > 0) {

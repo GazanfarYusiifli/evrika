@@ -383,6 +383,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           ];
 
           async function fetchAlumni() {
+            try {
+              const res = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/mezunlar', { cache: 'no-store' });
+              if (res.ok) {
+                const apiList = await res.json();
+                if (apiList && apiList.length > 0) {
+                  const dbAlumni = apiList.map(item => item.payload || item);
+                  // Merge DB alumni first, followed by static list (avoiding duplicate names)
+                  const seen = new Set();
+                  const merged = [];
+                  for (const a of [...dbAlumni, ...STATIC_ALUMNI]) {
+                    const key = (a.name || '').trim().toLowerCase();
+                    if (key && !seen.has(key)) {
+                      seen.add(key);
+                      merged.push(a);
+                    }
+                  }
+                  return merged;
+                }
+              }
+            } catch(e) {
+              console.warn('Alumni API fallback to static:', e);
+            }
             return STATIC_ALUMNI;
           }
 
