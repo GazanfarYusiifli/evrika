@@ -3934,51 +3934,59 @@ Qeyd edək ki, Evrika Təhsil Ekosistemi 15 illik akademik təcrübəyə malik o
         }
 
         async function initNews() {
-          const container = document.getElementById('dynamic-news-container');
+          const container = document.getElementById('home-news-grid') || document.getElementById('dynamic-news-container');
           if (!container) return;
           try {
-            const res = await fetch('/news.json');
-            if (res.ok) {
-              const data = await res.json();
-              if (data.length > 0) {
-                container.innerHTML = data.slice(0, 3).map(n => {
-                  let firstImg = n.img ? n.img.split(',')[0].trim() : '/assets/hero-main.jpg';
-                  if (firstImg.includes('supabase.co/storage')) firstImg = '/assets/hero-main.jpg';
-                  const dateStr = n.date || "";
-                  const parts = dateStr.split(/[-./]/);
-                  const months = ["Yan", "Fev", "Mar", "Apr", "May", "İyn", "İyl", "Avq", "Sen", "Okt", "Noy", "Dek"];
-                  
-                  let day = "12", month = "Avq";
-                  if(parts.length === 3) {
-                      if(parts[0].length === 4) {
-                          day = parts[2];
-                          month = months[parseInt(parts[1]) - 1] || "Ay";
-                      } else {
-                          day = parts[0];
-                          month = months[parseInt(parts[1]) - 1] || "Ay";
-                      }
-                  }
-                  
-                  return `
-                  <a href="news-detail.html?id=${n.id}" class="news-card" style="text-decoration:none;">
-                      <div class="card-media">
-                          <img src="${firstImg}" alt="${n.title}" loading="lazy">
-                          <div class="date-badge">
-                              <strong>${day}</strong>
-                              <span>${month}</span>
-                          </div>
-                      </div>
-                      <div class="card-body">
-                          <div class="card-cat">${n.category || 'Xəbər'}</div>
-                          <h3 class="card-title">${n.title}</h3>
-                          <p class="card-desc">${n.shortDesc || n.text || ''}</p>
-                          <div class="card-footer">
-                              <span data-i18n="news-read-more">Ətraflı Oxu</span> <i class="fas fa-arrow-right"></i>
-                          </div>
-                      </div>
-                  </a>
-                `}).join('');
+            let data = [];
+            try {
+              const liveRes = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/news', { cache: 'no-store' });
+              if (liveRes.ok) {
+                const list = await liveRes.json();
+                if (list && list.length > 0) data = list.map(item => item.payload || item);
               }
+            } catch(e) {}
+            if (!data.length) {
+              const res = await fetch('/news.json');
+              if (res.ok) data = await res.json();
+            }
+            if (data.length > 0) {
+              container.innerHTML = data.slice(0, 3).map(n => {
+                let firstImg = n.img ? n.img.split(',')[0].trim() : '/assets/hero-main.jpg';
+                if (!firstImg || firstImg.includes('supabase.co/storage')) firstImg = '/assets/hero-main.jpg';
+                const dateStr = n.date || "";
+                const parts = dateStr.split(/[-./]/);
+                const months = ["Yan", "Fev", "Mar", "Apr", "May", "İyn", "İyl", "Avq", "Sen", "Okt", "Noy", "Dek"];
+                
+                let day = "12", month = "Avq";
+                if(parts.length === 3) {
+                    if(parts[0].length === 4) {
+                        day = parts[2];
+                        month = months[parseInt(parts[1]) - 1] || "Ay";
+                    } else {
+                        day = parts[0];
+                        month = months[parseInt(parts[1]) - 1] || "Ay";
+                    }
+                }
+                
+                return `
+                <a href="news-detail.html?id=${n.id}" class="news-card" style="text-decoration:none;">
+                    <div class="card-media">
+                        <img src="${firstImg}" alt="${n.title}" loading="lazy">
+                        <div class="date-badge">
+                            <strong>${day}</strong>
+                            <span>${month}</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-cat">${n.category || 'EVRİKA YENİLİK'}</div>
+                        <h3 class="card-title">${n.title}</h3>
+                        <p class="card-desc">${n.shortDesc || n.text || ''}</p>
+                        <div class="card-footer">
+                            <span data-i18n="news-read-more">Ətraflı Oxu</span> <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </a>
+              `}).join('');
             }
           } catch(e) { console.error(e); }
         }

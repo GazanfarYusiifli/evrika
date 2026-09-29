@@ -446,11 +446,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         async function loadDetail() {
             try {
-                const res = await fetch('/news.json');
-                if(!res.ok) return;
-                const allNews = await res.json();
+                let allNews = [];
+                try {
+                    const liveRes = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/news', { cache: 'no-store' });
+                    if(liveRes.ok) {
+                        const list = await liveRes.json();
+                        if(list && list.length > 0) allNews = list.map(item => ({ ...item.payload, ...item, id: item.id }));
+                    }
+                } catch(e) {}
+
+                if(!allNews.length) {
+                    const res = await fetch('/news.json');
+                    if(res.ok) allNews = await res.json();
+                }
                 
-                const item = allNews.find(x => x.id === newsId) || allNews[0];
+                const item = allNews.find(x => String(x.id) === String(newsId)) || allNews[0];
                 if(!item) return;
 
                 document.title = item.title + " | Evrika";
