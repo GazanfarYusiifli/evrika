@@ -479,6 +479,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     galleryHtml += `</div>`;
                 }
 
+                const articleText = (item.text || item.shortDesc || item.desc || '').replace(/\n\n/g, '<br><br>');
                 document.getElementById('article-view').innerHTML = `
                     ${firstImg ? `
                     <div class="article-hero" onclick="document.getElementById('image-modal').style.display='flex'; document.getElementById('modal-image').src='${firstImg}';">
@@ -488,9 +489,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     ` : ''}
                     ${galleryHtml}
                     <article class="article-content" style="padding-top: 10px;">
-                        <span class="article-date">${item.date}</span>
+                        <span class="article-date">${item.date || ''}</span>
                         <h1 class="article-title">${item.title}</h1>
-                        <div class="article-text">${item.text.replace(/\n\n/g, '<br><br>')}</div>
+                        <div class="article-text">${articleText}</div>
                     </article>
                 `;
 

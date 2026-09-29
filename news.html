@@ -499,7 +499,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 if(liveRes.ok) {
                     const list = await liveRes.json();
                     if(list && list.length > 0) {
-                        data = list.map(item => item.payload || item);
+                        data = list.map(item => ({ ...item.payload, ...item, id: item.id || item._db_id_ }));
                     }
                 }
             } catch(e) { console.warn('Live news fallback:', e); }
@@ -528,31 +528,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     }
                 }
                 
-                const imgArr = (n.img || "").split(',');
-                let firstImg = imgArr[0].trim();
+                const imgArr = (n.img || "").split(',').map(s => s.trim()).filter(Boolean);
+                let firstImg = imgArr[0] || '/assets/hero-main.jpg';
                 if(firstImg.includes('supabase.co/storage')) {
                     firstImg = '/assets/hero-main.jpg';
                 }
+                const previewDesc = n.shortDesc || n.text || '';
                     
-                    return `
-                        <a href="news-detail.html?id=${n.id}" class="news-card">
-                            <div class="card-media">
-                                <img src="${firstImg}" alt="${n.title}" loading="lazy">
-                                <div class="date-badge">
-                                    <strong>${day}</strong>
-                                    <span>${month}</span>
-                                </div>
+                return `
+                    <a href="news-detail.html?id=${n.id}" class="news-card">
+                        <div class="card-media">
+                            <img src="${firstImg}" alt="${n.title}" loading="lazy">
+                            <div class="date-badge">
+                                <strong>${day}</strong>
+                                <span>${month}</span>
                             </div>
-                            <div class="card-body">
-                                <div class="card-cat">${n.category || 'Xəbər'}</div>
-                                <h3 class="card-title">${n.title}</h3>
-                                <p class="card-desc">${n.shortDesc || ''}</p>
-                                <div class="card-footer">
-                                    <span data-i18n="news-read-more">Daha ətraflı</span> <i class="fas fa-arrow-right"></i>
-                                </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-cat">${n.category || 'Xəbər'}</div>
+                            <h3 class="card-title">${n.title}</h3>
+                            <p class="card-desc">${previewDesc}</p>
+                            <div class="card-footer">
+                                <span data-i18n="news-read-more">Daha ətraflı</span> <i class="fas fa-arrow-right"></i>
                             </div>
-                        </a>
-                    `;
+                        </div>
+                    </a>
+                `;
                 }).join('');
                 if(typeof updateContent === 'function') updateContent(localStorage.getItem('evrika-lang') || 'az');
             }
