@@ -3942,7 +3942,7 @@ Qeyd edək ki, Evrika Təhsil Ekosistemi 15 illik akademik təcrübəyə malik o
               const liveRes = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/news', { cache: 'no-store' });
               if (liveRes.ok) {
                 const list = await liveRes.json();
-                if (list && list.length > 0) data = list.map(item => item.payload || item);
+                if (list && list.length > 0) data = list.map(item => ({ ...item.payload, ...item, id: item.id || item._db_id_ }));
               }
             } catch(e) {}
             if (!data.length) {
@@ -4297,66 +4297,7 @@ Qeyd edək ki, Evrika Təhsil Ekosistemi 15 illik akademik təcrübəyə malik o
       }
     });
   </script>
-<script>
-    document.addEventListener("DOMContentLoaded", async function() {
-        const grid = document.getElementById('home-news-grid');
-        if(!grid) return;
-        try {
-            let data = [];
-            try {
-                const liveRes = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/news', { cache: 'no-store' });
-                if(liveRes.ok) {
-                    const list = await liveRes.json();
-                    if(list && list.length > 0) data = list.map(item => item.payload || item);
-                }
-            } catch(e) {}
-            if(!data.length) {
-                const res = await fetch('/news.json');
-                if(res.ok) data = await res.json();
-            }
-            if(!data.length) {
-                grid.innerHTML = '<div style="text-align:center; width:100%; grid-column:1/-1; opacity:0.5; font-size:1.2rem;">Hələ ki, heç bir xəbər yoxdur.</div>';
-                return;
-            }
-                grid.innerHTML = data.slice(0, 3).map(n => {
-                    const dateStr = n.date || "";
-                    const parts = dateStr.split(/[-./]/);
-                    const months = ["Yan", "Fev", "Mar", "Apr", "May", "İyn", "İyl", "Avq", "Sen", "Okt", "Noy", "Dek"];
-                    
-                    let day = "12", month = "Avq";
-                    if(parts.length === 3) {
-                        if(parts[0].length === 4) {
-                            day = parts[2];
-                            month = months[parseInt(parts[1]) - 1] || "Ay";
-                        } else {
-                            day = parts[0];
-                            month = months[parseInt(parts[1]) - 1] || "Ay";
-                        }
-                    }
-                    let firstImg = (n.img || "").split(',')[0].trim();
-                    if(firstImg.includes('supabase.co/storage')) firstImg = '/assets/hero-main.jpg';
-                    return `
-                        <a href="news-detail.html?id=${n.id}" class="news-card">
-                            <div class="card-media">
-                                <img src="${firstImg}" alt="${n.title}" loading="lazy">
-                                <div class="date-badge">
-                                    <strong>${day}</strong>
-                                    <span>${month}</span>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="card-cat">EVRİKA YENİLİK</div>
-                                <h3 class="card-title">${n.title}</h3>
-                                <p class="card-desc">${n.text}</p>
-                                <div class="card-footer">TAM OXU <i class="fas fa-arrow-right"></i></div>
-                            </div>
-                        </a>
-                    `;
-                }).join('');
-            }
-        } catch(e) {}
-    });
-  </script>
+
 
 <!-- Whelp Widget Code -->
 <script src="https://widget.whelp.co/app.js"></script>

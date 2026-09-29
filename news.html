@@ -459,12 +459,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof updateContent === 'function') {
-      <!-- Cookie Banner Removed -->          setTimeout(() => {
-            const bar = document.getElementById('cookie-banner-v4');
-            bar.classList.add('active');
-          }, 3000);
-        }
-      });
+                updateContent(localStorage.getItem('evrika-lang') || 'az');
+            }
+        });
     </script>
 
 
