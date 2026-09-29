@@ -1189,36 +1189,68 @@ fbq('track', 'PageView');
 
     <!-- Leadership / Management Panel -->
     <div id="view-leadership" class="content" style="display: none;">
-        <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px;">
+        <div style="display: grid; grid-template-columns: 1fr 1.6fr; gap: 30px; align-items: start;">
           <!-- Left side: Form -->
-          <div class="stat-card" style="background: rgba(255,255,255,0.02); height: fit-content; border-top: 4px solid var(--burgundy);">
-            <h3 style="margin-bottom: 25px; font-weight: 900;" id="led-form-title">Yeni Rəhbərlik Üzvi</h3>
+          <div class="stat-card" style="background: rgba(255,255,255,0.02); height: fit-content; border-top: 4px solid var(--burgundy); position: sticky; top: 20px;">
+            <h3 style="margin-bottom: 25px; font-weight: 900; display:flex; justify-content:space-between; align-items:center;">
+              <span id="led-form-title">Yeni Rəhbərlik Üzvi</span>
+              <span style="font-size:0.75rem; background:rgba(255,255,255,0.05); color:var(--text-muted); padding:4px 10px; border-radius:12px; font-weight:600;">Cloudflare D1</span>
+            </h3>
             <form onsubmit="handleManagementSubmit(event)" id="led-form" style="display: flex; flex-direction: column; gap: 15px;">
               <input type="hidden" id="led-id">
-              <input type="text" id="led-name" placeholder="Ad Soyad" required class="admin-input">
-              <input type="text" id="led-role" placeholder="Vəzifə" required class="admin-input">
-              <select id="led-category" class="admin-input" style="background:#0f172a;">
-                <option value="leadership">Rəhbərlik (Təsisçi/Direktor)</option>
-                <option value="board" selected>İdarə Heyəti</option>
-              </select>
-              <textarea id="led-quote" placeholder="Sitat (Rəhbərlik üçün)" class="admin-input" style="height:80px; resize:vertical;"></textarea>
-              <div style="display:flex; gap:10px; align-items:center;">
-                <input type="text" id="led-img" placeholder="Şəkil URL" required class="admin-input" style="flex:1;">
-                <label class="btn-view" style="cursor:pointer; padding:18px;"><i class="fas fa-upload"></i><input type="file" hidden accept="image/*" onchange="uploadImage(this, 'led-img')"></label>
+              
+              <div>
+                <label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:6px; font-weight:700; text-transform:uppercase;">Ad Soyad</label>
+                <input type="text" id="led-name" placeholder="Məs: Xudaqulu Rzayev" required class="admin-input" style="width:100%;">
               </div>
-              <div style="display: flex; gap: 10px;">
-                <button type="submit" id="led-submit-btn" class="btn-view" style="flex:2; justify-content: center; background: var(--burgundy); border: none; padding: 15px;">Yadda Saxla</button>
-                <button type="button" onclick="resetManagementForm()" class="btn-view" style="flex:1; justify-content: center; background: rgba(255,255,255,0.05);"><i class="fas fa-undo"></i></button>
+
+              <div>
+                <label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:6px; font-weight:700; text-transform:uppercase;">Vəzifə</label>
+                <input type="text" id="led-role" placeholder="Məs: TƏSİSÇİ və ya DİREKTOR" required class="admin-input" style="width:100%;">
+              </div>
+
+              <div style="display:grid; grid-template-columns: 1.5fr 1fr; gap:12px;">
+                <div>
+                  <label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:6px; font-weight:700; text-transform:uppercase;">Kateqoriya</label>
+                  <select id="led-category" class="admin-input" style="background:#0f172a; width:100%;">
+                    <option value="leadership">Rəhbərlik (Təsisçi / Direktor)</option>
+                    <option value="board" selected>İdarə Heyəti</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:6px; font-weight:700; text-transform:uppercase;">Sıralama</label>
+                  <input type="number" id="led-order" placeholder="1, 2, 3..." class="admin-input" style="width:100%;" min="1">
+                </div>
+              </div>
+
+              <div>
+                <label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:6px; font-weight:700; text-transform:uppercase;">Sitat (İstəyə bağlı)</label>
+                <textarea id="led-quote" placeholder="«Evrika Təhsil Ekosistemi» haqqında sitat..." class="admin-input" style="height:70px; resize:vertical; width:100%;"></textarea>
+              </div>
+
+              <div>
+                <label style="display:block; font-size:0.75rem; color:var(--text-muted); margin-bottom:6px; font-weight:700; text-transform:uppercase;">Şəkil</label>
+                <div style="display:flex; gap:10px; align-items:center;">
+                  <input type="text" id="led-img" placeholder="Şəkil URL daxil edin və ya fayl seçin" required class="admin-input" style="flex:1;" oninput="updateLedPreview(this.value)">
+                  <label class="btn-view" style="cursor:pointer; padding:15px; background:rgba(255,255,255,0.06); border-radius:10px;"><i class="fas fa-upload"></i><input type="file" hidden accept="image/*" onchange="uploadImage(this, 'led-img'); setTimeout(() => updateLedPreview(document.getElementById('led-img').value), 1200);"></label>
+                  <img id="led-img-preview" src="./assets/loqoYeni.PNG" style="width:44px; height:44px; border-radius:50%; object-fit:cover; border:2px solid rgba(255,255,255,0.1); background:#070d1f;" onerror="this.src='./assets/loqoYeni.PNG'">
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 10px; margin-top: 5px;">
+                <button type="submit" id="led-submit-btn" class="btn-view" style="flex:2; justify-content: center; background: var(--burgundy); border: none; padding: 14px; font-weight:bold;"><i class="fas fa-save" style="margin-right:6px;"></i> Yadda Saxla</button>
+                <button type="button" onclick="resetManagementForm()" class="btn-view" style="flex:1; justify-content: center; background: rgba(255,255,255,0.05); padding: 14px;"><i class="fas fa-undo"></i> Sıfırla</button>
               </div>
             </form>
           </div>
           <!-- Right side: List -->
           <div class="table-wrapper">
-             <div style="padding:20px; border-bottom:1px solid var(--border); background:rgba(255,255,255,0.01);">
-                <h3 style="font-weight:800; font-size:1.1rem;"><i class="fas fa-users" style="color:var(--burgundy); margin-right:10px;"></i> Üvlərin Siyahısı</h3>
+             <div style="padding:20px; border-bottom:1px solid var(--border); background:rgba(255,255,255,0.01); display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="font-weight:800; font-size:1.1rem; margin:0;"><i class="fas fa-users" style="color:var(--burgundy); margin-right:10px;"></i> Üzvlərin Siyahısı</h3>
+                <span id="led-count-badge" style="font-size:0.75rem; background:rgba(255,255,255,0.08); padding:4px 12px; border-radius:12px; font-weight:700; color:var(--text-muted);">0 Üzv</span>
              </div>
              <table>
-               <thead><tr><th>Şəkil</th><th>Ad Soyad</th><th>Vəzifə</th><th>Əməliyyat</th></tr></thead>
+               <thead><tr><th>Şəkil</th><th>Ad Soyad</th><th>Vəzifə</th><th>Kateqoriya</th><th style="text-align:right;">Əməliyyat</th></tr></thead>
                <tbody id="led-tbody"></tbody>
              </table>
           </div>
@@ -4358,14 +4390,61 @@ fbq('track', 'PageView');
 
     // --- MANAGEMENT LOGIC ---
     let managementData = [];
+    window.updateLedPreview = (url) => {
+        const pv = document.getElementById('led-img-preview');
+        if (pv) pv.src = url || './assets/loqoYeni.PNG';
+    };
+
     window.loadManagement = async () => {
        try {
          const res = await fetch(`${API_URL}/management?select=*`, { headers: HEADERS });
          if(res.ok) {
-           managementData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id }));
-           const tb = document.getElementById('led-tbody'); if(tb) tb.innerHTML = managementData.map((m, i) => `<tr><td><img loading="lazy" decoding="async" src="${m.img}" style="width:40px;height:40px;object-fit:cover;border-radius:50%;"></td><td>${m.name}</td><td>${m.role}</td><td><div style="display:flex; gap:8px;"><button class="btn-view" style="padding:8px 12px; background:rgba(255,255,255,0.05);" onclick="editManagement(${i})"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:8px 12px;" onclick="deleteManagement('${m._db_id_}')"><i class="fas fa-trash"></i></button></div></td></tr>`).join('');
+           const raw = await res.json();
+           managementData = raw.map(r => {
+             const p = r.payload || {};
+             return {
+               category: p.category || p.group || r.category || r.group || 'board',
+               order: Number(p.order || r.order || 999),
+               quote: p.quote || r.quote || '',
+               ...p,
+               ...r,
+               _db_id_: r.id
+             };
+           }).sort((a,b) => (a.order || 999) - (b.order || 999));
+
+           const badge = document.getElementById('led-count-badge');
+           if (badge) badge.innerText = `${managementData.length} Üzv`;
+
+           const tb = document.getElementById('led-tbody');
+           if(tb) {
+             if (managementData.length === 0) {
+               tb.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);">Heç bir rəhbərlik üzvü tapılmadı.</td></tr>`;
+             } else {
+               tb.innerHTML = managementData.map((m, i) => {
+                 const isLead = m.category === 'leadership';
+                 const catBadge = isLead 
+                   ? `<span style="background:rgba(139,26,43,0.2); color:#ff6b81; border:1px solid rgba(139,26,43,0.4); padding:3px 10px; border-radius:12px; font-size:0.75rem; font-weight:700;">Rəhbərlik</span>`
+                   : `<span style="background:rgba(59,130,246,0.15); color:#60a5fa; border:1px solid rgba(59,130,246,0.3); padding:3px 10px; border-radius:12px; font-size:0.75rem; font-weight:700;">İdarə Heyəti</span>`;
+                 const orderBadge = m.order ? `<span style="color:var(--text-muted); font-size:0.75rem; margin-right:6px;">#${m.order}</span>` : '';
+                 return `
+                   <tr>
+                     <td><img loading="lazy" decoding="async" src="${m.img || './assets/loqoYeni.PNG'}" style="width:42px;height:42px;object-fit:cover;border-radius:50%;border:1px solid rgba(255,255,255,0.1);background:#070d1f;" onerror="this.src='./assets/loqoYeni.PNG'"></td>
+                     <td style="font-weight:700;">${orderBadge}${m.name || 'Adsız'}</td>
+                     <td style="color:var(--text-muted); font-size:0.85rem;">${m.role || '-'}</td>
+                     <td>${catBadge}</td>
+                     <td style="text-align:right;">
+                       <div style="display:inline-flex; gap:8px;">
+                         <button class="btn-view" title="Düzəliş et" style="padding:8px 12px; background:rgba(255,255,255,0.05);" onclick="editManagement(${i})"><i class="fas fa-edit"></i></button>
+                         <button class="btn-danger" title="Sil" style="padding:8px 12px;" onclick="deleteManagement('${m._db_id_}')"><i class="fas fa-trash"></i></button>
+                       </div>
+                     </td>
+                   </tr>
+                 `;
+               }).join('');
+             }
+           }
          } else if (res.status === 404) {
-           console.error("Supabase Error: 'management' table not found.");
+           console.error("Management loading: Table not found.");
          }
        } catch (e) {
          console.error("Management loading failed:", e);
@@ -4375,13 +4454,16 @@ fbq('track', 'PageView');
     window.editManagement = (idx) => {
         const m = managementData[idx];
         document.getElementById('led-id').value = m._db_id_;
-        document.getElementById('led-name').value = m.name;
-        document.getElementById('led-role').value = m.role;
+        document.getElementById('led-name').value = m.name || '';
+        document.getElementById('led-role').value = m.role || '';
         document.getElementById('led-category').value = m.category || 'board';
+        document.getElementById('led-order').value = m.order || '';
         document.getElementById('led-quote').value = m.quote || '';
-        document.getElementById('led-img').value = m.img;
+        document.getElementById('led-img').value = m.img || '';
+        updateLedPreview(m.img);
         document.getElementById('led-form-title').innerText = "Üzvə Düzəliş Et";
-        document.getElementById('led-submit-btn').innerText = "Dəyişikliyi Saxla";
+        document.getElementById('led-submit-btn').innerHTML = `<i class="fas fa-save" style="margin-right:6px;"></i> Dəyişikliyi Saxla`;
+        document.getElementById('led-name').focus();
     };
 
     window.handleManagementSubmit = async (e) => {
@@ -4389,37 +4471,58 @@ fbq('track', 'PageView');
         const id = document.getElementById('led-id').value;
         const btn = document.getElementById('led-submit-btn');
         const payload = { 
-            name: document.getElementById('led-name').value, 
-            role: document.getElementById('led-role').value,
+            name: document.getElementById('led-name').value.trim(), 
+            role: document.getElementById('led-role').value.trim(),
             category: document.getElementById('led-category').value,
-            quote: document.getElementById('led-quote').value,
-            img: document.getElementById('led-img').value 
+            group: document.getElementById('led-category').value,
+            order: document.getElementById('led-order').value ? parseInt(document.getElementById('led-order').value) : (managementData.length + 1),
+            quote: document.getElementById('led-quote').value.trim(),
+            img: document.getElementById('led-img').value.trim() 
         };
         btn.disabled = true;
+        const originalBtnHtml = btn.innerHTML;
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i> Saxlanılır...`;
+        
         const url = id ? `${API_URL}/management?id=eq.${id}` : `${API_URL}/management`;
         const method = id ? 'PATCH' : 'POST';
-        const res = await fetch(url, { method, headers: HEADERS, body: JSON.stringify({ payload }) });
-        if(res.ok) { 
-            resetManagementForm(); 
-            loadManagement(); 
-            alert("Uğurla yadda saxlanıldı!");
-        } else {
-            alert("Xəta baş verdi! Cədvəlin mövcudluğunu yoxlayın.");
+        try {
+          const res = await fetch(url, { method, headers: HEADERS, body: JSON.stringify({ payload }) });
+          if(res.ok) { 
+              resetManagementForm(); 
+              await loadManagement(); 
+              alert("Üzv uğurla yadda saxlanıldı!");
+          } else {
+              alert("Xəta baş verdi! Cədvəlin mövcudluğunu və bağlantını yoxlayın.");
+          }
+        } catch (err) {
+          alert("Şəbəkə xətası baş verdi.");
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = originalBtnHtml;
         }
-        btn.disabled = false;
     };
 
     window.deleteManagement = async (id) => {
-        if(!confirm('Silinsin?')) return;
-        await fetch(`${API_URL}/management?id=eq.${id}`, { method: 'DELETE', headers: HEADERS });
-        loadManagement();
+        if(!confirm('Bu rəhbərlik üzvünü silmək istədiyinizdən əminsiniz?')) return;
+        try {
+          const res = await fetch(`${API_URL}/management?id=eq.${id}`, { method: 'DELETE', headers: HEADERS });
+          if (res.ok) {
+            loadManagement();
+          } else {
+            alert('Silinərkən xəta baş verdi.');
+          }
+        } catch(e) {
+          alert('Şəbəkə xətası.');
+        }
     };
 
     window.resetManagementForm = () => { 
         document.getElementById('led-form').reset(); 
         document.getElementById('led-id').value = "";
+        document.getElementById('led-order').value = "";
+        updateLedPreview('');
         document.getElementById('led-form-title').innerText = "Yeni Rəhbərlik Üzvi";
-        document.getElementById('led-submit-btn').innerText = "Yadda Saxla";
+        document.getElementById('led-submit-btn').innerHTML = `<i class="fas fa-save" style="margin-right:6px;"></i> Yadda Saxla`;
     };
 
     // --- REUSABLE IMAGE UPLOAD WITH AUTO BG REMOVAL ---

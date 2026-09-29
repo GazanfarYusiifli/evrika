@@ -1331,9 +1331,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           const API_URL = 'https://evrika-api.yusifliqezenfer90.workers.dev/api';
           const res = await fetch(`${API_URL}/management`, { cache: 'no-store' });
           if (res.ok) {
-            const data = await res.json();
-            if (data && data.length > 0) {
-              renderMembers(data.map(r => r.payload || r));
+            const raw = await res.json();
+            if (raw && raw.length > 0) {
+              const normalized = raw.map(r => {
+                const p = r.payload || {};
+                return {
+                  category: p.category || p.group || r.category || r.group || 'board',
+                  order: Number(p.order || r.order || 999),
+                  quote: p.quote || r.quote || '',
+                  img: p.img || r.img || './assets/loqoYeni.PNG',
+                  name: p.name || r.name || '',
+                  role: p.role || r.role || '',
+                  ...p,
+                  ...r
+                };
+              }).sort((a,b) => (a.order || 999) - (b.order || 999));
+              renderMembers(normalized);
             }
           }
         } catch (e) {
