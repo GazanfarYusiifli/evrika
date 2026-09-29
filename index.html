@@ -3868,8 +3868,7 @@ Qeyd edək ki, Evrika Təhsil Ekosistemi 15 illik akademik təcrübəyə malik o
                 }).filter(p => p.name);
 
                 if (dbParents.length > 0) {
-                  const merged = [...dbParents, ...STATIC_PARENTS];
-                  renderParentTestimonials(merged);
+                  renderParentTestimonials(dbParents);
                 }
               }
             }
