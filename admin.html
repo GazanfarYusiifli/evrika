@@ -2,7 +2,8 @@
 <html lang="az">
 <head>
     <meta charset="UTF-8" />
-  <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
     <title>Evrika EMS | Dashboard</title>
     <meta name="description" content="Evrika – gələcəyin liderlərini yetişdirən müasir təhsil ekosistemi.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -158,159 +159,272 @@
       .detail-image-card:hover img { opacity: 1; transform: scale(1.05); }
       .detail-image-label { position: absolute; bottom: 0; left: 0; width: 100%; padding: 10px; background: linear-gradient(transparent, rgba(0,0,0,0.8)); font-size: 0.7rem; color: white; font-weight: 700; }
 
-      /* --- CRM RESPONSIVE FIXES --- */
+      /* --- COMPREHENSIVE RESPONSIVE STYLING (MOBILE & DESKTOP) --- */
       @media (max-width: 1024px) {
-        .sidebar { 
-          position: fixed !important; 
-          bottom: 0 !important; 
-          left: 0 !important; 
-          width: 100% !important; 
-          height: 70px !important; 
-          flex-direction: row !important; 
-          z-index: 2000 !important;
-          border-right: none !important;
-          border-top: 1px solid var(--border) !important;
-          background: #4c60ab !important;
+        body { 
+          flex-direction: column !important; 
+          height: 100vh !important; 
+          overflow: hidden !important; 
         }
-        .sb-header { display: none !important; }
-        .sb-nav { 
-          flex-direction: row !important; 
-          padding: 0 !important; 
-          justify-content: space-around !important; 
-          align-items: center !important; 
-          width: 100% !important;
-          gap: 0 !important;
+
+        #mobile-sidebar-toggle {
+          display: inline-flex !important;
         }
-        .sb-link { 
-          padding: 0 !important; 
-          flex: 1 !important; 
+
+        .topbar-hide-mob {
+          display: none !important;
+        }
+
+        /* Sidebar as smooth off-canvas drawer */
+        .sidebar {
+          position: fixed !important;
+          top: 0 !important;
+          bottom: 0 !important;
+          left: -320px !important;
+          width: 290px !important;
           height: 100% !important;
-          justify-content: center !important;
-          border-radius: 0 !important;
+          max-width: 85vw !important;
+          background: #090e1a !important;
+          box-shadow: 20px 0 50px rgba(0, 0, 0, 0.7) !important;
+          border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+          z-index: 2005 !important;
+          transition: left 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+          display: flex !important;
           flex-direction: column !important;
-          gap: 5px !important;
-          font-size: 0.65rem !important;
-          text-align: center !important;
+          overflow-y: auto !important;
         }
-        .sb-link span { display: block !important; }
-        .sb-link i { font-size: 1.1rem !important; }
-        .sb-link.active { border-top: 3px solid var(--burgundy) !important; border-radius: 0 !important; background: rgba(255,255,255,0.02) !important; box-shadow: none !important; }
-        
-        body { flex-direction: column !important; overflow: hidden !important; height: 100vh !important; }
-        .main { width: 100% !important; padding-bottom: 80px !important; overflow-y: auto !important; }
-        .topbar { padding: 0 20px !important; height: 70px !important; }
-        .topbar h1 { font-size: 1.1rem !important; }
-        .content { padding: 20px !important; }
-        .stats-grid { grid-template-columns: 1fr !important; }
+
+        .sidebar.mobile-open {
+          left: 0 !important;
+        }
+
+        #sidebar-close-mob-btn {
+          display: inline-flex !important;
+        }
+
+        .sb-header {
+          display: flex !important;
+          flex-direction: row !important;
+          align-items: center !important;
+          justify-content: space-between !important;
+          padding: 25px 20px !important;
+          border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+        }
+
+        .sb-nav {
+          display: flex !important;
+          flex-direction: column !important;
+          padding: 20px 15px !important;
+          overflow-y: auto !important;
+          gap: 6px !important;
+        }
+
+        .sb-link {
+          padding: 12px 16px !important;
+          font-size: 0.88rem !important;
+          border-radius: 12px !important;
+        }
+
+        .sb-link i {
+          font-size: 1rem !important;
+        }
+
+        .main {
+          width: 100% !important;
+          height: 100% !important;
+          overflow-y: auto !important;
+          padding-bottom: 30px !important;
+        }
+
+        .topbar {
+          padding: 0 15px !important;
+          height: 65px !important;
+        }
+
+        .topbar h1 {
+          font-size: 1.15rem !important;
+        }
+
+        .content {
+          padding: 15px !important;
+        }
+
+        /* Hub responsive */
+        #ems-hub {
+          padding: 20px !important;
+          overflow-y: auto !important;
+        }
+
+        #ems-hub > div:first-of-type {
+          margin-bottom: 30px !important;
+        }
+
+        #ems-hub > div:first-of-type > div:first-child {
+          font-size: 2.5rem !important;
+        }
+
+        #ems-hub > div:nth-of-type(2) {
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+          gap: 15px !important;
+        }
+
+        .hub-card {
+          padding: 30px 18px !important;
+          border-radius: 24px !important;
+        }
+
+        .hub-icon {
+          width: 60px !important;
+          height: 60px !important;
+          font-size: 1.6rem !important;
+          margin-bottom: 18px !important;
+        }
+
+        /* Forms layout stacked on tablets and mobile */
+        #view-leadership > div,
+        .partners-admin-layout,
+        #view-parents > div,
+        #view-ugurlar > div,
+        #view-mezunlar > div,
+        #view-news > div,
+        #view-popup > div {
+          grid-template-columns: 1fr !important;
+          gap: 20px !important;
+        }
+
+        .glass-sidebar {
+          position: static !important;
+          width: 100% !important;
+        }
+
+        .stat-card {
+          padding: 22px 18px !important;
+          border-radius: 20px !important;
+        }
+
+        /* Charts grid responsive */
+        #view-dashboard > div[style*="grid-template-columns: 1fr 1fr"] {
+          grid-template-columns: 1fr !important;
+          gap: 20px !important;
+        }
+
+        #view-dashboard .stat-card[style*="height: 620px"] {
+          height: 380px !important;
+        }
+
+        .stats-grid {
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+          gap: 12px !important;
+          margin-bottom: 25px !important;
+        }
+
+        .ems-stat-card {
+          padding: 20px !important;
+          border-radius: 20px !important;
+        }
+
+        .ems-stat-card .stat-val {
+          font-size: 1.7rem !important;
+        }
       }
 
       @media (max-width: 768px) {
-        .table-wrapper { overflow-x: auto !important; }
-        table { min-width: 800px !important; }
-        .modal { width: 100% !important; height: 100% !important; border-radius: 0 !important; max-width: none !important; }
-        .modal-body { padding: 20px !important; }
-        .kanban-board { flex-direction: column !important; gap: 30px !important; display: flex !important; }
-        .kanban-col { width: 100% !important; min-width: 0 !important; }
-        
-        .communication-hub { flex-direction: column !important; }
+        .topbar h1 {
+          font-size: 1rem !important;
+          white-space: nowrap !important;
+          overflow: hidden !important;
+          text-overflow: ellipsis !important;
+          max-width: 180px !important;
+        }
+
+        #ems-hub > div:nth-of-type(2) {
+          grid-template-columns: 1fr 1fr !important;
+        }
+
+        #hub-crm-branches-overlay > div > div:nth-of-type(2) {
+          grid-template-columns: 1fr 1fr !important;
+        }
+
+        .table-wrapper {
+          overflow-x: auto !important;
+          -webkit-overflow-scrolling: touch !important;
+          border-radius: 18px !important;
+        }
+
+        table {
+          min-width: 680px !important;
+        }
+
+        th, td {
+          padding: 14px 16px !important;
+          font-size: 0.85rem !important;
+        }
+
+        .modal {
+          width: 96% !important;
+          height: auto !important;
+          max-height: 90vh !important;
+          border-radius: 24px !important;
+        }
+
+        .modal-header {
+          padding: 20px 25px !important;
+        }
+
+        .modal-body {
+          padding: 20px 15px !important;
+        }
+
+        .detail-grid-v2 {
+          grid-template-columns: 1fr !important;
+        }
+
+        .kanban-board {
+          flex-direction: column !important;
+          gap: 20px !important;
+          display: flex !important;
+        }
+
+        .kanban-col {
+          width: 100% !important;
+          min-width: 0 !important;
+          min-height: auto !important;
+        }
+
+        .communication-hub {
+          flex-direction: column !important;
+        }
+
+        /* Filter rows wrapping neatly */
+        #view-apps > div:first-child,
+        #view-hr-panel > div:first-child,
+        #view-exam-apps > div:first-child {
+          flex-direction: column !important;
+          align-items: stretch !important;
+          gap: 10px !important;
+        }
+
+        #view-apps > div:first-child > div,
+        #view-apps > div:first-child > select,
+        #view-apps > div:first-child > button {
+          width: 100% !important;
+          min-width: 0 !important;
+        }
       }
-    
-@media (max-width: 1024px) {
-  .nav-glass-container {
-    display: flex !important;
-    background: #ffffff !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    border: none !important;
-    box-shadow: none !important;
-    align-items: center !important;
-    flex-direction: row !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-    padding: 8px 15px !important;
-    margin: 0 !important;
-    border-radius: 0 !important;
-  }
 
-  .modern-floating-nav.scrolled .nav-glass-container {
-    padding: 8px 15px !important;
-    border-radius: 0 !important;
-  }
+      @media (max-width: 480px) {
+        #ems-hub > div:nth-of-type(2) {
+          grid-template-columns: 1fr !important;
+        }
 
-  .nav-glass-container .logo {
-    flex-shrink: 0 !important;
-  }
+        #hub-crm-branches-overlay > div > div:nth-of-type(2) {
+          grid-template-columns: 1fr !important;
+        }
 
-  .nav-links {
-    display: none !important;
-  }
-
-  .nav-actions,
-  .modern-floating-nav.scrolled .nav-actions,
-  .modern-floating-nav.nav-hidden .nav-actions {
-    display: flex !important;
-    align-items: center !important;
-    margin-left: auto !important;
-    margin-right: 0 !important;
-    flex-shrink: 0 !important;
-  }
-  
-  .nav-actions > a:not(.nav-btn) {
-    display: none !important;
-  }
-  
-  .nav-actions > a.nav-btn {
-    padding: 8px 16px !important;
-    font-size: 0.82rem !important;
-    margin: 0 !important;
-    border-radius: 10px !important;
-    white-space: nowrap !important;
-  }
-  
-  .nav-actions > a.nav-btn:hover {
-    transform: none !important;
-  }
-
-  .mobile-menu-btn,
-  .modern-floating-nav.scrolled .mobile-menu-btn,
-  .modern-floating-nav.nav-hidden .mobile-menu-btn {
-    margin-left: 8px !important;
-    margin-right: 10px !important;
-    flex-shrink: 0 !important;
-    position: relative !important;
-    right: auto !important;
-    top: auto !important;
-    transform: none !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 38px !important; height: 38px !important;
-    background: #f8f9fa !important; border: 1px solid rgba(0,0,0,0.1) !important; color: #070d1f !important; border-radius: 10px !important; box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
-  }
-
-  .modern-floating-nav {
-    position: fixed !important;
-    background: #ffffff !important;
-    top: 0 !important;
-    width: 100% !important;
-    left: 0 !important;
-    right: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border-bottom: 1px solid rgba(0,0,0,0.05) !important;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.03) !important;
-    pointer-events: auto !important;
-  }
-
-  .modern-floating-nav.nav-hidden {
-    transform: translateY(-100%) !important;
-  }
-
-  .modern-floating-nav.scrolled {
-    transform: translateY(0) !important;
-    top: 0 !important;
-  }
-}
+        .stats-grid {
+          grid-template-columns: 1fr !important;
+        }
+      }
 
 </style>
 <!-- Meta Pixel Code -->
@@ -594,9 +708,14 @@ fbq('track', 'PageView');
     </style>
 
   <aside class="sidebar" id="main-sidebar" style="display:none;">
-    <div class="sb-header">
-      <h2 style="font-size: 1.4rem;">EVRIKA <span>EMS</span></h2>
-      <p style="font-size: 0.7rem; opacity: 0.5; margin-top: 5px; font-weight: 700; color: var(--text-muted);">PROFESSIONAL SYSTEM</p>
+    <div class="sb-header" style="display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <h2 style="font-size: 1.4rem;">EVRIKA <span>EMS</span></h2>
+        <p style="font-size: 0.7rem; opacity: 0.5; margin-top: 5px; font-weight: 700; color: var(--text-muted);">PROFESSIONAL SYSTEM</p>
+      </div>
+      <button onclick="toggleMobileSidebar(false)" class="btn-view" style="display:none; padding:8px 12px; background:rgba(255,255,255,0.08); border-radius:10px;" id="sidebar-close-mob-btn">
+        <i class="fas fa-times"></i>
+      </button>
     </div>
     <div class="sb-nav">
       <div class="sb-group-title" data-module="crm" id="sb-crm-title">CRM & MÜŞTƏRİ XİDMƏTLƏRİ</div>
@@ -656,13 +775,19 @@ fbq('track', 'PageView');
       </div>
     </div>
   </aside>
+  <div id="sidebar-backdrop" onclick="toggleMobileSidebar(false)" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); z-index:1999; transition:0.3s;"></div>
 
   <main class="main">
     <header class="topbar">
-      <h1 id="topbar-title">EVRIKA EMS</h1>
-      <div style="display: flex; align-items: center; gap: 20px;">
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <button id="mobile-sidebar-toggle" onclick="toggleMobileSidebar()" class="btn-view" style="display:none; padding:10px 14px; font-size:1.1rem; background:rgba(255,255,255,0.06); border-radius:12px;" aria-label="Menyu">
+          <i class="fas fa-bars"></i>
+        </button>
+        <h1 id="topbar-title">EVRIKA EMS</h1>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
          <div id="mcp-status" onclick="switchTab('mcp')" style="cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 800; background: rgba(251,146,60,0.1); color: #fb923c; padding: 8px 15px; border-radius: 30px; transition: 0.3s;" onmouseover="this.style.background='rgba(251,146,60,0.2)'" onmouseout="this.style.background='rgba(251,146,60,0.1)'">
-           <i class="fas fa-database"></i> Cloudflare D1
+           <i class="fas fa-database"></i> <span class="topbar-hide-mob">Cloudflare D1</span>
          </div>
          <button class="btn-view" onclick="toggleLang(this)"><span id="lang-code">AZ</span></button>
       </div>
@@ -3734,8 +3859,26 @@ fbq('track', 'PageView');
         }
     };
 
+    window.toggleMobileSidebar = (forceState) => {
+      const sb = document.getElementById('main-sidebar');
+      const bd = document.getElementById('sidebar-backdrop');
+      if (!sb) return;
+      const isOpen = sb.classList.contains('mobile-open');
+      const next = typeof forceState === 'boolean' ? forceState : !isOpen;
+      if (next) {
+        sb.classList.add('mobile-open');
+        if (bd) bd.style.display = 'block';
+      } else {
+        sb.classList.remove('mobile-open');
+        if (bd) bd.style.display = 'none';
+      }
+    };
+
     window.switchTab = (t) => {
       localStorage.setItem('evrika_active_tab', t);
+      // Close mobile sidebar if open
+      if (window.innerWidth <= 1024) toggleMobileSidebar(false);
+
       document.querySelectorAll('.content').forEach(c => c.style.display = 'none');
       if(document.getElementById('view-'+t)) document.getElementById('view-'+t).style.display = 'block';
       const titles = { 
