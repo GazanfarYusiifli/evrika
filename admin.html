@@ -1420,8 +1420,25 @@ fbq('track', 'PageView');
                   <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">SİTAT</label>
                   <textarea id="par-quote" placeholder="Valideynin rəyi..." required class="admin-input" style="height:100px; resize:vertical;"></textarea>
               </div>
+
+              <div style="display:flex; flex-direction:column; gap:5px;">
+                  <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">VALİDEYNİN PROFİL ŞƏKLİ</label>
+                  <div style="display:flex; gap:10px; align-items:center;">
+                      <input type="text" id="par-avatar" placeholder="Şəkil URL" class="admin-input" style="flex:1;">
+                      <label class="btn-view" style="cursor:pointer; padding:15px;"><i class="fas fa-upload"></i><input type="file" hidden accept="image/*" onchange="uploadImage(this, 'par-avatar')"></label>
+                      <img loading="lazy" decoding="async" id="par-avatar-preview" style="width:40px; height:40px; border-radius:50%; object-fit:cover; display:none;">
+                  </div>
+              </div>
+
+              <div style="display:flex; flex-direction:column; gap:5px;">
+                  <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">RƏY FORMATI</label>
+                  <select id="par-type" class="admin-input" onchange="toggleParentMediaFields()">
+                      <option value="photo">Foto / Mətn Rəyi</option>
+                      <option value="video">Video Rəy (YouTube / Instagram / Video)</option>
+                  </select>
+              </div>
               
-              <div style="display:flex; flex-direction:column; gap:5px;" id="par-media-field">
+              <div style="display:none; flex-direction:column; gap:5px;" id="par-media-field">
                   <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">VİDEO LİNKİ</label>
                   <input type="text" id="par-media-url" placeholder="YouTube, Instagram (Reel/Post) və ya Video URL" class="admin-input">
                   <div style="font-size:0.65rem; color:var(--warning); margin-top:5px; opacity:0.8;">
@@ -1429,15 +1446,13 @@ fbq('track', 'PageView');
                   </div>
               </div>
 
-              <div style="display:flex; flex-direction:column; gap:5px;" id="par-thumb-field">
+              <div style="display:none; flex-direction:column; gap:5px;" id="par-thumb-field">
                   <label style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">VİDEO COVER ŞEKLİ</label>
                   <div style="display:flex; gap:5px; align-items:center;">
                       <input type="text" id="par-thumb" placeholder="Şəkil URL" class="admin-input" style="flex:1;">
-                      <label class="btn-view" style="cursor:pointer; padding:15px;"><i class="fas fa-upload"></i><input type="file" hidden onchange="uploadImage(this, 'par-thumb')"></label>
+                      <label class="btn-view" style="cursor:pointer; padding:15px;"><i class="fas fa-upload"></i><input type="file" hidden accept="image/*" onchange="uploadImage(this, 'par-thumb')"></label>
                   </div>
               </div>
-
-              <input type="hidden" id="par-avatar">
 
               <div style="display: flex; gap: 10px; margin-top:10px;">
                 <button type="submit" id="par-submit-btn" class="btn-view" style="flex:2; justify-content: center; background: var(--accent); border: none; padding: 15px;">Yadda Saxla</button>
@@ -4488,6 +4503,11 @@ fbq('track', 'PageView');
             } else if (targetEl) {
                 targetEl.value = uploadedUrls.join(',');
             }
+            const prevEl = document.getElementById(targetId + '-preview');
+            if (prevEl && uploadedUrls[0]) {
+                prevEl.src = uploadedUrls[0];
+                prevEl.style.display = 'block';
+            }
         }
 
         label.innerHTML = oldHtml;
@@ -4982,6 +5002,7 @@ fbq('track', 'PageView');
 
     window.editParent = (idx) => {
         const p = parentsData[idx];
+        if(!p) return;
         document.getElementById('par-id').value = p._db_id_;
         document.getElementById('par-name').value = p.name;
         document.getElementById('par-status').value = p.status;
@@ -4991,6 +5012,16 @@ fbq('track', 'PageView');
         document.getElementById('par-media-url').value = p.media_url || '';
         document.getElementById('par-thumb').value = p.thumbnail_url || '';
         
+        const avPrev = document.getElementById('par-avatar-preview');
+        if (avPrev) {
+            if (p.avatar) {
+                avPrev.src = p.avatar;
+                avPrev.style.display = 'block';
+            } else {
+                avPrev.style.display = 'none';
+            }
+        }
+
         toggleParentMediaFields();
         document.getElementById('par-form-title').innerText = "Rəyə Düzəliş Et";
         document.getElementById('par-submit-btn').innerText = "Dəyişikliyi Saxla";
@@ -5000,6 +5031,8 @@ fbq('track', 'PageView');
     window.resetParentForm = () => {
         document.getElementById('par-form').reset();
         document.getElementById('par-id').value = "";
+        const avPrev = document.getElementById('par-avatar-preview');
+        if (avPrev) { avPrev.src = ''; avPrev.style.display = 'none'; }
         document.getElementById('par-form-title').innerText = "Yeni Valideyn Rəyi Əlavə Et";
         document.getElementById('par-submit-btn').innerText = "Yadda Saxla";
         toggleParentMediaFields();
