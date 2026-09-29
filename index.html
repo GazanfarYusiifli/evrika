@@ -3847,8 +3847,35 @@ Qeyd edək ki, Evrika Təhsil Ekosistemi 15 illik akademik təcrübəyə malik o
           });
         }
 
-        function initParentTestimonials() {
+        async function initParentTestimonials() {
           renderParentTestimonials(STATIC_PARENTS);
+          try {
+            const res = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/parent_testimonials', { cache: 'no-store' });
+            if (res.ok) {
+              const apiParents = await res.json();
+              if (apiParents && apiParents.length > 0) {
+                const dbParents = apiParents.map(p => {
+                  const item = p.payload || p;
+                  return {
+                    name: item.name || '',
+                    status: item.status || '',
+                    quote: item.quote || '',
+                    avatar: item.avatar || item.thumbnail_url || 'https://via.placeholder.com/400',
+                    thumbnail_url: item.thumbnail_url || '',
+                    media_url: item.media_url || '',
+                    type: item.type || (item.media_url ? 'video' : 'text')
+                  };
+                }).filter(p => p.name);
+
+                if (dbParents.length > 0) {
+                  const merged = [...dbParents, ...STATIC_PARENTS];
+                  renderParentTestimonials(merged);
+                }
+              }
+            }
+          } catch(e) {
+            console.warn('Live parent testimonials fallback:', e);
+          }
         }
 
         const STATIC_PARTNERS = [
@@ -4267,13 +4294,22 @@ Qeyd edək ki, Evrika Təhsil Ekosistemi 15 illik akademik təcrübəyə malik o
         const grid = document.getElementById('home-news-grid');
         if(!grid) return;
         try {
-            const res = await fetch('/news.json');
-            if(res.ok) {
-                const data = await res.json();
-                if(!data.length) {
-                    grid.innerHTML = '<div style="text-align:center; width:100%; grid-column:1/-1; opacity:0.5; font-size:1.2rem;">Hələ ki, heç bir xəbər yoxdur.</div>';
-                    return;
+            let data = [];
+            try {
+                const liveRes = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/news', { cache: 'no-store' });
+                if(liveRes.ok) {
+                    const list = await liveRes.json();
+                    if(list && list.length > 0) data = list.map(item => item.payload || item);
                 }
+            } catch(e) {}
+            if(!data.length) {
+                const res = await fetch('/news.json');
+                if(res.ok) data = await res.json();
+            }
+            if(!data.length) {
+                grid.innerHTML = '<div style="text-align:center; width:100%; grid-column:1/-1; opacity:0.5; font-size:1.2rem;">Hələ ki, heç bir xəbər yoxdur.</div>';
+                return;
+            }
                 grid.innerHTML = data.slice(0, 3).map(n => {
                     const dateStr = n.date || "";
                     const parts = dateStr.split(/[-./]/);
