@@ -4521,37 +4521,56 @@ fbq('track', 'PageView');
         try {
             const res = await fetch(`${API_URL}/popups?select=*`, { headers: HEADERS });
             if(res.ok) {
-                popupData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id })).sort((a,b) => b._db_id_ - a._db_id_);
+                popupData = (await res.json()).map(r => ({ ...r.payload, ...r, _db_id_: r.id })).sort((a,b) => b._db_id_ - a._db_id_);
                 const tb = document.getElementById('popup-tbody');
-                if(tb) tb.innerHTML = popupData.map((p, i) => `
-                    <tr>
-                        <td><img loading="lazy" decoding="async" src="${p.img}" style="width:60px; height:auto; border-radius:4px;"></td>
-                        <td>${p.title}</td>
-                        <td>
-                            <select onchange="togglePopupStatus('${p._db_id_}', this.value, ${i})" style="background:${p.status==='active'?'rgba(16,185,129,0.1)':'rgba(239,68,68,0.1)'}; color:${p.status==='active'?'#10b981':'#ef4444'}; border:1px solid transparent; padding:5px; border-radius:5px;">
-                                <option value="active" ${p.status==='active'?'selected':''}>Aktiv</option>
-                                <option value="inactive" ${p.status==='inactive'?'selected':''}>Deaktiv</option>
-                            </select>
-                        </td>
-                        <td>
-                            <div style="display:flex; gap:8px;">
-                                <button class="btn-view" style="padding:8px 12px; background:rgba(255,255,255,0.05);" onclick="editPopup(${i})"><i class="fas fa-edit"></i></button>
-                                <button class="btn-danger" style="padding:8px 12px;" onclick="deletePopup('${p._db_id_}')"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </td>
-                    </tr>
-                `).join('');
+                if(tb) {
+                    if(!popupData.length) {
+                        tb.innerHTML = '<tr><td colspan="5" style="text-align:center; opacity:0.4; padding:20px;">Hələ ki heç bir pop-up əlavə edilməyib</td></tr>';
+                    } else {
+                        tb.innerHTML = popupData.map((p, i) => `
+                            <tr>
+                                <td>
+                                    ${p.img ? `<img loading="lazy" decoding="async" src="${p.img}" style="width:70px; height:45px; object-fit:cover; border-radius:6px; border:1px solid rgba(255,255,255,0.1);">` : `<span style="opacity:0.3; font-size:0.7rem;">Şəkil yoxdur</span>`}
+                                </td>
+                                <td>
+                                    <div style="font-weight:700; color:white;">${p.title}</div>
+                                    ${p.desc ? `<div style="font-size:0.75rem; color:var(--text-muted);">${p.desc}</div>` : ''}
+                                </td>
+                                <td>
+                                    <select onchange="togglePopupStatus('${p._db_id_ || p.id}', this.value, ${i})" style="background:${p.status==='active'?'rgba(16,185,129,0.15)':'rgba(239,68,68,0.15)'}; color:${p.status==='active'?'#10b981':'#ef4444'}; border:1px solid rgba(255,255,255,0.1); padding:6px 12px; border-radius:8px; font-weight:700; cursor:pointer;">
+                                        <option value="active" ${p.status==='active'?'selected':''}>Aktiv</option>
+                                        <option value="inactive" ${p.status==='inactive'?'selected':''}>Deaktiv</option>
+                                    </select>
+                                </td>
+                                <td style="font-size:0.8rem; color:var(--text-muted);">${p.link || '-'}</td>
+                                <td>
+                                    <div style="display:flex; gap:8px;">
+                                        <button class="btn-view" title="Düzəliş Et" style="padding:8px 12px; background:rgba(255,255,255,0.08); border-radius:8px;" onclick="editPopup(${i})"><i class="fas fa-edit"></i></button>
+                                        <button class="btn-danger" title="Sil" style="padding:8px 12px; border-radius:8px;" onclick="deletePopup('${p._db_id_ || p.id}')"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('');
+                    }
+                }
             }
         } catch(e) { console.error("Popup loading failed", e); }
     };
 
     window.editPopup = (idx) => {
         const p = popupData[idx];
-        document.getElementById('popup-id').value = p._db_id_;
-        document.getElementById('popup-title').value = p.title;
-        document.getElementById('popup-img').value = p.img;
+        if(!p) return;
+        document.getElementById('popup-id').value = p._db_id_ || p.id;
+        document.getElementById('popup-title').value = p.title || '';
+        document.getElementById('popup-desc').value = p.desc || '';
         document.getElementById('popup-link').value = p.link || '';
-        document.getElementById('popup-status').value = p.status || 'active';
+        document.getElementById('popup-img').value = p.img || '';
+        const prev = document.getElementById('popup-img-preview');
+        if (prev) {
+            if (p.img) { prev.src = p.img; prev.style.display = 'block'; }
+            else { prev.style.display = 'none'; }
+        }
+        document.getElementById('popup-status').checked = (p.status === 'active');
         document.getElementById('popup-form-title').innerText = "Pop-up-a Düzəliş Et";
         document.getElementById('popup-submit-btn').innerText = "Dəyişikliyi Saxla";
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -4560,6 +4579,9 @@ fbq('track', 'PageView');
     window.resetPopupForm = () => {
         document.getElementById('popup-form').reset();
         document.getElementById('popup-id').value = '';
+        const prev = document.getElementById('popup-img-preview');
+        if (prev) { prev.src = ''; prev.style.display = 'none'; }
+        document.getElementById('popup-status').checked = true;
         document.getElementById('popup-form-title').innerText = "Yeni Pop-up Əlavə Et";
         document.getElementById('popup-submit-btn').innerText = "Yadda Saxla";
     };
@@ -4568,23 +4590,33 @@ fbq('track', 'PageView');
         e.preventDefault();
         const id = document.getElementById('popup-id').value;
         const btn = document.getElementById('popup-submit-btn');
+        const isActive = document.getElementById('popup-status').checked;
         const payload = {
-            title: document.getElementById('popup-title').value,
-            desc: document.getElementById('popup-desc').value,
-            img: document.getElementById('popup-img').value,
-            link: document.getElementById('popup-link').value,
-            status: document.getElementById('popup-status').value,
+            title: document.getElementById('popup-title').value.trim(),
+            desc: document.getElementById('popup-desc').value.trim(),
+            img: document.getElementById('popup-img').value.trim(),
+            link: document.getElementById('popup-link').value.trim(),
+            status: isActive ? 'active' : 'inactive',
             date: new Date().toLocaleDateString('az-AZ')
         };
         btn.disabled = true;
+        btn.innerText = "Gözləyin...";
         const url = id ? `${API_URL}/popups?id=eq.${id}` : `${API_URL}/popups`;
         const method = id ? 'PATCH' : 'POST';
         try {
             const res = await fetch(url, { method, headers: HEADERS, body: JSON.stringify({ payload }) });
-            if(res.ok) { resetPopupForm(); loadPopups(); alert("Pop-up uğurla saxlanıldı!"); }
-            else { alert("Cədvəl tapılmadı. Pop-up üçün bazada cədvəl lazımdır."); }
-        } catch(err) { console.error(err); }
-        btn.disabled = false;
+            if(res.ok) { 
+                resetPopupForm(); 
+                loadPopups(); 
+                alert(id ? "Pop-up uğurla yeniləndi!" : "Yeni pop-up uğurla yaradıldı!"); 
+            } else { 
+                alert("Xəta baş verdi."); 
+            }
+        } catch(err) { console.error(err); alert("Xəta: " + err.message); }
+        finally {
+            btn.disabled = false;
+            btn.innerText = id ? "Dəyişikliyi Saxla" : "Yadda Saxla";
+        }
     };
 
     window.deletePopup = async (id) => {
