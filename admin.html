@@ -4240,30 +4240,60 @@ fbq('track', 'PageView');
     // --- MEZUNLAR LOGIC ---
     let mezunlarData = [];
     window.loadMezunlar = async () => {
-       const res = await fetch(`${API_URL}/mezunlar?select=*`, { headers: HEADERS });
-       if(res.ok) { 
-           mezunlarData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id })).sort((a,b) => b._db_id_ - a._db_id_);
-       }
-       const tb = document.getElementById('mz-tbody'); if(tb) tb.innerHTML = mezunlarData.map((m, i) => `<tr><td><img loading="lazy" decoding="async" src="${m.img}" style="width:40px;height:40px;object-fit:cover;border-radius:50%;"></td><td>${m.name}</td><td>${m.uni}</td><td><div style="display:flex; gap:8px;"><button class="btn-view" style="padding:8px 12px; background:rgba(255,255,255,0.05);" onclick="editMezun(${i})"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:8px 12px;" onclick="deleteMezun('${m._db_id_}')"><i class="fas fa-trash"></i></button></div></td></tr>`).join('');
-       if(document.getElementById('dash-mz')) document.getElementById('dash-mz').innerText = mezunlarData.length;
+       try {
+           const res = await fetch(`${API_URL}/mezunlar?select=*`, { headers: HEADERS });
+           if(res.ok) { 
+               mezunlarData = (await res.json()).map(r => ({ ...r.payload, ...r, _db_id_: r.id })).sort((a,b) => b._db_id_ - a._db_id_);
+           }
+           const tb = document.getElementById('mz-tbody'); 
+           if(tb) {
+               if(!mezunlarData.length) {
+                   tb.innerHTML = '<tr><td colspan="4" style="text-align:center; opacity:0.4; padding:20px;">Hələ ki heç bir məzun əlavə edilməyib</td></tr>';
+               } else {
+                   tb.innerHTML = mezunlarData.map((m, i) => `
+                       <tr>
+                           <td>
+                               ${m.img ? `<img loading="lazy" decoding="async" src="${m.img}" style="width:44px; height:44px; object-fit:cover; border-radius:50%; border:2px solid rgba(255,255,255,0.1);">` : `<span style="opacity:0.3; font-size:0.7rem;">Şəkil yoxdur</span>`}
+                           </td>
+                           <td><b style="color:white; font-size:0.95rem;">${m.name}</b></td>
+                           <td style="color:var(--text-muted); font-size:0.9rem;">${m.uni}</td>
+                           <td>
+                               <div style="display:flex; gap:8px;">
+                                   <button class="btn-view" title="Düzəliş Et" style="padding:8px 12px; background:rgba(255,255,255,0.08); border-radius:8px;" onclick="editMezun(${i})"><i class="fas fa-edit"></i></button>
+                                   <button class="btn-danger" title="Sil" style="padding:8px 12px; border-radius:8px;" onclick="deleteMezun('${m._db_id_ || m.id}')"><i class="fas fa-trash"></i></button>
+                               </div>
+                           </td>
+                       </tr>
+                   `).join('');
+               }
+           }
+           if(document.getElementById('dash-mz')) document.getElementById('dash-mz').innerText = mezunlarData.length;
+       } catch(e) { console.error('loadMezunlar error:', e); }
     };
 
     window.editMezun = (idx) => {
         const m = mezunlarData[idx];
-        document.getElementById('mz-id').value = m._db_id_;
-        document.getElementById('mz-name').value = m.name;
-        document.getElementById('mz-uni').value = m.uni;
-        document.getElementById('mz-img').value = m.img;
-        const pv = document.getElementById('mz-img-preview'); if(m.img) { pv.src = m.img; pv.style.display='block'; } else { pv.style.display='none'; }
+        if(!m) return;
+        document.getElementById('mz-id').value = m._db_id_ || m.id;
+        document.getElementById('mz-name').value = m.name || '';
+        document.getElementById('mz-uni').value = m.uni || '';
+        document.getElementById('mz-img').value = m.img || '';
+        const pv = document.getElementById('mz-img-preview'); 
+        if(m.img) { pv.src = m.img; pv.style.display='block'; } else { pv.style.display='none'; }
         document.getElementById('mz-form-title').innerText = "Məzuna Düzəliş Et";
         document.getElementById('mz-submit-btn').innerText = "Dəyişikliyi Saxla";
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     window.handleMezunSubmit = async (e) => {
         e.preventDefault();
         const id = document.getElementById('mz-id').value;
         const btn = document.getElementById('mz-submit-btn');
-        const payload = { name: document.getElementById('mz-name').value, uni: document.getElementById('mz-uni').value, img: document.getElementById('mz-img').value };
+        const payload = { 
+            name: document.getElementById('mz-name').value.trim(), 
+            uni: document.getElementById('mz-uni').value.trim(), 
+            img: document.getElementById('mz-img').value.trim() 
+        };
         btn.disabled = true;
         btn.innerText = "Gözləyin...";
         const url = id ? `${API_URL}/mezunlar?id=eq.${id}` : `${API_URL}/mezunlar`;
@@ -4274,7 +4304,7 @@ fbq('track', 'PageView');
             if(res.ok) { 
                 resetMezunForm(); 
                 loadMezunlar(); 
-                alert("Məzun uğurla yadda saxlanıldı!");
+                alert(id ? "Dəyişikliklər uğurla yadda saxlanıldı!" : "Yeni məzun uğurla əlavə edildi!");
             } else {
                 const errText = await res.text();
                 alert("Xəta baş verdi: " + errText);
@@ -4288,15 +4318,25 @@ fbq('track', 'PageView');
     };
 
     window.deleteMezun = async (id) => {
-        if(!confirm('Silinsin?')) return;
-        await fetch(`${API_URL}/mezunlar?id=eq.${id}`, { method: 'DELETE', headers: HEADERS });
-        loadMezunlar();
+        if(!confirm('Bu məzunu silmək istədiyinizdən əminsiniz?')) return;
+        try {
+            const res = await fetch(`${API_URL}/mezunlar?id=eq.${id}`, { method: 'DELETE', headers: HEADERS });
+            if(res.ok) {
+                resetMezunForm();
+                loadMezunlar();
+            } else {
+                alert('Silinərkən xəta baş verdi.');
+            }
+        } catch(e) {
+            alert('Silinərkən xəta: ' + e.message);
+        }
     };
 
     window.resetMezunForm = () => { 
         document.getElementById('mz-form').reset(); 
         document.getElementById('mz-id').value = "";
-        document.getElementById('mz-img-preview').style.display='none';
+        const pv = document.getElementById('mz-img-preview');
+        if (pv) { pv.src = ''; pv.style.display='none'; }
         document.getElementById('mz-form-title').innerText = "Yeni Məzun Əlavə Et";
         document.getElementById('mz-submit-btn').innerText = "Yadda Saxla";
     };
