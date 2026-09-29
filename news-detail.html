@@ -408,12 +408,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof updateContent === 'function') {
-      <!-- Cookie Banner Removed -->          setTimeout(() => {
-            const bar = document.getElementById('cookie-banner-v4');
-            bar.classList.add('active');
-          }, 3000);
-        }
-      });
+                updateContent(localStorage.getItem('evrika-lang') || 'az');
+            }
+        });
     </script>
 
 
@@ -451,7 +448,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     const liveRes = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/news', { cache: 'no-store' });
                     if(liveRes.ok) {
                         const list = await liveRes.json();
-                        if(list && list.length > 0) allNews = list.map(item => ({ ...item.payload, ...item, id: item.id }));
+                        if(list && list.length > 0) allNews = list.map(item => ({ ...item.payload, ...item, id: item.id || item._db_id_ }));
                     }
                 } catch(e) {}
 
@@ -460,7 +457,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     if(res.ok) allNews = await res.json();
                 }
                 
-                const item = allNews.find(x => String(x.id) === String(newsId)) || allNews[0];
+                const item = allNews.find(x => String(x.id) === String(newsId) || String(x._db_id_) === String(newsId)) || allNews[0];
                 if(!item) return;
 
                 document.title = item.title + " | Evrika";
