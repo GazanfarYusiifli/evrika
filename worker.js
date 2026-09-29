@@ -743,17 +743,32 @@ export default {
       //    Uploads image files to Cloudflare Images and returns delivery URL.
       //    Requires env vars: CF_API_TOKEN, CF_ACCOUNT_ID
       // =========================================================================
+      // 6. CLOUDFLARE R2 OBJECT STORAGE (POST /upload-image & GET /cdn-images/*)
+      //    Zero-cost 10GB high-speed image hosting for Evrika EMS
+      // =========================================================================
+      if (path.startsWith("/cdn-images/")) {
+        const objectKey = decodeURIComponent(path.replace("/cdn-images/", ""));
+        if (env.BUCKET) {
+          const object = await env.BUCKET.get(objectKey);
+          if (!object) {
+            return new Response("Not Found", { status: 404 });
+          }
+          const headers = new Headers();
+          object.writeHttpMetadata(headers);
+          headers.set("Access-Control-Allow-Origin", "*");
+          headers.set("Cache-Control", "public, max-age=31536000, immutable");
+          return new Response(object.body, { headers });
+        }
+        return new Response("R2 BUCKET not bound", { status: 500 });
+      }
+
       if (path === "/upload-image") {
         if (request.method !== "POST") return jsonResponse({ ok: false, error: "POST only" }, 405);
 
-        const CF_TOKEN   = env.CF_API_TOKEN   || '';
-        const CF_ACCOUNT = env.CF_ACCOUNT_ID  || '0e36d7f920fbd6d21de587399cadf045';
-
-        if (!CF_TOKEN) {
-          return jsonResponse({ ok: false, error: "CF_API_TOKEN env var not set" }, 500);
+        if (!env.BUCKET) {
+          return jsonResponse({ ok: false, error: "Cloudflare R2 BUCKET binding tapılmadı. Zəhmət olmasa Settings -> Variables -> R2 Bucket Bindings bölməsindən 'BUCKET' əlavə edin." }, 500);
         }
 
-        // Receive the image from admin panel (multipart/form-data)
         let formData;
         try { formData = await request.formData(); } catch {
           return jsonResponse({ ok: false, error: "Invalid form data" }, 400);
@@ -761,39 +776,21 @@ export default {
 
         const file = formData.get('file');
         if (!file || typeof file === 'string') {
-          return jsonResponse({ ok: false, error: "No file provided" }, 400);
+          return jsonResponse({ ok: false, error: "Fayl tapılmadı" }, 400);
         }
 
-        // Build multipart upload for Cloudflare Images API
-        const cfForm = new FormData();
-        cfForm.append('file', file);
-        // Optional: set requireSignedURLs to false for public access
-        cfForm.append('requireSignedURLs', 'false');
+        const ext = file.name.split('.').pop() || 'png';
+        const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+        const uniqueKey = `uploads/${Date.now()}-${Math.random().toString(36).substring(2, 7)}-${cleanName}`;
 
-        const cfRes = await fetch(
-          `https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT}/images/v1`,
-          {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${CF_TOKEN}` },
-            body: cfForm
+        await env.BUCKET.put(uniqueKey, file.stream(), {
+          httpMetadata: {
+            contentType: file.type || 'image/png'
           }
-        );
+        });
 
-        const cfData = await cfRes.json().catch(() => ({}));
-
-        if (!cfRes.ok || !cfData.success) {
-          console.error('CF Images upload error:', JSON.stringify(cfData));
-          return jsonResponse({ ok: false, error: cfData.errors?.[0]?.message || 'Upload failed' }, 502);
-        }
-
-        // Return the public delivery URL (variant: public)
-        const imageId  = cfData.result.id;
-        const variants = cfData.result.variants || [];
-        // Prefer /public variant, fallback to first variant
-        const url = variants.find(v => v.endsWith('/public')) || variants[0] ||
-          `https://imagedelivery.net/${CF_ACCOUNT}/${imageId}/public`;
-
-        return jsonResponse({ ok: true, url, imageId, variants });
+        const publicUrl = `https://evrika-api.yusifliqezenfer90.workers.dev/cdn-images/${uniqueKey}`;
+        return jsonResponse({ ok: true, url: publicUrl, key: uniqueKey });
       }
 
       // =========================================================================
