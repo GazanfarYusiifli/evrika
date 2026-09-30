@@ -1022,8 +1022,14 @@ fbq('track', 'PageView');
           <option value="Cavablandırıldı">Cavablandırıldı</option>
           <option value="Bağlandı">Bağlandı</option>
         </select>
-        <button onclick="switchTab('qr-generator')" class="btn-view" style="background: var(--burgundy); border: none; padding: 14px 20px;">
+        <button onclick="switchTab('qr-generator')" class="btn-view" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: white; padding: 14px 18px;" title="Filiallar üzrə QR Kodlar">
           <i class="fas fa-qrcode"></i> QR Generator
+        </button>
+        <button onclick="exportParentVoicePDF()" class="btn-view" style="background: var(--burgundy); border: none; padding: 14px 18px;" title="Filtr olunmuş rəyləri PDF hesabat kimi çıxar">
+          <i class="fas fa-file-pdf"></i> PDF İxrac
+        </button>
+        <button onclick="exportParentVoiceExcel()" class="btn-view" style="background: var(--success); border: none; padding: 14px 18px;" title="Excel / CSV formatında yüklə">
+          <i class="fas fa-file-excel"></i> Excel-ə Çıxar
         </button>
       </div>
 
@@ -2319,6 +2325,8 @@ fbq('track', 'PageView');
           return matchesQ && matchesType && matchesStatus;
         });
 
+        window.displayedParentVoiceFeedbacks = displayed;
+
         const BRANCH_CONFIG = {
           'lisey1': { label: 'BETL Nərimanov', color: '#ef4444', bg: 'rgba(239,68,68,0.12)', border: 'rgba(239,68,68,0.25)', icon: 'fas fa-microscope' },
           'lisey2': { label: 'BETL Gənclik', color: '#3b82f6', bg: 'rgba(59,130,246,0.12)', border: 'rgba(59,130,246,0.25)', icon: 'fas fa-atom' },
@@ -2390,10 +2398,18 @@ fbq('track', 'PageView');
                 <option value="Bağlandı" ${st==='Bağlandı'?'selected':''}>Closed</option>
               </select>
             </td>
-            <td>
-              <button class="btn-view" onclick="openPvModal(${f._db_id_})" style="padding:8px 14px; background:var(--royal-blue); color:white; font-size:0.8rem; font-weight:700;">
-                <i class="fas fa-edit"></i> İdarə Et
-              </button>
+            <td style="white-space:nowrap;">
+              <div style="display:flex; gap:6px; align-items:center;">
+                <button class="btn-view" onclick="openPvModal(${f._db_id_})" style="padding:8px 12px; background:var(--royal-blue); color:white; font-size:0.8rem; font-weight:700;" title="Rəyə baxış və idarəetmə">
+                  <i class="fas fa-edit"></i> İdarə Et
+                </button>
+                <button class="btn-view" onclick="downloadSinglePvPDF(${f._db_id_})" style="padding:8px 12px; background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3); font-size:0.8rem;" title="Tək bu rəyin rəsmi PDF arayışını endir">
+                  <i class="fas fa-file-pdf"></i>
+                </button>
+                <button class="btn-view" onclick="sharePvWhatsApp(${f._db_id_})" style="padding:8px 12px; background:rgba(37,211,102,0.15); color:#25D366; border:1px solid rgba(37,211,102,0.3); font-size:0.8rem;" title="Məsul şəxsə / rəhbərliyə WhatsApp ilə yönləndir">
+                  <i class="fab fa-whatsapp"></i>
+                </button>
+              </div>
             </td>
           </tr>`;
         }).join('');
@@ -2513,11 +2529,21 @@ fbq('track', 'PageView');
               <textarea id="pv-edit-response-note" class="admin-input" rows="3" style="width:100%;" placeholder="Valideynlə telefon/whatsapp əlaqəsi saxlanıldı, təklif qəbul komissiyasına yönləndirildi...">${respNote}</textarea>
             </div>
 
-            <div style="display:flex; justify-content:flex-end; gap:10px;">
-              <button onclick="closePvModal()" class="btn-view" style="padding:12px 20px; background:rgba(255,255,255,0.05); color:white;">Bağla</button>
-              <button onclick="saveParentVoiceDetails(${dbId})" id="pv-save-btn" class="btn-view" style="padding:12px 24px; background:var(--accent); color:white; font-weight:800; border:none;">
-                <i class="fas fa-save"></i> Dəyişiklikləri Yadda Saxla
-              </button>
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+              <div style="display:flex; gap:8px;">
+                <button type="button" onclick="downloadSinglePvPDF(${dbId})" class="btn-view" style="padding:12px 18px; background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3); font-weight:700;">
+                  <i class="fas fa-file-pdf"></i> PDF Endir
+                </button>
+                <button type="button" onclick="sharePvWhatsApp(${dbId})" class="btn-view" style="padding:12px 18px; background:rgba(37,211,102,0.15); color:#25D366; border:1px solid rgba(37,211,102,0.3); font-weight:700;">
+                  <i class="fab fa-whatsapp"></i> WhatsApp ilə Paylaş
+                </button>
+              </div>
+              <div style="display:flex; gap:10px;">
+                <button type="button" onclick="closePvModal()" class="btn-view" style="padding:12px 20px; background:rgba(255,255,255,0.05); color:white;">Bağla</button>
+                <button type="button" onclick="saveParentVoiceDetails(${dbId})" id="pv-save-btn" class="btn-view" style="padding:12px 24px; background:var(--accent); color:white; font-weight:800; border:none;">
+                  <i class="fas fa-save"></i> Dəyişiklikləri Yadda Saxla
+                </button>
+              </div>
             </div>
           </div>
 
@@ -2592,6 +2618,340 @@ fbq('track', 'PageView');
       } catch(e) {
         console.error("Status update error", e);
       }
+    };
+
+    // ── VALİDEYN SƏSİ İXRAC & PAYLAŞMA FUNKSİYALARI ───────────────────
+    window.sharePvWhatsApp = (dbId) => {
+      const item = rawData.find(r => r._db_id_ == dbId);
+      if (!item) {
+        alert('Rəy məlumatı tapılmadı.');
+        return;
+      }
+      const pName = item.parent_name || item.fullName || 'Valideyn';
+      const phone = item.phone || '-';
+      const sName = item.child_name || item.student_name || 'Övlad';
+      const grade = item.child_age || item.student_grade || '-';
+      const branch = item.branch_name || (getGranularSource(item) === 'lisey1' ? 'BETL Nərimanov' : getGranularSource(item) === 'lisey2' ? 'BETL Gənclik' : 'Evrika Liseyi');
+      const fType = item.parent_feedback_type || 'Müraciət';
+      const fSource = item.first_touch_source || '-';
+      const fMsg = item.parent_feedback_message || item.note || '-';
+      const st = item.status || 'Yeni';
+      const assigned = item.assigned_to || item.responsible || 'Təyin edilməyib';
+      const dateStr = formatDateStr(item.created_at || item.submissionDate || Date.now());
+
+      const text = 
+`📌 *EVRİKA LİSEYİ — VALİDEYN MÜRACİƏTİ / RƏYİ*
+━━━━━━━━━━━━━━━━━━━━━━
+👤 *Valideyn:* ${pName}
+📞 *Əlaqə:* ${phone}
+🎓 *Şagird:* ${sName} (${grade})
+🏫 *Filial:* ${branch}
+📢 *Tanışlıq Mənbəyi:* ${fSource}
+
+🏷 *Rəy Növü:* ${fType}
+📊 *Status:* ${st}
+👔 *Məsul Şəxs:* ${assigned}
+🕒 *Tarix:* ${dateStr}
+
+💬 *Valideynin Qeydi / Təklifi:*
+"${fMsg}"
+━━━━━━━━━━━━━━━━━━━━━━
+🔗 *Evrika Liseyi CRM İdarəetmə Paneli*`;
+
+      const shareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+      window.open(shareUrl, '_blank');
+    };
+
+    window.downloadSinglePvPDF = (dbId) => {
+      const item = rawData.find(r => r._db_id_ == dbId);
+      if (!item) {
+        alert('Rəy məlumatı tapılmadı.');
+        return;
+      }
+      if (typeof html2pdf === 'undefined') {
+        alert('PDF generator yüklənir, zəhmət olmasa bir neçə saniyə sonra yenidən cəhd edin.');
+        return;
+      }
+
+      const pName = item.parent_name || item.fullName || 'Valideyn';
+      const phone = item.phone || '-';
+      const sName = item.child_name || item.student_name || 'Övlad';
+      const grade = item.child_age || item.student_grade || '-';
+      const branch = item.branch_name || (getGranularSource(item) === 'lisey1' ? 'BETL Nərimanov Filialı' : getGranularSource(item) === 'lisey2' ? 'BETL Gənclik Filialı' : 'Evrika Liseyi');
+      const fType = item.parent_feedback_type || 'Müraciət';
+      const fSource = item.first_touch_source || 'Məlum deyil';
+      const interests = item.interest_area || 'Qeyd edilməyib';
+      const fMsg = item.parent_feedback_message || item.note || 'Mətn yoxdur';
+      const st = item.status || 'Yeni';
+      const assigned = item.assigned_to || item.responsible || 'Təyin edilməyib';
+      const respDate = item.response_date ? formatDateStr(item.response_date) : 'Cavab verilməyib';
+      const respNote = item.response_note || 'Qeyd daxil edilməyib';
+      const dateStr = formatDateStr(item.created_at || item.submissionDate || Date.now());
+
+      const container = document.createElement('div');
+      container.style.cssText = 'position:fixed; left:-9999px; top:-9999px; width:750px; background:#ffffff; color:#0f172a; padding:40px; font-family:"Inter", -apple-system, BlinkMacSystemFont, sans-serif;';
+      
+      container.innerHTML = `
+        <div style="border-bottom:3px solid #8b1a2b; padding-bottom:18px; margin-bottom:24px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <h1 style="font-size:20px; font-weight:900; color:#8b1a2b; margin:0; text-transform:uppercase; letter-spacing:0.5px;">EVRİKA LİSEYİ</h1>
+            <p style="font-size:12px; color:#64748b; margin:3px 0 0 0; font-weight:600;">VALİDEYN SƏSİ VƏ MÜRACİƏT KARTI • RƏSMİ İCRA ARAYIŞI</p>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11px; font-weight:800; color:#0f172a;">SƏNƏD №: EV-PV-${item._db_id_}</div>
+            <div style="font-size:11px; color:#64748b;">${dateStr}</div>
+          </div>
+        </div>
+
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:16px; margin-bottom:18px;">
+          <table style="width:100%; border-collapse:collapse; font-size:13px;">
+            <tr>
+              <td style="padding:6px 0; color:#64748b; width:140px; font-weight:700;">Valideyn:</td>
+              <td style="padding:6px 0; color:#0f172a; font-weight:800; font-size:14px;">${pName}</td>
+              <td style="padding:6px 0; color:#64748b; width:130px; font-weight:700;">Şagird / Övlad:</td>
+              <td style="padding:6px 0; color:#0f172a; font-weight:800; font-size:14px;">${sName} (${grade})</td>
+            </tr>
+            <tr>
+              <td style="padding:6px 0; color:#64748b; font-weight:700;">Əlaqə Nömrəsi:</td>
+              <td style="padding:6px 0; color:#1d4ed8; font-weight:700;">${phone}</td>
+              <td style="padding:6px 0; color:#64748b; font-weight:700;">Filial / Bölmə:</td>
+              <td style="padding:6px 0; color:#0f172a; font-weight:700;">${branch}</td>
+            </tr>
+            <tr>
+              <td style="padding:6px 0; color:#64748b; font-weight:700;">İlk Tanışlıq:</td>
+              <td style="padding:6px 0; color:#0f172a;">${fSource}</td>
+              <td style="padding:6px 0; color:#64748b; font-weight:700;">Maraq Sahəsi:</td>
+              <td style="padding:6px 0; color:#0f172a;">${interests}</td>
+            </tr>
+          </table>
+        </div>
+
+        <div style="margin-bottom:20px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <div style="font-size:12px; font-weight:800; color:#8b1a2b; text-transform:uppercase;">Valideynin Rəyi / Mesajı (${fType})</div>
+            <span style="font-size:11px; background:#fee2e2; color:#991b1b; padding:3px 8px; border-radius:6px; font-weight:800;">${fType}</span>
+          </div>
+          <div style="background:#ffffff; border:1.5px solid #cbd5e1; border-radius:8px; padding:16px; font-size:13px; line-height:1.6; color:#1e293b; white-space:pre-wrap;">${fMsg}</div>
+        </div>
+
+        <div style="border:1px solid #cbd5e1; border-radius:10px; padding:16px; margin-bottom:24px; background:#f1f5f9;">
+          <div style="font-size:12px; font-weight:800; color:#0f172a; margin-bottom:10px; text-transform:uppercase;">CRM İcra və Nəticə Göstəriciləri</div>
+          <table style="width:100%; border-collapse:collapse; font-size:12px;">
+            <tr>
+              <td style="padding:5px 0; color:#475569; width:140px; font-weight:700;">Müraciət Statusu:</td>
+              <td style="padding:5px 0; color:#0f172a; font-weight:800;">${st}</td>
+              <td style="padding:5px 0; color:#475569; width:130px; font-weight:700;">Məsul Əməkdaş:</td>
+              <td style="padding:5px 0; color:#0f172a; font-weight:700;">${assigned}</td>
+            </tr>
+            <tr>
+              <td style="padding:5px 0; color:#475569; font-weight:700;">Cavablandırma:</td>
+              <td style="padding:5px 0; color:#0f172a;" colspan="3">${respDate}</td>
+            </tr>
+            <tr>
+              <td style="padding:6px 0; color:#475569; font-weight:700; vertical-align:top;">Yekun Nəticə Qeydi:</td>
+              <td style="padding:6px 0; color:#0f172a; vertical-align:top;" colspan="3">${respNote}</td>
+            </tr>
+          </table>
+        </div>
+
+        <div style="margin-top:40px; padding-top:16px; border-top:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; font-size:11px; color:#64748b;">
+          <div>Evrika Liseyi Avtomatlaşdırılmış CRM Sistemi</div>
+          <div>Məsul Şəxsin İmzası: _________________________</div>
+        </div>
+      `;
+
+      document.body.appendChild(container);
+
+      const cleanFileName = `Evrika_Rey_${(pName || 'Valideyn').replace(/[^a-zA-Z0-9_\u0400-\u04FF]/g, '_')}_${item._db_id_}.pdf`;
+      const opt = {
+        margin: [10, 10, 10, 10],
+        filename: cleanFileName,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(container).save().then(() => {
+        container.remove();
+      }).catch(err => {
+        console.error("PDF export error", err);
+        container.remove();
+        alert('PDF hazırlanarkən xəta baş verdi.');
+      });
+    };
+
+    window.exportParentVoicePDF = () => {
+      const list = window.displayedParentVoiceFeedbacks || [];
+      if (!list || list.length === 0) {
+        alert('İxrac etmək üçün heç bir rəy tapılmadı.');
+        return;
+      }
+      if (typeof html2pdf === 'undefined') {
+        alert('PDF generator yüklənir, zəhmət olmasa bir neçə saniyə sonra yenidən cəhd edin.');
+        return;
+      }
+
+      const activeBranch = window.selectedCrmBranch || 'all';
+      const branchTitles = {
+        'all': 'Bütün Filiallar üzrə',
+        'lisey1': 'BETL Nərimanov Filialı',
+        'lisey2': 'BETL Gənclik Filialı',
+        'montessori': 'Evrika Montessori Kids Bağçası',
+        'victory': 'Victory Colleges',
+        'zumrud': 'Zümrüd İdman Kompleksi'
+      };
+      const bTitle = branchTitles[activeBranch] || 'Evrika Liseyi';
+      const dateNow = new Date().toLocaleDateString('az-AZ');
+
+      const container = document.createElement('div');
+      container.style.cssText = 'position:fixed; left:-9999px; top:-9999px; width:800px; background:#ffffff; color:#0f172a; padding:35px; font-family:"Inter", -apple-system, BlinkMacSystemFont, sans-serif;';
+
+      let rowsHtml = list.map((item, idx) => {
+        const pName = item.parent_name || item.fullName || 'Valideyn';
+        const sName = item.child_name || item.student_name || 'Övlad';
+        const grade = item.child_age || item.student_grade || '-';
+        const phone = item.phone || '-';
+        const fType = item.parent_feedback_type || 'Müraciət';
+        const fSource = item.first_touch_source || '-';
+        const fMsg = item.parent_feedback_message || item.note || '-';
+        const st = item.status || 'Yeni';
+        const dateStr = formatDateStr(item.created_at || item.submissionDate || Date.now());
+
+        return `
+          <tr style="border-bottom:1px solid #e2e8f0; font-size:11px;">
+            <td style="padding:10px 8px; vertical-align:top; font-weight:800; color:#64748b;">${idx + 1}</td>
+            <td style="padding:10px 8px; vertical-align:top;">
+              <div style="font-weight:800; color:#0f172a; font-size:12px;">${pName}</div>
+              <div style="color:#2563eb; font-weight:600; margin-top:2px;">Övlad: ${sName} (${grade})</div>
+              <div style="color:#64748b; margin-top:2px;">${phone}</div>
+            </td>
+            <td style="padding:10px 8px; vertical-align:top;">
+              <span style="font-weight:800; color:#8b1a2b;">${fType}</span>
+              <div style="color:#64748b; font-size:10px; margin-top:3px;">Mənbə: ${fSource}</div>
+            </td>
+            <td style="padding:10px 8px; vertical-align:top; max-width:260px; line-height:1.4; color:#334155;">
+              ${fMsg}
+            </td>
+            <td style="padding:10px 8px; vertical-align:top; white-space:nowrap;">
+              <div style="font-weight:800; color:#0f172a;">${st}</div>
+              <div style="color:#64748b; font-size:10px; margin-top:2px;">${dateStr}</div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <div style="border-bottom:3px solid #8b1a2b; padding-bottom:15px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <h1 style="font-size:22px; font-weight:900; color:#8b1a2b; margin:0; text-transform:uppercase;">EVRİKA LİSEYİ</h1>
+            <p style="font-size:13px; color:#475569; margin:4px 0 0 0; font-weight:700;">VALİDEYN SƏSİ VƏ MÜRACİƏTLƏRİ HESABATI (${bTitle})</p>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:12px; font-weight:800; color:#0f172a;">ÜMUMİ RƏY: ${list.length}</div>
+            <div style="font-size:11px; color:#64748b;">Tarix: ${dateNow}</div>
+          </div>
+        </div>
+
+        <table style="width:100%; border-collapse:collapse; text-align:left;">
+          <thead>
+            <tr style="background:#f8fafc; border-bottom:2px solid #cbd5e1; font-size:11px; font-weight:800; color:#475569; text-transform:uppercase;">
+              <th style="padding:10px 8px; width:25px;">№</th>
+              <th style="padding:10px 8px;">Valideyn / Şagird / Əlaqə</th>
+              <th style="padding:10px 8px;">Növ / Mənbə</th>
+              <th style="padding:10px 8px;">Valideynin Sitatı & Mesajı</th>
+              <th style="padding:10px 8px;">Status & Tarix</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rowsHtml}
+          </tbody>
+        </table>
+
+        <div style="margin-top:25px; padding-top:12px; border-top:1px solid #cbd5e1; display:flex; justify-content:space-between; font-size:10px; color:#94a3b8;">
+          <div>Evrika Liseyi İdarəetmə Paneli • Valideyn Səsi Hesabatı</div>
+          <div>Səhifə avtomatik generasiya olunmuşdur</div>
+        </div>
+      `;
+
+      document.body.appendChild(container);
+
+      const opt = {
+        margin: [10, 10, 10, 10],
+        filename: `Evrika_Valideyn_Sesleri_${new Date().toISOString().split('T')[0]}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(container).save().then(() => {
+        container.remove();
+      }).catch(err => {
+        console.error("PDF bulk export error", err);
+        container.remove();
+        alert('PDF hesabatı hazırlanarkən xəta baş verdi.');
+      });
+    };
+
+    window.exportParentVoiceExcel = () => {
+      const list = window.displayedParentVoiceFeedbacks || [];
+      if (!list || list.length === 0) {
+        alert('İxrac etmək üçün heç bir rəy tapılmadı.');
+        return;
+      }
+
+      const csvRows = [];
+      csvRows.push([
+        'ID',
+        'Valideyn Adı',
+        'Şagird Adı',
+        'Sinif / Yaş',
+        'Əlaqə Telefonu',
+        'Filial',
+        'Rəy Növü',
+        'İlk Tanışlıq Mənbəyi',
+        'Maraqlanan Sahələr',
+        'Valideynin Mesajı / Təklifi',
+        'Status',
+        'Məsul Əməkdaş',
+        'Cavab Tarixi',
+        'Cavab Qeydi',
+        'Qeydiyyat Tarixi'
+      ].map(f => `"${f.replace(/"/g, '""')}"`).join(','));
+
+      list.forEach(item => {
+        const id = item._db_id_ || item.id || '';
+        const pName = item.parent_name || item.fullName || '';
+        const sName = item.child_name || item.student_name || '';
+        const grade = item.child_age || item.student_grade || '';
+        const phone = item.phone || '';
+        const branch = item.branch_name || (getGranularSource(item) === 'lisey1' ? 'BETL Nərimanov' : getGranularSource(item) === 'lisey2' ? 'BETL Gənclik' : 'Evrika Liseyi');
+        const fType = item.parent_feedback_type || '';
+        const fSource = item.first_touch_source || '';
+        const interests = item.interest_area || '';
+        const fMsg = (item.parent_feedback_message || item.note || '').replace(/\r?\n|\r/g, ' ');
+        const st = item.status || 'Yeni';
+        const assigned = item.assigned_to || item.responsible || '';
+        const respDate = item.response_date ? formatDateStr(item.response_date) : '';
+        const respNote = (item.response_note || '').replace(/\r?\n|\r/g, ' ');
+        const dateStr = formatDateStr(item.created_at || item.submissionDate || Date.now());
+
+        const row = [
+          id, pName, sName, grade, phone, branch, fType, fSource, interests, fMsg, st, assigned, respDate, respNote, dateStr
+        ].map(val => `"${String(val).replace(/"/g, '""')}"`);
+
+        csvRows.push(row.join(','));
+      });
+
+      const csvString = "\uFEFF" + csvRows.join("\n");
+      const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.setAttribute('href', url);
+      a.setAttribute('download', `Evrika_Valideyn_Reyleri_${new Date().toISOString().split('T')[0]}.csv`);
+      a.style.visibility = 'hidden';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     };
 
     window.renderQrGenerator = () => {
