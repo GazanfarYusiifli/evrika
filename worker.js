@@ -813,26 +813,30 @@ export default {
         let body;
         try { body = await request.json(); } catch { return jsonResponse({ ok: false, error: "Invalid JSON" }, 400); }
 
-        const { status, chid, direction, timestamp } = body || {};
-        if (!chid || !status) return jsonResponse({ ok: false, error: "Missing chid or status" }, 400);
+        const chid = body.chid || body.call_id || (body.call && (body.call.chid || body.call.call_id)) || (body.data && (body.data.chid || body.data.call_id));
+        const rawStatus = (body.status || body.event || body.call_state || (body.call && (body.call.status || body.call.final_status)) || (body.data && (body.data.status || body.data.event)) || '').toLowerCase();
+        const direction = body.direction || (body.call && body.call.direction) || 'inbound';
+        const timestamp = body.timestamp || body.time || (body.call && (body.call.timestamp || body.call.time)) || new Date().toISOString();
+
+        if (!chid || !rawStatus) return jsonResponse({ ok: false, error: "Missing chid or status" }, 400);
 
         // §14: Skip transfer-consultation leg (outbound ended with transfer_consultation:true)
-        if (status === 'ended' && body.transfer_consultation === true) {
+        if (rawStatus === 'ended' && (body.transfer_consultation === true || (body.call && body.call.transfer_consultation === true))) {
           return jsonResponse({ ok: true, action: 'skipped', reason: 'transfer_consultation', chid });
         }
 
         // §15: recording_ready — attach recording URLs to existing call record
-        if (status === 'recording_ready') {
+        if (rawStatus === 'recording_ready') {
           try {
             const rec = await env.DB.prepare(
               "SELECT id, payload FROM registrations WHERE json_extract(payload, '$.chid') = ? LIMIT 1"
             ).bind(chid).first();
             if (rec) {
               const p = safeJsonParse(rec.payload);
-              p.recording_count    = body.recording_count || 0;
-              p.recording_urls     = body.download_urls   || null;
-              p.recording_expires  = body.download_expires_at || null;
-              p.recording_uploaded = body.uploaded !== undefined ? body.uploaded : false;
+              p.recording_count    = body.recording_count || 1;
+              p.recording_urls     = body.download_urls   || p.recording_urls || null;
+              p.recording_expires  = body.download_expires_at || p.recording_expires || null;
+              p.recording_uploaded = body.uploaded !== undefined ? body.uploaded : true;
               await env.DB.prepare("UPDATE registrations SET payload = ? WHERE id = ?")
                 .bind(JSON.stringify(p), rec.id).run();
               return jsonResponse({ ok: true, action: 'recording_attached', id: rec.id, chid });
@@ -841,18 +845,23 @@ export default {
           return jsonResponse({ ok: true, action: 'recording_no_match', chid });
         }
 
-        // Early/non-informative events: acknowledge only (no DB write unless record already exists)
-        const EARLY_STATUSES = new Set(['dialing', 'ringing', 'ringing_stopped']);
+        // Only ringing/dialing are transient
+        const EARLY_STATUSES = new Set(['dialing', 'ringing']);
 
-        // §16 delivery_failed: real call data is nested in body.call
-        const isDeliveryFailed = status === 'delivery_failed';
-        const callData = isDeliveryFailed && body.call ? body.call : body;
-        const effectiveStatus = isDeliveryFailed
+        // §16 delivery_failed or nested call structure
+        const isDeliveryFailed = rawStatus === 'delivery_failed';
+        const callData = (body.call && typeof body.call === 'object') ? body.call : (body.data && typeof body.data === 'object' ? body.data : body);
+        let effectiveStatus = isDeliveryFailed
           ? (callData.final_status || 'missed')
-          : status;
+          : rawStatus;
+
+        // Map ringing_stopped, no_answer, cancel, busy, congestion, timeout, failed to missed
+        if (['ringing_stopped', 'no_answer', 'cancel', 'cancelled', 'busy', 'congestion', 'failed', 'timeout'].includes(effectiveStatus)) {
+          effectiveStatus = 'missed';
+        }
 
         // Extract fields
-        const phone      = String(callData.external_number || body.external_number || '').trim();
+        const phone      = String(callData.external_number || body.external_number || callData.caller_id || body.caller_id || callData.phone || body.phone || '').trim();
         const agentExt   = callData.agent_ext   || body.agent_ext   || '';
         const agentName  = callData.agent_name  || body.agent_name  || '';
         const inboundDid = callData.inbound_did || body.inbound_did || '';
@@ -868,11 +877,12 @@ export default {
 
         const STATE_AZ = {
           'ended':              'Cavablandırıldı',
+          'answered':           'Cavablandırıldı',
+          'completed':          'Cavablandırıldı',
           'missed':             'Buraxılmış Zəng',
           'abandoned':          'IVR-də tərk edildi',
           'unanswered':         'Cavabsız (Çıxış)',
           'callback_requested': 'Callback Tələb edildi',
-          'answered':           'Danışıqda',
           'transferred':        'Yönləndirildi'
         };
         const callStateAz = STATE_AZ[effectiveStatus] || effectiveStatus;
@@ -959,12 +969,12 @@ export default {
           if (existingP.status && existingP.status !== 'Yeni') merged.status = existingP.status;
           await env.DB.prepare("UPDATE registrations SET payload = ? WHERE id = ?")
             .bind(JSON.stringify(merged), existing.id).run();
-          return jsonResponse({ ok: true, action: 'updated', id: existing.id, chid, status });
+          return jsonResponse({ ok: true, action: 'updated', id: existing.id, chid, status: effectiveStatus });
         }
 
         // No existing record — skip creating for non-informative early events
-        if (EARLY_STATUSES.has(status)) {
-          return jsonResponse({ ok: true, action: 'acknowledged_early', chid, status });
+        if (EARLY_STATUSES.has(rawStatus)) {
+          return jsonResponse({ ok: true, action: 'acknowledged_early', chid, status: rawStatus });
         }
 
         // Create new record
@@ -972,7 +982,7 @@ export default {
           "INSERT INTO registrations (name, phone, source, payment_status, amount, payload) VALUES (?, ?, ?, ?, ?, ?)"
         ).bind(agentName || phone, phone, source, null, '0', JSON.stringify(newPayload)).run();
 
-        return jsonResponse({ ok: true, action: 'created', id: res.meta.last_row_id, chid, status }, 201);
+        return jsonResponse({ ok: true, action: 'created', id: res.meta.last_row_id, chid, status: effectiveStatus }, 201);
       }
 
       // =========================================================================

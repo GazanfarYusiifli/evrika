@@ -56,9 +56,11 @@ export default async function handler(req, res) {
 
     // ── CALL EVENT (application/json) ─────────────────────────────────────
     const body = req.body || {};
-    const { status, chid } = body;
+    const chid = body.chid || body.call_id || (body.call && (body.call.chid || body.call.call_id)) || (body.data && (body.data.chid || body.data.call_id)) || req.query.chid;
+    const status = body.status || body.event || body.call_state || (body.call && (body.call.status || body.call.final_status)) || (body.data && (body.data.status || body.data.event));
 
     if (!chid || !status) {
+      console.warn('Nexus webhook missing chid or status:', JSON.stringify(body).slice(0, 150));
       return res.status(200).json({ ok: false, reason: 'missing_chid_or_status' });
     }
 

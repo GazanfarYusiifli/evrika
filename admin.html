@@ -2009,14 +2009,10 @@ fbq('track', 'PageView');
           calls = calls.filter(r => getGranularSource(r) === activeBranch);
         }
 
-        let today = 0, answered = 0, missed = 0, totalDur = 0;
-        const todayStr = new Date().toISOString().split('T')[0];
+        let answered = 0, missed = 0, totalDur = 0;
 
         // Stats calculation
         calls.forEach(c => {
-            const dateStr = (c.created_at || c.submissionDate || '').split('T')[0];
-            if (dateStr === todayStr) today++;
-            
             const st = (c.call_status || '').toLowerCase();
             const dur = c.duration_seconds || (parseInt(c.duration) || 0);
             
@@ -2024,7 +2020,7 @@ fbq('track', 'PageView');
               answered++;
               totalDur += dur;
             }
-            if (st === 'missed' || st === 'abandoned' || (c.call_state_az || '').includes('Buraxılmış')) {
+            if (st === 'missed' || st === 'abandoned' || (c.call_state_az || '').includes('Buraxılmış') || (c.call_state_az || '').includes('tərk')) {
               missed++;
             }
         });
@@ -2107,7 +2103,7 @@ fbq('track', 'PageView');
 
         document.getElementById('calls-tbody').innerHTML = html || '<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fas fa-phone-slash fa-2x" style="opacity:0.3; margin-bottom:10px; display:block;"></i>Bu filial üzrə heç bir zəng qeydə alınmayıb</td></tr>';
         
-        document.getElementById('calls-today').innerText = today;
+        document.getElementById('calls-today').innerText = calls.length;
         document.getElementById('calls-answered').innerText = answered;
         document.getElementById('calls-missed').innerText = missed;
         document.getElementById('calls-avg-duration').innerText = answered > 0 ? Math.round(totalDur / answered) + ' san' : '0 san';
@@ -3084,10 +3080,30 @@ fbq('track', 'PageView');
     function formatDateStr(dateStr) {
         if (!dateStr) return '-';
         try {
-            const d = new Date(dateStr);
-            if (isNaN(d)) return dateStr;
-            const pad = (n) => n.toString().padStart(2, '0');
-            return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} / ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+            let str = String(dateStr).trim();
+            // SQLite datetime 'YYYY-MM-DD HH:mm:ss' is stored in UTC without timezone offset
+            if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/.test(str)) {
+                str = str.replace(' ', 'T') + 'Z';
+            } else if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(str) && !str.endsWith('Z') && !/[+-]\d{2}:\d{2}$/.test(str)) {
+                str = str + 'Z';
+            }
+            const d = new Date(str);
+            if (isNaN(d.getTime())) return dateStr;
+            
+            // Format strictly in Baku Timezone (UTC+4)
+            const parts = new Intl.DateTimeFormat('en-GB', {
+                timeZone: 'Asia/Baku',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            }).formatToParts(d);
+
+            const m = {};
+            parts.forEach(p => { m[p.type] = p.value; });
+            return `${m.year}-${m.month}-${m.day} / ${m.hour}:${m.minute}`;
         } catch(e) {
             return dateStr;
         }
