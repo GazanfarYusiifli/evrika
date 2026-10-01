@@ -371,10 +371,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             overflow: hidden;
             background: rgba(255,255,255,0.04);
             box-shadow: 0 8px 28px rgba(0,0,0,0.25);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
             margin-bottom: 18px;
+            cursor: pointer;
           }
-          
+
+          .ug-card-modern:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 36px rgba(0,0,0,0.4);
+          }
 
           .ug-card-modern img {
             display: block;
@@ -385,6 +390,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             background: rgba(255,255,255,0.05);
           }
 
+          .ug-card-modern:hover img {
+            transform: scale(1.04);
+          }
 
           .ug-card-modern .overlay-text {
             display: block;
@@ -393,21 +401,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             left: 0;
             right: 0;
             padding: 30px 18px 18px;
-            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
-            opacity: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.6) 60%, transparent 100%);
+            opacity: 1;
             transition: opacity 0.3s ease;
           }
 
           .ug-card-modern .overlay-text h3 {
             color: #fff;
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-weight: 800;
-            margin: 0 0 3px;
+            margin: 0 0 4px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.6);
           }
           .ug-card-modern .overlay-text p {
-            color: rgba(255,255,255,0.75);
-            font-size: 0.75rem;
+            color: #ffd1d1;
+            font-size: 0.8rem;
+            font-weight: 600;
             margin: 0;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.6);
           }
           
           /* Modal Styles */
@@ -518,67 +529,77 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const modalTitle = document.getElementById('ug-modal-title');
         const modalDesc = document.getElementById('ug-modal-desc');
 
-
+        const openModal = (card) => {
+          if (!modal) return;
+          const name = card.dataset.name || '';
+          const uni = card.dataset.uni || '';
+          const img = card.dataset.img || '';
+          if (modalImg) modalImg.src = img;
+          if (modalTitle) modalTitle.textContent = name;
+          if (modalDesc) modalDesc.textContent = uni;
+          modal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        };
 
         const closeModal = () => {
-          modal.classList.remove('active');
+          if (modal) modal.classList.remove('active');
           document.body.style.overflow = '';
         };
 
-        modalClose.addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => {
+        if (modalClose) modalClose.addEventListener('click', closeModal);
+        if (modal) modal.addEventListener('click', (e) => {
           if (e.target === modal) closeModal();
         });
 
         // Admin paneldən (admin.html) əlavə olunan yeni məlumatları yükləmək
         async function fetchMore() {
-          try {
-            const res = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/ugurlar', { cache: 'no-store' });
-            
-            if (res.ok) {
-              const data = await res.json();
-              data.forEach(item => {
-                const u = item.payload;
-                if (!u || !u.img) return;
-                // Ignore blocked Supabase storage URLs
-                if (u.img.includes('supabase.co/storage')) return;
+          const endpoints = [
+            'https://evrika-api.yusifliqezenfer90.workers.dev/api/ugurlar',
+            'https://evrika-api.yusifliqezenfer90.workers.dev/rest/v1/ugurlar'
+          ];
+          for (const url of endpoints) {
+            try {
+              const res = await fetch(url + (url.includes('?') ? '&' : '?') + 't=' + Date.now(), { cache: 'no-store' });
+              
+              if (res.ok) {
+                const data = await res.json();
+                const rawList = Array.isArray(data) ? data : (data.data || []);
+                if (rawList && rawList.length > 0) {
+                  const items = rawList.map(item => {
+                    const p = item.payload && typeof item.payload === 'object' ? item.payload : item;
+                    return {
+                      name: p.name || item.name || '',
+                      uni: p.uni || p.detail || item.uni || '',
+                      img: (p.img || item.img || '').trim()
+                    };
+                  }).filter(u => u.img && !u.img.includes('supabase.co/storage'));
 
-                // Dublikat yoxlanışı (şəkil yolu və ya adına görə)
-                // Həm tam yolu, həm də sadəcə fayl adını yoxlayırıq ki, 2 dəfə paylanmasın
-                const imgPath = u.img.trim();
-                const fileName = imgPath.split('/').pop();
-                
-                const exists = Array.from(document.querySelectorAll('.ug-card-modern')).some(card => {
-                  const cardImg = card.dataset.img.trim();
-                  return cardImg === imgPath || cardImg.endsWith(fileName) || imgPath.endsWith(cardImg.split('/').pop());
-                });
+                  if (items.length > 0) {
+                    if (gallery) {
+                      gallery.innerHTML = items.map(u => `
+                        <div class="ug-card-modern" data-name="${u.name}" data-uni="${u.uni}" data-img="${u.img}">
+                          <img src="${u.img}" alt="${u.name}" loading="lazy">
+                          <div class="overlay-text">
+                            <h3>${u.name}</h3>
+                            ${u.uni ? `<p>${u.uni}</p>` : ''}
+                          </div>
+                        </div>
+                      `).join('');
 
-                if (!exists) {
-                   const card = document.createElement('div');
-                   card.className = 'ug-card-modern';
-                   card.dataset.name = u.name || '';
-                   card.dataset.uni = u.uni || u.detail || '';
-                   card.dataset.img = imgPath;
-                   card.innerHTML = `
-                     <img src="${imgPath}" alt="" loading="lazy">
-                     <div class="overlay-text">
-                       <h3></h3>
-                       <p></p>
-                     </div>
-                   `;
-                   card.querySelector('img').alt = u.name || '';
-                   card.querySelector('h3').textContent = u.name || '';
-                   card.querySelector('p').textContent = u.uni || u.detail || '';
-                   gallery.appendChild(card);
+                      gallery.querySelectorAll('.ug-card-modern').forEach(card => {
+                        card.addEventListener('click', () => openModal(card));
+                      });
+                    }
+                    return;
+                  }
                 }
-              });
+              }
+            } catch(e) {
+              console.error("Dinamik məlumat yükləmə xətası:", e);
             }
-          } catch(e) {
-            console.error("Dinamik məlumat yükləmə xətası:", e);
           }
         }
         
-        // Səhifə sürətli açılsın deyə əvvəlcə statik olanlar görünür, sonra yenilər gəlir
         fetchMore();
       });
     </script>
@@ -675,37 +696,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </script>
 
 
-<script>
-document.addEventListener('DOMContentLoaded', async () => {
-    const API_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1';
-    const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
-    const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY };
-
-    const grid = document.getElementById('ug-grid');
-    if (!grid) return;
-
-    try {
-        const res = await fetch(`${API_URL}/ugurlar?select=*&order=id.desc`, { headers: HEADERS });
-        if (res.ok) {
-            const data = await res.json();
-            grid.innerHTML = data.map(item => {
-                const p = item.payload;
-                return `
-                <div class="ug-card-modern" data-name="${p.name || ''}" data-uni="${p.uni || ''}" data-img="${p.img || ''}">
-                  <img src="${p.img || ''}" alt="${p.name || ''}" loading="lazy">
-                  <div class="overlay-text">
-                    <h3 data-i18n="ach-card-title">${p.name || ''}</h3>
-                    <p>${p.uni || ''}</p>
-                  </div>
-                </div>`;
-            }).join('');
-        }
-    } catch (e) {
-        console.error('Failed to load ugurlar:', e);
-    }
-});
-</script>
-
 <!-- Whelp Widget Code -->
 <script src="https://widget.whelp.co/app.js"></script>
 <script type="text/javascript">
@@ -728,38 +718,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 	    setTimeout(() => clearInterval(wTimer), 8000);
 	}
 </script>
-
-<script>
-document.addEventListener('DOMContentLoaded', async () => {
-    const API_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1';
-    const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
-    const HEADERS = { 'apikey': API_KEY, 'Authorization': 'Bearer ' + API_KEY };
-
-    const grid = document.getElementById('ug-grid');
-    if (!grid) return;
-
-    try {
-        const res = await fetch(`${API_URL}/ugurlar?select=*&order=id.desc`, { headers: HEADERS });
-        if (res.ok) {
-            const data = await res.json();
-            grid.innerHTML = data.map(item => {
-                const p = item.payload;
-                return `
-                <div class="ug-card-modern" data-name="${p.name || ''}" data-uni="${p.uni || ''}" data-img="${p.img || ''}">
-                  <img src="${p.img || ''}" alt="${p.name || ''}" loading="lazy">
-                  <div class="overlay-text">
-                    <h3 data-i18n="ach-card-title">${p.name || ''}</h3>
-                    <p>${p.uni || ''}</p>
-                  </div>
-                </div>`;
-            }).join('');
-        }
-    } catch (e) {
-        console.error('Failed to load ugurlar:', e);
-    }
-});
-</script>
-
 <!-- Whelp Widget Code -->
 
 </body>
