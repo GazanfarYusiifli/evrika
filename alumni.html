@@ -383,27 +383,48 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           ];
 
           async function fetchAlumni() {
-            try {
-              const res = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/mezunlar', { cache: 'no-store' });
-              if (res.ok) {
-                const apiList = await res.json();
-                if (apiList && apiList.length > 0) {
-                  const dbAlumni = apiList.map(item => item.payload || item);
-                  // Merge DB alumni first, followed by static list (avoiding duplicate names)
-                  const seen = new Set();
-                  const merged = [];
-                  for (const a of [...dbAlumni, ...STATIC_ALUMNI]) {
-                    const key = (a.name || '').trim().toLowerCase();
-                    if (key && !seen.has(key)) {
-                      seen.add(key);
-                      merged.push(a);
+            const endpoints = [
+              'https://evrika-api.yusifliqezenfer90.workers.dev/api/mezunlar',
+              'https://evrika-api.yusifliqezenfer90.workers.dev/rest/v1/mezunlar'
+            ];
+            for (const url of endpoints) {
+              try {
+                const res = await fetch(url + (url.includes('?') ? '&' : '?') + 't=' + Date.now(), { cache: 'no-store' });
+                if (res.ok) {
+                  const json = await res.json();
+                  const rawList = Array.isArray(json) ? json : (json.data || []);
+                  if (rawList && rawList.length > 0) {
+                    const dbAlumni = rawList.map(item => {
+                      const p = item.payload && typeof item.payload === 'object' ? item.payload : item;
+                      return {
+                        name: p.name || p.fullName || item.name || '',
+                        uni: p.uni || p.university || p.desc || item.uni || 'Evrika Məzunu',
+                        img: p.img || p.image || p.photo || item.img || ''
+                      };
+                    }).filter(a => a.img && a.img.trim() !== '');
+
+                    if (dbAlumni.length > 0) {
+                      const seen = new Set();
+                      const merged = [];
+                      for (const a of dbAlumni) {
+                        const key = (a.name || '').trim().toLowerCase();
+                        if (key) seen.add(key);
+                        merged.push(a);
+                      }
+                      for (const a of STATIC_ALUMNI) {
+                        const key = (a.name || '').trim().toLowerCase();
+                        if (key && !seen.has(key)) {
+                          seen.add(key);
+                          merged.push(a);
+                        }
+                      }
+                      return merged;
                     }
                   }
-                  return merged;
                 }
+              } catch(e) {
+                console.warn('Alumni API fallback to static:', e);
               }
-            } catch(e) {
-              console.warn('Alumni API fallback to static:', e);
             }
             return STATIC_ALUMNI;
           }

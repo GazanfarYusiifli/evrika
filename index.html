@@ -2057,10 +2057,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </style>
 <script>
         // Optimization: Start fetching data immediately, in parallel with DOM parsing
-        const ALUMNI_API_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1';
-        const ALUMNI_API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
+        const ALUMNI_API_URL = 'https://evrika-api.yusifliqezenfer90.workers.dev/api/mezunlar';
 
-        // Define verified local alumni images
+        // Define verified local alumni images as fallback
         const STATIC_ALUMNI = [
           { img: "/mezunlar/Bayramov Əziz.JPG.jpeg", name: "Bayramov Əziz", uni: "Evrika Məzunu" },
           { img: "/mezunlar/Bədəlzadə Kövsər.JPG.jpeg", name: "Bədəlzadə Kövsər", uni: "Evrika Məzunu" },
@@ -2089,35 +2088,58 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         ];
 
         async function fetchAlumniForHome() {
-          try {
-            const res = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/mezunlar', { cache: 'no-store' });
-            if (res.ok) {
-              const apiList = await res.json();
-              if (apiList && apiList.length > 0) {
-                const dbAlumni = apiList.map(item => item.payload || item);
-                const seen = new Set();
-                const merged = [];
-                for (const a of [...dbAlumni, ...STATIC_ALUMNI]) {
-                  const key = (a.name || '').trim().toLowerCase();
-                  if (key && !seen.has(key)) {
-                    seen.add(key);
-                    merged.push(a);
+          const endpoints = [
+            'https://evrika-api.yusifliqezenfer90.workers.dev/api/mezunlar',
+            'https://evrika-api.yusifliqezenfer90.workers.dev/rest/v1/mezunlar'
+          ];
+          for (const url of endpoints) {
+            try {
+              const res = await fetch(url + (url.includes('?') ? '&' : '?') + 't=' + Date.now(), { cache: 'no-store' });
+              if (res.ok) {
+                const json = await res.json();
+                const rawList = Array.isArray(json) ? json : (json.data || []);
+                if (rawList && rawList.length > 0) {
+                  // Normalize data from admin panel payloads
+                  const dbAlumni = rawList.map(item => {
+                    const p = item.payload && typeof item.payload === 'object' ? item.payload : item;
+                    return {
+                      name: p.name || p.fullName || item.name || '',
+                      uni: p.uni || p.university || p.desc || item.uni || 'Evrika Məzunu',
+                      img: p.img || p.image || p.photo || item.img || ''
+                    };
+                  }).filter(a => a.img && a.img.trim() !== '');
+
+                  if (dbAlumni.length > 0) {
+                    // Show all DB alumni first, then append static alumni not present in DB
+                    const seen = new Set();
+                    const merged = [];
+                    for (const a of dbAlumni) {
+                      const key = (a.name || '').trim().toLowerCase();
+                      if (key) seen.add(key);
+                      merged.push(a);
+                    }
+                    for (const a of STATIC_ALUMNI) {
+                      const key = (a.name || '').trim().toLowerCase();
+                      if (key && !seen.has(key)) {
+                        seen.add(key);
+                        merged.push(a);
+                      }
+                    }
+                    return merged;
                   }
                 }
-                return merged;
               }
+            } catch(e) {
+              console.warn('Alumni fetch error from ' + url, e);
             }
-          } catch(e) {
-            console.warn('Home alumni API fallback:', e);
           }
           return STATIC_ALUMNI;
         }
 
         const alumniDataPromise = fetchAlumniForHome();
 
-        // Render alumni immediately with static fallback, update when API responds
-
         function renderAlumniTracks(data) {
+          if (!data || data.length === 0) return;
           const renderGroupIdx = (items) => {
             if (!items || items.length === 0) return '';
             return '<div class="alumni-group">' + items.map(a => `
@@ -2132,15 +2154,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     </div>
                  `).join('') + '</div>';
           };
-          // Use full data to ensure no empty slots on large screens
-          const t1Items = [...data];
-          // Shift the second track so it doesn't look identical vertically
-          const half = Math.floor(data.length / 2) || 1;
-          const t2Items = [...data.slice(half), ...data.slice(0, half)];
           
-          // Render 4 groups to be absolutely sure it's wide enough for any screen
-          const track1HTML = renderGroupIdx(t1Items) + renderGroupIdx(t1Items) + renderGroupIdx(t1Items) + renderGroupIdx(t1Items);
-          const track2HTML = renderGroupIdx(t2Items) + renderGroupIdx(t2Items) + renderGroupIdx(t2Items) + renderGroupIdx(t2Items);
+          // Duplicate items if too few so infinite marquee loops seamlessly
+          let fullList = [...data];
+          while (fullList.length < 12) {
+            fullList = fullList.concat(data);
+          }
+
+          const t1Items = [...fullList];
+          const half = Math.floor(fullList.length / 2) || 1;
+          const t2Items = [...fullList.slice(half), ...fullList.slice(0, half)];
+          
+          // Render multiple groups to ensure continuous ribbon across wide monitors
+          const track1HTML = renderGroupIdx(t1Items) + renderGroupIdx(t1Items) + renderGroupIdx(t1Items);
+          const track2HTML = renderGroupIdx(t2Items) + renderGroupIdx(t2Items) + renderGroupIdx(t2Items);
           const el1 = document.getElementById('alumni-track-1-idx');
           const el2 = document.getElementById('alumni-track-2-idx');
           if (el1) el1.innerHTML = track1HTML;
