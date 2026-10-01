@@ -551,7 +551,52 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           if (e.target === modal) closeModal();
         });
 
-        // Admin paneldən (admin.html) əlavə olunan yeni məlumatları yükləmək
+        // Verified local achievements fallback list
+        const STATIC_UGURLAR = [
+          { name: "Respublika Fənn Olimpiadası", uni: "Qızıl Medal", img: "/ugurlar/IMG_0015.JPG.jpeg" },
+          { name: "Beynəlxalq STEAM Festivalı", uni: "1-ci Yer Qalibi", img: "/ugurlar/IMG_0026.JPG.jpeg" },
+          { name: "Fənn Müsabiqəsi", uni: "Respublika Çempionu", img: "/ugurlar/IMG_0028.JPG.jpeg" },
+          { name: "Gənc Kimyaçılar Layihəsi", uni: "Fəxri Fərman", img: "/ugurlar/IMG_0031.JPG.jpeg" },
+          { name: "Riyaziyyat Zəfəri", uni: "Mütləq Birinci", img: "/ugurlar/IMG_0032.JPG.jpeg" },
+          { name: "Robototexnika və Kodlaşdırma", uni: "Qızıl Mükafat", img: "/ugurlar/IMG_0107.JPG.jpeg" },
+          { name: "Beynəlxalq Layihə Olimpiadası", uni: "Qalibiyyət Kuboku", img: "/ugurlar/IMG_0147.JPG.jpeg" },
+          { name: "SASMO Riyaziyyat Müsabiqəsi", uni: "Qızıl Medalçı", img: "/ugurlar/IMG_0169.JPG.jpeg" },
+          { name: "Kopernik Təbiət Elmləri", uni: "Beynəlxalq Diplom", img: "/ugurlar/IMG_0174.JPG.jpeg" },
+          { name: "Fizika Çempionatı", uni: "1-ci Dərəcəli Diplom", img: "/ugurlar/IMG_0343.JPG.jpeg" },
+          { name: "İntellektual Birincilik", uni: "Ölkə Çempionu", img: "/ugurlar/IMG_1089.JPG.jpeg" },
+          { name: "STEAM və Yaradıcı Mühəndislik", uni: "Ən Yaxşı İxtira", img: "/ugurlar/IMG_1971.JPG.jpeg" },
+          { name: "Respublika İnformatika Yarışı", uni: "Fəxri Birincilik", img: "/ugurlar/IMG_2100.JPG.jpeg" },
+          { name: "Məntiq Olimpiadası", uni: "Qızıl Mükafat", img: "/ugurlar/IMG_2124.JPG.jpeg" },
+          { name: "Akademik Zəfər", uni: "Mütləq Birincilik", img: "/ugurlar/IMG_2174.JPG.jpeg" },
+          { name: "Bioloji Tədqiqatlar Forumu", uni: "Qalib Layihə", img: "/ugurlar/IMG_2191.JPG.jpeg" },
+          { name: "Gənc Mühəndislər Hakatonu", uni: "1-ci Yer", img: "/ugurlar/IMG_5765.JPG.jpeg" },
+          { name: "Riyaziyyat və Məntiq Çempionatı", uni: "Qızıl Medal", img: "/ugurlar/IMG_5798.JPG.jpeg" },
+          { name: "İntellektual Fəxrimiz", uni: "Beynəlxalq Dərəcə", img: "/ugurlar/IMG_5889.JPG.jpeg" },
+          { name: "İbrahimov İbrahim", uni: "Evrika Uğuru", img: "/ugurlar/İbrahimov İbrahim.JPG.jpeg" }
+        ];
+
+        function renderGallery(items) {
+          if (!gallery || !items || items.length === 0) return;
+          gallery.innerHTML = items.map(u => `
+            <div class="ug-card-modern" data-name="${u.name || ''}" data-uni="${u.uni || ''}" data-img="${u.img || ''}">
+              <img src="${u.img}" alt="${u.name || ''}" loading="lazy">
+              <div class="overlay-text">
+                <h3>${u.name || ''}</h3>
+                ${u.uni ? `<p>${u.uni}</p>` : ''}
+              </div>
+            </div>
+          `).join('');
+
+          // Bind modal click events
+          gallery.querySelectorAll('.ug-card-modern').forEach(card => {
+            card.addEventListener('click', () => openModal(card));
+          });
+        }
+
+        // Show static achievements immediately so page is never empty
+        renderGallery(STATIC_UGURLAR);
+
+        // Then fetch latest items from Cloudflare Worker DB
         async function fetchMore() {
           const endpoints = [
             'https://evrika-api.yusifliqezenfer90.workers.dev/api/ugurlar',
@@ -559,43 +604,50 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           ];
           for (const url of endpoints) {
             try {
-              const res = await fetch(url + (url.includes('?') ? '&' : '?') + 't=' + Date.now(), { cache: 'no-store' });
+              const res = await fetch(url + (url.includes('?') ? '&' : '?') + 't=' + Date.now(), {
+                cache: 'no-store',
+                headers: {
+                  'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
+                  'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE'
+                }
+              });
               
               if (res.ok) {
                 const data = await res.json();
                 const rawList = Array.isArray(data) ? data : (data.data || []);
                 if (rawList && rawList.length > 0) {
-                  const items = rawList.map(item => {
+                  const dbItems = rawList.map(item => {
                     const p = item.payload && typeof item.payload === 'object' ? item.payload : item;
                     return {
                       name: p.name || item.name || '',
                       uni: p.uni || p.detail || item.uni || '',
                       img: (p.img || item.img || '').trim()
                     };
-                  }).filter(u => u.img && !u.img.includes('supabase.co/storage'));
+                  }).filter(u => u.img && u.img !== '');
 
-                  if (items.length > 0) {
-                    if (gallery) {
-                      gallery.innerHTML = items.map(u => `
-                        <div class="ug-card-modern" data-name="${u.name}" data-uni="${u.uni}" data-img="${u.img}">
-                          <img src="${u.img}" alt="${u.name}" loading="lazy">
-                          <div class="overlay-text">
-                            <h3>${u.name}</h3>
-                            ${u.uni ? `<p>${u.uni}</p>` : ''}
-                          </div>
-                        </div>
-                      `).join('');
-
-                      gallery.querySelectorAll('.ug-card-modern').forEach(card => {
-                        card.addEventListener('click', () => openModal(card));
-                      });
+                  if (dbItems.length > 0) {
+                    // Show all DB items first, then static fallbacks
+                    const seen = new Set();
+                    const merged = [];
+                    for (const u of dbItems) {
+                      const key = (u.name || u.img).trim().toLowerCase();
+                      if (key) seen.add(key);
+                      merged.push(u);
                     }
+                    for (const s of STATIC_UGURLAR) {
+                      const key = (s.name || s.img).trim().toLowerCase();
+                      if (key && !seen.has(key)) {
+                        seen.add(key);
+                        merged.push(s);
+                      }
+                    }
+                    renderGallery(merged);
                     return;
                   }
                 }
               }
             } catch(e) {
-              console.error("Dinamik məlumat yükləmə xətası:", e);
+              console.warn("Dinamik məlumat yükləmə xətası:", e);
             }
           }
         }
