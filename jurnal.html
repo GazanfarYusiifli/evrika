@@ -495,11 +495,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
         async function fetchVacancies() {
           try {
-            const res = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/vacancies');
+            let res = await fetch('/api/vacancies');
+            if(!res.ok) {
+              res = await fetch('https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/vacancies?select=*&order=id.desc', {
+                headers: {
+                  'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
+                  'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE'
+                }
+              });
+            }
             
             if(res.ok) {
               const data = await res.json();
-              const vacancies = data.map(row => (row.payload ? (typeof row.payload === 'string' ? JSON.parse(row.payload) : row.payload) : row));
+              const vacancies = data.map(row => (row.payload ? (typeof row.payload === 'string' ? JSON.parse(row.payload) : row.payload) : row)).filter(v => (v.status || 'Aktiv') !== 'Deaktiv');
               renderVacancies(vacancies);
             } else {
               renderVacancies([]);

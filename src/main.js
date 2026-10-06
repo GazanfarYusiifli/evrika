@@ -2306,10 +2306,19 @@ console.log('💎 Evrika Pro Optimized v4.0 Initialized');
 // --- Vacancy Notification Badge ---
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const res = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/vacancies');
+        let res = await fetch('/api/vacancies');
+        if (!res.ok) {
+            res = await fetch('https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/vacancies?select=*&order=id.desc', {
+                headers: {
+                    'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
+                    'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE'
+                }
+            });
+        }
         if (res.ok) {
             const data = await res.json();
-            if (data.length > 0) {
+            const activeList = data.filter(v => (v.status || (v.payload && v.payload.status) || 'Aktiv') !== 'Deaktiv');
+            if (activeList.length > 0) {
                 const desktopLink = document.querySelector('a[data-i18n="nav-vacancy"]');
                 if (desktopLink && !desktopLink.querySelector('.vac-badge')) {
                     desktopLink.innerHTML = desktopLink.innerHTML.replace('Təcrübə', '<span style="position:relative;">Təcrübə<span class="vac-badge" style="position: absolute; top: -5px; right: -28px; background: #ef4444; color: white; font-size: 0.55rem; padding: 2px 5px; border-radius: 6px; font-weight: 800;">YENİ</span></span>');

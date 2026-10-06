@@ -582,20 +582,35 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         
         async function fetchVacancies() {
           try {
-            const res = await fetch('https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/vacancies?select=*&order=id.desc', {
-              headers: {
-                'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
-                'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE'
+            let vacancies = null;
+            // 1. First try /api/vacancies
+            try {
+              const res = await fetch('/api/vacancies');
+              if (res.ok) {
+                const list = await res.json();
+                if (Array.isArray(list) && list.length > 0) {
+                  vacancies = list;
+                }
               }
-            });
-            
-            if(res.ok) {
-              const data = await res.json();
-              const vacancies = data.map(row => row.payload);
-              renderVacancies(vacancies);
-            } else {
-              renderVacancies([]);
+            } catch(e) {}
+
+            // 2. Fallback to Supabase
+            if (!vacancies) {
+              const res = await fetch('https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/vacancies?select=*&order=id.desc', {
+                headers: {
+                  'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
+                  'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE'
+                }
+              });
+              if(res.ok) {
+                const data = await res.json();
+                vacancies = data.map(row => ({ ...(row.payload || {}), id: row.id, _db_id_: row.id }));
+              }
             }
+
+            // Show active vacancies (status !== 'Deaktiv')
+            const activeVacancies = (vacancies || []).filter(v => (v.status || 'Aktiv') !== 'Deaktiv');
+            renderVacancies(activeVacancies);
           } catch (e) {
             console.error("Fetch error:", e);
             renderVacancies([]);
@@ -654,7 +669,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               </div>
 
               <div style="margin-top: 20px;">
-                <button onclick="openCvModal('${v.title}')" class="btn btn-outline" style="border: 1px solid var(--burgundy); color: var(--burgundy); font-weight: 800; padding: 12px 30px;">CV Göndər / Müraciət Et <i class="fas fa-arrow-right" style="margin-left: 10px;"></i></button>
+                <button onclick="openCvModal('${(v.title || 'Vakansiya').replace(/'/g, "\\'")}')" class="btn btn-outline" style="border: 1px solid var(--burgundy); color: var(--burgundy); font-weight: 800; padding: 12px 30px;">CV Göndər / Müraciət Et <i class="fas fa-arrow-right" style="margin-left: 10px;"></i></button>
               </div>
             `;
             container.appendChild(card);

@@ -268,12 +268,13 @@
     let regName = urlParams.get('name') || localStorage.getItem('last_name') || '';
     let emailParam = urlParams.get('email') || localStorage.getItem('last_email') || '';
     let autostart = urlParams.get('autostart') === '1';
+    let regAmount = 35;
 
     let isSubmitting = false;
 
     function handleManualGradeChange(val) {
-      const amt = (val === 'Məktəbəqədər' || val === 'Məktəbə qədər') ? 25 : 35;
-      document.getElementById('amount-display').innerText = amt.toFixed(2) + ' AZN';
+      regAmount = (val === 'Məktəbəqədər' || val === 'Məktəbə qədər') ? 25 : 35;
+      document.getElementById('amount-display').innerText = regAmount.toFixed(2) + ' AZN';
     }
 
     async function loadStudentDataIfAvailable() {
@@ -296,7 +297,8 @@
             const d = json.data;
             regName = d.student_name || regName;
             document.getElementById('student-info-tag').innerText = "Şagird: " + regName + (d.grade ? ` (${d.grade})` : '');
-            document.getElementById('amount-display').innerText = (d.amount || 35).toFixed(2) + ' AZN';
+            regAmount = d.amount || 35;
+            document.getElementById('amount-display').innerText = regAmount.toFixed(2) + ' AZN';
 
             if (d.isPaid || d.status === 'PAID') {
               document.getElementById('student-info-tag').innerHTML = `<span style="color:#10b981; font-weight:800;"><i class="fas fa-check-circle"></i> Bu qeydiyyat üzrə ödəniş artıq təsdiqlənib</span>`;
@@ -386,16 +388,34 @@
       try {
         btn.innerHTML = '<i class="fas fa-lock"></i> TƏHLÜKƏSİZ ÖDƏNİŞƏ YÖNLƏNDİRİLİRSİNİZ...';
 
-        const response = await fetch(`/api/epoint`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            regId: cleanDbId,
-            name: finalName,
-            email: finalEmail,
-            amount: regAmount || 35
-          })
-        });
+        let response = null;
+        try {
+          response = await fetch(`${API_BASE}/api/epoint-pay`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              regId: cleanDbId,
+              name: finalName,
+              email: finalEmail,
+              amount: regAmount || 35
+            })
+          });
+        } catch (netErr) {
+          console.warn("Direct worker call failed, trying /api/epoint:", netErr);
+        }
+
+        if (!response || !response.ok) {
+          response = await fetch(`/api/epoint`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              regId: cleanDbId,
+              name: finalName,
+              email: finalEmail,
+              amount: regAmount || 35
+            })
+          });
+        }
 
         const resData = await response.json();
 
@@ -404,11 +424,14 @@
           return;
         }
 
-        if (resData.success && resData.redirect_url) {
+        const isSuccess = (resData.success === true || resData.status === 'success') && !!resData.redirect_url;
+        if (isSuccess) {
           localStorage.setItem('last_regId', cleanDbId);
           localStorage.setItem('last_email', finalEmail);
           localStorage.setItem('last_name', finalName);
-          localStorage.setItem('last_order_id', resData.order_number);
+          if (resData.order_number || resData.order_id) {
+            localStorage.setItem('last_order_id', resData.order_number || resData.order_id);
+          }
           
           btn.innerHTML = '<i class="fas fa-check"></i> EPOINT ÇEKOUT AÇILIR...';
           window.location.href = resData.redirect_url;

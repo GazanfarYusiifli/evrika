@@ -1458,23 +1458,32 @@ fbq('track', 'PageView');
 
 
     <div id="view-hr-panel" class="content" style="display: none;">
-        <div class="stat-card" style="margin-bottom:30px; background: rgba(255,255,255,0.02);">
-            <h3 style="margin-bottom:25px; font-weight: 900;">Yeni Vakansiya Əlavə Et</h3>
+        <div class="stat-card" style="margin-bottom:30px; background: rgba(255,255,255,0.02); border-top: 4px solid var(--burgundy);">
+            <h3 id="vac-form-title" style="margin-bottom:25px; font-weight: 900;"><i class="fas fa-briefcase" style="color:var(--burgundy); margin-right:10px;"></i> Yeni Vakansiya Əlavə Et</h3>
             <form onsubmit="addVacancy(event)" style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                <input type="text" id="vac-title" placeholder="Başlıq" required class="admin-input">
-                <input type="text" id="vac-dept" placeholder="Filial" required class="admin-input">
-                <input type="text" id="vac-type" placeholder="Qrafik (Məs: 09:00-18:00)" required class="admin-input">
-                <input type="text" id="vac-desc" placeholder="Qısa təsvir" required class="admin-input">
-                <textarea id="vac-resp" placeholder="Öhdəliklər (Enter ilə bölün)" style="grid-column: span 2; min-height:100px;" class="admin-input"></textarea>
-                <textarea id="vac-reqs" placeholder="Tələblər (Enter ilə bölün)" style="grid-column: span 2; min-height:100px;" class="admin-input"></textarea>
-                <button type="submit" class="btn-view" style="grid-column: span 2; justify-content: center; background: var(--burgundy); border: none; padding: 18px;">Vakansiyanı Paylaş</button>
+                <input type="hidden" id="vac-id">
+                <input type="text" id="vac-title" placeholder="Başlıq (Vəzifə, məs: Çin dili müəllimi)" required class="admin-input">
+                <input type="text" id="vac-dept" placeholder="Filial / Ünvan (məs: Nərimanov rayonu, Fəxrəddin Musayev 68)" required class="admin-input">
+                <input type="text" id="vac-type" placeholder="Qrafik (məs: cədvələ əsasən)" required class="admin-input">
+                <input type="text" id="vac-desc" placeholder="Qısa təsvir (məs: 5-8 siniflər üçün)" required class="admin-input">
+                <select id="vac-status" class="admin-input" style="grid-column: span 2; background: rgba(15, 23, 42, 0.6); color: white;">
+                    <option value="Aktiv">Status: Aktiv (Saytda göstərilsin)</option>
+                    <option value="Deaktiv">Status: Deaktiv (Saytda gizlədilsin)</option>
+                </select>
+                <textarea id="vac-resp" placeholder="Əsas Öhdəliklər (hər öhdəliyi yeni sətirdən yazın)" style="grid-column: span 2; min-height:110px;" class="admin-input"></textarea>
+                <textarea id="vac-reqs" placeholder="Tələblər (hər tələbi yeni sətirdən yazın)" style="grid-column: span 2; min-height:110px;" class="admin-input"></textarea>
+                <div style="grid-column: span 2; display:flex; gap:15px;">
+                    <button type="submit" id="vac-submit-btn" class="btn-view" style="flex:2; justify-content: center; background: var(--burgundy); border: none; padding: 18px; font-weight:800;"><i class="fas fa-plus-circle" style="margin-right:8px;"></i> Vakansiyanı Paylaş</button>
+                    <button type="button" id="vac-cancel-btn" onclick="resetVacancyForm()" class="btn-view" style="display:none; flex:1; justify-content: center; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); padding: 18px;"><i class="fas fa-times" style="margin-right:8px;"></i> Ləğv Et</button>
+                </div>
             </form>
         </div>
         <div class="table-wrapper">
-          <div style="padding:20px; border-bottom:1px solid var(--border); background:rgba(255,255,255,0.01);">
+          <div style="padding:20px; border-bottom:1px solid var(--border); background:rgba(255,255,255,0.01); display:flex; justify-content:space-between; align-items:center;">
               <h3 style="font-weight:800; font-size:1.1rem;"><i class="fas fa-list-ul" style="color:var(--burgundy); margin-right:10px;"></i> Aktiv Vakansiyalar</h3>
+              <span id="vac-count-badge" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); padding:4px 12px; border-radius:20px; font-size:0.8rem; font-weight:700;">0 Vakansiya</span>
           </div>
-          <table><thead><tr><th>Vəzifə</th><th>Filial</th><th>Qrafik</th><th>Sil</th></tr></thead><tbody id="vac-tbody"></tbody></table>
+          <table><thead><tr><th>Vəzifə</th><th>Filial / Ünvan</th><th>Qrafik</th><th>Status</th><th style="text-align:right;">Əməliyyat</th></tr></thead><tbody id="vac-tbody"></tbody></table>
         </div>
         <div class="table-wrapper" style="margin-top:50px; border-top: 4px solid var(--burgundy);">
           <div style="padding:25px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
@@ -4738,44 +4747,210 @@ fbq('track', 'PageView');
         loadUgurlar();
     };
     window.deleteVacancy = async (id) => {
-        if(!confirm('Bu vakansiya silinsin?')) return;
-        await fetch(`${API_URL}/vacancies?id=eq.${id}`, { method: 'DELETE', headers: HEADERS });
-        loadVacancies();
+        if(!confirm('Bu vakansiyanı silmək istədiyinizə əminsiniz?')) return;
+        try {
+            let deleted = false;
+            // 1. Direct Supabase
+            try {
+                const sbRes = await fetch(`https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/vacancies?id=eq.${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
+                        'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE'
+                    }
+                });
+                if (sbRes.ok) deleted = true;
+            } catch(e) {}
+
+            // 2. Fallback to /api/vacancies
+            if (!deleted) {
+                try {
+                    const res = await fetch(`/api/vacancies?id=${id}`, { method: 'DELETE' });
+                    if (res.ok) deleted = true;
+                } catch(e) {}
+            }
+
+            // 3. Fallback to worker
+            if (!deleted) {
+                try {
+                    const res = await fetch(`${API_URL}/vacancies?id=eq.${id}`, { method: 'DELETE', headers: HEADERS });
+                    if (res.ok) deleted = true;
+                } catch(e) {}
+            }
+
+            if (!deleted) {
+                throw new Error("Silinmə sorğusu uğursuz oldu");
+            }
+
+            await loadVacancies();
+            alert('Vakansiya silindi!');
+        } catch(err) {
+            console.error('Delete vacancy error:', err);
+            alert('Silinərkən xəta baş verdi: ' + err.message);
+        }
+    };
+
+    window.editVacancy = (idx) => {
+        const v = vacanciesData[idx];
+        if (!v) return;
+
+        document.getElementById('vac-id').value = v._db_id_ || v.id;
+        document.getElementById('vac-title').value = v.title || '';
+        document.getElementById('vac-dept').value = v.location || v.dept || '';
+        document.getElementById('vac-type').value = v.time || '';
+        document.getElementById('vac-desc').value = v.desc || '';
+        document.getElementById('vac-status').value = v.status || 'Aktiv';
+        document.getElementById('vac-resp').value = v.responsibilities || '';
+        document.getElementById('vac-reqs').value = v.requirements || '';
+
+        document.getElementById('vac-form-title').innerHTML = '<i class="fas fa-edit" style="color:var(--warning); margin-right:10px;"></i> Vakansiyaya Düzəliş Et';
+        document.getElementById('vac-submit-btn').innerHTML = '<i class="fas fa-save" style="margin-right:8px;"></i> Dəyişikliyi Saxla';
+        document.getElementById('vac-cancel-btn').style.display = 'flex';
+
+        document.getElementById('view-hr-panel').scrollIntoView({ behavior: 'smooth' });
+    };
+
+    window.resetVacancyForm = () => {
+        document.getElementById('vac-id').value = '';
+        document.getElementById('vac-title').value = '';
+        document.getElementById('vac-dept').value = '';
+        document.getElementById('vac-type').value = '';
+        document.getElementById('vac-desc').value = '';
+        document.getElementById('vac-status').value = 'Aktiv';
+        document.getElementById('vac-resp').value = '';
+        document.getElementById('vac-reqs').value = '';
+
+        document.getElementById('vac-form-title').innerHTML = '<i class="fas fa-briefcase" style="color:var(--burgundy); margin-right:10px;"></i> Yeni Vakansiya Əlavə Et';
+        document.getElementById('vac-submit-btn').innerHTML = '<i class="fas fa-plus-circle" style="margin-right:8px;"></i> Vakansiyanı Paylaş';
+        document.getElementById('vac-cancel-btn').style.display = 'none';
     };
 
     window.addVacancy = async (e) => {
         e.preventDefault();
+        const editId = document.getElementById('vac-id').value;
         const payload = {
-            title: document.getElementById('vac-title').value,
-            location: document.getElementById('vac-dept').value,
-            time: document.getElementById('vac-type').value,
-            desc: document.getElementById('vac-desc').value,
-            responsibilities: document.getElementById('vac-resp').value,
-            requirements: document.getElementById('vac-reqs').value,
-            status: 'Aktiv'
+            title: document.getElementById('vac-title').value.trim(),
+            location: document.getElementById('vac-dept').value.trim(),
+            time: document.getElementById('vac-type').value.trim(),
+            desc: document.getElementById('vac-desc').value.trim(),
+            status: document.getElementById('vac-status').value,
+            responsibilities: document.getElementById('vac-resp').value.trim(),
+            requirements: document.getElementById('vac-reqs').value.trim()
         };
-        const btn = e.target.querySelector('button');
-        const origText = btn.innerText;
-        btn.innerText = "Gözləyin..."; btn.disabled = true;
+
+        if (!payload.title) {
+            alert('Zəhmət olmasa vəzifə adını qeyd edin.');
+            return;
+        }
+
+        const btn = document.getElementById('vac-submit-btn');
+        const origText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Yadda saxlanılır...';
+        btn.disabled = true;
+
         try {
-            await fetch(`${API_URL}/vacancies`, {
-                method: 'POST',
-                headers: HEADERS,
-                body: JSON.stringify({ payload })
-            });
-            e.target.reset();
-            loadVacancies();
+            let saved = false;
+            // 1. Direct Supabase
+            try {
+                const sbUrl = editId 
+                    ? `https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/vacancies?id=eq.${editId}`
+                    : `https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/vacancies`;
+                const sbMethod = editId ? 'PATCH' : 'POST';
+                const sbRes = await fetch(sbUrl, {
+                    method: sbMethod,
+                    headers: {
+                        'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
+                        'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=representation'
+                    },
+                    body: JSON.stringify({ payload })
+                });
+                if (sbRes.ok) saved = true;
+            } catch(e) {}
+
+            // 2. Fallback to /api/vacancies
+            if (!saved) {
+                try {
+                    const apiUrl = editId ? `/api/vacancies?id=${editId}` : `/api/vacancies`;
+                    const apiRes = await fetch(apiUrl, {
+                        method: editId ? 'PATCH' : 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ payload })
+                    });
+                    if (apiRes.ok) saved = true;
+                } catch(e) {}
+            }
+
+            // 3. Fallback to worker
+            if (!saved) {
+                try {
+                    const wUrl = editId ? `${API_URL}/vacancies?id=eq.${editId}` : `${API_URL}/vacancies`;
+                    const wRes = await fetch(wUrl, {
+                        method: editId ? 'PATCH' : 'POST',
+                        headers: HEADERS,
+                        body: JSON.stringify({ payload })
+                    });
+                    if (wRes.ok) saved = true;
+                } catch(e) {}
+            }
+
+            if (!saved) {
+                throw new Error("Yadda saxlamaq mümkün olmadı. Zəhmət olmasa internet bağlantınızı yoxlayın.");
+            }
+
+            resetVacancyForm();
+            await loadVacancies();
+            alert(editId ? 'Vakansiya uğurla yeniləndi!' : 'Yeni vakansiya uğurla əlavə edildi!');
+        } catch(err) {
+            console.error('Vacancy save error:', err);
+            alert('Xəta baş verdi: ' + err.message);
         } finally {
-            btn.innerText = origText; btn.disabled = false;
+            btn.innerHTML = origText;
+            btn.disabled = false;
         }
     };
 
     window.loadVacancies = async () => {
       try {
-        let res = await fetch(`${API_URL}/vacancies?select=*`, { headers: HEADERS });
-        if(!res.ok) res = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/vacancies');
-        if(res.ok) {
-          const list = await res.json();
+        let list = null;
+        // 1. Direct Supabase first
+        try {
+          const sbRes = await fetch('https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/vacancies?select=*&order=id.desc', {
+            headers: {
+              'apikey': 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE',
+              'Authorization': 'Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE'
+            }
+          });
+          if (sbRes.ok) {
+            const data = await sbRes.json();
+            if (Array.isArray(data)) list = data;
+          }
+        } catch(e) {}
+
+        // 2. Fallback to /api/vacancies
+        if (!list || !Array.isArray(list) || list.length === 0) {
+          try {
+            const res = await fetch('/api/vacancies');
+            if (res.ok) {
+              const data = await res.json();
+              if (Array.isArray(data) && data.length > 0) list = data;
+            }
+          } catch(e) {}
+        }
+
+        // 3. Fallback to worker
+        if (!list || !Array.isArray(list) || list.length === 0) {
+          try {
+            const res = await fetch(`${API_URL}/vacancies?select=*`, { headers: HEADERS });
+            if (res.ok) {
+              const data = await res.json();
+              if (Array.isArray(data) && data.length > 0) list = data;
+            }
+          } catch(e) {}
+        }
+
+        if (Array.isArray(list)) {
           vacanciesData = list.map(r => {
             let descObj = {};
             if (typeof r.description === 'string' && r.description.trim().startsWith('{')) {
@@ -4787,14 +4962,49 @@ fbq('track', 'PageView');
               ...p,
               ...r,
               _db_id_: r.id,
-              title: r.title || descObj.title || p.title || 'Vakansiya',
-              location: r.location || descObj.location || p.location || '',
-              status: r.status || descObj.status || p.status || (r.is_active ? 'Aktiv' : 'Deaktiv') || 'Aktiv'
+              id: r.id,
+              title: p.title || r.title || descObj.title || 'Vakansiya',
+              location: p.location || r.location || descObj.location || p.dept || '',
+              time: p.time || r.time || descObj.time || '',
+              desc: p.desc || r.desc || descObj.desc || '',
+              responsibilities: p.responsibilities || r.responsibilities || descObj.responsibilities || '',
+              requirements: p.requirements || r.requirements || descObj.requirements || '',
+              status: p.status || r.status || descObj.status || (r.is_active ? 'Aktiv' : 'Deaktiv') || 'Aktiv'
             };
           }).sort((a,b) => b._db_id_ - a._db_id_);
         }
+
+        const countBadge = document.getElementById('vac-count-badge');
+        if (countBadge) countBadge.innerText = `${vacanciesData.length} Vakansiya`;
+
         const tb = document.getElementById('vac-tbody'); 
-        if(tb) tb.innerHTML = vacanciesData.map(v => `<tr><td>${v.title}</td><td>${v.location || v.dept || '-'}</td><td>${v.time || '-'}</td><td><button class="btn-danger" onclick="deleteVacancy('${v._db_id_}')">Sil</button></td></tr>`).join('');
+        if(tb) {
+          if (vacanciesData.length === 0) {
+            tb.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; opacity:0.6;">Aktiv vakansiya tapılmadı. Yuxarıdakı formdan yeni vakansiya əlavə edə bilərsiniz.</td></tr>`;
+          } else {
+            tb.innerHTML = vacanciesData.map((v, i) => {
+              const isAct = v.status === 'Aktiv';
+              const statusBadge = isAct 
+                ? `<span style="background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3); padding:4px 10px; border-radius:6px; font-weight:800; font-size:0.75rem;"><i class="fas fa-check-circle"></i> Aktiv</span>`
+                : `<span style="background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3); padding:4px 10px; border-radius:6px; font-weight:800; font-size:0.75rem;"><i class="fas fa-pause-circle"></i> Deaktiv</span>`;
+              return `<tr>
+                <td>
+                  <div style="font-weight:700; color:white; font-size:0.95rem;">${v.title}</div>
+                  ${v.desc ? `<div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">${v.desc}</div>` : ''}
+                </td>
+                <td style="color:#cbd5e1;">${v.location || '-'}</td>
+                <td style="color:#cbd5e1;">${v.time || '-'}</td>
+                <td>${statusBadge}</td>
+                <td style="text-align:right;">
+                  <div style="display:inline-flex; gap:8px;">
+                    <button class="btn-view" style="padding:7px 14px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); font-size:0.8rem;" onclick="editVacancy(${i})"><i class="fas fa-edit"></i> Düzəlt</button>
+                    <button class="btn-danger" style="padding:7px 14px; font-size:0.8rem;" onclick="deleteVacancy('${v._db_id_}')"><i class="fas fa-trash"></i> Sil</button>
+                  </div>
+                </td>
+              </tr>`;
+            }).join('');
+          }
+        }
         renderDashboard();
       } catch(e) {
         console.warn('loadVacancies error:', e);

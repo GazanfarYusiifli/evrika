@@ -209,7 +209,7 @@ export default {
           description: `Evrika Liseyi Kupon № EV-${String(dbId).padStart(4, '0')} (${candidateName})`,
           success_redirect_url: `https://evrikaliseyi.edu.az/success?regId=${dbId}&order_id=${encodeURIComponent(orderNumber)}`,
           error_redirect_url: `https://evrikaliseyi.edu.az/error?regId=${dbId}&order_id=${encodeURIComponent(orderNumber)}`,
-          result_url: "https://evrika-api.yusifliqezenfer90.workers.dev/api/epoint-callback"
+          result_url: "https://evrikaliseyi.edu.az/result"
         };
 
         const dataB64 = utf8ToBase64(JSON.stringify(epointPayload));
@@ -567,7 +567,11 @@ export default {
           for (const ord of ordersToCheck) {
             if (reg.payment_status === "Ödənilib") break;
             try {
+              const ordPayment = await env.DB.prepare("SELECT * FROM payments WHERE order_id = ? ORDER BY id DESC LIMIT 1").bind(ord.id).first();
               const checkData = { public_key: PUBLIC_KEY, order_id: ord.order_number };
+              if (ordPayment && ordPayment.epoint_transaction) {
+                checkData.transaction = ordPayment.epoint_transaction;
+              }
               const checkB64 = utf8ToBase64(JSON.stringify(checkData));
               const checkSig = await calculateEpointSignature(privateKey, checkB64);
 
@@ -1131,9 +1135,76 @@ export default {
       }
 
       // =========================================================================
+      // 6.9 VACANCIES HANDLER (Integrated with Supabase Authoritative Storage)
+      // =========================================================================
+      if (path === '/vacancies' || path === 'vacancies') {
+        const SB_URL = "https://osicmnagzeqkhwticiqp.supabase.co/rest/v1/vacancies";
+        const SB_HEADERS = {
+          "apikey": "sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE",
+          "Authorization": "Bearer sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE",
+          "Content-Type": "application/json",
+          "Prefer": "return=representation"
+        };
+        if (request.method === "GET") {
+          const ids = getIdsFromQuery();
+          const query = (ids && ids.length > 0) ? `?id=in.(${ids.join(',')})&order=id.desc` : `?select=*&order=id.desc`;
+          const sbRes = await fetch(`${SB_URL}${query}`, { headers: SB_HEADERS });
+          if (sbRes.ok) {
+            const data = await sbRes.json();
+            const parsed = data.map(r => {
+              const p = r.payload || {};
+              return { ...r, payload: p, ...p, id: r.id, _db_id_: r.id };
+            });
+            return jsonResponse(parsed);
+          }
+          return jsonResponse([]);
+        }
+        if (request.method === "POST") {
+          const body = await request.json();
+          const payload = body.payload ? body.payload : body;
+          const sbRes = await fetch(SB_URL, {
+            method: "POST",
+            headers: SB_HEADERS,
+            body: JSON.stringify({ payload })
+          });
+          if (sbRes.ok) {
+            const data = await sbRes.json();
+            return jsonResponse({ success: true, id: data[0]?.id }, 201);
+          }
+          const errText = await sbRes.text();
+          return jsonResponse({ error: errText }, 500);
+        }
+        if (request.method === "PUT" || request.method === "PATCH") {
+          const ids = getIdsFromQuery();
+          if (!ids || ids.length === 0) return jsonResponse({ error: "Missing id" }, 400);
+          const body = await request.json();
+          const payload = body.payload ? body.payload : body;
+          const sbRes = await fetch(`${SB_URL}?id=eq.${ids[0]}`, {
+            method: "PATCH",
+            headers: SB_HEADERS,
+            body: JSON.stringify({ payload })
+          });
+          if (sbRes.ok) return jsonResponse({ success: true });
+          const errText = await sbRes.text();
+          return jsonResponse({ error: errText }, 500);
+        }
+        if (request.method === "DELETE") {
+          const ids = getIdsFromQuery();
+          if (!ids || ids.length === 0) return jsonResponse({ error: "Missing id" }, 400);
+          const sbRes = await fetch(`${SB_URL}?id=eq.${ids[0]}`, {
+            method: "DELETE",
+            headers: SB_HEADERS
+          });
+          if (sbRes.ok) return jsonResponse({ success: true });
+          const errText = await sbRes.text();
+          return jsonResponse({ error: errText }, 500);
+        }
+      }
+
+      // =========================================================================
       // 7. GENERIC CRUD TABLES HANDLER
       // =========================================================================
-      const dynamicTables = ['ugurlar', 'vacancies', 'news', 'mezunlar', 'management', 'popups', 'employees', 'partners', 'parent_testimonials', 'settings'];
+      const dynamicTables = ['ugurlar', 'news', 'mezunlar', 'management', 'popups', 'employees', 'partners', 'parent_testimonials', 'settings'];
       const tableName = path.replace('/', '');
 
       if (dynamicTables.includes(tableName)) {

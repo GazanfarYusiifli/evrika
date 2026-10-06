@@ -53,6 +53,22 @@ export default async function handler(req, res) {
   shasum.update(PRIVATE_KEY + data + PRIVATE_KEY);
   const signature = shasum.digest('base64');
 
+  // 1. Öncəliklə Cloudflare Worker-ə yönləndiririk (D1 bazası, auditi və sifariş cədvəli üçün)
+  try {
+    const cfRes = await fetch("https://evrika-api.yusifliqezenfer90.workers.dev/api/epoint-pay", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(req.body)
+    });
+    if (cfRes.ok) {
+      const cfData = await cfRes.json();
+      return res.status(200).json(cfData);
+    }
+  } catch (cfErr) {
+    console.warn("CF Worker forward failed, falling back to direct Epoint API:", cfErr);
+  }
+
+  // 2. Fallback: Birbaşa Epoint API ilə əlaqə
   try {
     const response = await fetch('https://epoint.az/api/1/request', {
       method: 'POST',
@@ -63,9 +79,17 @@ export default async function handler(req, res) {
     });
 
     const result = await response.json();
-    return res.status(200).json(result);
+    return res.status(200).json({
+      success: result.status === 'success',
+      status: result.status,
+      redirect_url: result.redirect_url,
+      transaction: result.transaction,
+      order_number: finalOrderId,
+      trace_id: result.trace_id,
+      message: result.message
+    });
   } catch (error) {
     console.error("Epoint xətası:", error);
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ success: false, error: error.message });
   }
 }
