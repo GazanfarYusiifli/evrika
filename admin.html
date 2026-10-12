@@ -747,6 +747,7 @@ fbq('track', 'PageView');
       <div class="sb-group-title" data-module="finance">FİNANS & SİSTEM</div>
       <div class="sb-link" data-module="finance" onclick="switchTab('finance')"><i class="fas fa-wallet"></i> <span>Maliyyə Paneli</span></div>
       <div class="sb-link" data-module="finance" onclick="switchTab('epoint-reports')"><i class="fas fa-file-invoice-dollar"></i> <span>Köçürmələrin Tarixçəsi</span></div>
+      <div class="sb-link" data-module="finance" onclick="switchTab('kupon')"><i class="fas fa-ticket-alt"></i> <span>Kupon Alanlar</span></div>
       
       <div class="sb-group-title" data-module="site">SAYT İDARƏETMƏ</div>
       <div class="sb-link" data-module="site" onclick="switchTab('ugurlar')"><i class="fas fa-medal"></i> <span>Uğurlar</span></div>
@@ -1074,9 +1075,10 @@ fbq('track', 'PageView');
 
     <!-- Finance Panel -->
         <div id="view-finance" class="content" style="display: none;">
-        <div style="display: flex; gap: 15px; margin-bottom: 25px;">
+        <div style="display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap;">
             <button id="btn-tab-report" class="btn-view" onclick="switchFinanceTab('report')" style="background: var(--accent); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.3s;"><i class="fas fa-chart-pie" style="margin-right: 8px;"></i> Hesabatlıq</button>
             <button id="btn-tab-history" class="btn-view" onclick="switchFinanceTab('history')" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 12px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.3s;"><i class="fas fa-list-ul" style="margin-right: 8px;"></i> Ödəniş Tarixçəsi</button>
+            <button id="btn-tab-coupons" class="btn-view" onclick="switchFinanceTab('coupons')" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 12px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.3s;"><i class="fas fa-ticket-alt" style="margin-right: 8px;"></i> Kupon & Müraciət Edənlər</button>
         </div>
 
         <div id="finance-view-report">
@@ -1093,9 +1095,10 @@ fbq('track', 'PageView');
                     <table>
                         <thead>
                           <tr>
-                            <th>Müştəri</th>
+                            <th>Müştəri / Sifariş</th>
                             <th>Məbləğ</th>
                             <th>Tarix</th>
+                            <th style="text-align:right;">Detallar</th>
                           </tr>
                         </thead>
                         <tbody id="finance-short-tbody">
@@ -1144,6 +1147,49 @@ fbq('track', 'PageView');
                 </table>
             </div>
         </div>
+
+        <div id="finance-view-coupons" style="display: none;">
+            <div class="stat-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 25px; flex-wrap:wrap; gap:15px;">
+                    <div>
+                        <h3 style="font-weight: 800; font-size: 1.2rem; margin:0;"><i class="fas fa-ticket-alt" style="color:var(--burgundy); margin-right: 10px;"></i> Kupon & Ödənişli Müraciətlər</h3>
+                        <p style="color:var(--text-muted); font-size:0.85rem; margin-top:5px;">Maliyyə və kupon sisteminə daxil olan müraciətçilərin siyahısı və detalları</p>
+                    </div>
+                    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                        <input type="text" id="filter-finance-kupon-search" oninput="renderFinanceCoupons()" placeholder="Axtar (Ad, nömrə, sifariş)..." class="admin-input" style="width:230px; padding:8px 12px;">
+                        <select id="filter-finance-kupon-status" onchange="renderFinanceCoupons()" style="padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--glass-border); width: 170px;">
+                            <option value="all">Bütün Statuslar</option>
+                            <option value="paid" selected>Yalnız Ödənilib</option>
+                            <option value="pending">Ödəniş Gözləyən</option>
+                        </select>
+                        <select id="filter-finance-kupon-branch" onchange="renderFinanceCoupons()" style="padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--glass-border); width: 180px;">
+                            <option value="all">Bütün Filiallar</option>
+                            <option value="lisey1">Nərimanov filialı</option>
+                            <option value="lisey2">Gənclik filialı</option>
+                            <option value="montessori">Montessori</option>
+                            <option value="victory">Victory</option>
+                            <option value="zumrud">Zümrüd</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead style="background: rgba(255,255,255,0.02);">
+                            <tr>
+                                <th style="padding: 15px 20px; color: var(--text-muted); font-size: 0.7rem; border-bottom: 1px solid var(--glass-border);">MÜRACİƏTÇİ / ŞAGİRD</th>
+                                <th style="padding: 15px 20px; color: var(--text-muted); font-size: 0.7rem; border-bottom: 1px solid var(--glass-border);">SİFARİŞ № / KUPON</th>
+                                <th style="padding: 15px 20px; color: var(--text-muted); font-size: 0.7rem; border-bottom: 1px solid var(--glass-border);">MƏBLƏĞ / STATUS</th>
+                                <th style="padding: 15px 20px; color: var(--text-muted); font-size: 0.7rem; border-bottom: 1px solid var(--glass-border);">ƏLAQƏ</th>
+                                <th style="padding: 15px 20px; color: var(--text-muted); font-size: 0.7rem; border-bottom: 1px solid var(--glass-border);">TARİX</th>
+                                <th style="padding: 15px 20px; color: var(--text-muted); font-size: 0.7rem; border-bottom: 1px solid var(--glass-border); text-align:right;">DETALLAR</th>
+                            </tr>
+                        </thead>
+                        <tbody id="finance-coupons-tbody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Epoint Reports View -->
@@ -1174,10 +1220,11 @@ fbq('track', 'PageView');
              <thead style="background: rgba(255,255,255,0.02);">
                <tr>
                  <th style="padding: 15px 20px; color: var(--text-muted); font-size: 0.7rem; border-bottom: 1px solid var(--glass-border);">SİFARİŞ № / TR ID</th>
-                 <th style="padding: 15px 20px; color: var(--text-muted); font-size: 0.7rem; border-bottom: 1px solid var(--glass-border);">KART SAHİBİ / MƏQƏD</th>
+                 <th style="padding: 15px 20px; color: var(--text-muted); font-size: 0.7rem; border-bottom: 1px solid var(--glass-border);">KART SAHİBİ / MƏQSƏD</th>
                  <th style="padding: 15px 20px; color: var(--text-muted); font-size: 0.7rem; border-bottom: 1px solid var(--glass-border);">MƏBLƏĞ</th>
                  <th style="padding: 15px 20px; color: var(--text-muted); font-size: 0.7rem; border-bottom: 1px solid var(--glass-border);">TARİX</th>
                  <th style="padding: 15px 20px; color: var(--text-muted); font-size: 0.7rem; border-bottom: 1px solid var(--glass-border);">STATUS</th>
+                 <th style="padding: 15px 20px; color: var(--text-muted); font-size: 0.7rem; border-bottom: 1px solid var(--glass-border); text-align:right;">DETALLAR</th>
                </tr>
              </thead>
              <tbody id="epoint-reports-tbody">
@@ -1190,16 +1237,27 @@ fbq('track', 'PageView');
     <!-- Kuponlar View -->
     <div id="view-kupon" class="content" style="display: none;">
       <div class="stat-card">
-         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 25px;">
-           <h3 style="font-weight: 800; font-size: 1.2rem; margin:0;"><i class="fas fa-ticket-alt" style="color:var(--burgundy); margin-right: 10px;"></i> Kupon Alanlar (Ödənişlər)</h3>
-           <select id="filter-kupon-branch" onchange="renderKupon()" style="padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--glass-border); width: 250px;">
-             <option value="all">Bütün Filiallar</option>
-             <option value="lisey1">Nərimanov filialı</option>
-             <option value="lisey2">Gənclik filialı</option>
-             <option value="montessori">Montessori</option>
-             <option value="victory">Victory</option>
-             <option value="zumrud">Zümrüd</option>
-           </select>
+         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 25px; flex-wrap:wrap; gap:15px;">
+           <div>
+             <h3 style="font-weight: 800; font-size: 1.2rem; margin:0;"><i class="fas fa-ticket-alt" style="color:var(--burgundy); margin-right: 10px;"></i> Kupon Alanlar (Ödənişlər & Müraciətlər)</h3>
+             <p style="color:var(--text-muted); font-size:0.85rem; margin-top:5px;">İmtahana giriş kuponu alan və ödəniş edən müraciətçilərin tam siyahısı</p>
+           </div>
+           <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+             <input type="text" id="filter-kupon-search" oninput="renderKupon()" placeholder="Axtar (Ad, nömrə, sifariş)..." class="admin-input" style="width:230px; padding:8px 12px;">
+             <select id="filter-kupon-status" onchange="renderKupon()" style="padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--glass-border); width: 170px;">
+               <option value="all">Bütün Statuslar</option>
+               <option value="paid" selected>Yalnız Ödənilib</option>
+               <option value="pending">Ödəniş Gözləyən</option>
+             </select>
+             <select id="filter-kupon-branch" onchange="renderKupon()" style="padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--glass-border); width: 180px;">
+               <option value="all">Bütün Filiallar</option>
+               <option value="lisey1">Nərimanov filialı</option>
+               <option value="lisey2">Gənclik filialı</option>
+               <option value="montessori">Montessori</option>
+               <option value="victory">Victory</option>
+               <option value="zumrud">Zümrüd</option>
+             </select>
+           </div>
          </div>
          <div class="table-wrapper">
            <table style="width: 100%; border-collapse: collapse;">
@@ -1952,7 +2010,8 @@ fbq('track', 'PageView');
 
         // Filter sidebar links/titles for the specific module
         document.querySelectorAll('[data-module]').forEach(el => {
-            el.style.display = (el.getAttribute('data-module') === mk ? 'flex' : 'none');
+            const mods = (el.getAttribute('data-module') || '').split(',').map(s => s.trim());
+            el.style.display = (mods.includes(mk) ? 'flex' : 'none');
         });
 
         // Show sidebar
@@ -3700,15 +3759,30 @@ fbq('track', 'PageView');
     window.switchFinanceTab = (tab) => {
         document.getElementById('finance-view-report').style.display = tab === 'report' ? 'block' : 'none';
         document.getElementById('finance-view-history').style.display = tab === 'history' ? 'block' : 'none';
+        const coupView = document.getElementById('finance-view-coupons');
+        if (coupView) coupView.style.display = tab === 'coupons' ? 'block' : 'none';
         
-        document.getElementById('btn-tab-report').style.background = tab === 'report' ? 'var(--accent)' : 'rgba(255,255,255,0.05)';
-        document.getElementById('btn-tab-report').style.border = tab === 'report' ? 'none' : '1px solid rgba(255,255,255,0.1)';
-        
-        document.getElementById('btn-tab-history').style.background = tab === 'history' ? 'var(--accent)' : 'rgba(255,255,255,0.05)';
-        document.getElementById('btn-tab-history').style.border = tab === 'history' ? 'none' : '1px solid rgba(255,255,255,0.1)';
+        const btnRep = document.getElementById('btn-tab-report');
+        const btnHist = document.getElementById('btn-tab-history');
+        const btnCoup = document.getElementById('btn-tab-coupons');
+
+        if (btnRep) {
+            btnRep.style.background = tab === 'report' ? 'var(--accent)' : 'rgba(255,255,255,0.05)';
+            btnRep.style.border = tab === 'report' ? 'none' : '1px solid rgba(255,255,255,0.1)';
+        }
+        if (btnHist) {
+            btnHist.style.background = tab === 'history' ? 'var(--accent)' : 'rgba(255,255,255,0.05)';
+            btnHist.style.border = tab === 'history' ? 'none' : '1px solid rgba(255,255,255,0.1)';
+        }
+        if (btnCoup) {
+            btnCoup.style.background = tab === 'coupons' ? 'var(--accent)' : 'rgba(255,255,255,0.05)';
+            btnCoup.style.border = tab === 'coupons' ? 'none' : '1px solid rgba(255,255,255,0.1)';
+        }
+
+        if (tab === 'coupons') renderFinanceCoupons();
     };
 
-        window.renderFinance = () => {
+    window.renderFinance = () => {
         const historyTb = document.getElementById('finance-history-tbody');
         const shortTb = document.getElementById('finance-short-tbody');
         
@@ -3774,14 +3848,21 @@ fbq('track', 'PageView');
             </tr>`;
         }).join('');
         
-        const shortHtml = payments.slice(0, 5).map(p => {
+        const shortHtml = payments.slice(0, 10).map(p => {
             const fullName = p.fullName || p['Ad Soyad'] || p.name || 'Adsız';
             const amount = p.epoint_amount || p.amount || 0;
             const date = p.epoint_date ? new Date(p.epoint_date).toLocaleString('az') : new Date(p.created_at || p.submissionDate || Date.now()).toLocaleString('az');
+            const ordNum = p.order_id ? (String(p.order_id).startsWith('EV-') ? p.order_id : `EV-${String(p.order_id).padStart(4, '0')}`) : (p._db_id_ ? `EV-${String(p._db_id_).padStart(4, '0')}` : '---');
             return `<tr>
-              <td><div style="font-weight:700; color:white;">${fullName}</div></td>
+              <td>
+                <div style="font-weight:700; color:white;">${fullName}</div>
+                <div style="font-size:0.7rem; color:var(--text-muted);">${ordNum}</div>
+              </td>
               <td><div style="color:var(--success); font-weight:800;">${amount} ₼</div></td>
               <td><div style="color:var(--text-muted); font-size:0.8rem;">${date}</div></td>
+              <td style="text-align:right;">
+                <button class="btn-view" style="padding:6px 12px; font-size:0.75rem; background:rgba(59,130,246,0.1); color:var(--royal-blue); border-color:rgba(59,130,246,0.2);" onclick="openFinanceDetails('${p._db_id_ || p.order_id || p.epoint_transaction}')"><i class="fas fa-eye" style="margin-right:4px;"></i> Bax</button>
+              </td>
             </tr>`;
         }).join('');
         
@@ -3798,6 +3879,119 @@ fbq('track', 'PageView');
         if(monthlyIncomeEl) monthlyIncomeEl.innerHTML = `${total.toFixed(2)} <small style="font-size:1.2rem; opacity:0.4;">AZN</small>`;
         if(commEl) commEl.innerHTML = `${totalCommission.toFixed(2)} <small style="font-size:1.2rem; opacity:0.4;">AZN</small>`;
         if(txEl) txEl.innerHTML = `${payments.length} <small style="font-size:0.8rem; font-weight:normal; opacity:0.6;">Ədəd</small>`;
+
+        renderFinanceCoupons();
+    };
+
+    window.renderFinanceCoupons = () => {
+        const tb = document.getElementById('finance-coupons-tbody');
+        if(!tb) return;
+
+        const branchFilter = document.getElementById('filter-finance-kupon-branch') ? document.getElementById('filter-finance-kupon-branch').value : 'all';
+        const statusFilter = document.getElementById('filter-finance-kupon-status') ? document.getElementById('filter-finance-kupon-status').value : 'all';
+        const searchVal = document.getElementById('filter-finance-kupon-search') ? document.getElementById('filter-finance-kupon-search').value.trim().toLowerCase() : '';
+
+        const sourceList = window.allFetchedData || rawData || [];
+        
+        let coupons = sourceList.filter(i => {
+            return !!(i.payment_status || i.epoint_amount || i.amount || i.order_id || i.coupon_code || i.epoint_transaction);
+        });
+
+        if (statusFilter === 'paid') {
+            coupons = coupons.filter(i => i.payment_status === 'Ödənilib');
+        } else if (statusFilter === 'pending') {
+            coupons = coupons.filter(i => i.payment_status !== 'Ödənilib');
+        }
+
+        if (branchFilter !== 'all') {
+            coupons = coupons.filter(i => {
+                const s = getGranularSource(i) || '';
+                if (branchFilter === 'lisey1') return s === 'lisey1' || s.includes('Nərimanov');
+                if (branchFilter === 'lisey2') return s === 'lisey2' || s.includes('Gənclik');
+                if (branchFilter === 'montessori') return s === 'montessori' || s.includes('Montessori');
+                if (branchFilter === 'victory') return s === 'victory' || s.includes('Victory');
+                if (branchFilter === 'zumrud') return s === 'zumrud' || s.includes('Zümrüd') || s.includes('zumrud');
+                return s === branchFilter;
+            });
+        }
+
+        if (searchVal) {
+            coupons = coupons.filter(i => {
+                const str = [
+                    i.fullName, i['Ad Soyad'], i.name, i.phone, i.tel, 
+                    i.order_id, i._db_id_, i.id, i.coupon_code, i.email,
+                    i['[2.Şagird] Adı'], i['[2.Şagird] Soyadı'], i['[1.Əlaqə] Valideyn Adı']
+                ].filter(Boolean).join(' ').toLowerCase();
+                return str.includes(searchVal);
+            });
+        }
+
+        coupons.sort((a,b) => new Date(b.epoint_date || b.created_at || b.submissionDate || 0) - new Date(a.epoint_date || a.created_at || a.submissionDate || 0));
+
+        const MAP = { 
+          'lisey1':'Nərimanov filialı', 'lisey2':'Gənclik filialı', 'montessori':'Montessori', 
+          'victory':'Victory', 'zumrud':'Zümrüd'
+        };
+
+        if (coupons.length === 0) {
+            tb.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:35px; color:var(--text-muted);"><i class="fas fa-info-circle" style="margin-right:8px;"></i> Məlumat tapılmadı.</td></tr>`;
+            return;
+        }
+
+        tb.innerHTML = coupons.map((p, idx) => {
+            const fullName = p.fullName || p['Ad Soyad'] || p.name || (p['[2.Şagird] Adı'] ? p['[2.Şagird] Adı'] + ' ' + (p['[2.Şagird] Soyadı']||'') : 'Adsız Şagird');
+            const parentName = p['[1.Əlaqə] Valideyn Adı'] || p.parent_name || '';
+            const grade = p.student_grade || p.grade || p.Sinif || p['Sinif'] || '';
+            const amount = p.epoint_amount || p.amount || 0;
+            const phone = p.phone || p.tel || p['[1.Əlaqə] Əlaqə Nömrəsi'] || '-';
+            const date = p.epoint_date ? new Date(p.epoint_date).toLocaleString('az') : new Date(p.created_at || p.submissionDate || Date.now()).toLocaleString('az');
+            const orderNum = p.order_id ? (String(p.order_id).startsWith('EV-') ? p.order_id : `EV-${String(p.order_id).padStart(4, '0')}`) : (p._db_id_ ? `EV-${String(p._db_id_).padStart(4, '0')}` : '---');
+            const couponCode = p.coupon_code || orderNum;
+
+            const isPaid = p.payment_status === 'Ödənilib';
+            const statusBadge = isPaid 
+                ? `<span style="background:rgba(16,185,129,0.12); color:#10b981; border:1px solid rgba(16,185,129,0.3); padding:4px 10px; border-radius:6px; font-weight:800; font-size:0.75rem;"><i class="fas fa-check-circle"></i> Ödənilib</span>`
+                : `<span style="background:rgba(245,158,11,0.12); color:#f59e0b; border:1px solid rgba(245,158,11,0.3); padding:4px 10px; border-radius:6px; font-weight:800; font-size:0.75rem;"><i class="fas fa-clock"></i> Gözlənilir</span>`;
+
+            const s = getGranularSource(p);
+            const sourceLabel = MAP[s] || String(s).replace('Qeydiyyat - ', '') || 'Onlayn Müraciət';
+
+            return `<tr>
+              <td style="padding: 15px 20px;">
+                 <div style="font-weight:800; color:white; font-size:0.95rem;">${fullName}</div>
+                 <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">
+                    ${grade ? `<span style="color:#38bdf8; font-weight:700;">${grade}</span> • ` : ''}
+                    <span style="color:var(--warning);">${sourceLabel}</span>
+                    ${parentName ? ` • Valideyn: ${parentName}` : ''}
+                 </div>
+              </td>
+              <td style="padding: 15px 20px;">
+                 <div style="font-weight:800; font-family:monospace; color:white; font-size:0.9rem;">${orderNum}</div>
+                 <div style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">Kupon: <span style="color:#10b981; font-weight:700;">${couponCode}</span></div>
+              </td>
+              <td style="padding: 15px 20px;">
+                 <div style="font-weight:900; color:${isPaid ? 'var(--success)' : 'white'}; font-size:1rem;">${parseFloat(String(amount).replace(/[^0-9.]/g,'')) || 0} ₼</div>
+                 <div style="margin-top:3px;">${statusBadge}</div>
+              </td>
+              <td style="padding: 15px 20px;">
+                 <div style="font-weight:700; font-size:0.85rem; color:white;">${phone}</div>
+                 ${p.email ? `<div style="font-size:0.7rem; color:var(--text-muted);">${p.email}</div>` : ''}
+              </td>
+              <td style="padding: 15px 20px;">
+                 <div style="font-size:0.8rem; color:var(--text-muted); font-weight:600;">${date}</div>
+              </td>
+              <td style="padding: 15px 20px; text-align:right;">
+                 <div style="display:inline-flex; gap:8px;">
+                   <button class="btn-view" style="padding:8px 14px; font-size:0.8rem; background:rgba(59,130,246,0.12); color:#38bdf8; border:1px solid rgba(56,189,248,0.3);" onclick="openFinanceDetails('${p._db_id_ || p.order_id || p.epoint_transaction}')">
+                     <i class="fas fa-eye" style="margin-right:5px;"></i> Detallar
+                   </button>
+                   ${(p.status === 'QR İstifadə Edilib' || p.status === 'İştirak Etdi') ? 
+                     `<span style="color:var(--success); font-size:0.75rem; font-weight:800; background:rgba(34,197,94,0.1); padding:8px 10px; border-radius:6px; display:inline-flex; align-items:center;"><i class="fas fa-check-circle" style="margin-right:4px;"></i> Giriş edib</span>` : 
+                     (isPaid ? `<button class="btn-view" style="background:var(--success); color:white; border:none; padding:8px 12px; font-size:0.75rem;" onclick="markQrScanned('${p._db_id_}')"><i class="fas fa-qrcode" style="margin-right:4px;"></i> Giriş</button>` : '')}
+                 </div>
+              </td>
+            </tr>`;
+        }).join('');
     };
 
     window.renderKupon = () => {
@@ -3805,8 +3999,17 @@ fbq('track', 'PageView');
         if(!tb) return;
         
         const branchFilter = document.getElementById('filter-kupon-branch') ? document.getElementById('filter-kupon-branch').value : 'all';
+        const statusFilter = document.getElementById('filter-kupon-status') ? document.getElementById('filter-kupon-status').value : 'paid';
+        const searchVal = document.getElementById('filter-kupon-search') ? document.getElementById('filter-kupon-search').value.trim().toLowerCase() : '';
         
-        let coupons = rawData.filter(i => (i.epoint_amount || i.amount) && i.payment_status === 'Ödənilib');
+        const sourceList = window.allFetchedData || rawData || [];
+        let coupons = sourceList.filter(i => (i.epoint_amount || i.amount || i.coupon_code || i.order_id || i.payment_status));
+
+        if (statusFilter === 'paid') {
+            coupons = coupons.filter(i => i.payment_status === 'Ödənilib');
+        } else if (statusFilter === 'pending') {
+            coupons = coupons.filter(i => i.payment_status !== 'Ödənilib');
+        }
         
         if (branchFilter !== 'all') {
             coupons = coupons.filter(i => {
@@ -3819,6 +4022,17 @@ fbq('track', 'PageView');
                 return s === branchFilter;
             });
         }
+
+        if (searchVal) {
+            coupons = coupons.filter(i => {
+                const str = [
+                    i.fullName, i['Ad Soyad'], i.name, i.phone, i.tel, 
+                    i.order_id, i._db_id_, i.id, i.coupon_code, i.email,
+                    i['[2.Şagird] Adı'], i['[2.Şagird] Soyadı'], i['[1.Əlaqə] Valideyn Adı']
+                ].filter(Boolean).join(' ').toLowerCase();
+                return str.includes(searchVal);
+            });
+        }
         
         coupons = coupons.sort((a,b) => new Date(b.epoint_date || b.created_at || b.submissionDate || 0) - new Date(a.epoint_date || a.created_at || a.submissionDate || 0));
 
@@ -3827,11 +4041,18 @@ fbq('track', 'PageView');
           'victory':'Victory', 'zumrud':'Zümrüd'
         };
 
+        if (coupons.length === 0) {
+            tb.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:35px; color:var(--text-muted);"><i class="fas fa-info-circle" style="margin-right:8px;"></i> Məlumat tapılmadı.</td></tr>`;
+            return;
+        }
+
         tb.innerHTML = coupons.map((p, idx) => {
             const fullName = p.fullName || p['Ad Soyad'] || p.name || (p['[2.Şagird] Adı'] ? p['[2.Şagird] Adı'] + ' ' + (p['[2.Şagird] Soyadı']||'') : 'Adsız');
             const amount = p.epoint_amount || p.amount || 0;
             const phone = p.phone || p.tel || p['[1.Əlaqə] Əlaqə Nömrəsi'] || '-';
             const date = p.epoint_date ? new Date(p.epoint_date).toLocaleString('az') : new Date(p.created_at || p.submissionDate || Date.now()).toLocaleString('az');
+            const isPaid = p.payment_status === 'Ödənilib';
+            const orderNum = p.order_id ? (String(p.order_id).startsWith('EV-') ? p.order_id : `EV-${String(p.order_id).padStart(4, '0')}`) : (p._db_id_ ? `EV-${String(p._db_id_).padStart(4, '0')}` : '---');
             
             const s = getGranularSource(p);
             const sourceLabel = MAP[s] || String(s).replace('Qeydiyyat - ', '') || 'Email';
@@ -3842,8 +4063,8 @@ fbq('track', 'PageView');
                  <div style="font-size:0.7rem; color:var(--text-muted); margin-top:3px;">${p.description || 'Sınaq / Təhsil Ödənişi'} <span style="color:var(--warning); margin-left:5px;">• ${sourceLabel}</span></div>
               </td>
               <td>
-                 <div style="color:var(--success); font-weight:800; font-size:1rem;">${amount} ₼</div>
-                 <div style="font-size:0.7rem; font-family:monospace; color:white; margin-top:3px;">Sifariş №: EV-${String(p.order_id || p._db_id_ || '').replace('EV-', '').padStart(4, '0')}</div>
+                 <div style="color:${isPaid ? 'var(--success)' : 'var(--warning)'}; font-weight:800; font-size:1rem;">${parseFloat(String(amount).replace(/[^0-9.]/g,'')) || 0} ₼</div>
+                 <div style="font-size:0.7rem; font-family:monospace; color:white; margin-top:3px;">Sifariş №: ${orderNum}</div>
               </td>
               <td><div style="font-weight:600; font-size:0.85rem;">${phone}</div></td>
               <td><div style="color:var(--text-muted); font-size:0.8rem; font-weight:600;">${date}</div></td>
@@ -3852,7 +4073,7 @@ fbq('track', 'PageView');
                   <button class="btn-view" style="padding:10px 15px; font-size:0.75rem;" onclick="openFinanceDetails('${p._db_id_ || p.order_id || p.epoint_transaction}')"><i class="fas fa-eye" style="margin-right:5px;"></i> Detallar</button>
                   ${(p.status === 'QR İstifadə Edilib' || p.status === 'İştirak Etdi') ? 
                     `<div style="color:var(--success); font-size:0.8rem; font-weight:800; background:rgba(34,197,94,0.1); padding:8px 12px; border-radius:8px;"><i class="fas fa-check-circle"></i> İçəri Keçib</div>` : 
-                    `<button class="btn-view" style="background:var(--success); color:white; border:none; padding:10px 15px; font-size:0.75rem;" onclick="markQrScanned('${p._db_id_}')"><i class="fas fa-qrcode" style="margin-right:5px;"></i> İçəri Keçir</button>`}
+                    (isPaid ? `<button class="btn-view" style="background:var(--success); color:white; border:none; padding:10px 15px; font-size:0.75rem;" onclick="markQrScanned('${p._db_id_}')"><i class="fas fa-qrcode" style="margin-right:5px;"></i> İçəri Keçir</button>` : '')}
                 </div>
               </td>
             </tr>`;
@@ -3957,11 +4178,16 @@ fbq('track', 'PageView');
         const sourceData = window.allFetchedData || rawData;
         const txs = sourceData.filter(i => i.epoint_transaction || i.epoint_amount || i.payment_status)
                            .sort((a,b) => new Date(b.epoint_date || b.created_at || b.submissionDate || 0) - new Date(a.epoint_date || a.created_at || a.submissionDate || 0));
-                           
+                            
         let totalAmount = 0;
         let totalCount = 0;
         let totalCommission = 0;
         
+        if (txs.length === 0) {
+            tb.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:35px; color:var(--text-muted);"><i class="fas fa-info-circle" style="margin-right:8px;"></i> Məlumat tapılmadı.</td></tr>`;
+            return;
+        }
+
         tb.innerHTML = txs.map((p, idx) => {
             const fullName = p.fullName || p['Ad Soyad'] || p.name || (p['[2.Şagird] Adı'] ? p['[2.Şagird] Adı'] + ' ' + (p['[2.Şagird] Soyadı']||'') : 'Adsız');
             const amount = parseFloat(String(p.epoint_amount || p.amount || 0).replace(/[^0-9.]/g, '')) || 0;
@@ -3997,6 +4223,11 @@ fbq('track', 'PageView');
                  <span style="padding:5px 10px; border-radius:6px; font-size:0.75rem; font-weight:800; ${isSuccess ? 'background:rgba(16,185,129,0.1); color:var(--success);' : 'background:rgba(239,68,68,0.1); color:var(--error);'}">
                     ${isSuccess ? '<i class="fas fa-check-circle"></i> ÖDƏNİLİB' : '<i class="fas fa-times-circle"></i> UĞURSUZ'}
                  </span>
+              </td>
+              <td style="text-align:right;">
+                <button class="btn-view" style="padding:7px 14px; font-size:0.75rem; background:rgba(59,130,246,0.1); color:var(--royal-blue); border-color:rgba(59,130,246,0.2);" onclick="openFinanceDetails('${p._db_id_ || p.order_id || p.epoint_transaction}')">
+                  <i class="fas fa-eye" style="margin-right:4px;"></i> Bax
+                </button>
               </td>
             </tr>`;
         }).join('');
@@ -4369,30 +4600,114 @@ fbq('track', 'PageView');
     };
 
     
-    window.openFinanceDetails = (order_id) => {
-        // find index in filteredData
-        const idx = filteredData.findIndex(i => (i._db_id_ == order_id || i.order_id == order_id || (i.epoint_transaction && i.epoint_transaction == order_id)));
-        if(idx >= 0) {
-            viewDetails(idx, true);
-        } else {
-            // fallback to rawData
-            const rIdx = rawData.findIndex(i => (i._db_id_ == order_id || i.order_id == order_id || (i.epoint_transaction && i.epoint_transaction == order_id)));
-            if(rIdx >= 0) {
-                // temporarily put it in filteredData to view
-                filteredData.push(rawData[rIdx]);
-                viewDetails(filteredData.length - 1, true);
-            } else {
-                alert('Detallar tapılmadı');
+    window.openFinanceDetails = async (identifier) => {
+        if (!identifier) return;
+        
+        const pool = (window.allFetchedData && window.allFetchedData.length) ? window.allFetchedData : (rawData || []);
+        const strId = String(identifier).trim();
+        const cleanNum = strId.replace(/^EV-/i, '').replace(/^0+/, '');
+
+        // 1. Search in local pool
+        let item = pool.find(i => {
+            if (!i) return false;
+            if (i._db_id_ == strId || i.id == strId) return true;
+            if (i.order_id && (String(i.order_id) === strId || String(i.order_id).replace(/^EV-/i, '').replace(/^0+/, '') === cleanNum)) return true;
+            if (cleanNum && (String(i._db_id_) === cleanNum || String(i.id) === cleanNum)) return true;
+            if (i.coupon_code && String(i.coupon_code).toLowerCase() === strId.toLowerCase()) return true;
+            if (i.epoint_transaction && String(i.epoint_transaction) === strId) return true;
+            if (i.epoint_rrn && String(i.epoint_rrn) === strId) return true;
+            return false;
+        });
+
+        if (!item && filteredData && filteredData.length) {
+            item = filteredData.find(i => {
+                if (!i) return false;
+                if (i._db_id_ == strId || i.id == strId) return true;
+                if (i.order_id && (String(i.order_id) === strId || String(i.order_id).replace(/^EV-/i, '').replace(/^0+/, '') === cleanNum)) return true;
+                if (cleanNum && (String(i._db_id_) === cleanNum || String(i.id) === cleanNum)) return true;
+                if (i.coupon_code && String(i.coupon_code).toLowerCase() === strId.toLowerCase()) return true;
+                if (i.epoint_transaction && String(i.epoint_transaction) === strId) return true;
+                return false;
+            });
+        }
+
+        if (item) {
+            viewDetails(item, true);
+            return;
+        }
+
+        // 2. Fallback to Supabase fetch if numeric or EV-ID
+        if (cleanNum && !isNaN(cleanNum)) {
+            try {
+                const res = await fetch(`${API_URL}/registrations?id=eq.${cleanNum}`, { headers: HEADERS });
+                if (res.ok) {
+                    const rows = await res.json();
+                    if (rows && rows.length > 0) {
+                        const r = rows[0];
+                        const p = r.payload || {};
+                        const effectivePaymentStatus = (r.payment_status === 'Ödənilib' || p.payment_status === 'Ödənilib') 
+                            ? 'Ödənilib' 
+                            : (r.payment_status || p.payment_status || 'Ödəniş gözlənilir');
+                        item = {
+                            ...p,
+                            ...r,
+                            _db_id_: r.id,
+                            created_at: r.created_at,
+                            phone: formatPhone(p.phone || r.phone),
+                            payment_status: effectivePaymentStatus
+                        };
+                        viewDetails(item, true);
+                        return;
+                    }
+                }
+            } catch(e) {
+                console.warn("Direct fetch error:", e);
             }
         }
+
+        // 3. Fallback to transaction query if transaction hash
+        if (strId.length > 6) {
+            try {
+                const res = await fetch(`${API_URL}/registrations?payload->>epoint_transaction=eq.${strId}`, { headers: HEADERS });
+                if (res.ok) {
+                    const rows = await res.json();
+                    if (rows && rows.length > 0) {
+                        const r = rows[0];
+                        const p = r.payload || {};
+                        item = {
+                            ...p,
+                            ...r,
+                            _db_id_: r.id,
+                            created_at: r.created_at,
+                            phone: formatPhone(p.phone || r.phone),
+                            payment_status: r.payment_status || p.payment_status || 'Ödəniş gözlənilir'
+                        };
+                        viewDetails(item, true);
+                        return;
+                    }
+                }
+            } catch(e) {}
+        }
+
+        alert('Detallar tapılmadı: ' + identifier);
     };
 
-    window.viewDetails = (idx, isFinance = false, isHR = false) => {
+    window.viewDetails = (idxOrItem, isFinance = false, isHR = false) => {
       const isExam = document.getElementById('view-exam-results') && document.getElementById('view-exam-results').style.display === 'block';
-      let originalItem = (isHR ? hrData[idx] : filteredData[idx]);
-      if ((originalItem.status || '').toLowerCase() === 'yeni') {
-          updateStatus(idx, 'Baxılıb', isFinance, isHR);
-          originalItem.status = 'Baxılıb';
+      let originalItem;
+      if (typeof idxOrItem === 'object' && idxOrItem !== null) {
+          originalItem = idxOrItem;
+      } else {
+          const idx = idxOrItem;
+          originalItem = isHR ? hrData[idx] : (filteredData[idx] || (rawData && rawData[idx]));
+          if (originalItem && (originalItem.status || '').toLowerCase() === 'yeni') {
+              updateStatus(idx, 'Baxılıb', isFinance, isHR);
+              originalItem.status = 'Baxılıb';
+          }
+      }
+      if (!originalItem) {
+          alert('Məlumat tapılmadı');
+          return;
       }
       let item = JSON.parse(JSON.stringify(originalItem));
       const content = document.getElementById('modal-content');
