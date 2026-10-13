@@ -5565,7 +5565,8 @@ fbq('track', 'PageView');
 
     window.editManagement = (idx) => {
         const m = managementData[idx];
-        document.getElementById('led-id').value = m._db_id_;
+        if (!m) return;
+        document.getElementById('led-id').value = m._db_id_ || m.id || '';
         document.getElementById('led-name').value = m.name || '';
         document.getElementById('led-role').value = m.role || '';
         document.getElementById('led-category').value = m.category || 'board';
@@ -5575,6 +5576,9 @@ fbq('track', 'PageView');
         updateLedPreview(m.img);
         document.getElementById('led-form-title').innerText = "Üzvə Düzəliş Et";
         document.getElementById('led-submit-btn').innerHTML = `<i class="fas fa-save" style="margin-right:6px;"></i> Dəyişikliyi Saxla`;
+        
+        const formEl = document.getElementById('led-form');
+        if (formEl) formEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
         document.getElementById('led-name').focus();
     };
 
@@ -5582,15 +5586,33 @@ fbq('track', 'PageView');
         e.preventDefault();
         const id = document.getElementById('led-id').value;
         const btn = document.getElementById('led-submit-btn');
+        const nameVal = document.getElementById('led-name').value.trim();
+        const roleVal = document.getElementById('led-role').value.trim();
+        const catVal = document.getElementById('led-category').value;
+        const orderVal = document.getElementById('led-order').value ? parseInt(document.getElementById('led-order').value) : (managementData.length + 1);
+        const quoteVal = document.getElementById('led-quote').value.trim();
+        const imgVal = document.getElementById('led-img').value.trim();
+
         const payload = { 
-            name: document.getElementById('led-name').value.trim(), 
-            role: document.getElementById('led-role').value.trim(),
-            category: document.getElementById('led-category').value,
-            group: document.getElementById('led-category').value,
-            order: document.getElementById('led-order').value ? parseInt(document.getElementById('led-order').value) : (managementData.length + 1),
-            quote: document.getElementById('led-quote').value.trim(),
-            img: document.getElementById('led-img').value.trim() 
+            name: nameVal, 
+            role: roleVal,
+            category: catVal,
+            group: catVal,
+            order: orderVal,
+            quote: quoteVal,
+            img: imgVal 
         };
+
+        const requestBody = {
+            payload,
+            name: nameVal,
+            role: roleVal,
+            category: catVal,
+            order: orderVal,
+            quote: quoteVal,
+            img: imgVal
+        };
+
         btn.disabled = true;
         const originalBtnHtml = btn.innerHTML;
         btn.innerHTML = `<i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i> Saxlanılır...`;
@@ -5598,7 +5620,7 @@ fbq('track', 'PageView');
         const url = id ? `${API_URL}/management?id=eq.${id}` : `${API_URL}/management`;
         const method = id ? 'PATCH' : 'POST';
         try {
-          const res = await fetch(url, { method, headers: HEADERS, body: JSON.stringify({ payload }) });
+          const res = await fetch(url, { method, headers: HEADERS, body: JSON.stringify(requestBody) });
           if(res.ok) { 
               resetManagementForm(); 
               await loadManagement(); 
