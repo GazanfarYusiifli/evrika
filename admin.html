@@ -3246,7 +3246,7 @@ fbq('track', 'PageView');
                 ...p, 
                 ...r, 
                 _db_id_: r.id, 
-                created_at: r.created_at, 
+                created_at: p.submissionDate || p.date || p.epoint_date || r.created_at, 
                 phone: formatPhone(p.phone || r.phone),
                 payment_status: effectivePaymentStatus
               };
@@ -3399,7 +3399,7 @@ fbq('track', 'PageView');
                       ...p, 
                       ...r, 
                       _db_id_: r.id, 
-                      created_at: r.created_at, 
+                      created_at: p.submissionDate || p.date || p.epoint_date || r.created_at, 
                       phone: formatPhone(p.phone || r.phone),
                       payment_status: effectivePaymentStatus
                     };
