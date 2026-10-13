@@ -3251,7 +3251,12 @@ fbq('track', 'PageView');
                 payment_status: effectivePaymentStatus
               };
           })
-          .sort((a, b) => (b._db_id_ || 0) - (a._db_id_ || 0));
+          .sort((a, b) => {
+              const dateA = new Date(a.epoint_date || a.created_at || a.submissionDate || a.date || 0).getTime();
+              const dateB = new Date(b.epoint_date || b.created_at || b.submissionDate || b.date || 0).getTime();
+              if (dateB !== dateA) return dateB - dateA;
+              return (b._db_id_ || 0) - (a._db_id_ || 0);
+          });
       
       window.allFetchedData = partialData;
       
@@ -3399,7 +3404,12 @@ fbq('track', 'PageView');
                       payment_status: effectivePaymentStatus
                     };
                 })
-                .sort((a, b) => b._db_id_ - a._db_id_);
+                .sort((a, b) => {
+                    const dateA = new Date(a.epoint_date || a.created_at || a.submissionDate || a.date || 0).getTime();
+                    const dateB = new Date(b.epoint_date || b.created_at || b.submissionDate || b.date || 0).getTime();
+                    if (dateB !== dateA) return dateB - dateA;
+                    return (b._db_id_ || 0) - (a._db_id_ || 0);
+                });
             window.allFetchedData = fetchedData;
             
             const isKaryera = (r) => {
@@ -3697,7 +3707,7 @@ fbq('track', 'PageView');
         const json = await res.json();
         if (json.success && (json.data?.isPaid || json.data?.status === 'PAID')) {
           alert(`✅ Təsdiqləndi!\nİştirakçı: ${json.data.student_name || 'Şagird'}\nStatus: Ödənilib\nKupon kodu: ${json.data.coupon_code || ('EV-' + String(dbId).padStart(4, '0'))}`);
-          await fetchAllData();
+          await initialLoad();
         } else {
           alert(`Məlumat: Bank sistemində bu müraciət üçün uğurlu ödəniş tapılmadı (Cari status: ${json.data?.status || 'Ödənilməyib'}).`);
         }
@@ -3750,7 +3760,7 @@ fbq('track', 'PageView');
 
       if (updatedCount > 0) {
         alert(`🎉 Sinxronizasiya tamamlandı: ${updatedCount} yeni ödəniş təsdiqləndi və 'Ödənilib' statusuna keçirildi!`);
-        await fetchAllData();
+        await initialLoad();
       } else {
         alert('Sinxronizasiya tamamlandı. Epoint üzərində yeni təsdiqlənmiş ödəniş aşkar edilmədi.');
       }
