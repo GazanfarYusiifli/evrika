@@ -53,10 +53,6 @@
       "destination": "/montessori.html"
     },
     {
-      "source": "/eduhome",
-      "destination": "/victory.html"
-    },
-    {
       "source": "/zumrud",
       "destination": "/zumrud.html"
     },
@@ -91,10 +87,6 @@
     {
       "source": "/register-montessori",
       "destination": "/register-montessori.html"
-    },
-    {
-      "source": "/register-eduhome",
-      "destination": "/register-victory.html"
     },
     {
       "source": "/register-zumrud",

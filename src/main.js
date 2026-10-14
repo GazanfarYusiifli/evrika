@@ -90,18 +90,6 @@ const schools = {
     img: "https://files.cdn-files-a.com/uploads/10086696/2000_695d46cadbf37.png",
     cta: "Akademiya ilə Əlaqə"
   },
-  4: {
-    badge: "Akademik Dəstək",
-    name: "Victory Colleges by Evrika Mərkəzi",
-    desc: "Xaricdə təhsil və beynəlxalq sertifikatlar üzrə ixtisaslaşmış mərkəzimiz şagirdlərə qlobal təhsil qapılarını açır. SAT, IELTS və Duolingo hazırlığı peşəkar mentorlarla aparılır.",
-    points: [
-      "SAT və IELTS Hazırlığı",
-      "Beynəlxalq Universitet Qəbulu",
-      "Karyera Planlama və Konsaltinq"
-    ],
-    img: "https://files.cdn-files-a.com/uploads/10086696/2000_6970fa193770e.png",
-    cta: "Konsultasiya Rezerv Et"
-  },
   5: {
     badge: "Peşəkar İdman",
     name: "Zümrüd İdman Mərkəzi",
@@ -139,7 +127,7 @@ const openModal = (id) => {
       </div>
 
       <div style="display: flex; gap: 20px;">
-        <a href="register-${id === '1' ? 'lisey1' : id === '3' ? 'montessori' : id === '4' ? 'eduhome' : id === '5' ? 'zumrud' : 'lisey1'}.html" class="btn btn-primary" style="flex: 2; justify-content: center;">${data.cta}</a>
+        <a href="register-${id === '1' ? 'lisey1' : id === '3' ? 'montessori' : id === '5' ? 'zumrud' : 'lisey1'}.html" class="btn btn-primary" style="flex: 2; justify-content: center;">${data.cta}</a>
         <button class="btn btn-outline" style="flex: 1; justify-content: center;" onclick="document.getElementById('school-modal').classList.remove('active'); setTimeout(() => document.getElementById('school-modal').style.display = 'none', 400);">Bağla</button>
       </div>
     </div>
