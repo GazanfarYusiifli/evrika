@@ -1808,6 +1808,63 @@ fbq('track', 'PageView');
         </div>
 
 
+        <div class="detail-group">
+          <div class="detail-group-header">Admin & CRM Şifrə Ayarları</div>
+          <p style="font-size:0.75rem; color:rgba(255,255,255,0.5); margin-bottom:15px;">Hər bir CRM filialı və sistem modulu üçün fərdi giriş şifrəsi təyin edin:</p>
+          
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:15px;">
+            <div class="fgroup">
+              <label style="display:block; margin-bottom:6px; font-size:0.75rem; font-weight:800; color:#ef4444;"><i class="fas fa-layer-group"></i> BÜTÜN CRM (Baş İdarəetmə)</label>
+              <input type="text" id="setting-pass-crm" class="admin-input" placeholder="crm123">
+            </div>
+            <div class="fgroup">
+              <label style="display:block; margin-bottom:6px; font-size:0.75rem; font-weight:800; color:#ef4444;"><i class="fas fa-microscope"></i> BETL Nərimanov</label>
+              <input type="text" id="setting-pass-crm-lisey1" class="admin-input" placeholder="nerimanov123">
+            </div>
+            <div class="fgroup">
+              <label style="display:block; margin-bottom:6px; font-size:0.75rem; font-weight:800; color:#3b82f6;"><i class="fas fa-atom"></i> BETL Gənclik</label>
+              <input type="text" id="setting-pass-crm-lisey2" class="admin-input" placeholder="genclik123">
+            </div>
+            <div class="fgroup">
+              <label style="display:block; margin-bottom:6px; font-size:0.75rem; font-weight:800; color:#10b981;"><i class="fas fa-child"></i> Montessori Kids</label>
+              <input type="text" id="setting-pass-crm-montessori" class="admin-input" placeholder="montessori123">
+            </div>
+            <div class="fgroup">
+              <label style="display:block; margin-bottom:6px; font-size:0.75rem; font-weight:800; color:#a855f7;"><i class="fas fa-graduation-cap"></i> Victory Colleges</label>
+              <input type="text" id="setting-pass-crm-victory" class="admin-input" placeholder="victory123">
+            </div>
+            <div class="fgroup">
+              <label style="display:block; margin-bottom:6px; font-size:0.75rem; font-weight:800; color:#eab308;"><i class="fas fa-swimmer"></i> Zümrüd İdman</label>
+              <input type="text" id="setting-pass-crm-zumrud" class="admin-input" placeholder="zumrud123">
+            </div>
+          </div>
+
+          <div style="border-top: 1px dashed rgba(255,255,255,0.1); margin: 15px 0; padding-top: 15px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:15px;">
+              <div class="fgroup">
+                <label style="display:block; margin-bottom:6px; font-size:0.75rem; font-weight:800; color:#3b82f6;"><i class="fas fa-user-tie"></i> HR Panel</label>
+                <input type="text" id="setting-pass-hr" class="admin-input" placeholder="hr123">
+              </div>
+              <div class="fgroup">
+                <label style="display:block; margin-bottom:6px; font-size:0.75rem; font-weight:800; color:#10b981;"><i class="fas fa-chart-line"></i> Finans Panel</label>
+                <input type="text" id="setting-pass-finance" class="admin-input" placeholder="fin123">
+              </div>
+              <div class="fgroup">
+                <label style="display:block; margin-bottom:6px; font-size:0.75rem; font-weight:800; color:#f59e0b;"><i class="fas fa-magic"></i> Sayt İdarəetmə</label>
+                <input type="text" id="setting-pass-site" class="admin-input" placeholder="site123">
+              </div>
+              <div class="fgroup">
+                <label style="display:block; margin-bottom:6px; font-size:0.75rem; font-weight:800; color:#8b5cf6;"><i class="fas fa-file-signature"></i> İmtahan Paneli</label>
+                <input type="text" id="setting-pass-exam" class="admin-input" placeholder="exam123">
+              </div>
+            </div>
+          </div>
+
+          <button onclick="saveAdminPasswords()" class="btn-view" style="width:100%; justify-content:center; background:#10b981; border:none; padding:18px; color:white; font-weight:800;">
+            Bütün Şifrələri Yadda Saxla <i class="fas fa-key" style="margin-left: 10px;"></i>
+          </button>
+        </div>
+
         <div id="settings-status" style="margin-top:15px; font-size:0.8rem; font-weight:800; text-align:center; opacity:0; transition:0.3s;"></div>
       </div>
     </div>
@@ -1900,26 +1957,49 @@ fbq('track', 'PageView');
 
 
     let savedPass = localStorage.getItem('evrika_admin_passwords');
-    let MODULE_PASSORDS = savedPass ? JSON.parse(savedPass) : { 'crm':'crm123', 'hr':'hr123', 'finance':'fin123', 'site':'site123', 'exam':'exam123' };
+    let defaultModulePasswords = {
+        'crm': 'crm123',
+        'crm_lisey1': 'nerimanov123',
+        'crm_lisey2': 'genclik123',
+        'crm_montessori': 'montessori123',
+        'crm_victory': 'victory123',
+        'crm_zumrud': 'zumrud123',
+        'hr': 'hr123',
+        'finance': 'fin123',
+        'site': 'site123',
+        'exam': 'exam123'
+    };
+    let MODULE_PASSORDS = savedPass ? Object.assign({}, defaultModulePasswords, JSON.parse(savedPass)) : defaultModulePasswords;
 
-    setTimeout(() => {
+    function populatePasswordSettingsInputs() {
         if(document.getElementById('setting-pass-crm')) {
             document.getElementById('setting-pass-crm').value = MODULE_PASSORDS['crm'] || 'crm123';
+            if(document.getElementById('setting-pass-crm-lisey1')) document.getElementById('setting-pass-crm-lisey1').value = MODULE_PASSORDS['crm_lisey1'] || 'nerimanov123';
+            if(document.getElementById('setting-pass-crm-lisey2')) document.getElementById('setting-pass-crm-lisey2').value = MODULE_PASSORDS['crm_lisey2'] || 'genclik123';
+            if(document.getElementById('setting-pass-crm-montessori')) document.getElementById('setting-pass-crm-montessori').value = MODULE_PASSORDS['crm_montessori'] || 'montessori123';
+            if(document.getElementById('setting-pass-crm-victory')) document.getElementById('setting-pass-crm-victory').value = MODULE_PASSORDS['crm_victory'] || 'victory123';
+            if(document.getElementById('setting-pass-crm-zumrud')) document.getElementById('setting-pass-crm-zumrud').value = MODULE_PASSORDS['crm_zumrud'] || 'zumrud123';
             document.getElementById('setting-pass-hr').value = MODULE_PASSORDS['hr'] || 'hr123';
             document.getElementById('setting-pass-finance').value = MODULE_PASSORDS['finance'] || 'fin123';
             document.getElementById('setting-pass-site').value = MODULE_PASSORDS['site'] || 'site123';
             document.getElementById('setting-pass-exam').value = MODULE_PASSORDS['exam'] || 'exam123';
         }
-    }, 500);
+    }
+    setTimeout(populatePasswordSettingsInputs, 300);
 
     window.saveAdminPasswords = () => {
-        MODULE_PASSORDS['crm'] = document.getElementById('setting-pass-crm').value || 'crm123';
-        MODULE_PASSORDS['hr'] = document.getElementById('setting-pass-hr').value || 'hr123';
-        MODULE_PASSORDS['finance'] = document.getElementById('setting-pass-finance').value || 'fin123';
-        MODULE_PASSORDS['site'] = document.getElementById('setting-pass-site').value || 'site123';
-        MODULE_PASSORDS['exam'] = document.getElementById('setting-pass-exam').value || 'exam123';
+        MODULE_PASSORDS['crm'] = (document.getElementById('setting-pass-crm') && document.getElementById('setting-pass-crm').value) || 'crm123';
+        MODULE_PASSORDS['crm_lisey1'] = (document.getElementById('setting-pass-crm-lisey1') && document.getElementById('setting-pass-crm-lisey1').value) || 'nerimanov123';
+        MODULE_PASSORDS['crm_lisey2'] = (document.getElementById('setting-pass-crm-lisey2') && document.getElementById('setting-pass-crm-lisey2').value) || 'genclik123';
+        MODULE_PASSORDS['crm_montessori'] = (document.getElementById('setting-pass-crm-montessori') && document.getElementById('setting-pass-crm-montessori').value) || 'montessori123';
+        MODULE_PASSORDS['crm_victory'] = (document.getElementById('setting-pass-crm-victory') && document.getElementById('setting-pass-crm-victory').value) || 'victory123';
+        MODULE_PASSORDS['crm_zumrud'] = (document.getElementById('setting-pass-crm-zumrud') && document.getElementById('setting-pass-crm-zumrud').value) || 'zumrud123';
+        MODULE_PASSORDS['hr'] = (document.getElementById('setting-pass-hr') && document.getElementById('setting-pass-hr').value) || 'hr123';
+        MODULE_PASSORDS['finance'] = (document.getElementById('setting-pass-finance') && document.getElementById('setting-pass-finance').value) || 'fin123';
+        MODULE_PASSORDS['site'] = (document.getElementById('setting-pass-site') && document.getElementById('setting-pass-site').value) || 'site123';
+        MODULE_PASSORDS['exam'] = (document.getElementById('setting-pass-exam') && document.getElementById('setting-pass-exam').value) || 'exam123';
         localStorage.setItem('evrika_admin_passwords', JSON.stringify(MODULE_PASSORDS));
-        showSettingsStatus('Şifrələr uğurla yadda saxlanıldı!', '#10b981');
+        showSettingsStatus('Bütün şifrələr uğurla yadda saxlanıldı!', '#10b981');
     };
     let currentModuleKey = '';
 
@@ -1986,8 +2066,21 @@ fbq('track', 'PageView');
         const card = document.getElementById('login-card');
         const error = document.getElementById('login-error');
 
-        const expectedPass = MODULE_PASSORDS[currentModuleKey] || 'crm123';
-        if (pass === expectedPass) {
+        let expectedPass = MODULE_PASSORDS[currentModuleKey] || 'crm123';
+        const masterPass = MODULE_PASSORDS['crm'] || 'crm123';
+
+        // Per branch specific CRM passwords
+        if (currentModuleKey === 'crm') {
+            if (window.selectedCrmBranch === 'all') {
+                expectedPass = masterPass;
+            } else if (window.selectedCrmBranch) {
+                const branchPassKey = 'crm_' + window.selectedCrmBranch;
+                expectedPass = MODULE_PASSORDS[branchPassKey] || defaultModulePasswords[branchPassKey] || masterPass;
+            }
+        }
+
+        // Allow branch login either with its specific password OR with the master CRM password
+        if (pass === expectedPass || (currentModuleKey === 'crm' && pass === masterPass)) {
             overlaySuccessfulLogin();
         } else {
             error.style.opacity = '1';
