@@ -2069,18 +2069,18 @@ fbq('track', 'PageView');
         let expectedPass = MODULE_PASSORDS[currentModuleKey] || 'crm123';
         const masterPass = MODULE_PASSORDS['crm'] || 'crm123';
 
-        // Per branch specific CRM passwords
+        // Strict Per-Branch Authentication
         if (currentModuleKey === 'crm') {
             if (window.selectedCrmBranch === 'all') {
                 expectedPass = masterPass;
             } else if (window.selectedCrmBranch) {
                 const branchPassKey = 'crm_' + window.selectedCrmBranch;
-                expectedPass = MODULE_PASSORDS[branchPassKey] || defaultModulePasswords[branchPassKey] || masterPass;
+                expectedPass = MODULE_PASSORDS[branchPassKey] || defaultModulePasswords[branchPassKey] || 'crm123';
             }
         }
 
-        // Allow branch login either with its specific password OR with the master CRM password
-        if (pass === expectedPass || (currentModuleKey === 'crm' && pass === masterPass)) {
+        // Each section strictly requires its own password
+        if (pass === expectedPass) {
             overlaySuccessfulLogin();
         } else {
             error.style.opacity = '1';
