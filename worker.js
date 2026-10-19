@@ -1020,7 +1020,28 @@ export default {
             const placeholders = ids.map(() => '?').join(',');
             let results;
             try {
-              const q = await env.DB.prepare(`SELECT id, created_at, name, phone, source, payment_status, amount, coupon_code, paid_at, json_remove(payload, '$.cv_file_base64') AS payload FROM registrations WHERE id IN (${placeholders}) ORDER BY id DESC`).bind(...ids).all();
+              const q = await env.DB.prepare(`
+                SELECT r.id, r.created_at, r.name, r.phone, r.source, 
+                       CASE 
+                         WHEN r.payment_status = 'Ödənilib' THEN 'Ödənilib'
+                         WHEN o.status = 'PAID' THEN 'Ödənilib'
+                         WHEN o.status IN ('FAILED', 'CANCELLED', 'REJECTED') THEN 'Uğursuz'
+                         WHEN o.status = 'PENDING' THEN 'Ödəniş gözlənilir'
+                         ELSE r.payment_status 
+                       END AS payment_status,
+                       r.amount, r.coupon_code, r.paid_at, 
+                       json_remove(r.payload, '$.cv_file_base64') AS payload,
+                       o.status AS order_status
+                FROM registrations r
+                LEFT JOIN (
+                  SELECT registration_id, status, MAX(id) as max_id 
+                  FROM orders 
+                  GROUP BY registration_id
+                ) latest_o ON r.id = latest_o.registration_id
+                LEFT JOIN orders o ON o.id = latest_o.max_id
+                WHERE r.id IN (${placeholders}) 
+                ORDER BY r.id DESC
+              `).bind(...ids).all();
               results = q.results;
             } catch(e) {
               const q = await env.DB.prepare(`SELECT * FROM registrations WHERE id IN (${placeholders}) ORDER BY id DESC`).bind(...ids).all();
@@ -1046,7 +1067,27 @@ export default {
 
           let results;
           try {
-            const q = await env.DB.prepare("SELECT id, created_at, name, phone, source, payment_status, amount, coupon_code, paid_at, json_remove(payload, '$.cv_file_base64') AS payload FROM registrations ORDER BY id DESC").all();
+            const q = await env.DB.prepare(`
+              SELECT r.id, r.created_at, r.name, r.phone, r.source, 
+                     CASE 
+                       WHEN r.payment_status = 'Ödənilib' THEN 'Ödənilib'
+                       WHEN o.status = 'PAID' THEN 'Ödənilib'
+                       WHEN o.status IN ('FAILED', 'CANCELLED', 'REJECTED') THEN 'Uğursuz'
+                       WHEN o.status = 'PENDING' THEN 'Ödəniş gözlənilir'
+                       ELSE r.payment_status 
+                     END AS payment_status,
+                     r.amount, r.coupon_code, r.paid_at, 
+                     json_remove(r.payload, '$.cv_file_base64') AS payload,
+                     o.status AS order_status
+              FROM registrations r
+              LEFT JOIN (
+                SELECT registration_id, status, MAX(id) as max_id 
+                FROM orders 
+                GROUP BY registration_id
+              ) latest_o ON r.id = latest_o.registration_id
+              LEFT JOIN orders o ON o.id = latest_o.max_id
+              ORDER BY r.id DESC
+            `).all();
             results = q.results;
           } catch(e) {
             const q = await env.DB.prepare("SELECT id, created_at, name, phone, source, payment_status, amount, coupon_code, paid_at, payload FROM registrations ORDER BY id DESC").all();
