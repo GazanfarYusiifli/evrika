@@ -1078,11 +1078,10 @@ export default {
               p.id = row.id;
               p._db_id_ = row.id;
               p.created_at = row.created_at;
-              p.payment_status = row.payment_status;
               p.amount = row.amount;
               p.coupon_code = row.coupon_code;
               p.paid_at = row.paid_at;
-              return { ...row, payload: p, ...p };
+              return { ...row, payload: p, ...p, payment_status: row.payment_status };
             });
             return jsonResponse(parsed);
           }
@@ -1135,12 +1134,12 @@ export default {
               name: r.name,
               phone: r.phone,
               source: r.source,
-              payment_status: r.payment_status,
               amount: r.amount,
               coupon_code: r.coupon_code,
               paid_at: r.paid_at,
               payload: p,
-              ...p
+              ...p,
+              payment_status: r.payment_status
             };
           });
           return jsonResponse(parsed);
