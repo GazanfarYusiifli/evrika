@@ -352,17 +352,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   const supabaseData = data.map(row => {
                       const cleaned = row.payload || {};
                       cleaned._db_id_ = row.id; 
+                      cleaned.id = row.id;
+                      cleaned.name = row.name || cleaned.name;
+                      cleaned.phone = row.phone || cleaned.phone;
+                      cleaned.source = row.source || cleaned.source;
+                      cleaned.payment_status = row.payment_status || cleaned.payment_status || 'Ödəniş gözlənilir';
+                      cleaned.amount = row.amount || cleaned.amount;
+                      cleaned.created_at = row.created_at || cleaned.created_at;
                       return cleaned;
                   });
-                  // Destruktiv yazılmanı sildim. Yəni Supabase-dən gələn məlumatlarla Locally var olanlar birləşdirilir, üst-üstə yazmır!
-                  // Yalnız Supabase-də olub Local-da olmayanları əlavə edirik (ID yoxlayırıq).
                   supabaseData.forEach(sbItem => {
-                      const exists = rawData.some(localItem => 
+                      const existingIndex = rawData.findIndex(localItem => 
                           (localItem._db_id_ && sbItem._db_id_ && localItem._db_id_ === sbItem._db_id_) ||
                           (localItem.submissionDate && sbItem.submissionDate && localItem.submissionDate === sbItem.submissionDate) ||
                           (localItem.date && sbItem.date && localItem.date === sbItem.date)
                       );
-                      if(!exists) rawData.push(sbItem);
+                      if(existingIndex >= 0) {
+                          rawData[existingIndex] = { ...rawData[existingIndex], ...sbItem };
+                      } else {
+                          rawData.push(sbItem);
+                      }
                   });
                   // Tarixə görə yenidən düzürük
                   rawData.sort((a,b) => {
@@ -449,13 +458,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         // Multi-State Payment Status Check
         let paymentBadgeHtml = `<span style="color:var(--text-muted); font-size:0.85rem;">-</span>`;
-        const pStat = String(item.payment_status || '').toLowerCase();
+        const pStat = String(item.payment_status || '').toLowerCase().trim();
         if (pStat === 'ödənilib' || pStat === 'paid') {
           paymentBadgeHtml = `<span class="badge paid"><i class="fas fa-check-circle"></i> ÖDƏNİLİB</span>`;
-        } else if (pStat === 'gözləyir' || pStat === 'pending') {
-          paymentBadgeHtml = `<span class="badge pending"><i class="fas fa-clock"></i> GÖZLƏYİR</span>`;
         } else if (pStat === 'uğursuz' || pStat === 'failed') {
-          paymentBadgeHtml = `<span class="badge failed"><i class="fas fa-times"></i> UĞURSUZ</span>`;
+          paymentBadgeHtml = `<span class="badge failed" style="background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3);"><i class="fas fa-times-circle"></i> UĞURSUZ</span>`;
+        } else if (pStat === 'ödəniş gözlənilir' || pStat === 'gözləyir' || pStat === 'gözləmədə' || pStat === 'pending') {
+          paymentBadgeHtml = `<span class="badge pending"><i class="fas fa-clock"></i> ÖDƏNİŞ GÖZLƏNİLİR</span>`;
         } else if (pStat === 'ləğv edilib' || pStat === 'cancelled') {
           paymentBadgeHtml = `<span class="badge cancelled"><i class="fas fa-ban"></i> LƏĞV EDİLİB</span>`;
         } else if (pStat === 'geri qaytarılıb' || pStat === 'refunded') {
