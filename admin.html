@@ -3332,6 +3332,7 @@ fbq('track', 'PageView');
       if (!Array.isArray(allData) || allData.length === 0) return;
       let partialData = allData
           .map(r => {
+              const p = r.payload || {};
               let effectivePaymentStatus = 'Ödəniş gözlənilir';
               const rawStat = r.payment_status || p.payment_status || '';
               if (rawStat === 'Ödənilib' || r.payment_status === 'Ödənilib' || p.payment_status === 'Ödənilib') {
@@ -3492,6 +3493,7 @@ fbq('track', 'PageView');
         if(allData.length > 0) {
             let fetchedData = allData
                 .map(r => {
+                    const p = r.payload || {};
                     let effectivePaymentStatus = 'Ödəniş gözlənilir';
                     const rawStat = r.payment_status || p.payment_status || '';
                     if (rawStat === 'Ödənilib' || r.payment_status === 'Ödənilib' || p.payment_status === 'Ödənilib') {
