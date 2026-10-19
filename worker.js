@@ -504,6 +504,15 @@ export default {
             `).bind(failStatus, activeOrderId).run();
           }
 
+          const failRegRow = await env.DB.prepare("SELECT * FROM registrations WHERE id = ?").bind(regId).first();
+          if (failRegRow && failRegRow.payment_status !== "Ödənilib") {
+            let p = safeJsonParse(failRegRow.payload);
+            p.payment_status = "Uğursuz";
+            p.payment_fail_reason = bank_response || status || "İmtina edildi";
+            await env.DB.prepare("UPDATE registrations SET payment_status = 'Uğursuz', payload = ? WHERE id = ?")
+              .bind(JSON.stringify(p), regId).run();
+          }
+
           await logPaymentEvent(env.DB, {
             registration_id: regId,
             order_id: activeOrderId,
@@ -631,6 +640,19 @@ export default {
                   reg.coupon_code = couponCode;
                   ord.status = "PAID";
                   break;
+                } else if (epStatusData.status === "failed" || epStatusData.status === "cancel" || epStatusData.status === "error") {
+                  const bankFailReason = epStatusData.bank_response || epStatusData.message || "İmtina edildi";
+                  await env.DB.prepare("UPDATE payments SET status = 'FAILED', bank_response = ?, updated_at = CURRENT_TIMESTAMP WHERE order_id = ?").bind(bankFailReason, ord.id).run();
+                  await env.DB.prepare("UPDATE orders SET status = 'FAILED', updated_at = CURRENT_TIMESTAMP WHERE id = ?").bind(ord.id).run();
+
+                  payload.payment_status = "Uğursuz";
+                  payload.payment_fail_reason = bankFailReason;
+
+                  await env.DB.prepare("UPDATE registrations SET payment_status = 'Uğursuz', payload = ? WHERE id = ?")
+                    .bind(JSON.stringify(payload), dbId).run();
+
+                  reg.payment_status = "Uğursuz";
+                  ord.status = "FAILED";
                 }
               }
             } catch (e) {
