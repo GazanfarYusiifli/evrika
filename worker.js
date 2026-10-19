@@ -109,10 +109,23 @@ export default {
     };
 
     try {
+      // 0. APPLE PAY DOMAIN ASSOCIATION
+      if (path === "/.well-known/apple-developer-merchantid-domain-association" || path === "/.well-known/apple-developer-merchantid-domain-association.txt") {
+        const appleDomainContent = env.APPLE_PAY_ASSOCIATION || "7B227073704964223A22";
+        return new Response(appleDomainContent, {
+          status: 200,
+          headers: {
+            "Content-Type": "text/plain; charset=utf-8",
+            "Cache-Control": "public, max-age=86400",
+            "Access-Control-Allow-Origin": "*"
+          }
+        });
+      }
+
       // =========================================================================
-      // 1. PAYMENT GATEWAY: CREATE CHECKOUT (POST /epoint-pay or /epoint)
+      // 1. PAYMENT GATEWAY: CREATE CHECKOUT (POST /epoint-pay, /epoint, or /checkout)
       // =========================================================================
-      if (path === "/epoint-pay" || path === "/epoint") {
+      if (path === "/epoint-pay" || path === "/epoint" || path === "/epoint/checkout") {
         if (request.method !== "POST") {
           return jsonResponse({ success: false, error: { code: "METHOD_NOT_ALLOWED", message: "Yalnız POST sorğusuna icazə verilir" } }, 405);
         }
@@ -215,10 +228,14 @@ export default {
         const dataB64 = utf8ToBase64(JSON.stringify(epointPayload));
         const signature = await calculateEpointSignature(privateKey, dataB64);
 
-        // Dispatch request to Epoint
+        // Dispatch request to Epoint with custom headers to prevent Cloudflare WAF Error 1010
         const epointResponse = await fetch("https://epoint.az/api/1/request", {
           method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Accept": "application/json, text/plain, */*",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 EvrikaPaymentClient/2.0"
+          },
           body: new URLSearchParams({ data: dataB64, signature })
         });
 
@@ -577,7 +594,11 @@ export default {
 
               const epCheckRes = await fetch("https://epoint.az/api/1/get-status", {
                 method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                headers: {
+                  "Content-Type": "application/x-www-form-urlencoded",
+                  "Accept": "application/json, text/plain, */*",
+                  "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 EvrikaPaymentClient/2.0"
+                },
                 body: new URLSearchParams({ data: checkB64, signature: checkSig })
               });
 
