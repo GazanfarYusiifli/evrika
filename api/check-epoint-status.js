@@ -35,23 +35,26 @@ async function queryEpointStatusByTransaction(transactionId) {
   }
 }
 
-async function reconcileRegistration(dbId, { orderId, transaction, markFailed } = {}) {
+async function reconcileRegistration(dbId, { orderId, transaction, markFailed, preloadedReg } = {}) {
   const cleanId = parseInt(String(dbId).replace(/\D/g, ""), 10);
   if (!cleanId || isNaN(cleanId)) return null;
 
   const statusParams = new URLSearchParams({ id: String(cleanId) });
   if (orderId) statusParams.append("order_id", String(orderId));
 
+  let regRow = preloadedReg || null;
   const [cfStatusRes, regRes] = await Promise.all([
     fetch(`${CF_BASE_URL}/api/payment-status?${statusParams.toString()}`).catch(() => null),
-    fetch(`${CF_BASE_URL}/api/registrations?id=${cleanId}`).catch(() => null)
+    regRow ? Promise.resolve(null) : fetch(`${CF_BASE_URL}/api/registrations?id=${cleanId}`).catch(() => null)
   ]);
 
   const cfStatusJson = cfStatusRes && cfStatusRes.ok ? await cfStatusRes.json().catch(() => null) : null;
   const cfData = cfStatusJson?.data || null;
 
-  const regList = regRes && regRes.ok ? await regRes.json().catch(() => []) : [];
-  const regRow = Array.isArray(regList) && regList.length > 0 ? regList[0] : null;
+  if (!regRow && regRes && regRes.ok) {
+    const regList = await regRes.json().catch(() => []);
+    regRow = Array.isArray(regList) && regList.length > 0 ? regList[0] : null;
+  }
 
   if (!cfData && !regRow) return null;
 
@@ -62,7 +65,7 @@ async function reconcileRegistration(dbId, { orderId, transaction, markFailed } 
     null;
 
   let epStatus = null;
-  if (txId && regRow?.payment_status !== "Ödənilib") {
+  if (txId && regRow?.payment_status !== "Ödənilib" && !cfData?.isPaid) {
     epStatus = await queryEpointStatusByTransaction(txId);
   }
 
@@ -110,8 +113,9 @@ async function reconcileRegistration(dbId, { orderId, transaction, markFailed } 
     cfData?.paid_at ||
     (isPaid ? new Date().toISOString() : null);
 
-  // Sync authoritative state back into D1 registrations table if needed
-  if (isPaid && regRow && regRow.payment_status !== "Ödənilib") {
+  // Sync authoritative state back into D1 registrations table
+  // Note: Worker's PUT /api/registrations?id=X safely merges with existing payload in D1
+  if (isPaid && (!regRow || regRow.payment_status !== "Ödənilib")) {
     try {
       await fetch(`${CF_BASE_URL}/api/registrations?id=${cleanId}`, {
         method: "PUT",
@@ -120,17 +124,17 @@ async function reconcileRegistration(dbId, { orderId, transaction, markFailed } 
           payment_status: "Ödənilib",
           coupon_code: couponCode,
           paid_at: paidAt,
-          amount: epStatus?.amount ? String(epStatus.amount) : (regRow.amount || "35"),
-          epoint_transaction: epStatus?.transaction || txId || "",
-          epoint_rrn: epStatus?.rrn || "",
-          epoint_card_mask: epStatus?.card_mask || "",
-          epoint_card_name: epStatus?.card_name || ""
+          ...(epStatus?.amount ? { amount: String(epStatus.amount) } : {}),
+          ...(epStatus?.transaction || txId ? { epoint_transaction: epStatus?.transaction || txId } : {}),
+          ...(epStatus?.rrn ? { epoint_rrn: epStatus.rrn } : {}),
+          ...(epStatus?.card_mask ? { epoint_card_mask: epStatus.card_mask } : {}),
+          ...(epStatus?.card_name ? { epoint_card_name: epStatus.card_name } : {})
         })
       });
     } catch (e) {
       console.warn("Failed to sync PAID status to registration:", e);
     }
-  } else if (isFailed && regRow && regRow.payment_status !== "Ödənilib" && regRow.payment_status !== "Uğursuz") {
+  } else if (isFailed && (!regRow || (regRow.payment_status !== "Ödənilib" && regRow.payment_status !== "Uğursuz"))) {
     const failReason =
       epStatus?.message ||
       epStatus?.bank_response ||
@@ -188,21 +192,29 @@ export default async function handler(req, res) {
     const batchIds = req.body?.ids || (req.query.ids ? String(req.query.ids).split(",") : null);
 
     if (syncAll || (Array.isArray(batchIds) && batchIds.length > 0)) {
-      let targetIds = [];
+      let targetItems = [];
       if (Array.isArray(batchIds) && batchIds.length > 0) {
-        targetIds = batchIds.map(id => parseInt(String(id).replace(/\D/g, ""), 10)).filter(Boolean);
+        const cleanIds = batchIds.map(id => parseInt(String(id).replace(/\D/g, ""), 10)).filter(Boolean);
+        targetItems = cleanIds.map(id => ({ id, reg: null }));
       } else {
         const allRes = await fetch(`${CF_BASE_URL}/api/registrations`);
         const allRegs = allRes.ok ? await allRes.json() : [];
-        targetIds = (Array.isArray(allRegs) ? allRegs : [])
+        targetItems = (Array.isArray(allRegs) ? allRegs : [])
           .filter(r => r && r.payment_status === "Ödəniş gözlənilir")
-          .map(r => r.id);
+          .map(r => ({ id: r.id, reg: r }));
       }
 
       const reconciled = [];
-      for (const id of targetIds.slice(0, 50)) {
-        const item = await reconcileRegistration(id);
-        if (item) reconciled.push(item);
+      const slice = targetItems.slice(0, 20);
+      const chunkSize = 5;
+      for (let i = 0; i < slice.length; i += chunkSize) {
+        const chunk = slice.slice(i, i + chunkSize);
+        const results = await Promise.all(
+          chunk.map(item => reconcileRegistration(item.id, { preloadedReg: item.reg }))
+        );
+        results.forEach(r => {
+          if (r) reconciled.push(r);
+        });
       }
 
       return res.status(200).json({
