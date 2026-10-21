@@ -552,7 +552,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 utm_term: sessionStorage.getItem('utm_term') || "",
                 utm_content: sessionStorage.getItem('utm_content') || "",
                 name: firstName + " " + lastName,
+                student_name: firstName + " " + lastName,
+                student_grade: grade,
                 phone: "+994" + phoneNum,
+                email: email,
                 source: "Qeydiyyat - Gənclik filialı",
                 status: "Yeni",
                 payment_status: "Ödəniş gözlənilir",
@@ -594,7 +597,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                       localStorage.setItem('last_regId', data[0].id);
                       localStorage.setItem('last_email', email);
                       localStorage.setItem('last_name', firstName + ' ' + lastName);
-                      localStorage.setItem('last_epoint_transaction', epointData.transaction);
+                      if (epointData.transaction) localStorage.setItem('last_epoint_transaction', epointData.transaction);
+                      if (epointData.order_number || epointData.order_id) localStorage.setItem('last_order_id', epointData.order_number || epointData.order_id);
                       window.location.href = epointData.redirect_url;
                   } else {
                       window.location.href = 'payment.html?id=' + data[0].id + '&name=' + encodeURIComponent(firstName + ' ' + lastName) + '&amount=' + amountNum + '&email=' + encodeURIComponent(email);

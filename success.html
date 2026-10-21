@@ -493,6 +493,7 @@
     const urlParams = new URLSearchParams(window.location.search);
     let rawRegId = urlParams.get('regId') || urlParams.get('id') || localStorage.getItem('last_regId') || '';
     let orderIdParam = urlParams.get('order_id') || localStorage.getItem('last_order_id') || '';
+    let txParam = urlParams.get('transaction') || localStorage.getItem('last_epoint_transaction') || '';
 
     let dbId = parseInt(String(rawRegId).replace(/\D/g, ''), 10);
     if ((!dbId || isNaN(dbId)) && orderIdParam) {
@@ -519,9 +520,20 @@
       }
 
       try {
-        const res = await fetch(`${API_BASE}/api/payment-status?id=${dbId}${orderIdParam ? '&order_id=' + encodeURIComponent(orderIdParam) : ''}`, {
-          cache: 'no-store'
-        });
+        const qs = new URLSearchParams({ id: String(dbId) });
+        if (orderIdParam) qs.append('order_id', orderIdParam);
+        if (txParam) qs.append('transaction', txParam);
+
+        let res = null;
+        try {
+          res = await fetch(`/api/check-epoint-status?${qs.toString()}`, { cache: 'no-store' });
+        } catch (e) {
+          console.warn("Primary check-epoint-status warning:", e);
+        }
+
+        if (!res || !res.ok) {
+          res = await fetch(`${API_BASE}/api/payment-status?${qs.toString()}`, { cache: 'no-store' });
+        }
 
         if (!res.ok) {
           throw new Error("HTTP error " + res.status);
@@ -569,7 +581,7 @@
       document.getElementById('ticket-order-id').innerText = coupon;
       document.getElementById('ticket-student-name').innerText = data.student_name || 'Şagird';
       
-      const amtNum = parseFloat(data.amount) || 0.01;
+      const amtNum = parseFloat(data.amount) || 35;
       document.getElementById('ticket-amount').innerText = `${amtNum.toFixed(2)} AZN (ÖDƏNİLİB)`;
 
       let branch = 'EVRİKA Liseyi';
@@ -609,7 +621,7 @@
 
       const coupon = loadedTicketData.coupon_code || ("EV-" + String(dbId).padStart(4, '0'));
       const student = loadedTicketData.student_name || 'Şagird';
-      const amtNum = (parseFloat(loadedTicketData.amount) || 0.01).toFixed(2) + ' AZN';
+      const amtNum = (parseFloat(loadedTicketData.amount) || 35).toFixed(2) + ' AZN';
 
       let branch = 'EVRİKA Liseyi';
       const src = (loadedTicketData.source || '').toLowerCase();

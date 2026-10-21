@@ -387,6 +387,52 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
       
       renderDashboard();
+      reconcileCrmPendingPayments();
+    }
+
+    async function reconcileCrmPendingPayments() {
+      try {
+        const pendingIds = (rawData || [])
+          .filter(item => item && (item._db_id_ || item.id) && isPaymentReg(item) && item.payment_status === 'Ödəniş gözlənilir')
+          .slice(0, 40)
+          .map(item => item._db_id_ || item.id);
+        if (pendingIds.length === 0) return;
+
+        const syncRes = await fetch('/api/check-epoint-status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ids: pendingIds })
+        });
+        if (!syncRes.ok) return;
+        const syncJson = await syncRes.json();
+        if (!Array.isArray(syncJson.reconciled)) return;
+
+        let changed = false;
+        const map = new Map();
+        syncJson.reconciled.forEach(r => {
+          if (r && r.registration_id && r.payment_status && r.payment_status !== 'Ödəniş gözlənilir') {
+            map.set(Number(r.registration_id), r);
+          }
+        });
+        if (map.size > 0) {
+          rawData.forEach(item => {
+            const idNum = Number(item._db_id_ || item.id);
+            if (map.has(idNum)) {
+              const rec = map.get(idNum);
+              item.payment_status = rec.payment_status;
+              if (rec.coupon_code) item.coupon_code = rec.coupon_code;
+              if (rec.paid_at) item.paid_at = rec.paid_at;
+              changed = true;
+            }
+          });
+          if (changed) {
+            localStorage.setItem('evrika_crm_data', JSON.stringify(rawData));
+            renderDashboard();
+          }
+        }
+      } catch (e) {
+        console.warn("CRM background reconcile warning:", e);
+      }
     }
 
     function isPaymentReg(item) {

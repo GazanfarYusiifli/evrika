@@ -243,12 +243,61 @@
   </div>
 
   <script>
+    const API_BASE = 'https://evrika-api.yusifliqezenfer90.workers.dev';
     const urlParams = new URLSearchParams(window.location.search);
-    const regId = urlParams.get('regId') || urlParams.get('id') || localStorage.getItem('last_regId') || '';
+    const rawRegId = urlParams.get('regId') || urlParams.get('id') || localStorage.getItem('last_regId') || '';
+    const orderId = urlParams.get('order_id') || localStorage.getItem('last_order_id') || '';
+    const txId = urlParams.get('transaction') || localStorage.getItem('last_epoint_transaction') || '';
     const email = urlParams.get('email') || localStorage.getItem('last_email') || '';
     const name = urlParams.get('name') || localStorage.getItem('last_name') || '';
-    if (regId) {
-      document.getElementById('retry-link').href = `/payment.html?id=${encodeURIComponent(regId)}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&retry=1`;
+
+    let cleanRegId = rawRegId ? parseInt(String(rawRegId).replace(/\D/g, ''), 10) : null;
+    if ((!cleanRegId || isNaN(cleanRegId)) && orderId) {
+      const m = String(orderId).match(/EVR-(\d+)/i) || String(orderId).match(/EV-0*(\d+)/i) || String(orderId).match(/^(\d+)/);
+      if (m) cleanRegId = parseInt(m[1], 10);
+    }
+
+    if (cleanRegId) {
+      document.getElementById('retry-link').href = `/payment.html?id=${encodeURIComponent(cleanRegId)}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&retry=1`;
+
+      // Avtomatik olaraq uğursuz cəhdi sistemdə və CRM-də "Uğursuz" kimi qeydə alırıq
+      (async function syncFailedStatus() {
+        try {
+          const qs = new URLSearchParams({
+            id: String(cleanRegId),
+            markFailed: '1'
+          });
+          if (orderId) qs.append('order_id', orderId);
+          if (txId) qs.append('transaction', txId);
+
+          const res = await fetch(`/api/check-epoint-status?${qs.toString()}`, { cache: 'no-store' });
+          if (res.ok) {
+            const json = await res.json();
+            if (json?.data?.isPaid) {
+              // Əgər əslində ödəniş uğurla keçibsə, dərhal kupon səhifəsinə yönləndir
+              window.location.href = `/success?regId=${cleanRegId}`;
+              return;
+            }
+          }
+        } catch (err) {
+          console.warn('Reconcile on error page warning:', err);
+          try {
+            const checkRes = await fetch(`${API_BASE}/api/registrations?id=${cleanRegId}`);
+            const list = checkRes.ok ? await checkRes.json() : [];
+            const existing = Array.isArray(list) && list.length > 0 ? list[0] : null;
+            if (existing && existing.payment_status !== 'Ödənilib') {
+              await fetch(`${API_BASE}/api/registrations?id=${cleanRegId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  payment_status: 'Uğursuz',
+                  payment_fail_reason: 'Ödəniş tamamlanmadı və ya ləğv edildi'
+                })
+              });
+            }
+          } catch (e2) {}
+        }
+      })();
     } else {
       document.getElementById('retry-link').href = '/schools.html';
     }

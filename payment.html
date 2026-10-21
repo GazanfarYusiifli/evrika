@@ -352,6 +352,7 @@
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+              name: finalName,
               fullName: finalName,
               student_name: finalName,
               student_grade: gradeVal,
@@ -360,7 +361,7 @@
               source: 'Birbaşa Ödəniş Portalı',
               status: 'Yeni',
               payment_status: 'Ödəniş gözlənilir',
-              amount: '0.01',
+              amount: String(regAmount || 35) + ' AZN',
               date: new Date().toISOString()
             })
           });
@@ -390,7 +391,7 @@
 
         let response = null;
         try {
-          response = await fetch(`${API_BASE}/api/epoint-pay`, {
+          response = await fetch(`/api/epoint`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -401,11 +402,11 @@
             })
           });
         } catch (netErr) {
-          console.warn("Direct worker call failed, trying /api/epoint:", netErr);
+          console.warn("/api/epoint call failed, trying direct worker:", netErr);
         }
 
         if (!response || !response.ok) {
-          response = await fetch(`/api/epoint`, {
+          response = await fetch(`${API_BASE}/api/epoint-pay`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -431,6 +432,9 @@
           localStorage.setItem('last_name', finalName);
           if (resData.order_number || resData.order_id) {
             localStorage.setItem('last_order_id', resData.order_number || resData.order_id);
+          }
+          if (resData.transaction) {
+            localStorage.setItem('last_epoint_transaction', resData.transaction);
           }
           
           btn.innerHTML = '<i class="fas fa-check"></i> EPOINT ÇEKOUT AÇILIR...';

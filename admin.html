@@ -3462,6 +3462,7 @@ fbq('track', 'PageView');
               localStorage.setItem('evrika_crm_data', JSON.stringify(allData));
             } catch(e) {}
             hideToast(true);
+            reconcilePendingPaymentsInBackground();
         } else {
             hideToast(false);
         }
@@ -3477,10 +3478,85 @@ fbq('track', 'PageView');
               localStorage.setItem('evrika_crm_data', JSON.stringify(allData));
             } catch(e) {}
             hideToast(true);
+            reconcilePendingPaymentsInBackground();
             return;
           }
         } catch(err2) {}
         hideToast(false);
+      }
+    }
+
+    let isReconcilingPending = false;
+    async function reconcilePendingPaymentsInBackground() {
+      if (isReconcilingPending) return;
+      isReconcilingPending = true;
+      try {
+        const pendingItems = (rawData || []).filter(item =>
+          item &&
+          (item._db_id_ || item.id) &&
+          isPaymentReg(item) &&
+          item.payment_status === 'Ödəniş gözlənilir'
+        );
+        if (pendingItems.length === 0) {
+          isReconcilingPending = false;
+          return;
+        }
+
+        const pendingIds = pendingItems.slice(0, 40).map(item => item._db_id_ || item.id);
+        let updatedMap = new Map();
+
+        try {
+          const syncRes = await fetch('/api/check-epoint-status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ids: pendingIds })
+          });
+          if (syncRes.ok) {
+            const syncJson = await syncRes.json();
+            if (Array.isArray(syncJson.reconciled)) {
+              syncJson.reconciled.forEach(rec => {
+                if (rec && rec.registration_id && rec.payment_status && rec.payment_status !== 'Ödəniş gözlənilir') {
+                  updatedMap.set(Number(rec.registration_id), rec);
+                }
+              });
+            }
+          }
+        } catch (err) {
+          console.warn('Batch check-epoint-status fallback:', err);
+        }
+
+        if (updatedMap.size > 0) {
+          (rawData || []).forEach(item => {
+            const idNum = Number(item._db_id_ || item.id);
+            if (updatedMap.has(idNum)) {
+              const rec = updatedMap.get(idNum);
+              item.payment_status = rec.payment_status;
+              if (rec.coupon_code) item.coupon_code = rec.coupon_code;
+              if (rec.paid_at) item.paid_at = rec.paid_at;
+            }
+          });
+          (window.allFetchedData || []).forEach(item => {
+            const idNum = Number(item._db_id_ || item.id);
+            if (updatedMap.has(idNum)) {
+              const rec = updatedMap.get(idNum);
+              item.payment_status = rec.payment_status;
+              if (rec.coupon_code) item.coupon_code = rec.coupon_code;
+              if (rec.paid_at) item.paid_at = rec.paid_at;
+            }
+          });
+          try {
+            localStorage.setItem('evrika_cached_regs', JSON.stringify(window.allFetchedData));
+            localStorage.setItem('evrika_crm_data', JSON.stringify(window.allFetchedData));
+          } catch (e) {}
+          window.filterData();
+          renderDashboard();
+          renderAnalytics();
+          renderFinance();
+        }
+      } catch (e) {
+        console.warn('Reconcile background error:', e);
+      } finally {
+        isReconcilingPending = false;
       }
     }
 
