@@ -200,7 +200,34 @@ export default async function handler(req, res) {
         const allRes = await fetch(`${CF_BASE_URL}/api/registrations`);
         const allRegs = allRes.ok ? await allRes.json() : [];
         targetItems = (Array.isArray(allRegs) ? allRegs : [])
-          .filter(r => r && r.payment_status === "Ödəniş gözlənilir")
+          .filter(r => {
+            if (!r || r.payment_status !== "Ödəniş gözlənilir") return false;
+            if (r.is_call || r.chid || r.position) return false;
+            const s = String(r.source || r.student_grade || "").toLowerCase();
+            if (
+              s === "contact" ||
+              s === "karyera" ||
+              s === "career" ||
+              s.includes("zəng") ||
+              s.includes("phone") ||
+              s.includes("survey") ||
+              s.includes("səsi") ||
+              s.includes("sesi") ||
+              s.includes("montessori") ||
+              s.includes("zumrud") ||
+              s.includes("zümrüd")
+            ) {
+              return false;
+            }
+            return (
+              s.includes("qeydiyyat") ||
+              s.includes("lisey") ||
+              s.includes("ptim") ||
+              s.includes("ödəniş") ||
+              s.includes("odenis") ||
+              s.includes("imtahan")
+            );
+          })
           .map(r => ({ id: r.id, reg: r }));
       }
 
