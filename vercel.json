@@ -33,6 +33,10 @@
       "destination": "/about.html"
     },
     {
+      "source": "/management",
+      "destination": "/management.html"
+    },
+    {
       "source": "/schools",
       "destination": "/schools.html"
     },
