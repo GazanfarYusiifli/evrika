@@ -131,6 +131,14 @@
     {
       "source": "/error",
       "destination": "/error.html"
+    },
+    {
+      "source": "/fail",
+      "destination": "/error.html"
+    },
+    {
+      "source": "/api/epoint/callback",
+      "destination": "/api/result"
     }
   ]
 }

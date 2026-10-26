@@ -185,6 +185,90 @@
       cursor: not-allowed;
       transform: none;
     }
+
+    .express-pay-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    .express-btn {
+      width: 100%;
+      padding: 15px;
+      border-radius: 14px;
+      font-size: 0.98rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.25s ease;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .express-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-apple-pay {
+      background: #000000;
+      color: #ffffff;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+    }
+    .btn-apple-pay:hover {
+      background: #111111;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+    }
+
+    .btn-google-pay {
+      background: #ffffff;
+      color: #1f1f1f;
+      box-shadow: 0 4px 18px rgba(255, 255, 255, 0.1);
+    }
+    .btn-google-pay:hover {
+      background: #f1f5f9;
+      box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+    }
+
+    .divider-text {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: #64748b;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin: 8px 0;
+    }
+    .divider-text::before,
+    .divider-text::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .divider-text::before { margin-right: 12px; }
+    .divider-text::after { margin-left: 12px; }
+
+    .security-notice-box {
+      background: rgba(14, 165, 233, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 0.8rem;
+      color: #bae6fd;
+      line-height: 1.5;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .security-notice-box i {
+      font-size: 1rem;
+      color: #38bdf8;
+      margin-top: 2px;
+    }
   </style>
 </head>
 <body>
@@ -251,9 +335,30 @@
         </div>
       </div>
 
+      <!-- Express 1-Touch Payment Buttons -->
+      <div class="express-pay-wrap">
+        <button type="button" class="express-btn btn-apple-pay" onclick="processExpressPayment('Apple Pay')">
+          <i class="fab fa-apple" style="font-size: 1.25rem;"></i> Pay ilə 1 Toxunuşla Ödə
+        </button>
+        <button type="button" class="express-btn btn-google-pay" onclick="processExpressPayment('Google Pay')">
+          <i class="fab fa-google" style="color: #4285f4; font-size: 1.1rem;"></i> Pay ilə Sürətli Ödəniş
+        </button>
+      </div>
+
+      <div class="divider-text">və ya bank kartı ilə</div>
+
       <button type="button" class="pay-btn" id="paySubmitBtn" onclick="processPayment()">
-        <i class="fas fa-credit-card"></i> KARTLA ÖDƏNİŞƏ KEÇ
+        <i class="fas fa-credit-card"></i> Visa / Mastercard ilə Ödə
       </button>
+
+      <!-- Educational & PCI-DSS Compliance Notice -->
+      <div class="security-notice-box">
+        <i class="fas fa-shield-halved"></i>
+        <div>
+          <b>Təhlükəsizlik və 3D Secure Tələbi:</b><br>
+          Ödənişlər yalnız <b>Visa</b> və <b>Mastercard</b> ilə qəbul olunur. Zəhmət olmasa kartınızın <b>3D Secure (SMS OTP)</b> funksiyasının aktiv olduğundan əmin olun. Kart məlumatlarınız serverimizdə saxlanılmır və birbaşa bank səviyyəsində şifrələnir.
+        </div>
+      </div>
 
       <p style="text-align:center; font-size: 0.75rem; color: rgba(255,255,255,0.4);">
         <i class="fas fa-shield-alt"></i> PashaBank & Epoint 3D-Secure ilə tam qorunur
@@ -321,7 +426,11 @@
 
     loadStudentDataIfAvailable();
 
-    async function processPayment() {
+    function processExpressPayment(method) {
+      processPayment(method);
+    }
+
+    async function processPayment(paymentMethod) {
       if (isSubmitting) return;
 
       const btn = document.getElementById('paySubmitBtn');
@@ -342,7 +451,7 @@
         if (!finalName || !phoneVal) {
           alert('Zəhmət olmasa şagirdin adını və əlaqə nömrəsini daxil edin.');
           btn.disabled = false;
-          btn.innerHTML = '<i class="fas fa-credit-card"></i> KARTLA ÖDƏNİŞƏ KEÇ';
+          btn.innerHTML = '<i class="fas fa-credit-card"></i> Visa / Mastercard ilə Ödə';
           isSubmitting = false;
           return;
         }
@@ -358,7 +467,7 @@
               student_grade: gradeVal,
               phone: phoneVal,
               email: finalEmail,
-              source: 'Birbaşa Ödəniş Portalı',
+              source: paymentMethod ? `Ödəniş Portalı (${paymentMethod})` : 'Birbaşa Ödəniş Portalı',
               status: 'Yeni',
               payment_status: 'Ödəniş gözlənilir',
               amount: String(regAmount || 35) + ' AZN',
@@ -381,13 +490,15 @@
       if (!cleanDbId) {
         alert('Qeydiyyat ID tapılmadı.');
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-credit-card"></i> KARTLA ÖDƏNİŞƏ KEÇ';
+        btn.innerHTML = '<i class="fas fa-credit-card"></i> Visa / Mastercard ilə Ödə';
         isSubmitting = false;
         return;
       }
 
       try {
-        btn.innerHTML = '<i class="fas fa-lock"></i> TƏHLÜKƏSİZ ÖDƏNİŞƏ YÖNLƏNDİRİLİRSİNİZ...';
+        btn.innerHTML = paymentMethod 
+          ? `<i class="fas fa-lock"></i> ${paymentMethod} İLƏ ƏLAQƏ QURULUR...`
+          : '<i class="fas fa-lock"></i> TƏHLÜKƏSİZ ÖDƏNİŞƏ YÖNLƏNDİRİLİRSİNİZ...';
 
         let response = null;
         try {
@@ -398,7 +509,8 @@
               regId: cleanDbId,
               name: finalName,
               email: finalEmail,
-              amount: regAmount || 35
+              amount: regAmount || 35,
+              paymentMethod: paymentMethod || 'Card'
             })
           });
         } catch (netErr) {
@@ -413,7 +525,8 @@
               regId: cleanDbId,
               name: finalName,
               email: finalEmail,
-              amount: regAmount || 35
+              amount: regAmount || 35,
+              paymentMethod: paymentMethod || 'Card'
             })
           });
         }
@@ -442,14 +555,14 @@
         } else {
           const errMsg = (resData.error && resData.error.message) || resData.message || 'Ödəniş sessiyası yaradıla bilmədi.';
           alert('Xəta: ' + errMsg);
-          btn.innerHTML = 'YENİDƏN CƏHD ET';
+          btn.innerHTML = '<i class="fas fa-redo"></i> YENİDƏN CƏHD ET';
           btn.disabled = false;
           isSubmitting = false;
         }
       } catch (err) {
         console.error('Payment error:', err);
         alert('Serverlə əlaqə qurulmadı. İnternet bağlantınızı yoxlayın.');
-        btn.innerHTML = '<i class="fas fa-credit-card"></i> KARTLA ÖDƏNİŞƏ KEÇ';
+        btn.innerHTML = '<i class="fas fa-credit-card"></i> Visa / Mastercard ilə Ödə';
         btn.disabled = false;
         isSubmitting = false;
       }
