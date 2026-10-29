@@ -1969,7 +1969,31 @@ fbq('track', 'PageView');
         'site': 'site123',
         'exam': 'exam123'
     };
-    let MODULE_PASSORDS = savedPass ? Object.assign({}, defaultModulePasswords, JSON.parse(savedPass)) : defaultModulePasswords;
+    let MODULE_PASSORDS = savedPass ? Object.assign({}, defaultModulePasswords, JSON.parse(savedPass)) : Object.assign({}, defaultModulePasswords);
+    let _adminPassDbId = 6;
+
+    async function syncAdminPasswordsFromCloud() {
+        try {
+            const res = await fetch(`${API_URL}/parent_testimonials?select=*`, { headers: HEADERS, cache: 'no-store' });
+            if (res.ok) {
+                const list = await res.json();
+                const rec = list.find(r => (r.payload && r.payload.__type__ === 'admin_system_passwords') || r.__type__ === 'admin_system_passwords');
+                if (rec) {
+                    _adminPassDbId = rec.id || rec._db_id_ || 6;
+                    const p = rec.payload || rec;
+                    Object.keys(defaultModulePasswords).forEach(k => {
+                        if (p[k]) MODULE_PASSORDS[k] = p[k];
+                    });
+                    localStorage.setItem('evrika_admin_passwords', JSON.stringify(MODULE_PASSORDS));
+                    populatePasswordSettingsInputs();
+                }
+            }
+        } catch (e) {
+            console.warn("Could not sync admin passwords from cloud:", e);
+        }
+    }
+    // Asinxron olaraq serverdən ən son parolları yüklə
+    syncAdminPasswordsFromCloud();
 
     function populatePasswordSettingsInputs() {
         if(document.getElementById('setting-pass-crm')) {
@@ -1987,7 +2011,7 @@ fbq('track', 'PageView');
     }
     setTimeout(populatePasswordSettingsInputs, 300);
 
-    window.saveAdminPasswords = () => {
+    window.saveAdminPasswords = async () => {
         MODULE_PASSORDS['crm'] = (document.getElementById('setting-pass-crm') && document.getElementById('setting-pass-crm').value) || 'crm123';
         MODULE_PASSORDS['crm_lisey1'] = (document.getElementById('setting-pass-crm-lisey1') && document.getElementById('setting-pass-crm-lisey1').value) || 'nerimanov123';
         MODULE_PASSORDS['crm_lisey2'] = (document.getElementById('setting-pass-crm-lisey2') && document.getElementById('setting-pass-crm-lisey2').value) || 'genclik123';
@@ -1998,8 +2022,42 @@ fbq('track', 'PageView');
         MODULE_PASSORDS['finance'] = (document.getElementById('setting-pass-finance') && document.getElementById('setting-pass-finance').value) || 'fin123';
         MODULE_PASSORDS['site'] = (document.getElementById('setting-pass-site') && document.getElementById('setting-pass-site').value) || 'site123';
         MODULE_PASSORDS['exam'] = (document.getElementById('setting-pass-exam') && document.getElementById('setting-pass-exam').value) || 'exam123';
+        
+        // Həm lokal brauzerdə saxla
         localStorage.setItem('evrika_admin_passwords', JSON.stringify(MODULE_PASSORDS));
-        showSettingsStatus('Bütün şifrələr uğurla yadda saxlanıldı!', '#10b981');
+        showSettingsStatus('Şifrələr yadda saxlanılır...', '#3b82f6');
+
+        // Həm də serverə yaz (bütün kompüterlər və cihazlar üçün mərkəzləşdirilmiş)
+        try {
+            const payloadData = {
+                __type__: 'admin_system_passwords',
+                ...MODULE_PASSORDS,
+                updated_at: new Date().toISOString()
+            };
+            const updateUrl = `${API_URL}/parent_testimonials?id=eq.${_adminPassDbId}`;
+            const putRes = await fetch(updateUrl, {
+                method: 'PUT',
+                headers: HEADERS,
+                body: JSON.stringify({ payload: payloadData })
+            });
+
+            if (!putRes.ok) {
+                // Əgər ID tapılmazsa POST ilə yaradırıq
+                const postRes = await fetch(`${API_URL}/parent_testimonials`, {
+                    method: 'POST',
+                    headers: HEADERS,
+                    body: JSON.stringify({ payload: payloadData })
+                });
+                if (postRes.ok) {
+                    const postData = await postRes.json();
+                    if (postData.id) _adminPassDbId = postData.id;
+                }
+            }
+            showSettingsStatus('Bütün şifrələr mərkəzi serverdə və bu cihazda uğurla yadda saxlanıldı!', '#10b981');
+        } catch(e) {
+            console.error("Şifrə serverə yazılarkən xəta:", e);
+            showSettingsStatus('Lokal saxlanıldı, lakin serverlə sinxronizasiyada ləngimə oldu.', '#f59e0b');
+        }
     };
     let currentModuleKey = '';
 
@@ -6412,7 +6470,10 @@ fbq('track', 'PageView');
         try {
             const res = await fetch(`${API_URL}/parent_testimonials?select=*`, { headers: HEADERS });
             if(res.ok) {
-                parentsData = (await res.json()).map(r => ({ ...r.payload, _db_id_: r.id })).sort((a,b) => b._db_id_ - a._db_id_);
+                parentsData = (await res.json())
+                    .map(r => ({ ...r.payload, _db_id_: r.id }))
+                    .filter(r => r.name && r.__type__ !== 'admin_system_passwords')
+                    .sort((a,b) => b._db_id_ - a._db_id_);
                 const tb = document.getElementById('par-tbody');
                 if(tb) tb.innerHTML = parentsData.map((p, i) => `
                     <tr>
