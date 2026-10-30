@@ -713,7 +713,7 @@ const translations = {
     "modal-btn": "Qeydiyyatdan keç",
     "nav-about": "Haqqımızda",
     "nav-management": "Rəhbərlik və İdarə Heyəti",
-    "nav-management-desc": "Peşəkar komandamız",
+    "nav-management-desc": "Rəhbərlik və İdarəetmə komandası",
     "nav-academic": "Akademik İstiqamətlər",
     "nav-vacancy": "Vakansiya & Təcrübə",
     "nav-journal": "Evrika Jurnalı",
