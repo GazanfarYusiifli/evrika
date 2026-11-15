@@ -290,9 +290,12 @@
         <h4 style="font-weight: 900; font-size: 1.1rem; color:#fff; display:flex; align-items:center; gap:8px;">
           <i class="fas fa-lock" style="color:#10b981;"></i> EPOINT SECURE
         </h4>
-        <div style="display: flex; gap: 10px; align-items:center;">
-          <img decoding="async" src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" style="height: 20px;" alt="Mastercard">
-          <img decoding="async" src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" style="height: 14px;" alt="Visa">
+        <div style="display: flex; gap: 8px; align-items:center;">
+          <svg width="36" height="22" viewBox="0 0 36 22" role="img" aria-label="Mastercard" style="display:block;">
+            <circle cx="13" cy="11" r="8.5" fill="#EB001B"/>
+            <circle cx="23" cy="11" r="8.5" fill="#F79E1B" fill-opacity="0.9"/>
+          </svg>
+          <span style="display:inline-flex; align-items:center; justify-content:center; padding:3px 7px; border-radius:6px; background:rgba(255,255,255,0.92); color:#1A1F71; font-weight:900; font-size:0.74rem; letter-spacing:0.6px; font-style:italic; line-height:1;">VISA</span>
         </div>
       </div>
 
@@ -301,6 +304,8 @@
         <h2 id="amount-display">35.00 AZN</h2>
         <div id="student-info-tag" style="margin-top: 6px; font-size: 0.85rem; color: #38bdf8; font-weight: 700;"></div>
       </div>
+
+      <div id="retry-notice" style="display: none; background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 12px; padding: 12px 14px; font-size: 0.83rem; color: #fde68a; line-height: 1.45;"></div>
 
       <!-- Fallback fields if no regId is passed -->
       <div id="extra-fields" style="display: none; flex-direction: column; gap: 14px;">
@@ -335,18 +340,6 @@
         </div>
       </div>
 
-      <!-- Express 1-Touch Payment Buttons -->
-      <div class="express-pay-wrap">
-        <button type="button" class="express-btn btn-apple-pay" onclick="processExpressPayment('Apple Pay')">
-          <i class="fab fa-apple" style="font-size: 1.25rem;"></i> Pay ilə 1 Toxunuşla Ödə
-        </button>
-        <button type="button" class="express-btn btn-google-pay" onclick="processExpressPayment('Google Pay')">
-          <i class="fab fa-google" style="color: #4285f4; font-size: 1.1rem;"></i> Pay ilə Sürətli Ödəniş
-        </button>
-      </div>
-
-      <div class="divider-text">və ya bank kartı ilə</div>
-
       <button type="button" class="pay-btn" id="paySubmitBtn" onclick="processPayment()">
         <i class="fas fa-credit-card"></i> Visa / Mastercard ilə Ödə
       </button>
@@ -372,10 +365,27 @@
     let regId = urlParams.get('id') || urlParams.get('regId') || localStorage.getItem('last_regId') || '';
     let regName = urlParams.get('name') || localStorage.getItem('last_name') || '';
     let emailParam = urlParams.get('email') || localStorage.getItem('last_email') || '';
-    let autostart = urlParams.get('autostart') === '1';
-    let regAmount = 35;
+    const isRetry = urlParams.get('retry') === '1';
+    let autostart = urlParams.get('autostart') === '1' && !isRetry;
+    const rawAmountParam = urlParams.get('amount') || localStorage.getItem('last_amount') || '';
+    const parsedInitAmount = parseFloat(String(rawAmountParam).replace(/[^0-9.]/g, ''));
+    let regAmount = (!isNaN(parsedInitAmount) && parsedInitAmount >= 20) ? parsedInitAmount : 35;
 
     let isSubmitting = false;
+    document.getElementById('amount-display').innerText = regAmount.toFixed(2) + ' AZN';
+    if (regName) {
+      document.getElementById('student-info-tag').innerText = 'Şagird: ' + regName;
+    }
+
+    function showRetryNotice(reasonText) {
+      const box = document.getElementById('retry-notice');
+      if (!box) return;
+      const reasonHtml = reasonText
+        ? `<div style="margin-top:4px; color:#fecaca;"><b>Son cəhdin səbəbi:</b> ${String(reasonText).replace(/[<>&]/g, '')}</div>`
+        : '';
+      box.innerHTML = `<i class="fas fa-info-circle" style="margin-right:6px;"></i> <b>Yenidən ödəniş:</b> Kartınızın internet ödənişlərinə açıq olduğunu və <b>3D Secure (SMS OTP)</b> təsdiqini vaxtında daxil etdiyinizi yoxlayın.${reasonHtml}`;
+      box.style.display = 'block';
+    }
 
     function handleManualGradeChange(val) {
       regAmount = (val === 'Məktəbəqədər' || val === 'Məktəbə qədər') ? 25 : 35;
@@ -394,15 +404,23 @@
         return;
       }
 
+      let hasFailedBefore = isRetry;
+      let lastFailReason = '';
+
       try {
-        const res = await fetch(`${API_BASE}/api/payment-status?id=${cleanDbId}`, { cache: 'no-store' });
-        if (res.ok) {
+        let res = await fetch(`/api/check-epoint-status?id=${cleanDbId}`, { cache: 'no-store' }).catch(() => null);
+        if (!res || !res.ok) {
+          res = await fetch(`${API_BASE}/api/payment-status?id=${cleanDbId}`, { cache: 'no-store' });
+        }
+        if (res && res.ok) {
           const json = await res.json();
           if (json && json.data) {
             const d = json.data;
             regName = d.student_name || regName;
             document.getElementById('student-info-tag').innerText = "Şagird: " + regName + (d.grade ? ` (${d.grade})` : '');
-            regAmount = d.amount || 35;
+            if (d.amount && !isNaN(parseFloat(d.amount)) && parseFloat(d.amount) >= 20) {
+              regAmount = parseFloat(d.amount);
+            }
             document.getElementById('amount-display').innerText = regAmount.toFixed(2) + ' AZN';
 
             if (d.isPaid || d.status === 'PAID') {
@@ -413,10 +431,22 @@
               btn.onclick = () => window.location.href = `/success?regId=${cleanDbId}`;
               return;
             }
+
+            if (d.status === 'FAILED' || d.status === 'CANCELLED' || d.status === 'EXPIRED' || d.payment_status === 'Uğursuz') {
+              hasFailedBefore = true;
+              lastFailReason = d.fail_reason || '';
+            }
           }
         }
       } catch (err) {
         console.warn("Status check warning:", err);
+      }
+
+      if (hasFailedBefore) {
+        showRetryNotice(lastFailReason);
+        const btn = document.getElementById('paySubmitBtn');
+        if (btn) btn.innerHTML = '<i class="fas fa-redo"></i> Visa / Mastercard ilə Yenidən Ödə';
+        return;
       }
 
       if (autostart) {
@@ -426,14 +456,18 @@
 
     loadStudentDataIfAvailable();
 
-    function processExpressPayment(method) {
-      processPayment(method);
-    }
-
-    async function processPayment(paymentMethod) {
+    async function processPayment() {
       if (isSubmitting) return;
 
       const btn = document.getElementById('paySubmitBtn');
+      const resetBtn = () => {
+        btn.disabled = false;
+        btn.innerHTML = isRetry
+          ? '<i class="fas fa-redo"></i> Visa / Mastercard ilə Yenidən Ödə'
+          : '<i class="fas fa-credit-card"></i> Visa / Mastercard ilə Ödə';
+        isSubmitting = false;
+      };
+
       btn.disabled = true;
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> BAĞLANTI QURULUR...';
       isSubmitting = true;
@@ -450,9 +484,7 @@
 
         if (!finalName || !phoneVal) {
           alert('Zəhmət olmasa şagirdin adını və əlaqə nömrəsini daxil edin.');
-          btn.disabled = false;
-          btn.innerHTML = '<i class="fas fa-credit-card"></i> Visa / Mastercard ilə Ödə';
-          isSubmitting = false;
+          resetBtn();
           return;
         }
 
@@ -467,7 +499,7 @@
               student_grade: gradeVal,
               phone: phoneVal,
               email: finalEmail,
-              source: paymentMethod ? `Ödəniş Portalı (${paymentMethod})` : 'Birbaşa Ödəniş Portalı',
+              source: 'Birbaşa Ödəniş Portalı',
               status: 'Yeni',
               payment_status: 'Ödəniş gözlənilir',
               amount: String(regAmount || 35) + ' AZN',
@@ -477,9 +509,7 @@
 
           if (createRes.ok) {
             const data = await createRes.json();
-            if (data && data.id) {
-              finalDbId = data.id;
-            }
+            finalDbId = data?.id || (Array.isArray(data) && data[0]?.id) || null;
           }
         } catch(e) {
           console.error("Auto registration error:", e);
@@ -488,17 +518,13 @@
 
       const cleanDbId = finalDbId ? parseInt(String(finalDbId).replace(/\D/g, ''), 10) : null;
       if (!cleanDbId) {
-        alert('Qeydiyyat ID tapılmadı.');
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-credit-card"></i> Visa / Mastercard ilə Ödə';
-        isSubmitting = false;
+        alert('Qeydiyyat ID yaradıla bilmədi. Zəhmət olmasa yenidən cəhd edin.');
+        resetBtn();
         return;
       }
 
       try {
-        btn.innerHTML = paymentMethod 
-          ? `<i class="fas fa-lock"></i> ${paymentMethod} İLƏ ƏLAQƏ QURULUR...`
-          : '<i class="fas fa-lock"></i> TƏHLÜKƏSİZ ÖDƏNİŞƏ YÖNLƏNDİRİLİRSİNİZ...';
+        btn.innerHTML = '<i class="fas fa-lock"></i> TƏHLÜKƏSİZ ÖDƏNİŞƏ YÖNLƏNDİRİLİRSİNİZ...';
 
         let response = null;
         try {
@@ -510,14 +536,14 @@
               name: finalName,
               email: finalEmail,
               amount: regAmount || 35,
-              paymentMethod: paymentMethod || 'Card'
+              paymentMethod: 'Card'
             })
           });
         } catch (netErr) {
           console.warn("/api/epoint call failed, trying direct worker:", netErr);
         }
 
-        if (!response || !response.ok) {
+        if (!response || response.status >= 500) {
           response = await fetch(`${API_BASE}/api/epoint-pay`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -526,14 +552,14 @@
               name: finalName,
               email: finalEmail,
               amount: regAmount || 35,
-              paymentMethod: paymentMethod || 'Card'
+              paymentMethod: 'Card'
             })
           });
         }
 
         const resData = await response.json();
 
-        if (resData.already_paid) {
+        if (resData.already_paid || resData.error?.code === 'ALREADY_PAID') {
           window.location.href = `/success?regId=${cleanDbId}`;
           return;
         }
@@ -541,15 +567,16 @@
         const isSuccess = (resData.success === true || resData.status === 'success') && !!resData.redirect_url;
         if (isSuccess) {
           localStorage.setItem('last_regId', cleanDbId);
-          localStorage.setItem('last_email', finalEmail);
-          localStorage.setItem('last_name', finalName);
+          localStorage.setItem('last_email', finalEmail || '');
+          localStorage.setItem('last_name', finalName || '');
+          localStorage.setItem('last_amount', String(resData.amount || regAmount || 35));
           if (resData.order_number || resData.order_id) {
             localStorage.setItem('last_order_id', resData.order_number || resData.order_id);
           }
           if (resData.transaction) {
             localStorage.setItem('last_epoint_transaction', resData.transaction);
           }
-          
+
           btn.innerHTML = '<i class="fas fa-check"></i> EPOINT ÇEKOUT AÇILIR...';
           window.location.href = resData.redirect_url;
         } else {
@@ -562,9 +589,7 @@
       } catch (err) {
         console.error('Payment error:', err);
         alert('Serverlə əlaqə qurulmadı. İnternet bağlantınızı yoxlayın.');
-        btn.innerHTML = '<i class="fas fa-credit-card"></i> Visa / Mastercard ilə Ödə';
-        btn.disabled = false;
-        isSubmitting = false;
+        resetBtn();
       }
     }
   </script>

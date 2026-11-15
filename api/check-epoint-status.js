@@ -4,12 +4,40 @@ const PUBLIC_KEY = "i000201608";
 const PRIVATE_KEY = process.env.EPOINT_PRIVATE_KEY || "HNIbtyFLu3PbxXlVykJEwOR1";
 const CF_BASE_URL = "https://evrika-api.yusifliqezenfer90.workers.dev";
 
-async function queryEpointStatusByTransaction(transactionId) {
-  if (!transactionId) return null;
+function isPayableRegistration(r) {
+  if (!r || r.is_call || r.chid || r.position) return false;
+  const s = String(r.source || r.student_grade || "").toLowerCase();
+  if (
+    s === "contact" ||
+    s === "karyera" ||
+    s === "career" ||
+    s.includes("zəng") ||
+    s.includes("phone") ||
+    s.includes("survey") ||
+    s.includes("səsi") ||
+    s.includes("sesi") ||
+    s.includes("montessori") ||
+    s.includes("zumrud") ||
+    s.includes("zümrüd")
+  ) {
+    return false;
+  }
+  return (
+    s.includes("qeydiyyat") ||
+    s.includes("lisey") ||
+    s.includes("ptim") ||
+    s.includes("ödəniş") ||
+    s.includes("odenis") ||
+    s.includes("imtahan") ||
+    Boolean(r.last_order_id || r.epoint_transaction)
+  );
+}
+
+async function fetchEpointGetStatus(paramsObj) {
   try {
     const payload = JSON.stringify({
       public_key: PUBLIC_KEY,
-      transaction: String(transactionId).trim()
+      ...paramsObj
     });
     const data = Buffer.from(payload).toString("base64");
     const signature = crypto
@@ -35,6 +63,30 @@ async function queryEpointStatusByTransaction(transactionId) {
   }
 }
 
+function isEpointNotFound(epStatus) {
+  if (!epStatus || epStatus.status !== "error") return false;
+  const msg = String(epStatus.message || "").toLowerCase();
+  return msg.includes("not found") || msg.includes("tapılmadı") || msg.includes("does not exist");
+}
+
+async function queryEpointStatus({ transaction, orderId } = {}) {
+  const cleanOrder = orderId ? String(orderId).trim() : "";
+  const cleanTx = transaction ? String(transaction).trim() : "";
+
+  if (cleanOrder) {
+    const byOrder = await fetchEpointGetStatus({ order_id: cleanOrder });
+    if (byOrder && !isEpointNotFound(byOrder)) {
+      return byOrder;
+    }
+  }
+
+  if (cleanTx) {
+    return await fetchEpointGetStatus({ transaction: cleanTx });
+  }
+
+  return null;
+}
+
 async function reconcileRegistration(dbId, { orderId, transaction, markFailed, preloadedReg } = {}) {
   const cleanId = parseInt(String(dbId).replace(/\D/g, ""), 10);
   if (!cleanId || isNaN(cleanId)) return null;
@@ -58,15 +110,28 @@ async function reconcileRegistration(dbId, { orderId, transaction, markFailed, p
 
   if (!cfData && !regRow) return null;
 
+  const targetOrderId =
+    orderId ||
+    regRow?.last_order_id ||
+    regRow?.payload?.last_order_id ||
+    cfData?.order_number ||
+    null;
+
+  const sameOrderAsCf =
+    !cfData?.order_number ||
+    !targetOrderId ||
+    String(cfData.order_number) === String(targetOrderId);
+
   const txId =
     transaction ||
     regRow?.epoint_transaction ||
     regRow?.payload?.epoint_transaction ||
+    (sameOrderAsCf ? cfData?.transaction : null) ||
     null;
 
   let epStatus = null;
-  if (txId && regRow?.payment_status !== "Ödənilib" && !cfData?.isPaid) {
-    epStatus = await queryEpointStatusByTransaction(txId);
+  if ((txId || targetOrderId) && regRow?.payment_status !== "Ödənilib" && !cfData?.isPaid) {
+    epStatus = await queryEpointStatus({ transaction: txId, orderId: targetOrderId });
   }
 
   const isPaid =
@@ -75,33 +140,41 @@ async function reconcileRegistration(dbId, { orderId, transaction, markFailed, p
     cfData?.status === "PAID" ||
     (epStatus?.status === "success" && (!epStatus.code || String(epStatus.code) === "000"));
 
-  // Check if session has timed out (more than 30 minutes since registration/last attempt without payment)
-  let isExpiredPending = false;
-  if (!isPaid && regRow) {
-    const refDateStr =
-      regRow.payment_attempt_at ||
-      regRow.payload?.payment_attempt_at ||
-      regRow.date ||
-      regRow.created_at;
-    if (refDateStr) {
-      const refTime = new Date(refDateStr).getTime();
-      if (!isNaN(refTime) && Date.now() - refTime > 30 * 60 * 1000) {
-        isExpiredPending = true;
-      }
-    }
-  }
+  const epNotFound = isEpointNotFound(epStatus);
+  const epExplicitFail =
+    Boolean(epStatus) &&
+    !epNotFound &&
+    (epStatus.status === "failed" ||
+      epStatus.status === "error" ||
+      epStatus.status === "returned" ||
+      epStatus.status === "rejected" ||
+      (epStatus.code && String(epStatus.code) !== "000" && epStatus.status !== "new"));
+
+  const cfOrderFailed =
+    sameOrderAsCf &&
+    epStatus?.status !== "new" &&
+    (cfData?.status === "FAILED" ||
+      cfData?.status === "CANCELLED" ||
+      cfData?.status === "EXPIRED");
+
+  const explicitCancelRequested =
+    (markFailed === true || markFailed === "1") && epStatus?.status !== "new";
 
   const isFailed =
     !isPaid &&
-    (cfData?.status === "FAILED" ||
-      cfData?.status === "CANCELLED" ||
-      cfData?.status === "EXPIRED" ||
-      epStatus?.status === "failed" ||
-      epStatus?.status === "error" ||
-      epStatus?.status === "returned" ||
-      markFailed === true ||
-      markFailed === "1" ||
-      isExpiredPending);
+    (epExplicitFail || cfOrderFailed || explicitCancelRequested);
+
+  const dbAlreadyFailed =
+    !isPaid &&
+    regRow?.payment_status === "Uğursuz" &&
+    epStatus?.status !== "new";
+
+  const effectiveFailed = isFailed || dbAlreadyFailed;
+
+  const epReasonParts = [epStatus?.message, epStatus?.bank_response]
+    .map(v => (v ? String(v).trim() : ""))
+    .filter(v => v && v !== "Error");
+  const epFailText = [...new Set(epReasonParts)].join(" — ");
 
   const couponCode =
     regRow?.coupon_code ||
@@ -122,9 +195,13 @@ async function reconcileRegistration(dbId, { orderId, transaction, markFailed, p
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           payment_status: "Ödənilib",
+          payment_fail_reason: "",
           coupon_code: couponCode,
           paid_at: paidAt,
+          epoint_code: epStatus?.code || "000",
+          epoint_message: epStatus?.message || "Approved",
           ...(epStatus?.amount ? { amount: String(epStatus.amount) } : {}),
+          ...(epStatus?.order_id || targetOrderId ? { last_order_id: epStatus?.order_id || targetOrderId } : {}),
           ...(epStatus?.transaction || txId ? { epoint_transaction: epStatus?.transaction || txId } : {}),
           ...(epStatus?.rrn ? { epoint_rrn: epStatus.rrn } : {}),
           ...(epStatus?.card_mask ? { epoint_card_mask: epStatus.card_mask } : {}),
@@ -134,10 +211,16 @@ async function reconcileRegistration(dbId, { orderId, transaction, markFailed, p
     } catch (e) {
       console.warn("Failed to sync PAID status to registration:", e);
     }
-  } else if (isFailed && (!regRow || (regRow.payment_status !== "Ödənilib" && regRow.payment_status !== "Uğursuz"))) {
+  } else if (
+    isFailed &&
+    (!regRow || isPayableRegistration(regRow)) &&
+    (!regRow ||
+      (regRow.payment_status !== "Ödənilib" &&
+        (regRow.payment_status !== "Uğursuz" || (epFailText && !regRow.payment_fail_reason))))
+  ) {
     const failReason =
-      epStatus?.message ||
-      epStatus?.bank_response ||
+      epFailText ||
+      (epStatus?.code ? `Bank imtinası (Kod: ${epStatus.code})` : "") ||
       (markFailed ? "Ödəniş istifadəçi və ya bank tərəfindən ləğv edildi" : "Ödəniş tamamlanmadı / Uğursuz");
     try {
       await fetch(`${CF_BASE_URL}/api/registrations?id=${cleanId}`, {
@@ -147,7 +230,8 @@ async function reconcileRegistration(dbId, { orderId, transaction, markFailed, p
           payment_status: "Uğursuz",
           payment_fail_reason: failReason,
           epoint_code: epStatus?.code || "",
-          epoint_message: epStatus?.message || ""
+          epoint_message: epStatus?.message || "",
+          epoint_bank_response: epStatus?.bank_response || ""
         })
       });
     } catch (e) {
@@ -155,12 +239,17 @@ async function reconcileRegistration(dbId, { orderId, transaction, markFailed, p
     }
   }
 
-  const finalStatus = isPaid ? "PAID" : (isFailed ? "FAILED" : (cfData?.status || "PENDING"));
-  const finalPaymentStatusAz = isPaid ? "Ödənilib" : (isFailed ? "Uğursuz" : "Ödəniş gözlənilir");
+  const finalStatus = isPaid
+    ? "PAID"
+    : effectiveFailed
+      ? (sameOrderAsCf && (cfData?.status === "CANCELLED" || cfData?.status === "EXPIRED") ? cfData.status : "FAILED")
+      : "PENDING";
+  const finalPaymentStatusAz = isPaid ? "Ödənilib" : effectiveFailed ? "Uğursuz" : "Ödəniş gözlənilir";
 
   return {
     registration_id: cleanId,
-    order_number: cfData?.order_number || regRow?.last_order_id || orderId || null,
+    order_number: targetOrderId || null,
+    transaction: epStatus?.transaction || txId || null,
     status: finalStatus,
     payment_status: finalPaymentStatusAz,
     isPaid,
@@ -171,8 +260,8 @@ async function reconcileRegistration(dbId, { orderId, transaction, markFailed, p
     amount: cfData?.amount || parseFloat(regRow?.amount) || 35,
     currency: "AZN",
     paid_at: paidAt,
-    fail_reason: isFailed
-      ? (epStatus?.message || epStatus?.bank_response || regRow?.payment_fail_reason || "Ödəniş tamamlanmadı")
+    fail_reason: effectiveFailed
+      ? (epFailText || regRow?.payment_fail_reason || "Ödəniş tamamlanmadı")
       : null,
     epoint: epStatus || undefined
   };
@@ -200,34 +289,7 @@ export default async function handler(req, res) {
         const allRes = await fetch(`${CF_BASE_URL}/api/registrations`);
         const allRegs = allRes.ok ? await allRes.json() : [];
         targetItems = (Array.isArray(allRegs) ? allRegs : [])
-          .filter(r => {
-            if (!r || r.payment_status !== "Ödəniş gözlənilir") return false;
-            if (r.is_call || r.chid || r.position) return false;
-            const s = String(r.source || r.student_grade || "").toLowerCase();
-            if (
-              s === "contact" ||
-              s === "karyera" ||
-              s === "career" ||
-              s.includes("zəng") ||
-              s.includes("phone") ||
-              s.includes("survey") ||
-              s.includes("səsi") ||
-              s.includes("sesi") ||
-              s.includes("montessori") ||
-              s.includes("zumrud") ||
-              s.includes("zümrüd")
-            ) {
-              return false;
-            }
-            return (
-              s.includes("qeydiyyat") ||
-              s.includes("lisey") ||
-              s.includes("ptim") ||
-              s.includes("ödəniş") ||
-              s.includes("odenis") ||
-              s.includes("imtahan")
-            );
-          })
+          .filter(r => r && r.payment_status === "Ödəniş gözlənilir" && isPayableRegistration(r))
           .map(r => ({ id: r.id, reg: r }));
       }
 

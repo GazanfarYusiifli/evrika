@@ -317,7 +317,7 @@ window.submitToSupabase = async (formData, btn, originalText) => {
   
   // Default payment status
   if (window.location.pathname.includes('register-lisey') || window.location.pathname.includes('register-ptim')) {
-      crmForm['payment_status'] = 'Ödənilməyib';
+      crmForm['payment_status'] = 'Ödəniş gözlənilir';
   }
 
   try {
@@ -334,7 +334,7 @@ window.submitToSupabase = async (formData, btn, originalText) => {
       btn.style.background = '#10B981';
       
       const responseData = await res.json();
-      const insertedId = responseData.id;
+      const insertedId = responseData?.id || (Array.isArray(responseData) && responseData[0]?.id);
 
       if (window.location.pathname.includes('register-lisey') || window.location.pathname.includes('register-ptim')) {
           const studentName = crmForm['[2.Şagird] Adı'] || crmForm.name || '';
@@ -342,6 +342,12 @@ window.submitToSupabase = async (formData, btn, originalText) => {
           const isPreschool = studentGrade.toLowerCase().includes('məktəbəqədər') || studentGrade.toLowerCase().includes('məktəbə qədər') || studentGrade.toLowerCase().includes('mektebeqeder');
           const targetAmount = isPreschool ? '25' : '35';
           const emailVal = crmForm.email || '';
+          if (insertedId) {
+            localStorage.setItem('last_regId', insertedId);
+            localStorage.setItem('last_name', studentName);
+            localStorage.setItem('last_email', emailVal);
+            localStorage.setItem('last_amount', targetAmount);
+          }
           setTimeout(() => {
               btn.innerHTML = '<i class="fas fa-lock"></i> ÖDƏNİŞƏ KEÇİLİR...';
               window.location.href = `/payment.html?id=${insertedId}&name=${encodeURIComponent(studentName)}&amount=${targetAmount}&email=${encodeURIComponent(emailVal)}&autostart=1`;
@@ -365,112 +371,11 @@ window.submitToSupabase = async (formData, btn, originalText) => {
 };
 
 window.showPaymentModal = (crmForm, dbId) => {
-    const amount = crmForm['[3.Təhsil] Qeydiyyat Səviyyəsi'] === 'Məktəbəqədər (5-6 yaş)' ? '25' : '35';
-    const email = crmForm.email || 'Email qeyd olunmayıb';
-    const phone = crmForm.phone || crmForm.tel || crmForm['[1.Əlaqə] Əlaqə Nömrəsi'] || 'Nömrə qeyd olunmayıb';
-
-    const overlay = document.createElement('div');
-    overlay.style.position = 'fixed';
-    overlay.style.top = '0'; overlay.style.left = '0'; overlay.style.width = '100%'; overlay.style.height = '100%';
-    overlay.style.background = 'rgba(0,0,0,0.8)'; overlay.style.backdropFilter = 'blur(10px)';
-    overlay.style.zIndex = '999999'; overlay.style.display = 'flex'; overlay.style.alignItems = 'center'; overlay.style.justifyContent = 'center';
-
-    const modal = document.createElement('div');
-    modal.style.background = '#050a18'; modal.style.border = '1px solid rgba(255,255,255,0.1)';
-    modal.style.borderRadius = '24px'; modal.style.padding = '40px'; modal.style.width = '100%'; modal.style.maxWidth = '450px';
-    modal.style.color = 'white'; modal.style.boxShadow = '0 20px 50px rgba(0,0,0,0.5)';
-    modal.style.position = 'relative';
-
-    modal.innerHTML = `
-        <h3 style="font-weight: 900; font-size: 1.6rem; margin-bottom: 10px; color: #fff;">Qeydiyyatı Tamamla</h3>
-        <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-bottom: 25px;">İmtahana giriş kuponunu əldə etmək üçün ödənişi tamamlayın.</p>
-        
-        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 20px; margin-bottom: 25px;">
-            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                <span style="color:rgba(255,255,255,0.5);">Məbləğ:</span>
-                <span style="font-weight:800; color:#10B981; font-size:1.2rem;">${amount} AZN</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; font-size:0.85rem;">
-                <span style="color:rgba(255,255,255,0.5);">Namizəd:</span>
-                <span style="font-weight:700;">${crmForm['[2.Şagird] Adı'] || crmForm.name || 'Bilinmir'}</span>
-            </div>
-        </div>
-
-        <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px;">
-            <input type="text" placeholder="Kartın Nömrəsi (0000 0000 0000 0000)" class="admin-input" style="background:#0f172a; border:1px solid rgba(255,255,255,0.1); padding:15px; border-radius:12px; color:white; width:100%;">
-            <div style="display: flex; gap: 15px;">
-                <input type="text" placeholder="AA/İİ" class="admin-input" style="flex:1; background:#0f172a; border:1px solid rgba(255,255,255,0.1); padding:15px; border-radius:12px; color:white;">
-                <input type="text" placeholder="CVV" class="admin-input" style="flex:1; background:#0f172a; border:1px solid rgba(255,255,255,0.1); padding:15px; border-radius:12px; color:white;">
-            </div>
-        </div>
-
-        <button id="pay-btn" style="width:100%; padding:18px; border:none; border-radius:12px; background:linear-gradient(135deg, #8B1A2B 0%, #b32a3e 100%); color:white; font-weight:800; font-size:1.1rem; cursor:pointer; transition:0.3s;">
-            <i class="fas fa-lock" style="margin-right:8px;"></i> İndi Ödə
-        </button>
-        <button id="cancel-btn" style="width:100%; padding:15px; border:none; background:transparent; color:rgba(255,255,255,0.5); font-weight:600; font-size:0.9rem; cursor:pointer; margin-top:10px;">
-            Daha Sonra Ödə
-        </button>
-    `;
-
-    overlay.appendChild(modal);
-    document.body.appendChild(overlay);
-
-    document.getElementById('cancel-btn').onclick = () => {
-        document.body.removeChild(overlay);
-        window.location.href = 'index.html?success=true';
-    };
-
-    document.getElementById('pay-btn').onclick = async function() {
-        this.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> İşlənir...';
-        this.style.opacity = '0.7';
-        this.disabled = true;
-
-        // Simulate API call to payment gateway
-        setTimeout(async () => {
-            // Update CRM Payment Status
-            crmForm['payment_status'] = 'Ödənilib';
-            
-            await fetch(`https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations?id=${dbId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ payment_status: 'Ödənilib', ...crmForm })
-            });
-
-            // Call Vercel API to send actual Email
-            try {
-                await fetch('/api/send-email', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        email: email,
-                        name: crmForm['[2.Şagird] Adı'] || crmForm.name || 'Namizəd',
-                        dbId: dbId
-                    })
-                });
-            } catch (err) {
-                console.error("Failed to send email API:", err);
-            }
-
-            // Show Success Ticket
-            modal.innerHTML = `
-                <div style="text-align:center;">
-                    <div style="width:80px; height:80px; background:rgba(16,185,129,0.1); color:#10B981; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2.5rem; margin:0 auto 20px;">
-                        <i class="fas fa-check"></i>
-                    </div>
-                    <h3 style="font-weight: 900; font-size: 1.6rem; margin-bottom: 10px; color: #fff;">Ödəniş Uğurlu!</h3>
-                    <p style="color: rgba(255,255,255,0.6); font-size: 0.95rem; margin-bottom: 30px; line-height:1.6;">
-                        İmtahana giriş kuponunuz və QR kod <b>${email}</b> ünvanına uğurla göndərildi.
-                    </p>
-
-                    <button onclick="window.location.href='index.html'" style="width:100%; padding:18px; border:none; border-radius:12px; background:rgba(255,255,255,0.1); color:white; font-weight:800; font-size:1rem; cursor:pointer; transition:0.3s;">
-                        Ana Səhifəyə Qayıt
-                    </button>
-                </div>
-            `;
-        }, 2000);
-    };
+    const level = String(crmForm['[3.Təhsil] Qeydiyyat Səviyyəsi'] || crmForm.student_grade || '').toLowerCase();
+    const amount = (level.includes('məktəbəqədər') || level.includes('məktəbə qədər')) ? '25' : '35';
+    const studentName = crmForm['[2.Şagird] Adı'] || crmForm.name || '';
+    const email = crmForm.email || '';
+    window.location.href = `/payment.html?id=${encodeURIComponent(dbId)}&name=${encodeURIComponent(studentName)}&amount=${amount}&email=${encodeURIComponent(email)}&autostart=1`;
 };
 
 // Form Listeners

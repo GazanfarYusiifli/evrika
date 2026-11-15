@@ -34,11 +34,12 @@ export default async function handler(req, res) {
   }
 
   // Real qiymətlər: Məktəbəqədər = 25 AZN, digər siniflər = 35 AZN
+  // Yalnız dbId olmayan test ödənişlərində (məs: /epoint-test) kiçik test məbləğlərinə (məs. 1 AZN) icazə verilir
   let parsedAmount = 35;
-  if (amount) {
+  if (amount !== undefined && amount !== null && String(amount).trim() !== "") {
     const p = parseFloat(String(amount).replace(/[^0-9.]/g, ''));
-    if (!isNaN(p) && p >= 20) {
-      parsedAmount = p;
+    if (!isNaN(p) && ((!dbId && p > 0) || (dbId && p >= 20))) {
+      parsedAmount = Math.round(p * 100) / 100;
     }
   }
 
@@ -54,6 +55,11 @@ export default async function handler(req, res) {
       })
     });
 
+    if (cfRes.status === 404 || cfRes.status === 409) {
+      const cfErr = await cfRes.json().catch(() => ({}));
+      return res.status(cfRes.status).json({ success: false, ...cfErr });
+    }
+
     if (cfRes.ok) {
       const cfData = await cfRes.json();
 
@@ -68,6 +74,10 @@ export default async function handler(req, res) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               payment_status: "Ödəniş gözlənilir",
+              payment_fail_reason: "",
+              epoint_code: "",
+              epoint_message: "",
+              epoint_bank_response: "",
               epoint_transaction: cfData.transaction || "",
               last_order_id: cfData.order_number || finalOrderId,
               payment_attempt_at: new Date().toISOString()
@@ -78,7 +88,9 @@ export default async function handler(req, res) {
         }
       }
 
-      return res.status(200).json(cfData);
+      if (cfData.redirect_url) {
+        return res.status(200).json(cfData);
+      }
     }
   } catch (cfErr) {
     console.warn("CF Worker forward failed, falling back to direct Epoint API:", cfErr);
@@ -92,8 +104,8 @@ export default async function handler(req, res) {
     language: "az",
     order_id: finalOrderId,
     description: description || (`Evrika Liseyi Kupon № ` + (dbId ? `EV-${String(dbId).padStart(4, '0')}` : finalOrderId)),
-    success_redirect_url: `https://evrikaliseyi.edu.az/success?regId=${dbId}&order_id=${encodeURIComponent(finalOrderId)}&email=${encodeURIComponent(email || '')}&name=${encodeURIComponent(name || '')}`,
-    error_redirect_url: `https://evrikaliseyi.edu.az/error?regId=${dbId}&order_id=${encodeURIComponent(finalOrderId)}`,
+    success_redirect_url: `https://evrikaliseyi.edu.az/success?regId=${dbId}&order_id=${encodeURIComponent(finalOrderId)}&amount=${encodeURIComponent(parsedAmount)}&email=${encodeURIComponent(email || '')}&name=${encodeURIComponent(name || '')}`,
+    error_redirect_url: `https://evrikaliseyi.edu.az/error?regId=${dbId}&order_id=${encodeURIComponent(finalOrderId)}&amount=${encodeURIComponent(parsedAmount)}`,
     result_url: "https://evrikaliseyi.edu.az/result"
   };
 
@@ -124,6 +136,10 @@ export default async function handler(req, res) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             payment_status: "Ödəniş gözlənilir",
+            payment_fail_reason: "",
+            epoint_code: "",
+            epoint_message: "",
+            epoint_bank_response: "",
             epoint_transaction: result.transaction || "",
             last_order_id: finalOrderId,
             payment_attempt_at: new Date().toISOString()
@@ -134,8 +150,9 @@ export default async function handler(req, res) {
       }
     }
 
-    return res.status(200).json({
-      success: result.status === 'success',
+    const ok = result.status === 'success' && Boolean(result.redirect_url);
+    return res.status(ok ? 200 : 400).json({
+      success: ok,
       status: result.status,
       redirect_url: result.redirect_url,
       transaction: result.transaction,

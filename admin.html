@@ -3957,7 +3957,7 @@ fbq('track', 'PageView');
                 </button>
               ` : ''}
               ${item.payment_status !== 'Ödənilib' && phoneClean ? `
-                <a href="https://api.whatsapp.com/send?phone=${phoneClean}&text=${encodeURIComponent(`Hörmətli valideyn, qeydiyyatınız qəbul olunub. İmtahana giriş kuponunu əldə etmək üçün təhlükəsiz ödəniş linki: https://evrikaliseyi.edu.az/payment.html?id=${item._db_id_}&name=${encodeURIComponent(fullName)}`)}" target="_blank" style="background:rgba(37,211,102,0.15); color:#25d366; border:1px solid rgba(37,211,102,0.3); padding:10px 14px; border-radius:15px; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; transition:0.3s;" title="Valideynə WhatsApp-la ödəniş linki göndər">
+                <a href="https://api.whatsapp.com/send?phone=${phoneClean}&text=${encodeURIComponent(`Hörmətli valideyn, qeydiyyatınız qəbul olunub. İmtahana giriş kuponunu əldə etmək üçün təhlükəsiz ödəniş linki: https://evrikaliseyi.edu.az/payment.html?id=${item._db_id_}&name=${encodeURIComponent(fullName)}&amount=${encodeURIComponent(parseFloat(item.amount) || 35)}&email=${encodeURIComponent(item.email || '')}`)}" target="_blank" style="background:rgba(37,211,102,0.15); color:#25d366; border:1px solid rgba(37,211,102,0.3); padding:10px 14px; border-radius:15px; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; transition:0.3s;" title="Valideynə WhatsApp-la ödəniş linki göndər">
                   <i class="fab fa-whatsapp" style="font-size:1rem;"></i>
                 </a>
               ` : ''}
@@ -3978,13 +3978,19 @@ fbq('track', 'PageView');
         btnEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
       }
       try {
-        const res = await fetch(`https://evrika-api.yusifliqezenfer90.workers.dev/api/payment-status?id=${dbId}`, { cache: 'no-store' });
+        let res = await fetch(`/api/check-epoint-status?id=${dbId}`, { cache: 'no-store' }).catch(() => null);
+        if (!res || !res.ok) {
+          res = await fetch(`https://evrika-api.yusifliqezenfer90.workers.dev/api/payment-status?id=${dbId}`, { cache: 'no-store' });
+        }
         const json = await res.json();
-        if (json.success && (json.data?.isPaid || json.data?.status === 'PAID')) {
-          alert(`✅ Təsdiqləndi!\nİştirakçı: ${json.data.student_name || 'Şagird'}\nStatus: Ödənilib\nKupon kodu: ${json.data.coupon_code || ('EV-' + String(dbId).padStart(4, '0'))}`);
+        const d = json?.data || json;
+        if (json.success && (d?.isPaid || d?.status === 'PAID')) {
+          alert(`✅ Təsdiqləndi!\nİştirakçı: ${d.student_name || 'Şagird'}\nStatus: Ödənilib\nKupon kodu: ${d.coupon_code || ('EV-' + String(dbId).padStart(4, '0'))}`);
           await initialLoad();
         } else {
-          alert(`Məlumat: Bank sistemində bu müraciət üçün uğurlu ödəniş tapılmadı (Cari status: ${json.data?.status || 'Ödənilməyib'}).`);
+          const reason = d?.fail_reason || d?.epoint?.bank_response || d?.epoint?.message || '';
+          alert(`Məlumat: Bank sistemində bu müraciət üçün uğurlu ödəniş tapılmadı (Cari status: ${d?.payment_status || d?.status || 'Ödənilməyib'})${reason ? '\nSəbəb: ' + reason : ''}`);
+          await initialLoad();
         }
       } catch (err) {
         console.error('Reconcile error:', err);
@@ -4018,15 +4024,26 @@ fbq('track', 'PageView');
       if (syncIcon) syncIcon.className = 'fas fa-spinner fa-spin';
 
       let updatedCount = 0;
-      for (const item of unpaidItems) {
-        try {
-          const res = await fetch(`https://evrika-api.yusifliqezenfer90.workers.dev/api/payment-status?id=${item._db_id_}`, { cache: 'no-store' });
+      try {
+        const res = await fetch('/api/check-epoint-status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ids: unpaidItems.map(i => i._db_id_) })
+        });
+        if (res.ok) {
           const json = await res.json();
-          if (json.success && (json.data?.isPaid || json.data?.status === 'PAID')) {
-            updatedCount++;
-          }
-        } catch (e) {
-          console.warn('Sync error for item', item._db_id_, e);
+          const list = Array.isArray(json.reconciled) ? json.reconciled : [];
+          updatedCount = list.filter(x => x && (x.isPaid || x.status === 'PAID')).length;
+        }
+      } catch (e) {
+        for (const item of unpaidItems) {
+          try {
+            const res = await fetch(`https://evrika-api.yusifliqezenfer90.workers.dev/api/payment-status?id=${item._db_id_}`, { cache: 'no-store' });
+            const json = await res.json();
+            if (json.success && (json.data?.isPaid || json.data?.status === 'PAID')) {
+              updatedCount++;
+            }
+          } catch (e2) {}
         }
       }
 
@@ -5198,8 +5215,8 @@ fbq('track', 'PageView');
                   <span style="color:${item.payment_status === 'Ödənilib' ? '#10b981' : (item.payment_status === 'Uğursuz' ? '#ef4444' : (item.payment_status === 'Ödəniş gözlənilir' ? '#f59e0b' : '#ef4444'))}; font-weight:800; background:${item.payment_status === 'Ödənilib' ? 'rgba(16,185,129,0.1)' : (item.payment_status === 'Uğursuz' ? 'rgba(239,68,68,0.12)' : (item.payment_status === 'Ödəniş gözlənilir' ? 'rgba(245,158,11,0.12)' : 'rgba(239,68,68,0.1)'))}; padding:4px 8px; border-radius:6px;">${item.payment_status || 'Ödəniş gözlənilir'}</span>
                   ${item.payment_status !== 'Ödənilib' ? `
                     <button onclick="syncEpointPayment(${item._db_id_}, this)" style="background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid #10b981; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;"><i class="fas fa-sync-alt"></i> Epoint-lə Yoxla</button>
-                    <button onclick="navigator.clipboard.writeText('https://evrikaliseyi.edu.az/payment.html?id=${item._db_id_}&name=${encodeURIComponent(item.fullName || item.name || '')}&amount=${encodeURIComponent(item.amount || '35')}&email=${encodeURIComponent(item.email || '')}'); alert('Ödəniş linki kopyalandı! Valideynə göndərə bilərsiniz:\\nhttps://evrikaliseyi.edu.az/payment.html?id=${item._db_id_}');" style="background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid #38bdf8; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;"><i class="fas fa-link"></i> Ödəniş Linkini Kopyala</button>
-                    ${item.phone || item.tel ? `<a href="https://api.whatsapp.com/send?phone=${formatPhone(item.phone || item.tel)}&text=${encodeURIComponent(`Hörmətli valideyn, qeydiyyatınız qəbul olunub. İmtahana giriş kuponunu əldə etmək üçün təhlükəsiz ödəniş linki: https://evrikaliseyi.edu.az/payment.html?id=${item._db_id_}&name=${encodeURIComponent(item.fullName || item.name || '')}`)}" target="_blank" style="background: rgba(37,211,102,0.15); color: #25d366; border: 1px solid #25d366; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;"><i class="fab fa-whatsapp"></i> WhatsApp-la Göndər</a>` : ''}
+                    <button onclick="navigator.clipboard.writeText('https://evrikaliseyi.edu.az/payment.html?id=${item._db_id_}&name=${encodeURIComponent(item.fullName || item.name || '')}&amount=${encodeURIComponent(parseFloat(item.amount) || 35)}&email=${encodeURIComponent(item.email || '')}'); alert('Ödəniş linki kopyalandı! Valideynə göndərə bilərsiniz:\\nhttps://evrikaliseyi.edu.az/payment.html?id=${item._db_id_}');" style="background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid #38bdf8; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; cursor: pointer;"><i class="fas fa-link"></i> Ödəniş Linkini Kopyala</button>
+                    ${item.phone || item.tel ? `<a href="https://api.whatsapp.com/send?phone=${formatPhone(item.phone || item.tel)}&text=${encodeURIComponent(`Hörmətli valideyn, qeydiyyatınız qəbul olunub. İmtahana giriş kuponunu əldə etmək üçün təhlükəsiz ödəniş linki: https://evrikaliseyi.edu.az/payment.html?id=${item._db_id_}&name=${encodeURIComponent(item.fullName || item.name || '')}&amount=${encodeURIComponent(parseFloat(item.amount) || 35)}&email=${encodeURIComponent(item.email || '')}`)}" target="_blank" style="background: rgba(37,211,102,0.15); color: #25d366; border: 1px solid #25d366; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;"><i class="fab fa-whatsapp"></i> WhatsApp-la Göndər</a>` : ''}
                   ` : ''}
                 </div>
                 ${isScanned ? '<div style="color:#ef4444; font-weight:900; font-size:0.9rem;"><i class="fas fa-check-double"></i> Bu kodla giriş edilib</div>' : ''}
@@ -5227,12 +5244,14 @@ fbq('track', 'PageView');
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ regId: dbId })
         });
-        const data = await res.json();
-        if (data.isPaid || data.status === 'success') {
+        const json = await res.json();
+        const d = json?.data || json || {};
+        if (d.isPaid || d.status === 'PAID' || d.status === 'success') {
           alert('Təbrik edirik! Ödəniş Epoint tərəfindən təsdiqləndi və bazada "Ödənilib" edildi.');
           location.reload();
         } else {
-          alert('Epoint Bank Cavabı: ' + (data.epointData?.bank_response || data.epointData?.message || data.status || 'Ödəniş edilməyib / Ləğv olunub'));
+          const reason = d.fail_reason || d.epoint?.bank_response || d.epoint?.message || d.payment_status || d.status || 'Ödəniş edilməyib / Ləğv olunub';
+          alert('Epoint Bank Cavabı: ' + reason);
           location.reload();
         }
       } catch (e) {

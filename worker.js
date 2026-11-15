@@ -240,6 +240,10 @@ export default {
         });
 
         if (!epointResponse.ok) {
+          await env.DB.prepare("UPDATE payments SET status = 'FAILED', bank_response = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?")
+            .bind(`HTTP_${epointResponse.status}`, paymentId).run();
+          await env.DB.prepare("UPDATE orders SET status = 'FAILED', updated_at = CURRENT_TIMESTAMP WHERE id = ?")
+            .bind(orderId).run();
           await logPaymentEvent(env.DB, {
             registration_id: dbId,
             order_id: orderId,
@@ -257,6 +261,17 @@ export default {
           if (epointData.transaction) {
             await env.DB.prepare("UPDATE payments SET epoint_transaction = ? WHERE id = ?").bind(epointData.transaction, paymentId).run();
           }
+
+          regPayload.payment_status = "Ödəniş gözlənilir";
+          regPayload.payment_fail_reason = "";
+          regPayload.epoint_code = "";
+          regPayload.epoint_message = "";
+          regPayload.epoint_bank_response = "";
+          regPayload.epoint_transaction = epointData.transaction || "";
+          regPayload.last_order_id = orderNumber;
+          regPayload.payment_attempt_at = new Date().toISOString();
+          await env.DB.prepare("UPDATE registrations SET payment_status = 'Ödəniş gözlənilir', payload = ? WHERE id = ?")
+            .bind(JSON.stringify(regPayload), dbId).run();
 
           await logPaymentEvent(env.DB, {
             registration_id: dbId,
@@ -276,6 +291,10 @@ export default {
             amount: authAmount
           });
         } else {
+          await env.DB.prepare("UPDATE payments SET status = 'FAILED', bank_response = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?")
+            .bind(epointData.message || "EPOINT_REJECTED", paymentId).run();
+          await env.DB.prepare("UPDATE orders SET status = 'FAILED', updated_at = CURRENT_TIMESTAMP WHERE id = ?")
+            .bind(orderId).run();
           await logPaymentEvent(env.DB, {
             registration_id: dbId,
             order_id: orderId,
@@ -455,13 +474,17 @@ export default {
           if (regRow) {
             let p = safeJsonParse(regRow.payload);
             p.payment_status = "Ödənilib";
+            p.payment_fail_reason = "";
             p.coupon_code = couponCode;
             p.paid_at = nowIso;
             p.order_id = couponCode;
+            if (order_id) p.last_order_id = order_id;
             p.epoint_amount = amount || regRow.amount;
             p.epoint_transaction = transaction || "";
             p.epoint_rrn = rrn || "";
             p.epoint_card_mask = card_mask || "";
+            p.epoint_code = result.code || "000";
+            p.epoint_message = result.message || "Approved";
             p.epoint_bank_response = bank_response || "APPROVED";
 
             if (!p.note || !p.note.includes("EPOINT VASİTƏSİLƏ ÖDƏNİLDİ")) {
@@ -507,10 +530,16 @@ export default {
           const failRegRow = await env.DB.prepare("SELECT * FROM registrations WHERE id = ?").bind(regId).first();
           if (failRegRow && failRegRow.payment_status !== "Ödənilib") {
             let p = safeJsonParse(failRegRow.payload);
-            p.payment_status = "Uğursuz";
-            p.payment_fail_reason = bank_response || status || "İmtina edildi";
-            await env.DB.prepare("UPDATE registrations SET payment_status = 'Uğursuz', payload = ? WHERE id = ?")
-              .bind(JSON.stringify(p), regId).run();
+            const isStaleOrder = p.last_order_id && order_id && String(p.last_order_id) !== String(order_id);
+            if (!isStaleOrder) {
+              p.payment_status = "Uğursuz";
+              p.payment_fail_reason = [result.message, bank_response].filter(Boolean).join(" — ") || status || "İmtina edildi";
+              p.epoint_code = result.code || "";
+              p.epoint_message = result.message || "";
+              p.epoint_bank_response = bank_response || "";
+              await env.DB.prepare("UPDATE registrations SET payment_status = 'Uğursuz', payload = ? WHERE id = ?")
+                .bind(JSON.stringify(p), regId).run();
+            }
           }
 
           await logPaymentEvent(env.DB, {
@@ -619,6 +648,7 @@ export default {
                   await env.DB.prepare("UPDATE orders SET status = 'PAID', paid_at = CURRENT_TIMESTAMP WHERE id = ?").bind(ord.id).run();
 
                   payload.payment_status = "Ödənilib";
+                  payload.payment_fail_reason = "";
                   payload.coupon_code = couponCode;
                   payload.paid_at = new Date().toISOString();
                   payload.epoint_amount = epStatusData.amount || reg.amount;
@@ -640,18 +670,26 @@ export default {
                   reg.coupon_code = couponCode;
                   ord.status = "PAID";
                   break;
-                } else if (epStatusData.status === "failed" || epStatusData.status === "cancel" || epStatusData.status === "error") {
-                  const bankFailReason = epStatusData.bank_response || epStatusData.message || "İmtina edildi";
+                } else if (
+                  (epStatusData.status === "failed" || epStatusData.status === "cancel" || epStatusData.status === "error") &&
+                  !String(epStatusData.message || "").toLowerCase().includes("not found")
+                ) {
+                  const bankFailReason = [epStatusData.message, epStatusData.bank_response].filter(Boolean).join(" — ") || "İmtina edildi";
                   await env.DB.prepare("UPDATE payments SET status = 'FAILED', bank_response = ?, updated_at = CURRENT_TIMESTAMP WHERE order_id = ?").bind(bankFailReason, ord.id).run();
                   await env.DB.prepare("UPDATE orders SET status = 'FAILED', updated_at = CURRENT_TIMESTAMP WHERE id = ?").bind(ord.id).run();
 
-                  payload.payment_status = "Uğursuz";
-                  payload.payment_fail_reason = bankFailReason;
+                  const isLatestOrder = ordersToCheck.length > 0 && ord.order_number === ordersToCheck[0].order_number &&
+                    (!payload.last_order_id || String(ord.order_number) === String(payload.last_order_id));
 
-                  await env.DB.prepare("UPDATE registrations SET payment_status = 'Uğursuz', payload = ? WHERE id = ?")
-                    .bind(JSON.stringify(payload), dbId).run();
+                  if (isLatestOrder && reg.payment_status !== "Ödənilib") {
+                    payload.payment_status = "Uğursuz";
+                    payload.payment_fail_reason = bankFailReason;
 
-                  reg.payment_status = "Uğursuz";
+                    await env.DB.prepare("UPDATE registrations SET payment_status = 'Uğursuz', payload = ? WHERE id = ?")
+                      .bind(JSON.stringify(payload), dbId).run();
+
+                    reg.payment_status = "Uğursuz";
+                  }
                   ord.status = "FAILED";
                 }
               }
@@ -1047,8 +1085,10 @@ export default {
                        CASE 
                          WHEN r.payment_status = 'Ödənilib' THEN 'Ödənilib'
                          WHEN o.status = 'PAID' THEN 'Ödənilib'
-                         WHEN o.status IN ('FAILED', 'CANCELLED', 'REJECTED') THEN 'Uğursuz'
-                         WHEN o.status = 'PENDING' THEN 'Ödəniş gözlənilir'
+                         WHEN o.status IN ('FAILED', 'CANCELLED', 'REJECTED')
+                              AND (json_extract(r.payload, '$.last_order_id') IS NULL OR o.order_number = json_extract(r.payload, '$.last_order_id')) THEN 'Uğursuz'
+                         WHEN o.status = 'PENDING'
+                              AND (json_extract(r.payload, '$.last_order_id') IS NULL OR o.order_number = json_extract(r.payload, '$.last_order_id')) THEN 'Ödəniş gözlənilir'
                          ELSE r.payment_status 
                        END AS payment_status,
                        r.amount, r.coupon_code, r.paid_at, 
@@ -1093,8 +1133,10 @@ export default {
                      CASE 
                        WHEN r.payment_status = 'Ödənilib' THEN 'Ödənilib'
                        WHEN o.status = 'PAID' THEN 'Ödənilib'
-                       WHEN o.status IN ('FAILED', 'CANCELLED', 'REJECTED') THEN 'Uğursuz'
-                       WHEN o.status = 'PENDING' THEN 'Ödəniş gözlənilir'
+                       WHEN o.status IN ('FAILED', 'CANCELLED', 'REJECTED')
+                            AND (json_extract(r.payload, '$.last_order_id') IS NULL OR o.order_number = json_extract(r.payload, '$.last_order_id')) THEN 'Uğursuz'
+                       WHEN o.status = 'PENDING'
+                            AND (json_extract(r.payload, '$.last_order_id') IS NULL OR o.order_number = json_extract(r.payload, '$.last_order_id')) THEN 'Ödəniş gözlənilir'
                        ELSE r.payment_status 
                      END AS payment_status,
                      r.amount, r.coupon_code, r.paid_at, 

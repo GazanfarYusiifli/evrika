@@ -582,20 +582,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   body: JSON.stringify(payloadData)
                 });
                 const data = await res.json();
-                if(data && data.id) {
-                    window.currentRegistrationId = data.id;
-                    window.currentPayloadData = payloadData;
-                    if (!data[0]) data[0] = { id: data.id };
+                const createdDbId = data?.id || (Array.isArray(data) && data[0]?.id);
+                if (!res.ok || !createdDbId) {
+                  throw new Error('Registration creation failed');
                 }
-                
+                window.currentRegistrationId = createdDbId;
+                window.currentPayloadData = payloadData;
+
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ÖDƏNİŞƏ YÖNLƏNDİRİLİR...';
-                
+
+                const paymentFallbackUrl = 'payment.html?id=' + createdDbId + '&name=' + encodeURIComponent(firstName + ' ' + lastName) + '&amount=' + amountNum + '&email=' + encodeURIComponent(email);
                 try {
+                  localStorage.setItem('last_regId', createdDbId);
+                  localStorage.setItem('last_email', email);
+                  localStorage.setItem('last_name', firstName + ' ' + lastName);
+                  localStorage.setItem('last_amount', amountNum);
+
                   const epointRes = await fetch('/api/epoint', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                      regId: data[0].id,
+                      regId: createdDbId,
                       email: email,
                       name: firstName + ' ' + lastName,
                       amount: amountNum
@@ -603,20 +610,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                   });
 
                   const epointData = await epointRes.json();
-                  
+
                   if (epointData.redirect_url) {
-                      localStorage.setItem('last_regId', data[0].id);
-                      localStorage.setItem('last_email', email);
-                      localStorage.setItem('last_name', firstName + ' ' + lastName);
                       if (epointData.transaction) localStorage.setItem('last_epoint_transaction', epointData.transaction);
                       if (epointData.order_number || epointData.order_id) localStorage.setItem('last_order_id', epointData.order_number || epointData.order_id);
                       window.location.href = epointData.redirect_url;
                   } else {
-                      window.location.href = 'payment.html?id=' + data[0].id + '&name=' + encodeURIComponent(firstName + ' ' + lastName) + '&amount=' + amountNum + '&email=' + encodeURIComponent(email);
+                      window.location.href = paymentFallbackUrl;
                   }
                 } catch(epointErr) {
                   console.error(epointErr);
-                  window.location.href = 'payment.html?id=' + data[0].id + '&name=' + encodeURIComponent(firstName + ' ' + lastName) + '&amount=' + amountNum + '&email=' + encodeURIComponent(email);
+                  window.location.href = paymentFallbackUrl;
                 }
                 
               } catch(e) {

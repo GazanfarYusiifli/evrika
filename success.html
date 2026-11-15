@@ -436,6 +436,7 @@
           </div>
           <h1 class="state-title">Ödəniş tamamlanmadı</h1>
           <p class="state-sub">Ödəniş həyata keçirilmədi. Zəhmət olmasa kart məlumatlarını yoxlayın və yenidən cəhd edin.</p>
+          <div id="failed-reason-box" style="display:none; margin-top:12px; padding:10px 14px; border-radius:12px; background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.3); color:#fca5a5; font-size:0.85rem; font-weight:600;"></div>
         </div>
         <div class="actions-wrap">
           <a id="retryBtn" href="/payment.html" class="btn-action red">
@@ -494,6 +495,9 @@
     let rawRegId = urlParams.get('regId') || urlParams.get('id') || localStorage.getItem('last_regId') || '';
     let orderIdParam = urlParams.get('order_id') || localStorage.getItem('last_order_id') || '';
     let txParam = urlParams.get('transaction') || localStorage.getItem('last_epoint_transaction') || '';
+    let emailParam = urlParams.get('email') || localStorage.getItem('last_email') || '';
+    let nameParam = urlParams.get('name') || localStorage.getItem('last_name') || '';
+    let amountParam = urlParams.get('amount') || localStorage.getItem('last_amount') || '';
 
     let dbId = parseInt(String(rawRegId).replace(/\D/g, ''), 10);
     if ((!dbId || isNaN(dbId)) && orderIdParam) {
@@ -548,17 +552,23 @@
           renderPaidTicket(data);
           showState('paid');
           triggerConfetti();
+          sendCouponEmailIfPossible(data);
         } else if (data.status === 'FAILED') {
           if (pollInterval) clearInterval(pollInterval);
-          setupRetryLinks();
+          const failBox = document.getElementById('failed-reason-box');
+          if (failBox && data.fail_reason) {
+            failBox.innerText = 'Bank / Epoint cavabı: ' + data.fail_reason;
+            failBox.style.display = 'block';
+          }
+          setupRetryLinks(data);
           showState('failed');
         } else if (data.status === 'CANCELLED') {
           if (pollInterval) clearInterval(pollInterval);
-          setupRetryLinks();
+          setupRetryLinks(data);
           showState('cancelled');
         } else if (data.status === 'EXPIRED') {
           if (pollInterval) clearInterval(pollInterval);
-          setupRetryLinks();
+          setupRetryLinks(data);
           showState('expired');
         } else {
           // Still PENDING
@@ -601,10 +611,40 @@
       document.getElementById('ticket-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(verifyUrl)}`;
     }
 
-    function setupRetryLinks() {
-      const retryUrl = `/payment.html?id=${dbId}&retry=1`;
+    function setupRetryLinks(data) {
+      const qs = new URLSearchParams({
+        id: String(dbId),
+        retry: '1'
+      });
+      const targetName = (data && data.student_name) || nameParam;
+      const targetAmount = (data && data.amount) || amountParam;
+      if (targetName) qs.set('name', targetName);
+      if (targetAmount) qs.set('amount', String(targetAmount));
+      if (emailParam) qs.set('email', emailParam);
+
+      const retryUrl = `/payment.html?${qs.toString()}`;
       if (document.getElementById('retryBtn')) document.getElementById('retryBtn').href = retryUrl;
       if (document.getElementById('cancelRetryBtn')) document.getElementById('cancelRetryBtn').href = retryUrl;
+      if (document.getElementById('newPaymentBtn')) document.getElementById('newPaymentBtn').href = retryUrl;
+    }
+
+    async function sendCouponEmailIfPossible(data) {
+      try {
+        const key = 'coupon_emailed_' + dbId;
+        if (sessionStorage.getItem(key)) return;
+        sessionStorage.setItem(key, '1');
+        await fetch('/api/send-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            dbId: dbId,
+            email: emailParam || undefined,
+            name: (data && data.student_name) || nameParam || undefined
+          })
+        });
+      } catch (e) {
+        console.warn('Coupon email trigger warning:', e);
+      }
     }
 
     function triggerConfetti() {

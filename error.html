@@ -219,6 +219,8 @@
       <h1 class="error-title">Ödəniş Tamamlanmadı</h1>
       <p class="error-sub">Əməliyyat ləğv edildi və ya bank tərəfindən rədd edildi. Kartınızdan heç bir vəsait çıxılmamışdır.</p>
 
+      <div id="error-reason-banner" style="display:none; background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.35); border-radius:14px; padding:12px 16px; margin-bottom:18px; color:#fca5a5; font-size:0.88rem; font-weight:600; text-align:left; line-height:1.5;"></div>
+
       <div class="info-box">
         <p><i class="fas fa-info-circle" style="color: #f59e0b; margin-right: 6px;"></i> <b>Mümkün Səbəblər:</b></p>
         <ul style="padding-left: 20px; margin-top: 6px;">
@@ -250,6 +252,7 @@
     const txId = urlParams.get('transaction') || localStorage.getItem('last_epoint_transaction') || '';
     const email = urlParams.get('email') || localStorage.getItem('last_email') || '';
     const name = urlParams.get('name') || localStorage.getItem('last_name') || '';
+    const amount = urlParams.get('amount') || localStorage.getItem('last_amount') || '';
 
     let cleanRegId = rawRegId ? parseInt(String(rawRegId).replace(/\D/g, ''), 10) : null;
     if ((!cleanRegId || isNaN(cleanRegId)) && orderId) {
@@ -257,10 +260,24 @@
       if (m) cleanRegId = parseInt(m[1], 10);
     }
 
-    if (cleanRegId) {
-      document.getElementById('retry-link').href = `/payment.html?id=${encodeURIComponent(cleanRegId)}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&retry=1`;
+    function showBankFailReason(reason) {
+      const banner = document.getElementById('error-reason-banner');
+      if (!banner || !reason) return;
+      banner.innerHTML = `<i class="fas fa-exclamation-triangle" style="margin-right:6px;"></i> <b>Bank / Epoint Cavabı:</b> ${String(reason).replace(/[<>&]/g, '')}`;
+      banner.style.display = 'block';
+    }
 
-      // Avtomatik olaraq uğursuz cəhdi sistemdə və CRM-də "Uğursuz" kimi qeydə alırıq
+    if (cleanRegId) {
+      const retryQs = new URLSearchParams({
+        id: String(cleanRegId),
+        retry: '1'
+      });
+      if (name) retryQs.set('name', name);
+      if (email) retryQs.set('email', email);
+      if (amount) retryQs.set('amount', amount);
+      document.getElementById('retry-link').href = `/payment.html?${retryQs.toString()}`;
+
+      // Epoint üzərindən əməliyyatın əsl statusunu yoxlayırıq; əgər uğursuzdursa real bank səbəbini qeydə alırıq
       (async function syncFailedStatus() {
         try {
           const qs = new URLSearchParams({
@@ -273,11 +290,22 @@
           const res = await fetch(`/api/check-epoint-status?${qs.toString()}`, { cache: 'no-store' });
           if (res.ok) {
             const json = await res.json();
-            if (json?.data?.isPaid) {
+            const d = json?.data;
+            if (d?.isPaid) {
               // Əgər əslində ödəniş uğurla keçibsə, dərhal kupon səhifəsinə yönləndir
               window.location.href = `/success?regId=${cleanRegId}`;
               return;
             }
+            if (d?.fail_reason) {
+              showBankFailReason(d.fail_reason);
+            }
+            if (d?.student_name && !name) {
+              retryQs.set('name', d.student_name);
+            }
+            if (d?.amount && !amount) {
+              retryQs.set('amount', String(d.amount));
+            }
+            document.getElementById('retry-link').href = `/payment.html?${retryQs.toString()}`;
           }
         } catch (err) {
           console.warn('Reconcile on error page warning:', err);
@@ -286,12 +314,14 @@
             const list = checkRes.ok ? await checkRes.json() : [];
             const existing = Array.isArray(list) && list.length > 0 ? list[0] : null;
             if (existing && existing.payment_status !== 'Ödənilib') {
+              const reasonText = existing.payment_fail_reason || 'Ödəniş tamamlanmadı və ya ləğv edildi';
+              showBankFailReason(reasonText);
               await fetch(`${API_BASE}/api/registrations?id=${cleanRegId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                   payment_status: 'Uğursuz',
-                  payment_fail_reason: 'Ödəniş tamamlanmadı və ya ləğv edildi'
+                  payment_fail_reason: reasonText
                 })
               });
             }
@@ -299,7 +329,7 @@
         }
       })();
     } else {
-      document.getElementById('retry-link').href = '/schools.html';
+      document.getElementById('retry-link').href = '/payment.html';
     }
   </script>
 </body>

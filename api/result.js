@@ -147,6 +147,7 @@ export default async function handler(req, res) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               payment_status: "Ödənilib",
+              payment_fail_reason: "",
               coupon_code: couponCode,
               paid_at: paidAt,
               amount: amount ? String(amount) : (existingReg?.amount || "35"),
@@ -163,11 +164,20 @@ export default async function handler(req, res) {
             })
           });
         } else if (status && status !== "new") {
-          // Only mark as Uğursuz if the registration has not already been paid
-          if (!existingReg || existingReg.payment_status !== "Ödənilib") {
+          // Newer retry started with a different last_order_id should not be overwritten by an older expired order webhook
+          const isStaleOrder =
+            existingReg?.last_order_id &&
+            order_id &&
+            String(existingReg.last_order_id) !== String(order_id);
+
+          // Only mark as Uğursuz if the registration has not already been paid and order is current
+          if ((!existingReg || existingReg.payment_status !== "Ödənilib") && !isStaleOrder) {
+            const failParts = [message, bank_response]
+              .map(v => (v ? String(v).trim() : ""))
+              .filter(Boolean);
+            const uniqueFailParts = [...new Set(failParts)];
             const failReason =
-              message ||
-              bank_response ||
+              uniqueFailParts.join(" — ") ||
               (code ? `Bank imtinası (Kod: ${code})` : "Ödəniş tamamlanmadı");
 
             await fetch(`${CF_BASE_URL}/api/registrations?id=${dbId}`, {

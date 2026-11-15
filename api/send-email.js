@@ -1,97 +1,63 @@
 import nodemailer from 'nodemailer';
-import crypto from 'crypto';
+
+const CF_BASE_URL = "https://evrika-api.yusifliqezenfer90.workers.dev";
 
 export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Only POST requests allowed' });
   }
 
-  const { email, name, dbId, transactionId } = req.body;
+  const { email, name, dbId, force } = req.body || {};
+  const cleanDbId = dbId ? parseInt(String(dbId).replace(/\D/g, ''), 10) : null;
 
-  if (!email || !dbId) {
-    return res.status(400).json({ message: 'Missing required fields' });
+  if (!cleanDbId || isNaN(cleanDbId)) {
+    return res.status(400).json({ message: 'Missing valid dbId' });
   }
 
-  const SUPABASE_URL = "https://osicmnagzeqkhwticiqp.supabase.co";
-  const SUPABASE_KEY = process.env.SUPABASE_ANON_KEY || "sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE";
+  let regRow = null;
+  let isConfirmedPaid = false;
 
   try {
-    // 1. Datanı alırıq
-    const getRes = await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${dbId}&select=payload`, {
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`
-      }
-    });
-    
-    if (getRes.ok) {
-      const records = await getRes.json();
-      if (records && records.length > 0) {
-        const payload = records[0].payload;
-        
-        // Əgər artıq ödənilibsə, heç nə etmə (dublikatın qarşısını al)
-        if (payload.payment_status !== 'Ödənilib') {
-            payload.status = 'Yeni';
-            payload.payment_status = 'Ödənilib';
-            payload.order_id = "EV-" + String(dbId).padStart(4, '0');
-            
-            // 1.5. Epoint-dən statusu yoxla və məlumatları çək
-            try {
-                const PUB_KEY = "i000201608";
-                const PVT_KEY = process.env.EPOINT_PRIVATE_KEY || "HNIbtyFLu3PbxXlVykJEwOR1";
-                const targetOrderId = "EV-" + String(dbId).padStart(4, '0');
-                const dataObj = { public_key: PUB_KEY, order_id: targetOrderId };
-                const dataJson = JSON.stringify(dataObj);
-                const dataB64 = Buffer.from(dataJson).toString('base64');
-                const shasum = crypto.createHash('sha1');
-                shasum.update(PVT_KEY + dataB64 + PVT_KEY);
-                const signatureStr = shasum.digest('base64');
+    const [regRes, statusRes] = await Promise.all([
+      fetch(`${CF_BASE_URL}/api/registrations?id=${cleanDbId}`).catch(() => null),
+      fetch(`${CF_BASE_URL}/api/payment-status?id=${cleanDbId}`).catch(() => null)
+    ]);
 
-                const epointRes = await fetch("https://epoint.az/api/1/get-status", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: new URLSearchParams({ data: dataB64, signature: signatureStr }).toString()
-                });
-                
-                if (epointRes.ok) {
-                    const epointData = await epointRes.json();
-                    if (epointData.status === 'success') {
-                        payload.epoint_amount = epointData.amount;
-                        payload.epoint_currency = epointData.currency;
-                        payload.epoint_card_number = epointData.card_number || epointData.CARD_NUMBER || epointData.cardnumber || "";
-                        payload.epoint_card_name = epointData.cardname || epointData.CARDNAME || epointData.card_name || epointData.name || "Bilinmir";
-                        payload.epoint_approval_code = epointData.approval_code || epointData.APPROVAL_CODE || epointData.approvalCode || "";
-                        payload.epoint_result_code = epointData.result_code || epointData.RESULT_CODE || epointData.resultCode || "";
-                        payload.epoint_3dsecure = epointData.secure || epointData['3dsecure'] || epointData['3DSECURE'] || "";
-                        payload.epoint_bank_response = epointData.bank_response || epointData.bankResponse || "";
-                        payload.epoint_transaction = epointData.transaction;
-                        payload.epoint_rrn = epointData.rrn;
-                    }
-                }
-            } catch (epointErr) {
-                console.error("send-email.js-də Epoint API xətası:", epointErr);
-            }
-
-            if (!payload.note.includes('EPOINT VASİTƏSİLƏ ÖDƏNİLDİ')) {
-                payload.note += ' | EPOINT VASİTƏSİLƏ ÖDƏNİLDİ. İmtahan giriş kuponu göndərildi.';
-            }
-
-            // Mövcud sətiri yeniləyirik
-            await fetch(`${SUPABASE_URL}/rest/v1/registrations?id=eq.${dbId}`, {
-              method: 'PATCH',
-              headers: {
-                'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`,
-                'Content-Type': 'application/json',
-                'Prefer': 'return=representation'
-              },
-              body: JSON.stringify({ payload })
-            });
-        }
-      }
+    if (regRes && regRes.ok) {
+      const records = await regRes.json().catch(() => []);
+      regRow = Array.isArray(records) && records.length > 0 ? records[0] : null;
     }
+
+    const statusJson = statusRes && statusRes.ok ? await statusRes.json().catch(() => null) : null;
+    isConfirmedPaid =
+      regRow?.payment_status === 'Ödənilib' ||
+      statusJson?.data?.isPaid === true ||
+      statusJson?.data?.status === 'PAID';
   } catch (err) {
-    console.error("DB Update Error:", err);
+    console.error("D1 lookup error in send-email:", err);
+  }
+
+  if (!isConfirmedPaid) {
+    return res.status(409).json({ message: 'Payment is not confirmed yet' });
+  }
+
+  if (regRow?.coupon_email_sent && !force) {
+    return res.status(200).json({ message: 'Coupon email already sent', skipped: true });
+  }
+
+  const targetEmail = (email || regRow?.email || regRow?.payload?.email || '').trim();
+  const targetName = (name || regRow?.name || regRow?.payload?.name || 'Namizəd').trim();
+
+  if (!targetEmail || !targetEmail.includes('@')) {
+    return res.status(400).json({ message: 'Missing valid email address' });
   }
 
   // 2. Email Göndəririk
@@ -103,12 +69,13 @@ export default async function handler(req, res) {
     }
   });
 
-  const verifyUrl = encodeURIComponent(`https://evrikaliseyi.edu.az/verify.html?id=${dbId}`);
+  const couponCode = regRow?.coupon_code || `EV-${String(cleanDbId).padStart(4, '0')}`;
+  const verifyUrl = encodeURIComponent(`https://evrikaliseyi.edu.az/verify.html?id=${cleanDbId}`);
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${verifyUrl}`;
-  
+
   const mailOptions = {
     from: '"Evrika Portal" <' + (process.env.EMAIL_USER || 'yusifliqezenfer90@gmail.com') + '>',
-    to: email,
+    to: targetEmail,
     subject: 'İmtahana Giriş Kuponu - Evrika Təhsil Ekosistemi',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
@@ -117,7 +84,7 @@ export default async function handler(req, res) {
             <p style="margin: 10px 0 0; opacity: 0.8;">Evrika Beynəlxalq Elm və Texnologiya Liseyi</p>
         </div>
         <div style="padding: 30px; background: #ffffff;">
-            <p style="font-size: 16px; color: #333;">Hörmətli <b>${name || 'Namizəd'}</b>,</p>
+            <p style="font-size: 16px; color: #333;">Hörmətli <b>${targetName}</b>,</p>
             <p style="font-size: 15px; color: #555; line-height: 1.6;">
                 Qeydiyyatınız və ödənişiniz uğurla təsdiqlənmişdir. İmtahanda iştirak etmək üçün bu QR kodu imtahan günü nəzarətçiyə təqdim etməyiniz xahiş olunur.
             </p>
@@ -125,7 +92,7 @@ export default async function handler(req, res) {
             <div style="text-align: center; margin: 30px 0; padding: 20px; background: #f8fafc; border-radius: 12px; border: 1px dashed #cbd5e1;">
                 <img src="${qrUrl}" alt="QR Code" style="width: 150px; height: 150px; display: block; margin: 0 auto;">
                 <div style="margin-top: 15px; font-weight: bold; color: #0f172a; font-size: 14px; letter-spacing: 2px;">
-                    KOD: EV-${String(dbId).padStart(4, '0')}
+                    KOD: ${couponCode}
                 </div>
             </div>
 
@@ -142,6 +109,26 @@ export default async function handler(req, res) {
 
   try {
     await transporter.sendMail(mailOptions);
+
+    try {
+      const existingNote = String(regRow?.note || '');
+      const updatedNote = existingNote.includes('İmtahan giriş kuponu göndərildi')
+        ? existingNote
+        : (existingNote ? `${existingNote} | ` : '') + 'EPOINT VASİTƏSİLƏ ÖDƏNİLDİ. İmtahan giriş kuponu göndərildi.';
+
+      await fetch(`${CF_BASE_URL}/api/registrations?id=${cleanDbId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          coupon_email_sent: true,
+          coupon_email_sent_at: new Date().toISOString(),
+          note: updatedNote
+        })
+      });
+    } catch (noteErr) {
+      console.warn("Could not record coupon_email_sent flag:", noteErr);
+    }
+
     return res.status(200).json({ message: 'Success' });
   } catch (error) {
     console.error('Error sending email:', error);
