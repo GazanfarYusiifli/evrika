@@ -338,91 +338,175 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </section>
 
       <!-- Advanced Contact Section (Split Surface) -->
-      <section class="section" style="margin-top: -100px; position: relative; z-index: 20; padding-top: 0;">
+      <section class="section contact-surface-section">
         <div class="container">
           <div class="contact-grid-wrapper">
-            
-            <!-- Side Info: Glass & Navy Combo -->
-            <div class="reveal" style="display: flex; flex-direction: column; gap: 30px;">
-              <!-- Main Info Card -->
-              <div style="background: var(--white); padding: 45px 40px; border-radius: 40px; box-shadow: 0 40px 100px rgba(76, 96, 171,0.06); border: 1px solid rgba(76, 96, 171,0.05); height: 100%;">
-                <h3 style="color: var(--navy); font-size: 2.2rem; margin-bottom: 32px; font-weight: 900; letter-spacing: -0.02em;" data-i18n="contact-info-center">Məlumat Mərkəzi</h3>
-                
-                <div style="display: flex; flex-direction: column; gap: 26px;">
-                  <!-- Addresses -->
-                  <div style="display: flex; gap: 18px;">
-                    <div style="width: 50px; height: 50px; background: rgba(139,26,43,0.08); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: var(--burgundy); font-size: 1.15rem; flex-shrink: 0;">
+
+            <!-- Side Info: Modern Porcelain & Navy Glass Cards -->
+            <div class="reveal contact-side-col">
+              <article class="contact-info-card">
+                <header class="contact-card-head">
+                  <span class="contact-eyebrow">EVRİKA • 24/7 DƏSTƏK</span>
+                  <h3 class="contact-card-title" data-i18n="contact-info-center">Məlumat Mərkəzi</h3>
+                </header>
+
+                <!-- Branches & Addresses -->
+                <div class="contact-block">
+                  <div class="contact-block-head">
+                    <span class="contact-icon-badge is-burgundy" aria-hidden="true">
                       <i class="fas fa-map-marked-alt"></i>
-                    </div>
-                    <div>
-                      <div style="color: var(--navy); opacity: 0.7; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 10px;" data-i18n="contact-branches-title">Ünvanlarımız</div>
-                      <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <div style="font-size: 0.94rem; line-height: 1.45; color: var(--navy);" data-i18n="contact-branch-mont"><strong>Qafur Rəşad 16, Bakı, Azərbaycan</strong> — Evrika Montessori Uşaq Akademiyası</div>
-                        <div style="font-size: 0.94rem; line-height: 1.45; color: var(--navy);" data-i18n="contact-branch-nar"><strong>68 Fəxrəddin Musayev, Bakı, Azərbaycan</strong> — Evrika Beynəlxalq Elm və Texnologiya Liseyi (Nərimanov filialı)</div>
-                        <div style="font-size: 0.94rem; line-height: 1.45; color: var(--navy);" data-i18n="contact-branch-ganclik"><strong>Yəhya Bakuvi küç. 42, Zümrüd Yaşayış Kompleksi</strong> — Evrika Beynəlxalq Elm və Texnologiya Liseyi (Gənclik filialı)</div>
-                        <div style="font-size: 0.94rem; line-height: 1.45; color: var(--navy);" data-i18n="contact-branch-zumrud"><strong>Yəhya Bakuvi küç. 42, Zümrüd Yaşayış Kompleksi</strong> — Zümrüd Ana və uşaq klubu by Evrika Active Life</div>
-                      </div>
-                    </div>
+                    </span>
+                    <span class="contact-block-label" data-i18n="contact-branches-title">Ünvanlarımız</span>
                   </div>
 
-                  <!-- Phones -->
-                  <div style="display: flex; gap: 18px;">
-                    <div style="width: 50px; height: 50px; background: rgba(76, 96, 171,0.06); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: var(--navy); font-size: 1.15rem; flex-shrink: 0;">
+                  <div class="branch-address-list">
+                    <div class="branch-address-item">
+                      <i class="fas fa-map-pin" aria-hidden="true"></i>
+                      <div data-i18n="contact-branch-mont"><strong>Qafur Rəşad 16, Bakı, Azərbaycan</strong> — Evrika Montessori Uşaq Akademiyası</div>
+                    </div>
+                    <div class="branch-address-item">
+                      <i class="fas fa-map-pin" aria-hidden="true"></i>
+                      <div data-i18n="contact-branch-nar"><strong>68 Fəxrəddin Musayev, Bakı, Azərbaycan</strong> — Evrika Beynəlxalq Elm və Texnologiya Liseyi (Nərimanov filialı)</div>
+                    </div>
+                    <div class="branch-address-item">
+                      <i class="fas fa-map-pin" aria-hidden="true"></i>
+                      <div data-i18n="contact-branch-ganclik"><strong>Yəhya Bakuvi küç. 42, Zümrüd Yaşayış Kompleksi</strong> — Evrika Beynəlxalq Elm və Texnologiya Liseyi (Gənclik filialı)</div>
+                    </div>
+                    <div class="branch-address-item">
+                      <i class="fas fa-map-pin" aria-hidden="true"></i>
+                      <div data-i18n="contact-branch-zumrud"><strong>Yəhya Bakuvi küç. 42, Zümrüd Yaşayış Kompleksi</strong> — Zümrüd Ana və uşaq klubu by Evrika Active Life</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Quick Contact Channels (Hotline + Email) -->
+                <div class="contact-channels-grid">
+                  <a href="tel:*1808" class="contact-channel-tile">
+                    <span class="contact-icon-badge is-navy" aria-hidden="true">
                       <i class="fas fa-phone-volume"></i>
-                    </div>
+                    </span>
                     <div>
-                      <div style="color: var(--navy); opacity: 0.7; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 4px;" data-i18n="contact-hotline">Qaynar Xətt</div>
-                      <div style="color: var(--navy); font-size: 1.2rem; font-weight: 700;">*1808</div>
+                      <div class="contact-channel-label" data-i18n="contact-hotline">Qaynar Xətt</div>
+                      <div class="contact-channel-val">*1808</div>
                     </div>
-                  </div>
+                  </a>
 
-                  <!-- Email -->
-                  <div style="display: flex; gap: 18px;">
-                    <div style="width: 50px; height: 50px; background: rgba(139,26,43,0.08); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: var(--burgundy); font-size: 1.15rem; flex-shrink: 0;">
+                  <a href="mailto:info@evrikaliseyi.edu.az" class="contact-channel-tile">
+                    <span class="contact-icon-badge is-burgundy" aria-hidden="true">
                       <i class="fas fa-envelope-open-text"></i>
+                    </span>
+                    <div style="min-width: 0;">
+                      <div class="contact-channel-label" data-i18n="contact-official-email">Rəsmi Email</div>
+                      <div class="contact-channel-val is-email">info@evrikaliseyi.edu.az</div>
                     </div>
-                    <div>
-                      <div style="color: var(--navy); opacity: 0.7; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 4px;" data-i18n="contact-official-email">Rəsmi Email</div>
-                      <div style="color: var(--navy); font-size: 1.1rem; font-weight: 600;">info@evrikaliseyi.edu.az</div>
-                    </div>
-                  </div>
+                  </a>
                 </div>
-              </div>
+              </article>
 
-              <!-- Working Hours Card (Navy Slim) -->
-              <div style="background: var(--navy); color: var(--white); padding: 35px 50px; border-radius: 35px; box-shadow: 0 20px 50px rgba(76, 96, 171,0.2); display: flex; align-items: center; justify-content: space-between;">
+              <!-- Working Hours Card -->
+              <article class="contact-hours-card">
                 <div>
-                  <h4 style="margin-bottom: 6px; font-weight: 900; color: white;" data-i18n="contact-work-hours-title">İş vaxtı</h4>
-                  <p style="opacity: 0.7; margin-bottom: 0; font-size: 1rem; font-weight: 500;" data-i18n="contact-work-hours-desc">Bazar ertəsi - Cümə | 09:00 - 17:30</p>
+                  <div class="hours-pill"><span class="hours-dot" aria-hidden="true"></span> AKTİV QƏBUL</div>
+                  <h4 class="hours-title" data-i18n="contact-work-hours-title">İş vaxtı</h4>
+                  <p class="hours-desc" data-i18n="contact-work-hours-desc">Bazar ertəsi - Cümə | 09:00 - 17:30</p>
                 </div>
-                <div style="font-size: 2rem; opacity: 0.2;"><i class="fas fa-clock"></i></div>
-              </div>
+                <div class="hours-icon" aria-hidden="true"><i class="fas fa-clock"></i></div>
+              </article>
             </div>
 
             <!-- Modern Form Surface -->
             <div class="reveal">
-              <form id="contact-form" style="background: var(--white); padding: 70px; border-radius: 40px; box-shadow: 0 60px 140px rgba(0,0,0,0.07); border: 1px solid rgba(0,0,0,0.03);">
-                <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 35px; margin-bottom: 35px;">
-                  <div class="form-group">
-                    <label style="color: var(--navy); font-weight: 800; margin-bottom: 12px; display: block; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em;" data-i18n="form-name-label">Ad</label>
-                    <input type="text" name="fullName" placeholder="Adınız" data-i18n-placeholder="form-name-ph" required style="width: 100%; padding: 20px; border-radius: 16px; border: 2px solid #f1f3f6; font-family: 'Inter'; font-size: 1rem; transition: all 0.3s ease; outline: none;">
+              <form id="contact-form" class="modern-contact-form" novalidate aria-labelledby="contact-form-heading">
+                <header class="form-card-head">
+                  <span class="contact-eyebrow">ONLAYN MÜRACİƏT</span>
+                  <h3 id="contact-form-heading" class="contact-card-title" data-i18n="contact-form-title">Bizə Yazın</h3>
+                  <p class="form-card-sub" data-i18n="contact-form-sub">Suallarınızı göndərin, mütəxəssislərimiz ən qısa zamanda sizinlə əlaqə saxlasın.</p>
+                </header>
+
+                <div class="form-grid">
+                  <div class="modern-field">
+                    <label for="contact-fullName">
+                      <span data-i18n="form-name-label">Ad</span> <span class="req-star" aria-hidden="true">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="contact-fullName"
+                      name="fullName"
+                      placeholder="Adınız"
+                      data-i18n-placeholder="form-name-ph"
+                      autocomplete="name"
+                      enterkeyhint="next"
+                      required
+                      minlength="2"
+                      data-error="err-fullName"
+                    >
+                    <div id="err-fullName" class="field-error-msg">
+                      <span role="img" aria-label="Xəta">⚠</span> Zəhmət olmasa adınızı daxil edin (ən azı 2 hərf).
+                    </div>
                   </div>
-                  <div class="form-group">
-                    <label style="color: var(--navy); font-weight: 800; margin-bottom: 12px; display: block; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em;" data-i18n="form-phone-label">Telefon</label>
-                    <input type="tel" name="phone" placeholder="+994" data-i18n-placeholder="form-phone-ph" required style="width: 100%; padding: 20px; border-radius: 16px; border: 2px solid #f1f3f6; font-family: 'Inter'; font-size: 1rem; outline: none;">
+
+                  <div class="modern-field">
+                    <label for="contact-phone">
+                      <span data-i18n="form-phone-label">Telefon</span> <span class="req-star" aria-hidden="true">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      id="contact-phone"
+                      name="phone"
+                      placeholder="+994"
+                      data-i18n-placeholder="form-phone-ph"
+                      autocomplete="tel"
+                      inputmode="tel"
+                      enterkeyhint="next"
+                      required
+                      minlength="7"
+                      data-error="err-phone"
+                    >
+                    <div id="err-phone" class="field-error-msg">
+                      <span role="img" aria-label="Xəta">⚠</span> Zəhmət olmasa düzgün əlaqə nömrəsi daxil edin.
+                    </div>
                   </div>
                 </div>
-                <div class="form-group" style="margin-bottom: 35px;">
-                  <label style="color: var(--navy); font-weight: 800; margin-bottom: 12px; display: block; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em;" data-i18n="form-email-label">E-poçt ünvanı</label>
-                  <input type="email" name="email" placeholder="example@mail.com" data-i18n-placeholder="form-email-ph" required style="width: 100%; padding: 20px; border-radius: 16px; border: 2px solid #f1f3f6; font-family: 'Inter'; font-size: 1rem; outline: none;">
+
+                <div class="modern-field">
+                  <label for="contact-email">
+                    <span data-i18n="form-email-label">E-poçt ünvanı</span> <span class="req-star" aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    id="contact-email"
+                    name="email"
+                    placeholder="example@mail.com"
+                    data-i18n-placeholder="form-email-ph"
+                    autocomplete="email"
+                    autocorrect="off"
+                    autocapitalize="none"
+                    spellcheck="false"
+                    enterkeyhint="next"
+                    required
+                    data-error="err-email"
+                  >
+                  <div id="err-email" class="field-error-msg">
+                    <span role="img" aria-label="Xəta">⚠</span> Düzgün e-poçt ünvanı daxil edin (məs: ad@mail.com).
+                  </div>
                 </div>
-                <div class="form-group" style="margin-bottom: 50px;">
-                  <label style="color: var(--navy); font-weight: 800; margin-bottom: 12px; display: block; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em;" data-i18n="form-message-label">Mesaj</label>
-                  <textarea name="message" placeholder="Müraciətiniz və ya sualınız..." data-i18n-placeholder="form-message-ph" style="width: 100%; padding: 20px; border-radius: 16px; border: 2px solid #f1f3f6; font-family: 'Inter'; font-size: 1rem; min-height: 200px; resize: none; outline: none;"></textarea>
+
+                <div class="modern-field" style="margin-bottom: 28px;">
+                  <label for="contact-message" data-i18n="form-message-label">Mesaj</label>
+                  <textarea
+                    id="contact-message"
+                    name="message"
+                    placeholder="Müraciətiniz və ya sualınız..."
+                    data-i18n-placeholder="form-message-ph"
+                    enterkeyhint="send"
+                  ></textarea>
                 </div>
-                <button type="submit" id="contact-submit-btn" class="btn btn-primary btn-xl" style="width: 100%; justify-content: center; background: var(--burgundy) !important; border: none !important; color: white !important; font-size: 1.15rem; padding: 25px !important; box-shadow: 0 25px 50px rgba(139,26,43,0.3);">
-                  <span data-i18n="form-submit-btn">Müraciəti Göndər <i class="fas fa-paper-plane" style="margin-left: 15px; font-size: 1rem;"></i></span>
+
+                <button type="submit" id="contact-submit-btn" class="modern-submit-btn">
+                  <span data-i18n="form-submit-btn">Müraciəti Göndər <i class="fas fa-paper-plane" style="margin-left: 12px; font-size: 0.95rem;"></i></span>
                 </button>
+
+                <div id="contact-form-status" class="form-status-banner" role="status" aria-live="polite" hidden></div>
               </form>
             </div>
 
@@ -431,17 +515,383 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </section>
 
       <style>
+        .contact-surface-section {
+          margin-top: -96px;
+          position: relative;
+          z-index: 20;
+          padding-top: 0;
+        }
         .contact-grid-wrapper {
           display: grid;
-          grid-template-columns: 1fr 1.5fr;
-          gap: 40px;
+          grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.35fr);
+          gap: 32px;
           align-items: stretch;
         }
+        .contact-side-col {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+        }
+        .contact-info-card {
+          container-type: inline-size;
+          background: rgba(255, 255, 255, 0.98);
+          padding: 40px 36px;
+          border-radius: 32px;
+          box-shadow: 0 32px 80px rgba(15, 23, 42, 0.08);
+          border: 1px solid rgba(76, 96, 171, 0.12);
+          position: relative;
+          overflow: hidden;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+        }
+        .contact-info-card::before,
+        .modern-contact-form::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 4px;
+          background: linear-gradient(90deg, var(--burgundy) 0%, var(--navy) 100%);
+        }
+        .contact-eyebrow {
+          display: inline-block;
+          font-size: 0.7rem;
+          font-weight: 800;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: var(--burgundy);
+          margin-bottom: 6px;
+        }
+        .contact-card-title {
+          color: var(--navy);
+          font-size: clamp(1.65rem, 2.5vw, 2.05rem);
+          font-weight: 900;
+          letter-spacing: -0.025em;
+          margin: 0;
+        }
+        .contact-block {
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+        }
+        .contact-block-head {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+        .contact-icon-badge {
+          width: 44px;
+          height: 44px;
+          border-radius: 14px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.05rem;
+          flex-shrink: 0;
+        }
+        .contact-icon-badge.is-burgundy {
+          background: rgba(139, 26, 43, 0.09);
+          color: var(--burgundy);
+        }
+        .contact-icon-badge.is-navy {
+          background: rgba(76, 96, 171, 0.09);
+          color: var(--navy);
+        }
+        .contact-block-label {
+          color: var(--navy);
+          font-weight: 800;
+          font-size: 0.78rem;
+          text-transform: uppercase;
+          letter-spacing: 0.14em;
+        }
+        .branch-address-list {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        .branch-address-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 10px;
+          padding: 12px 14px;
+          border-radius: 16px;
+          background: rgba(76, 96, 171, 0.035);
+          border: 1px solid rgba(76, 96, 171, 0.09);
+          font-size: 0.9rem;
+          line-height: 1.48;
+          color: #1e293b;
+          transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+        .branch-address-item:hover {
+          background: rgba(76, 96, 171, 0.06);
+          border-color: rgba(76, 96, 171, 0.22);
+          transform: translateX(3px);
+        }
+        .branch-address-item i {
+          color: var(--burgundy);
+          margin-top: 4px;
+          font-size: 0.85rem;
+          flex-shrink: 0;
+        }
+        .branch-address-item strong {
+          color: var(--navy);
+        }
+        .contact-channels-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 12px;
+          margin-top: auto;
+        }
+        @container (min-width: 390px) {
+          .contact-channels-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+        }
+        .contact-channel-tile {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 14px 16px;
+          border-radius: 18px;
+          background: #f8fafc;
+          border: 1px solid rgba(76, 96, 171, 0.12);
+          text-decoration: none;
+          transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+          min-width: 0;
+        }
+        .contact-channel-tile:hover {
+          transform: translateY(-2px);
+          border-color: rgba(139, 26, 43, 0.28);
+          box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+        }
+        .contact-channel-tile:focus-visible {
+          outline: 3px solid var(--navy);
+          outline-offset: 2px;
+        }
+        .contact-channel-label {
+          color: #64748b;
+          font-weight: 800;
+          font-size: 0.68rem;
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          margin-bottom: 2px;
+        }
+        .contact-channel-val {
+          color: var(--navy);
+          font-size: 1.05rem;
+          font-weight: 800;
+        }
+        .contact-channel-val.is-email {
+          font-size: 0.84rem;
+          overflow-wrap: anywhere;
+        }
+
+        .contact-hours-card {
+          background: linear-gradient(135deg, #1e3168 0%, #2a3e7c 60%, #4b1d35 100%);
+          color: var(--white);
+          padding: 28px 34px;
+          border-radius: 28px;
+          box-shadow: 0 20px 50px rgba(30, 49, 104, 0.25);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .hours-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
+          font-size: 0.68rem;
+          font-weight: 800;
+          letter-spacing: 0.14em;
+          padding: 4px 10px;
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.12);
+          color: #e2e8f0;
+          margin-bottom: 10px;
+        }
+        .hours-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #22c55e;
+          box-shadow: 0 0 8px #22c55e;
+        }
+        .hours-title {
+          margin: 0 0 4px;
+          font-weight: 900;
+          font-size: 1.25rem;
+          color: #ffffff;
+        }
+        .hours-desc {
+          margin: 0;
+          font-size: 0.96rem;
+          font-weight: 500;
+          color: rgba(255, 255, 255, 0.82);
+        }
+        .hours-icon {
+          font-size: 2.2rem;
+          color: rgba(255, 255, 255, 0.18);
+          flex-shrink: 0;
+        }
+
+        .modern-contact-form {
+          background: rgba(255, 255, 255, 0.99);
+          padding: 44px 44px;
+          border-radius: 32px;
+          box-shadow: 0 40px 100px rgba(15, 23, 42, 0.08);
+          border: 1px solid rgba(76, 96, 171, 0.12);
+          position: relative;
+          overflow: hidden;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+        }
+        .form-card-head {
+          margin-bottom: 28px;
+        }
+        .form-card-sub {
+          margin: 8px 0 0;
+          font-size: 0.94rem;
+          color: #64748b;
+          line-height: 1.5;
+        }
+        .form-grid {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 20px;
+        }
+        .modern-field {
+          display: flex;
+          flex-direction: column;
+          margin-bottom: 20px;
+        }
+        .modern-field label {
+          color: var(--navy);
+          font-weight: 800;
+          margin-bottom: 8px;
+          font-size: 0.8rem;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+        }
+        .req-star {
+          color: var(--burgundy);
+        }
+        .modern-field input,
+        .modern-field textarea {
+          font: inherit;
+          font-size: max(1rem, 1em);
+          width: 100%;
+          min-height: 52px;
+          padding: 14px 16px;
+          border-radius: 14px;
+          border: 1.5px solid #cbd5e1;
+          background: #f8fafc;
+          color: #0f172a;
+          transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+          box-sizing: border-box;
+        }
+        .modern-field textarea {
+          min-height: 165px;
+          resize: vertical;
+          line-height: 1.55;
+        }
+        .modern-field input::placeholder,
+        .modern-field textarea::placeholder {
+          color: #94a3b8;
+        }
+        .modern-field input:hover,
+        .modern-field textarea:hover {
+          border-color: #94a3b8;
+        }
+        .modern-field input:focus-visible,
+        .modern-field textarea:focus-visible {
+          outline: 3px solid rgba(76, 96, 171, 0.25);
+          outline-offset: 0;
+          border-color: var(--navy);
+          background: #ffffff;
+        }
+        .field-error-msg {
+          display: none;
+          margin-top: 6px;
+          font-size: 0.82rem;
+          font-weight: 600;
+          color: #dc2626;
+        }
+        .modern-field :is(:user-invalid, .user-invalid-fallback) {
+          border-color: #dc2626;
+          background: #fef2f2;
+        }
+        .modern-field :is(:user-invalid, .user-invalid-fallback) + .field-error-msg {
+          display: block;
+        }
+        .modern-field input:user-valid {
+          border-color: #16a34a;
+        }
+        .modern-submit-btn {
+          width: 100%;
+          min-height: 58px;
+          padding: 16px 28px;
+          border: none;
+          border-radius: 16px;
+          background: linear-gradient(135deg, #8B1A2B 0%, #b0253b 100%);
+          color: #ffffff;
+          font-family: inherit;
+          font-size: 1.05rem;
+          font-weight: 800;
+          letter-spacing: 0.02em;
+          cursor: pointer;
+          box-shadow: 0 18px 40px rgba(139, 26, 43, 0.28);
+          transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          margin-top: auto;
+        }
+        .modern-submit-btn:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 24px 50px rgba(139, 26, 43, 0.36);
+        }
+        .modern-submit-btn:focus-visible {
+          outline: 3px solid var(--navy);
+          outline-offset: 3px;
+        }
+        .modern-submit-btn:disabled {
+          opacity: 0.72;
+          cursor: wait;
+        }
+        .form-status-banner {
+          margin-top: 16px;
+          padding: 14px 16px;
+          border-radius: 14px;
+          font-size: 0.92rem;
+          font-weight: 600;
+          line-height: 1.45;
+        }
+        .form-status-banner.is-success {
+          background: #ecfdf5;
+          border: 1px solid #86efac;
+          color: #166534;
+        }
+        .form-status-banner.is-warn {
+          background: #fffbeb;
+          border: 1px solid #fcd34d;
+          color: #92400e;
+        }
+
         @media (max-width: 991px) {
           .contact-grid-wrapper { grid-template-columns: 1fr; }
-          #contact-form { padding: 40px !important; }
-          .form-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
-          section[style*="margin-top: -100px"] { margin-top: -60px !important; }
+          .contact-info-card, .modern-contact-form { padding: 28px 22px; border-radius: 26px; }
+          .contact-hours-card { padding: 24px 22px; }
+          .form-grid { grid-template-columns: 1fr; gap: 0; }
+          .contact-surface-section { margin-top: -56px; }
         }
       </style>
 
@@ -779,56 +1229,137 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }, 100);
       });
 
-      // Contact Form Supabase Sync
-      document.getElementById('contact-form').addEventListener('submit', async function(e) {
+      // Sync aria-invalid / describedby & deferred validation state for accessible UX
+      (function setupContactFormUx() {
+        const form = document.getElementById('contact-form');
+        const statusBanner = document.getElementById('contact-form-status');
+        if (!form) return;
+
+        const supportsUserInvalid = typeof CSS !== 'undefined' && CSS.supports && CSS.supports('selector(:user-invalid)');
+        const dirtyState = new WeakMap();
+
+        const linkError = (el, shown) => {
+          const errorId = el.dataset.error;
+          if (!errorId) return;
+          const ids = (el.getAttribute('aria-describedby') || '').split(/\s+/).filter(id => id && id !== errorId);
+          if (shown) ids.push(errorId);
+          if (ids.length) el.setAttribute('aria-describedby', ids.join(' '));
+          else el.removeAttribute('aria-describedby');
+        };
+
+        const syncControl = (el) => {
+          if (!el || !el.matches || !el.matches('input, textarea')) return;
+          const invalid = supportsUserInvalid ? el.matches(':user-invalid') : !el.validity.valid;
+          if (!supportsUserInvalid) {
+            el.classList.toggle('user-invalid-fallback', invalid);
+          }
+          el.setAttribute('aria-invalid', invalid ? 'true' : 'false');
+          linkError(el, invalid);
+        };
+
+        form.querySelectorAll('input, textarea').forEach(el => {
+          el.setAttribute('aria-invalid', 'false');
+        });
+
+        form.addEventListener('input', (e) => {
+          const el = e.target;
+          const st = dirtyState.get(el) || { interacted: false, blurred: false };
+          st.interacted = true;
+          dirtyState.set(el, st);
+          if (st.blurred || el.getAttribute('aria-invalid') === 'true') {
+            syncControl(el);
+          }
+        });
+
+        form.addEventListener('blur', (e) => {
+          const el = e.target;
+          const st = dirtyState.get(el) || { interacted: false, blurred: false };
+          st.blurred = true;
+          dirtyState.set(el, st);
+          if (st.interacted || el.value) {
+            syncControl(el);
+          }
+        }, true);
+
+        form.addEventListener('submit', async function(e) {
           e.preventDefault();
+          if (statusBanner) statusBanner.hidden = true;
+
+          const controls = Array.from(form.querySelectorAll('input, textarea'));
+          const firstInvalid = controls.find(c => !c.checkValidity());
+          if (firstInvalid) {
+            controls.forEach(c => {
+              dirtyState.set(c, { interacted: true, blurred: true });
+              if (!supportsUserInvalid) {
+                c.classList.toggle('user-invalid-fallback', !c.validity.valid);
+              }
+              c.setAttribute('aria-invalid', c.validity.valid ? 'false' : 'true');
+              linkError(c, !c.validity.valid);
+            });
+            firstInvalid.focus();
+            return;
+          }
+
           const btn = document.getElementById('contact-submit-btn');
           const originalText = btn.innerHTML;
-          btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Göndərilir...';
+          btn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right:10px;"></i> Göndərilir...';
           btn.disabled = true;
 
           const formData = new FormData(this);
           const contactData = {};
-          for(let [key, val] of formData.entries()) {
-              contactData[key] = val;
+          for (let [key, val] of formData.entries()) {
+            contactData[key] = val;
           }
           contactData['submissionDate'] = new Date().toISOString();
           contactData['status'] = 'Yeni';
-          contactData['source'] = 'contact'; // Track source
-          
-          // Local Backup
+          contactData['source'] = 'contact';
+
           let crmData = JSON.parse(localStorage.getItem('evrika_crm_data')) || [];
           crmData.unshift(contactData);
           localStorage.setItem('evrika_crm_data', JSON.stringify(crmData));
 
           try {
-              // Post to Cloudflare D1
-              let res = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify(contactData)
-              });
-              
-              if (res.ok) {
-                alert("Müraciətiniz uğurla göndərildi! Əməkdaşlarımız ən qısa zamanda sizinlə əlaqə saxlayacaq.");
-                this.reset();
-              } else {
-                const errorText = await res.text();
-                console.error("API Error:", errorText);
-                alert("Müraciətiniz qəbul edildi (Local), lakin serverlə sinxronlaşmadı.");
-                this.reset();
+            let res = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(contactData)
+            });
+
+            if (res.ok) {
+              if (statusBanner) {
+                statusBanner.className = 'form-status-banner is-success';
+                statusBanner.innerText = 'Müraciətiniz uğurla göndərildi! Əməkdaşlarımız ən qısa zamanda sizinlə əlaqə saxlayacaq.';
+                statusBanner.hidden = false;
               }
-          } catch (err) {
-              console.error("API Error:", err);
-              alert("Müraciətiniz qəbul edildi (Local).");
               this.reset();
+              controls.forEach(c => {
+                dirtyState.delete(c);
+                c.classList.remove('user-invalid-fallback');
+                c.setAttribute('aria-invalid', 'false');
+                linkError(c, false);
+              });
+            } else {
+              if (statusBanner) {
+                statusBanner.className = 'form-status-banner is-warn';
+                statusBanner.innerText = 'Müraciətiniz qəbul edildi, lakin server sinxronizasiyasında gecikmə oldu.';
+                statusBanner.hidden = false;
+              }
+              this.reset();
+            }
+          } catch (err) {
+            console.error('API Error:', err);
+            if (statusBanner) {
+              statusBanner.className = 'form-status-banner is-warn';
+              statusBanner.innerText = 'Müraciətiniz lokal yaddaşda saxlanıldı.';
+              statusBanner.hidden = false;
+            }
+            this.reset();
           }
 
           btn.innerHTML = originalText;
           btn.disabled = false;
-      });
+        });
+      })();
     </script>
   
     <script>
