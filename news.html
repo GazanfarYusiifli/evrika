@@ -518,7 +518,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 return `
                     <a href="news-detail.html?id=${n.id}" class="news-card">
                         <div class="card-media">
-                            <img src="${firstImg}" alt="${n.title}" loading="lazy">
+                            <img src="${firstImg}" alt="${n.title}" loading="lazy" onerror="this.onerror=null;this.src='/assets/hero-main.jpg';">
                             <div class="date-badge">
                                 <strong>${day}</strong>
                                 <span>${month}</span>

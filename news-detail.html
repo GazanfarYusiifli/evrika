@@ -436,8 +436,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </script>
 
 <script>
-        const API_URL = 'https://osicmnagzeqkhwticiqp.supabase.co/rest/v1';
-        const API_KEY = 'sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE';
         const urlParams = new URLSearchParams(window.location.search);
         const newsId = parseInt(urlParams.get('id'), 10) || 1;
 
@@ -480,7 +478,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 document.getElementById('article-view').innerHTML = `
                     ${firstImg ? `
                     <div class="article-hero" onclick="document.getElementById('image-modal').style.display='flex'; document.getElementById('modal-image').src='${firstImg}';">
-                        <img loading="lazy" decoding="async" src="${firstImg}" alt="${item.title}">
+                        <img loading="lazy" decoding="async" src="${firstImg}" alt="${item.title}" onerror="this.onerror=null;this.src='/assets/hero-main.jpg';">
                         <div class="article-zoom-btn"><i class="fas fa-expand"></i> Böyüt</div>
                     </div>
                     ` : ''}

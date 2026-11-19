@@ -1589,7 +1589,8 @@ fbq('track', 'PageView');
                 <input type="text" id="news-title" placeholder="Xəbər başlığı" required class="admin-input">
                 <div style="display:flex; gap:10px; align-items:center;">
                   <input type="text" id="news-img" placeholder="Şəkil URL-i" required class="admin-input" style="flex:1;">
-                  <label class="btn-view" style="cursor:pointer; padding:18px;"><i class="fas fa-upload"></i><input type="file" hidden multiple accept="image/*" onchange="uploadImage(this, 'news-img')"></label>
+                  <label class="btn-view" style="cursor:pointer; padding:18px;"><i class="fas fa-upload"></i><input type="file" hidden multiple accept="image/*" id="news-img-file" onchange="uploadImage(this, 'news-img')"></label>
+                  <img loading="lazy" decoding="async" id="news-img-preview" style="width:45px; height:45px; border-radius:6px; object-fit:cover; display:none;">
                 </div>
                 <textarea id="news-text" placeholder="Xəbərin ətraflı mətni..." required style="min-height:200px;" class="admin-input"></textarea>
                 <div style="display: flex; gap: 10px;">
@@ -1771,7 +1772,7 @@ fbq('track', 'PageView');
               <div style="font-size:0.65rem; color:var(--text-muted); margin-bottom:5px;"><i class="fas fa-info-circle"></i> Daha gözəl görünüş üçün uyğun ölçülü (Landscape) şəkillərə üstünlük verin</div>
               <div style="display:flex; gap:10px; align-items:center;">
                 <input type="text" id="popup-img" placeholder="Şəkil URL" required class="admin-input" style="flex:1;">
-                <label class="btn-view" style="cursor:pointer; padding:18px;"><i class="fas fa-upload"></i><input type="file" hidden accept="image/jpeg,image/png,image/webp" id="popup-img-file" onchange="uploadImage(this, 'popup-img'); let i=0; let int=setInterval(()=>{let v=document.getElementById('popup-img').value; if(v && v.startsWith('http')){ let p=document.getElementById('popup-img-preview'); p.src=v; p.style.display='block'; clearInterval(int);} i++; if(i>30)clearInterval(int);}, 1000);"></label>
+                <label class="btn-view" style="cursor:pointer; padding:18px;"><i class="fas fa-upload"></i><input type="file" hidden accept="image/jpeg,image/png,image/webp" id="popup-img-file" onchange="uploadImage(this, 'popup-img')"></label>
                 <img loading="lazy" decoding="async" id="popup-img-preview" style="width:40px; height:40px; border-radius:5px; object-fit:cover; display:none;">
               </div>
               <div style="display:flex; align-items:center; gap:10px; margin-top:5px; margin-bottom:10px;">
@@ -5645,6 +5646,12 @@ fbq('track', 'PageView');
         document.getElementById('news-id').value = n._db_id_;
         document.getElementById('news-title').value = n.title;
         document.getElementById('news-img').value = n.img;
+        const firstImg = (n.img || '').split(',')[0].trim();
+        const prev = document.getElementById('news-img-preview');
+        if (prev) {
+            if (firstImg) { prev.src = firstImg; prev.style.display = 'block'; }
+            else { prev.style.display = 'none'; }
+        }
         document.getElementById('news-text').value = n.text || '';
         document.getElementById('news-form-title').innerText = "Xəbərə Düzəliş Et";
         document.getElementById('news-submit-btn').innerText = "Dəyişikliyi Saxla";
@@ -5654,6 +5661,8 @@ fbq('track', 'PageView');
     window.resetNewsForm = () => {
         document.getElementById('news-form').reset();
         document.getElementById('news-id').value = '';
+        const prev = document.getElementById('news-img-preview');
+        if (prev) { prev.src = ''; prev.style.display = 'none'; }
         document.getElementById('news-form-title').innerText = "Yeni Xəbər Paylaş";
         document.getElementById('news-submit-btn').innerText = "Paylaş";
     };
@@ -5662,18 +5671,36 @@ fbq('track', 'PageView');
         e.preventDefault();
         const id = document.getElementById('news-id').value;
         const btn = document.getElementById('news-submit-btn');
+        const imgVal = document.getElementById('news-img').value.trim();
+        if (!imgVal) {
+            alert("Zəhmət olmasa şəkil yükləyin və ya şəkil URL-i daxil edin.");
+            return;
+        }
         const payload = {
-            title: document.getElementById('news-title').value,
-            img: document.getElementById('news-img').value,
+            title: document.getElementById('news-title').value.trim(),
+            img: imgVal,
             text: document.getElementById('news-text').value,
             date: new Date().toLocaleDateString('az-AZ')
         };
         btn.disabled = true;
         const url = id ? `${API_URL}/news?id=eq.${id}` : `${API_URL}/news`;
         const method = id ? 'PATCH' : 'POST';
-        const res = await fetch(url, { method, headers: HEADERS, body: JSON.stringify({ payload }) });
-        if(res.ok) { resetNewsForm(); loadNews(); alert("Xəbər uğurla saxlanıldı!"); }
-        btn.disabled = false;
+        try {
+            const res = await fetch(url, { method, headers: HEADERS, body: JSON.stringify({ payload }) });
+            if (res.ok) {
+                resetNewsForm();
+                loadNews();
+                alert("Xəbər uğurla saxlanıldı!");
+            } else {
+                const errText = await res.text();
+                alert("Xəbər saxlanılarkən xəta baş verdi: " + errText);
+            }
+        } catch (err) {
+            console.error("News save error:", err);
+            alert("Şəbəkə xətası: " + err.message);
+        } finally {
+            btn.disabled = false;
+        }
     };
 
     window.deleteNews = async (id) => {
@@ -6157,8 +6184,14 @@ fbq('track', 'PageView');
 
     window.togglePopupStatus = async (id, newStatus, idx) => {
         const item = popupData[idx];
-        const updatedPayload = { ...item, status: newStatus };
+        const updatedPayload = {
+            ...(item?.payload || item),
+            status: newStatus
+        };
         delete updatedPayload._db_id_;
+        delete updatedPayload.id;
+        delete updatedPayload.created_at;
+        delete updatedPayload.payload;
         try {
             await fetch(`${API_URL}/popups?id=eq.${id}`, {
                 method: 'PATCH',
