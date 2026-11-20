@@ -2219,6 +2219,7 @@ fbq('track', 'PageView');
             }
 
             filteredData = getBranchFilteredData();
+            updateAppsBadges();
             switchTab('dashboard');
         } else {
             const startTabs = { 'hr':'hr-panel', 'finance':'finance', 'site':'ugurlar', 'exam':'exam-results' };
@@ -3383,27 +3384,98 @@ fbq('track', 'PageView');
 
     const statusMap = { 'Yeni': { color:'#f59e0b', bg:'rgba(245,158,11,0.1)' }, 'Baxılıb': { color:'#3b82f6', bg:'rgba(59,130,246,0.1)' }, 'Əlaqə': { color:'#8b5cf6', bg:'rgba(139,92,246,0.1)' }, 'Qəbul': { color:'#10b981', bg:'rgba(16,185,129,0.1)' }, 'İmtina': { color:'#ef4444', bg:'rgba(239,68,68,0.1)' } };
 
+    function normalizeBranchText(val) {
+      return String(val || '')
+        .toLowerCase()
+        .replace(/ə/g, 'e')
+        .replace(/ü/g, 'u')
+        .replace(/ö/g, 'o')
+        .replace(/ş/g, 's')
+        .replace(/ç/g, 'c')
+        .replace(/ğ/g, 'g')
+        .replace(/ı/g, 'i')
+        .replace(/İ/g, 'i');
+    }
+
+    function parseUtcDateMs(dateStr) {
+      if (!dateStr) return 0;
+      let str = String(dateStr).trim();
+      if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/.test(str)) {
+        str = str.replace(' ', 'T') + 'Z';
+      } else if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(str) && !str.endsWith('Z') && !/[+-]\d{2}:\d{2}$/.test(str)) {
+        str = str + 'Z';
+      }
+      const ms = new Date(str).getTime();
+      return Number.isNaN(ms) ? 0 : ms;
+    }
+
+    function isCallRecord(item) {
+      if (!item) return false;
+      const src = String(item.source || '');
+      return Boolean(item.is_call || item.call_status || src.includes('Zəng'));
+    }
+
+    function isParentVoiceRecord(item) {
+      if (!item) return false;
+      if (item.is_parent_voice === true || item.is_parent_voice === 'true') return true;
+      const s = String(item.source || '');
+      const ft = String(item.form_type || '');
+      const note = String(item.note || '');
+      return (
+        s.includes('Valideyn') || s.includes('Parent') ||
+        ft.includes('Valideyn') || ft.includes('Parent') ||
+        note.includes('Valideyn Sorğusu') || note.includes('Valideyn Səsi') || note.includes('Montessori Sorğusu')
+      );
+    }
+
+    function isOnlineAppRecord(item) {
+      return Boolean(item && !isCallRecord(item) && !isParentVoiceRecord(item));
+    }
+
+    function isPaidApplication(item) {
+      if (!item) return false;
+      const st = String(item.payment_status || '').trim().toLowerCase();
+      return st === 'ödənilib' || st === 'paid';
+    }
+
     function getGranularSource(item) {
       if(!item) return 'contact';
       if (item.position || (item.source && (item.source.includes('Karyera') || item.source.includes('Vakansiya')))) return 'career';
       
-      const s = String(item.source || '').toLowerCase();
-      // Only use relevant text fields (not ALL values - that's very expensive!)
-      const allText = (s + ' ' + String(item.note || '') + ' ' + String(item.description || '')).toLowerCase();
+      const s = normalizeBranchText(item.source);
+      const bField = normalizeBranchText(item.branch);
+      const allText = normalizeBranchText(
+        [item.source, item.branch, item.branch_name, item.school, item.note, item.description].filter(Boolean).join(' ')
+      );
 
-      if (s.includes('nərimanov') || s.includes('nerimanov') || s.includes('lisey 1') || s.includes('liseyi 1') || s === 'lisey1' || allText.includes('nərimanov') || allText.includes('nerimanov')) return 'lisey1';
-      if (s.includes('gənclik') || s.includes('genclik') || s.includes('lisey 2') || s.includes('liseyi 2') || s === 'lisey2' || allText.includes('gənclik') || allText.includes('genclik')) return 'lisey2';
-      if (s.includes('montessori') || allText.includes('montessori')) return 'montessori';
-      if (s.includes('victory') || s.includes('eduhome') || allText.includes('victory')) return 'victory';
-      if (s.includes('zümrüd') || s.includes('zumrud') || allText.includes('zümrüd') || allText.includes('zumrud')) return 'zumrud';
-      if (s.includes('phone') || s.includes('zəng') || s.includes('nexus') || item.is_call) return 'phone';
+      if (bField === 'lisey1' || bField === 'lis1' || allText.includes('nerimanov') || allText.includes('lisey 1') || allText.includes('liseyi 1') || allText.includes('lisey1')) return 'lisey1';
+      if (bField === 'lisey2' || bField === 'lis2' || allText.includes('genclik') || allText.includes('lisey 2') || allText.includes('liseyi 2') || allText.includes('lisey2')) return 'lisey2';
+      if (bField === 'montessori' || allText.includes('montessori')) return 'montessori';
+      if (bField === 'victory' || allText.includes('victory') || allText.includes('eduhome')) return 'victory';
+      if (bField === 'zumrud' || allText.includes('zumrud')) return 'zumrud';
+      if (s.includes('phone') || s.includes('zeng') || s.includes('nexus') || item.is_call) return 'phone';
       if (s.includes('whatsapp') || allText.includes('whatsapp')) return 'whatsapp';
-      if (s.includes('instagram') || allText.includes('instagram') || allText.includes('ig')) return 'instagram';
-      if (s.includes('facebook') || allText.includes('facebook') || allText.includes('fb')) return 'facebook';
+      if (s.includes('instagram') || allText.includes('instagram') || /\big\b/.test(allText)) return 'instagram';
+      if (s.includes('facebook') || allText.includes('facebook') || /\bfb\b/.test(allText)) return 'facebook';
       if (s.includes('linkedin') || allText.includes('linkedin')) return 'linkedin';
-      if (s.includes('əlaqə') || s.includes('contact') || allText.includes('əlaqə')) return 'contact';
+      if (s.includes('elaqe') || s.includes('contact') || allText.includes('elaqe')) return 'contact';
       
       return 'contact';
+    }
+
+    function updateAppsBadges() {
+      const bData = getBranchFilteredData();
+      const newCount = bData.filter(item => (item.status || 'Yeni').toLowerCase() === 'yeni').length;
+      const badge = document.getElementById('new-apps-badge');
+      const badgeExam = document.getElementById('new-exam-apps-badge');
+      if (badge) {
+          badge.innerText = newCount;
+          badge.style.display = newCount > 0 ? 'inline-block' : 'none';
+      }
+      if (badgeExam) {
+          badgeExam.innerText = newCount;
+          badgeExam.style.display = newCount > 0 ? 'inline-block' : 'none';
+      }
     }
 
     function formatPhone(phone) {
@@ -3461,18 +3533,7 @@ fbq('track', 'PageView');
       window.filterData();
       if (window.renderVacancyApps) window.renderVacancyApps();
       
-      const bData = getBranchFilteredData();
-      const newCount = bData.filter(item => (item.status || "").toLowerCase() === "yeni").length;
-      const badge = document.getElementById("new-apps-badge");
-      const badgeExam = document.getElementById("new-exam-apps-badge");
-      if (badge) {
-          badge.innerText = newCount;
-          badge.style.display = newCount > 0 ? "inline-block" : "none";
-      }
-      if (badgeExam) {
-          badgeExam.innerText = newCount;
-          badgeExam.style.display = newCount > 0 ? "inline-block" : "none";
-      }
+      updateAppsBadges();
       renderDashboard();
       renderAnalytics();
       renderFinance();
@@ -3697,19 +3758,7 @@ fbq('track', 'PageView');
             window.filterData();
             if (window.renderVacancyApps) window.renderVacancyApps();
             
-            const bData = getBranchFilteredData();
-            const newCount = bData.filter(item => (item.status || '').toLowerCase() === 'yeni').length;
-            const badge = document.getElementById('new-apps-badge');
-            const badgeExam = document.getElementById('new-exam-apps-badge');
-            if (badge) {
-                badge.innerText = newCount;
-                badge.style.display = newCount > 0 ? 'inline-block' : 'none';
-            }
-            if (badgeExam) {
-                badgeExam.innerText = newCount;
-                badgeExam.style.display = newCount > 0 ? 'inline-block' : 'none';
-            }
-            
+            updateAppsBadges();
             renderDashboard(); renderAnalytics(); renderFinance(); renderVacancyApps();
         }
       } catch(e) {}
@@ -3743,6 +3792,8 @@ fbq('track', 'PageView');
       if (activeLink) activeLink.classList.add('active');
 
       filterData();
+      updateAppsBadges();
+      renderDashboard();
     };
 
     window.filterData = () => {
@@ -3753,7 +3804,7 @@ fbq('track', 'PageView');
 
       filteredData = rawData.filter(item => {
         // Exclude call center & parent voice feedback records from online applications table
-        if (item.is_call || item.call_status || (item.source && item.source.includes('Zəng')) || item.is_parent_voice || (item.source && (item.source.includes('Valideyn') || item.source.includes('Parent')))) return false;
+        if (!isOnlineAppRecord(item)) return false;
 
         const fullName = (item.fullName || item['Ad Soyad'] || item.name || 
                           item['[1.Əlaqə] Valideyn Adı'] || 
@@ -3765,15 +3816,7 @@ fbq('track', 'PageView');
         const matchesSearch = fullName.includes(q) || phone.includes(q);
         
         let s = getGranularSource(item) || '';
-        
-        let matchesBranch = true;
-        if (branch !== 'all') {
-          if (branch === 'lisey1') matchesBranch = s === 'lisey1' || s.includes('Nərimanov');
-          else if (branch === 'lisey2') matchesBranch = s === 'lisey2' || s.includes('Gənclik');
-          else if (branch === 'montessori') matchesBranch = s === 'montessori' || s.includes('Montessori');
-          else if (branch === 'victory') matchesBranch = s === 'victory' || s.includes('Victory');
-          else if (branch === 'zumrud') matchesBranch = s === 'zumrud' || s.includes('Zümrüd') || s.includes('zumrud');
-        }
+        const matchesBranch = (branch === 'all') || (s === branch);
         
         let matchesStatus = true;
         if (status !== 'all') {
@@ -6398,16 +6441,10 @@ fbq('track', 'PageView');
 
     function getBranchFilteredData() {
       const b = window.selectedCrmBranch || 'all';
-      if (!b || b === 'all') return rawData;
-      return rawData.filter(i => {
-        // getGranularSource already checks source/note/description fields
-        const s = getGranularSource(i) || '';
-        if (b === 'lisey1') return s === 'lisey1';
-        if (b === 'lisey2') return s === 'lisey2';
-        if (b === 'montessori') return s === 'montessori';
-        if (b === 'victory') return s === 'victory';
-        if (b === 'zumrud') return s === 'zumrud';
-        return true;
+      return rawData.filter(item => {
+        if (!isOnlineAppRecord(item)) return false;
+        if (!b || b === 'all') return true;
+        return getGranularSource(item) === b;
       });
     }
 
@@ -6497,7 +6534,7 @@ fbq('track', 'PageView');
       const bData = getBranchFilteredData();
       const b = window.selectedCrmBranch || 'all';
 
-      // 1. Ümumi müraciət
+      // 1. Ümumi müraciət (yalnız Onlayn Müraciətlər — zənglər və valideyn sorğuları ayrı bölmələrdədir)
       if(document.getElementById('dash-total')) {
         document.getElementById('dash-total').innerText = bData.length;
       }
@@ -6508,33 +6545,48 @@ fbq('track', 'PageView');
       }
 
       // 3. Kupon Alan Sayı
+      const paidApps = bData.filter(i => isPaidApplication(i));
       if(document.getElementById('dash-ugur')) {
-         const kuponCount = bData.filter(i => (i.epoint_amount || i.amount) && i.payment_status === 'Ödənilib').length;
-         document.getElementById('dash-ugur').innerText = kuponCount;
+         document.getElementById('dash-ugur').innerText = paidApps.length;
       }
 
       // 4. Aktiv Vakansiya
       if(document.getElementById('dash-vac')) {
-         let filteredVacancies = vacanciesData;
+         const VAC_BRANCH_KEYWORDS = {
+           'lisey1': ['nerimanov', 'lisey 1', 'liseyi 1', 'lisey1'],
+           'lisey2': ['genclik', 'lisey 2', 'liseyi 2', 'lisey2'],
+           'montessori': ['montessori'],
+           'victory': ['victory', 'eduhome'],
+           'zumrud': ['zumrud']
+         };
+         const activeVacancies = (vacanciesData || []).filter(v => String(v.status || '').trim().toLowerCase() === 'aktiv');
+         let filteredVacancies = activeVacancies;
          if (b !== 'all') {
-           const BRANCH_NAMES = { 'lisey1':'Nərimanov', 'lisey2':'Gənclik', 'montessori':'Montessori', 'victory':'Victory', 'zumrud':'Zümrüd' };
-           const branchKw = (BRANCH_NAMES[b] || '').toLowerCase();
-           filteredVacancies = vacanciesData.filter(v => {
-             const vText = ((v.title || '') + ' ' + (v.location || '') + ' ' + (v.branch || '')).toLowerCase();
-             return vText.includes(branchKw);
+           const keywords = VAC_BRANCH_KEYWORDS[b] || [];
+           filteredVacancies = activeVacancies.filter(v => {
+             const vText = normalizeBranchText([v.title, v.location, v.branch, v.desc].filter(Boolean).join(' '));
+             return keywords.some(kw => vText.includes(kw));
            });
          }
-         const activeCount = filteredVacancies.filter(v => v.status === 'Aktiv').length || (b === 'all' ? vacanciesData.length : 0);
-         document.getElementById('dash-vac').innerText = activeCount;
+         document.getElementById('dash-vac').innerText = filteredVacancies.length;
       }
       
       // 5. Son Ödəniş Edən
       if(document.getElementById('dash-last-payer')) {
-         const latestPayment = bData.filter(i => (i.epoint_amount || i.amount) && i.payment_status === 'Ödənilib')
-                                     .sort((a,b) => new Date(b.epoint_date || b.submissionDate || 0) - new Date(a.epoint_date || a.submissionDate || 0))[0];
+         const getPaymentTimeMs = (item) => Math.max(
+           parseUtcDateMs(item.paid_at),
+           parseUtcDateMs(item.epoint_date),
+           parseUtcDateMs(item.submissionDate),
+           parseUtcDateMs(item.created_at)
+         );
+         const latestPayment = [...paidApps].sort((a, bItem) => {
+           const diff = getPaymentTimeMs(bItem) - getPaymentTimeMs(a);
+           if (diff !== 0) return diff;
+           return (bItem._db_id_ || 0) - (a._db_id_ || 0);
+         })[0];
          if(latestPayment) {
              const name = latestPayment.fullName || latestPayment['Ad Soyad'] || latestPayment.name || (latestPayment['[2.Şagird] Adı'] ? latestPayment['[2.Şagird] Adı'] + ' ' + (latestPayment['[2.Şagird] Soyadı']||'') : 'Adsız');
-             const amt = parseFloat(String(latestPayment.epoint_amount || latestPayment.amount).replace(/[^0-9.]/g, '')) || 0;
+             const amt = parseFloat(String(latestPayment.epoint_amount || latestPayment.amount || 0).replace(/[^0-9.]/g, '')) || 0;
              document.getElementById('dash-last-payer').innerHTML = `${name} <br><small style="opacity:0.6; font-size:0.8rem;">(${amt} AZN)</small>`;
          } else {
              document.getElementById('dash-last-payer').innerText = 'Yoxdur';
@@ -6693,22 +6745,20 @@ fbq('track', 'PageView');
           'montessori': 'Montessori Academy (Qeydiyyat)',
           'victory': 'Victory Colleges (Qeydiyyat)',
           'zumrud': 'Zümrüd Ana və uşaq klubu (Qeydiyyat)',
-          'career': 'Karyera və Vakansiyalar',
           'contact': 'Bizimlə Əlaqə (Səhifədən)',
           'whatsapp': 'WhatsApp',
           'instagram': 'Instagram',
           'linkedin': 'LinkedIn',
           'facebook': 'Facebook',
-          'email': 'Email',
-          'phone': 'Telefon Zəngi'
+          'email': 'Email'
         };
-        const PRIMARY_KEYS = ['lisey1', 'lisey2', 'montessori', 'victory', 'zumrud', 'contact', 'career', 'whatsapp', 'instagram', 'linkedin', 'facebook', 'email'];
+        const PRIMARY_KEYS = ['lisey1', 'lisey2', 'montessori', 'victory', 'zumrud', 'contact'];
         PRIMARY_KEYS.forEach(k => sourceCounts[SOURCE_MAP[k]] = 0);
 
         bData.forEach(item => {
           const s = getGranularSource(item);
-          const mapped = SOURCE_MAP[s] || s || 'Email'; 
-          const finalLabel = mapped === 'Digər Mənbələr' || mapped === 'Vebsayt' ? 'Email' : mapped;
+          const mapped = SOURCE_MAP[s] || s || 'Bizimlə Əlaqə (Səhifədən)';
+          const finalLabel = mapped === 'Digər Mənbələr' || mapped === 'Vebsayt' ? 'Bizimlə Əlaqə (Səhifədən)' : mapped;
           sourceCounts[finalLabel] = (sourceCounts[finalLabel] || 0) + 1;
         });
 
@@ -6725,7 +6775,6 @@ fbq('track', 'PageView');
 
         const CHANNELS = [
           `${branchName} Vebsayt Qeydiyyatı`,
-          'Telefon / Zəng Mərkəzi',
           'WhatsApp Müraciəti',
           'Instagram Reklamı',
           'Facebook / Sosial Media',
@@ -6735,18 +6784,16 @@ fbq('track', 'PageView');
         CHANNELS.forEach(c => sourceCounts[c] = 0);
 
         bData.forEach(item => {
-          const s = (item.source || '').toLowerCase();
-          const allText = (s + ' ' + String(item.note || '') + ' ' + String(item.description || '')).toLowerCase();
+          const s = normalizeBranchText(item.source);
+          const allText = normalizeBranchText([item.source, item.utm_source, item.utm_medium, item.note, item.description].filter(Boolean).join(' '));
           
-          if (item.is_call || s.includes('phone') || s.includes('zəng') || s.includes('nexus')) {
-            sourceCounts['Telefon / Zəng Mərkəzi']++;
-          } else if (s.includes('whatsapp') || allText.includes('whatsapp')) {
+          if (s.includes('whatsapp') || allText.includes('whatsapp')) {
             sourceCounts['WhatsApp Müraciəti']++;
-          } else if (s.includes('instagram') || allText.includes('instagram') || allText.includes('ig')) {
+          } else if (s.includes('instagram') || allText.includes('instagram') || /\big\b/.test(allText)) {
             sourceCounts['Instagram Reklamı']++;
-          } else if (s.includes('facebook') || allText.includes('facebook') || allText.includes('fb')) {
+          } else if (s.includes('facebook') || allText.includes('facebook') || /\bfb\b/.test(allText)) {
             sourceCounts['Facebook / Sosial Media']++;
-          } else if (s.includes('contact') || s.includes('əlaqə') || s.includes('email')) {
+          } else if (s.includes('contact') || s.includes('elaqe') || s.includes('email')) {
             sourceCounts['Əlaqə Forması / Email']++;
           } else {
             sourceCounts[`${branchName} Vebsayt Qeydiyyatı`]++;
@@ -6757,6 +6804,7 @@ fbq('track', 'PageView');
       }
 
       const dataValues = labels.map(l => sourceCounts[l] || 0);
+      const hasPieData = dataValues.some(v => v > 0);
 
       // Pie Chart
       const ctxEl = document.getElementById('pieChart');
@@ -6765,8 +6813,13 @@ fbq('track', 'PageView');
         window.myPieChart = new Chart(ctxEl.getContext('2d'), {
           type: 'doughnut',
           data: {
-            labels: labels,
-            datasets: [{ data: dataValues, backgroundColor: colors, borderWidth: 0, hoverOffset: 20 }]
+            labels: hasPieData ? labels : ['Məlumat yoxdur'],
+            datasets: [{
+              data: hasPieData ? dataValues : [1],
+              backgroundColor: hasPieData ? colors : ['rgba(255,255,255,0.08)'],
+              borderWidth: 0,
+              hoverOffset: hasPieData ? 20 : 0
+            }]
           },
           options: {
             responsive: true,
@@ -6801,26 +6854,34 @@ fbq('track', 'PageView');
         if (window.myLineChart) window.myLineChart.destroy();
         
         const months = ['Yan', 'Fev', 'Mar', 'Apr', 'May', 'İyun', 'İyul', 'Avq', 'Sen', 'Okt', 'Noy', 'Dek'];
-        const currentMonthIdx = new Date().getMonth();
-        const displayMonths = months.slice(Math.max(0, currentMonthIdx - 5), currentMonthIdx + 1);
-        
-        const monthlyCounts = displayMonths.map(() => 0);
-        bData.forEach(item => {
-          const d = new Date(item.created_at || item.submissionDate || Date.now());
-          const mIdx = d.getMonth();
-          const dispIdx = displayMonths.indexOf(months[mIdx]);
-          if (dispIdx >= 0) monthlyCounts[dispIdx]++;
-        });
+        const now = new Date();
+        const buckets = [];
+        for (let offset = 5; offset >= 0; offset--) {
+          const dt = new Date(now.getFullYear(), now.getMonth() - offset, 1);
+          buckets.push({
+            year: dt.getFullYear(),
+            month: dt.getMonth(),
+            label: months[dt.getMonth()]
+          });
+        }
+        const displayMonths = buckets.map(bkt => bkt.label);
+        const monthlyCounts = buckets.map(() => 0);
 
-        const chartData = monthlyCounts.some(c => c > 0) ? monthlyCounts : [1, 2, 1, 3, 2, bData.length];
+        bData.forEach(item => {
+          const ms = parseUtcDateMs(item.created_at || item.submissionDate || item.date);
+          if (!ms) return;
+          const d = new Date(ms);
+          const idx = buckets.findIndex(bkt => bkt.year === d.getFullYear() && bkt.month === d.getMonth());
+          if (idx >= 0) monthlyCounts[idx]++;
+        });
 
         window.myLineChart = new Chart(lineCtxEl.getContext('2d'), {
           type: 'line',
           data: {
-            labels: displayMonths.length > 0 ? displayMonths : ['Yan', 'Fev', 'Mar', 'Apr', 'May', 'İyun'],
+            labels: displayMonths,
             datasets: [{
               label: 'Müraciət Dinamikası',
-              data: chartData,
+              data: monthlyCounts,
               borderColor: '#8B1A2B',
               tension: 0.4,
               fill: true,
@@ -6844,9 +6905,6 @@ fbq('track', 'PageView');
       const item = (isHR ? hrData[idx] : filteredData[idx]);
       const dbId = item._db_id_;
       if (!dbId) return;
-
-      const oldStatus = (item.status || '').toLowerCase();
-      const newStatusLower = (newStatus || '').toLowerCase();
 
       try {
         // Həmişə ən son datanı DB-dən çəkirik ki, payment_status (Epoint tərəfindən dəyişilən) əzilməsin
@@ -6873,23 +6931,8 @@ fbq('track', 'PageView');
            const rawItem = rawData.find(r => r._db_id_ === dbId);
            if (rawItem) rawItem.status = newStatus;
 
-           // Update notification badge instantly
-           const badge = document.getElementById('new-apps-badge');
-           const badgeExam = document.getElementById('new-exam-apps-badge');
-           if (badge) {
-               let currentCount = parseInt(badge.innerText) || 0;
-               if (oldStatus === 'yeni' && newStatusLower !== 'yeni') {
-                   currentCount = Math.max(0, currentCount - 1);
-               } else if (oldStatus !== 'yeni' && newStatusLower === 'yeni') {
-                   currentCount++;
-               }
-               badge.innerText = currentCount;
-               badge.style.display = currentCount > 0 ? 'inline-block' : 'none';
-               if (badgeExam) {
-                   badgeExam.innerText = currentCount;
-                   badgeExam.style.display = currentCount > 0 ? 'inline-block' : 'none';
-               }
-           }
+           // Update notification badges consistently from active branch applications
+           updateAppsBadges();
 
            renderApps(); // Refresh table view without losing filters
            renderDashboard(); // Refresh dashboard stats
