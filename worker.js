@@ -998,7 +998,7 @@ export default {
           `| Filial: ${branchLabel}`,
           inboundDid ? `| DID: *${inboundDid}` : null,
           nexusMenu  ? `| IVR Menyu: ${nexusMenu}` : null,
-          status === 'callback_requested' ? '| ⚠️ CALLBACK LAZIMDIR' : null,
+          (effectiveStatus === 'callback_requested' || rawStatus === 'callback_requested') ? '| ⚠️ CALLBACK LAZIMDIR' : null,
           isDeliveryFailed ? `| [Gecikmiş çatdırılma: ${(body.failed_events || []).join(', ')}]` : null
         ].filter(Boolean).join(' ');
 
@@ -1026,7 +1026,7 @@ export default {
           duration_seconds:       dSec,
           duration:               dStr,
           note:                   noteParts,
-          callback_requested:     status === 'callback_requested' || body.nexus_callback === '1' || callData.callback_requested === true,
+          callback_requested:     effectiveStatus === 'callback_requested' || rawStatus === 'callback_requested' || body.nexus_callback === '1' || callData.callback_requested === true,
           recording_count:        body.recording_count || 0,
           recording_urls:         body.download_urls   || null,
           recording_expires:      body.download_expires_at || null,
