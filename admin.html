@@ -755,6 +755,10 @@ fbq('track', 'PageView');
         <div><i class="fas fa-comment-dots" style="color:#f59e0b;"></i> <span>Valideyn Sorğusu</span></div>
         <span id="new-parent-voice-badge" style="display:none; background:#f59e0b; color:white; padding:2px 8px; border-radius:12px; font-size:0.7rem; font-weight:800;">0</span>
       </div>
+      <div class="sb-link" data-module="crm" onclick="switchTab('kupon')" style="display:flex; justify-content:space-between; align-items:center;">
+        <div><i class="fas fa-ticket-alt" style="color:#10b981;"></i> <span>Kupon Alanlar</span></div>
+        <span id="crm-kupon-badge" style="display:none; background:#10b981; color:white; padding:2px 8px; border-radius:12px; font-size:0.7rem; font-weight:800;">0</span>
+      </div>
       <div class="sb-link" data-module="crm" onclick="switchTab('qr-generator')"><i class="fas fa-qrcode" style="color:#10b981;"></i> <span>QR Kod Generator</span></div>
       <div class="sb-group-title" data-module="exam">İMTAHAN</div>
       <div class="sb-link" data-module="exam" onclick="switchTab('exam-apps')" style="display:flex; justify-content:space-between; align-items:center;">
@@ -834,7 +838,7 @@ fbq('track', 'PageView');
             <div class="stat-lab">Aktiv Vakansiya</div>
             <div class="stat-val" id="dash-vac">0</div>
         </div>
-        <div class="ems-stat-card" style="--accent: var(--success);">
+        <div class="ems-stat-card" style="--accent: var(--success); cursor: pointer;" onclick="switchTab('kupon')" title="Kupon Alanlar siyahısına bax">
             <div class="ems-stat-icon"><i class="fas fa-ticket-alt"></i></div>
             <div class="stat-lab">Kupon Alan Sayı</div>
             <div class="stat-val" id="dash-ugur">0</div>
@@ -1285,6 +1289,7 @@ fbq('track', 'PageView');
                <option value="victory">Victory</option>
                <option value="zumrud">Zümrüd</option>
              </select>
+             <span id="kupon-locked-branch-badge" style="display:none; padding: 8px 14px; border-radius: 8px; background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.3); font-size: 0.8rem; font-weight: 700;"></span>
            </div>
          </div>
          <div class="table-wrapper">
@@ -2218,10 +2223,16 @@ fbq('track', 'PageView');
               qrLink.style.display = (window.selectedCrmBranch === 'all' ? 'flex' : 'none');
             }
 
+            const kuponBranchSel = document.getElementById('filter-kupon-branch');
+            if (kuponBranchSel) kuponBranchSel.value = window.selectedCrmBranch || 'all';
             filteredData = getBranchFilteredData();
             updateAppsBadges();
+            renderKupon();
             switchTab('dashboard');
         } else {
+            window.selectedCrmBranch = 'all';
+            const kuponBranchSel = document.getElementById('filter-kupon-branch');
+            if (kuponBranchSel) kuponBranchSel.value = 'all';
             const startTabs = { 'hr':'hr-panel', 'finance':'finance', 'site':'ugurlar', 'exam':'exam-results' };
             switchTab(startTabs[mk]);
         }
@@ -3466,8 +3477,10 @@ fbq('track', 'PageView');
     function updateAppsBadges() {
       const bData = getBranchFilteredData();
       const newCount = bData.filter(item => (item.status || 'Yeni').toLowerCase() === 'yeni').length;
+      const kuponPaidCount = bData.filter(i => isPaidApplication(i)).length;
       const badge = document.getElementById('new-apps-badge');
       const badgeExam = document.getElementById('new-exam-apps-badge');
+      const badgeKupon = document.getElementById('crm-kupon-badge');
       if (badge) {
           badge.innerText = newCount;
           badge.style.display = newCount > 0 ? 'inline-block' : 'none';
@@ -3475,6 +3488,10 @@ fbq('track', 'PageView');
       if (badgeExam) {
           badgeExam.innerText = newCount;
           badgeExam.style.display = newCount > 0 ? 'inline-block' : 'none';
+      }
+      if (badgeKupon) {
+          badgeKupon.innerText = kuponPaidCount;
+          badgeKupon.style.display = kuponPaidCount > 0 ? 'inline-block' : 'none';
       }
     }
 
@@ -3537,6 +3554,7 @@ fbq('track', 'PageView');
       renderDashboard();
       renderAnalytics();
       renderFinance();
+      if (typeof renderKupon === 'function') renderKupon();
     }
 
     async function initialLoad() {
@@ -3760,6 +3778,7 @@ fbq('track', 'PageView');
             
             updateAppsBadges();
             renderDashboard(); renderAnalytics(); renderFinance(); renderVacancyApps();
+            if (typeof renderKupon === 'function') renderKupon();
         }
       } catch(e) {}
     }
@@ -3791,9 +3810,12 @@ fbq('track', 'PageView');
       const activeLink = document.querySelector(`.sb-link[onclick="switchBranchCrm('${branchKey}')"]`);
       if (activeLink) activeLink.classList.add('active');
 
+      const kuponBranchSel = document.getElementById('filter-kupon-branch');
+      if (kuponBranchSel) kuponBranchSel.value = branchKey || 'all';
       filterData();
       updateAppsBadges();
       renderDashboard();
+      if (typeof renderKupon === 'function') renderKupon();
     };
 
     window.filterData = () => {
@@ -4343,30 +4365,53 @@ fbq('track', 'PageView');
     window.renderKupon = () => {
         const tb = document.getElementById('kupon-tbody');
         if(!tb) return;
-        
-        const branchFilter = document.getElementById('filter-kupon-branch') ? document.getElementById('filter-kupon-branch').value : 'all';
+
+        const MAP = { 
+          'lisey1':'Nərimanov filialı', 'lisey2':'Gənclik filialı', 'montessori':'Montessori', 
+          'victory':'Victory', 'zumrud':'Zümrüd'
+        };
+
+        const activeBranch = window.selectedCrmBranch || 'all';
+        const isBranchLocked = (currentModuleKey === 'crm' && activeBranch !== 'all');
+        const branchEl = document.getElementById('filter-kupon-branch');
+        const lockedBadgeEl = document.getElementById('kupon-locked-branch-badge');
+        if (branchEl) {
+            if (isBranchLocked) {
+                branchEl.value = activeBranch;
+                branchEl.style.display = 'none';
+            } else {
+                branchEl.style.display = 'inline-block';
+            }
+        }
+        if (lockedBadgeEl) {
+            if (isBranchLocked) {
+                lockedBadgeEl.innerText = MAP[activeBranch] || activeBranch;
+                lockedBadgeEl.style.display = 'inline-block';
+            } else {
+                lockedBadgeEl.style.display = 'none';
+            }
+        }
+
+        const branchFilter = isBranchLocked ? activeBranch : (branchEl ? branchEl.value : 'all');
         const statusFilter = document.getElementById('filter-kupon-status') ? document.getElementById('filter-kupon-status').value : 'paid';
         const searchVal = document.getElementById('filter-kupon-search') ? document.getElementById('filter-kupon-search').value.trim().toLowerCase() : '';
         
-        const sourceList = window.allFetchedData || rawData || [];
-        let coupons = sourceList.filter(i => (i.epoint_amount || i.amount || i.coupon_code || i.order_id || i.payment_status));
+        const sourceList = rawData || [];
+        let coupons = sourceList.filter(i => {
+            if (!isOnlineAppRecord(i)) return false;
+            if (isPaidApplication(i)) return true;
+            const numAmt = parseFloat(String(i.epoint_amount || i.amount || 0).replace(/[^0-9.]/g, '')) || 0;
+            return Boolean(numAmt > 0 || i.order_id || i.coupon_code || i.epoint_transaction);
+        });
 
         if (statusFilter === 'paid') {
-            coupons = coupons.filter(i => i.payment_status === 'Ödənilib');
+            coupons = coupons.filter(i => isPaidApplication(i));
         } else if (statusFilter === 'pending') {
-            coupons = coupons.filter(i => i.payment_status !== 'Ödənilib');
+            coupons = coupons.filter(i => !isPaidApplication(i));
         }
         
         if (branchFilter !== 'all') {
-            coupons = coupons.filter(i => {
-                const s = getGranularSource(i) || '';
-                if (branchFilter === 'lisey1') return s === 'lisey1' || s.includes('Nərimanov');
-                if (branchFilter === 'lisey2') return s === 'lisey2' || s.includes('Gənclik');
-                if (branchFilter === 'montessori') return s === 'montessori' || s.includes('Montessori');
-                if (branchFilter === 'victory') return s === 'victory' || s.includes('Victory');
-                if (branchFilter === 'zumrud') return s === 'zumrud' || s.includes('Zümrüd') || s.includes('zumrud');
-                return s === branchFilter;
-            });
+            coupons = coupons.filter(i => getGranularSource(i) === branchFilter);
         }
 
         if (searchVal) {
@@ -4380,24 +4425,29 @@ fbq('track', 'PageView');
             });
         }
         
-        coupons = coupons.sort((a,b) => new Date(b.epoint_date || b.created_at || b.submissionDate || 0) - new Date(a.epoint_date || a.created_at || a.submissionDate || 0));
-
-        const MAP = { 
-          'lisey1':'Nərimanov filialı', 'lisey2':'Gənclik filialı', 'montessori':'Montessori', 
-          'victory':'Victory', 'zumrud':'Zümrüd'
-        };
+        const getCouponTimeMs = (item) => Math.max(
+            parseUtcDateMs(item.paid_at),
+            parseUtcDateMs(item.epoint_date),
+            parseUtcDateMs(item.submissionDate),
+            parseUtcDateMs(item.created_at)
+        );
+        coupons = coupons.sort((a, b) => {
+            const diff = getCouponTimeMs(b) - getCouponTimeMs(a);
+            if (diff !== 0) return diff;
+            return (b._db_id_ || 0) - (a._db_id_ || 0);
+        });
 
         if (coupons.length === 0) {
             tb.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:35px; color:var(--text-muted);"><i class="fas fa-info-circle" style="margin-right:8px;"></i> Məlumat tapılmadı.</td></tr>`;
             return;
         }
 
-        tb.innerHTML = coupons.map((p, idx) => {
+        tb.innerHTML = coupons.map((p) => {
             const fullName = p.fullName || p['Ad Soyad'] || p.name || (p['[2.Şagird] Adı'] ? p['[2.Şagird] Adı'] + ' ' + (p['[2.Şagird] Soyadı']||'') : 'Adsız');
             const amount = p.epoint_amount || p.amount || 0;
             const phone = p.phone || p.tel || p['[1.Əlaqə] Əlaqə Nömrəsi'] || '-';
-            const date = p.epoint_date ? new Date(p.epoint_date).toLocaleString('az') : new Date(p.created_at || p.submissionDate || Date.now()).toLocaleString('az');
-            const isPaid = p.payment_status === 'Ödənilib';
+            const date = formatDateStr(p.paid_at || p.epoint_date || p.submissionDate || p.created_at);
+            const isPaid = isPaidApplication(p);
             const orderNum = p.order_id ? (String(p.order_id).startsWith('EV-') ? p.order_id : `EV-${String(p.order_id).padStart(4, '0')}`) : (p._db_id_ ? `EV-${String(p._db_id_).padStart(4, '0')}` : '---');
             
             const s = getGranularSource(p);
@@ -4920,8 +4970,7 @@ fbq('track', 'PageView');
       
       // Handle the active class for sidebar links
       document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
-      const activeLink = document.querySelector(`.sb-link[onclick="switchTab('${t}')"]`);
-      if (activeLink) activeLink.classList.add('active');
+      document.querySelectorAll(`.sb-link[onclick="switchTab('${t}')"]`).forEach(l => l.classList.add('active'));
 
       if(t==='hr-panel') renderVacancyApps();
       if(t==='apps') renderApps();
