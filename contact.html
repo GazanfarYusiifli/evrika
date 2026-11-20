@@ -900,14 +900,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <style>
         #multi-branch-map {
           width: 100%;
-          height: 750px;
-          border-radius: 40px;
+          height: 580px;
+          border-radius: 34px;
           z-index: 5;
-          filter: grayscale(0.2) contrast(1.1); /* Professional color grade */
+          background: #e2e8f0;
         }
         
         .map-section-wrapper {
-          padding: 160px 0;
+          padding: 130px 0;
           background: #050a18;
           position: relative;
           overflow: hidden;
@@ -935,12 +935,56 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         /* Premium Map Container */
         .map-glass-card {
           position: relative;
-          background: rgba(255, 255, 255, 0.03);
+          background: rgba(255, 255, 255, 0.04);
           backdrop-filter: blur(20px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 50px;
-          padding: 15px;
-          box-shadow: 0 100px 200px rgba(0,0,0,0.6), inset 0 0 80px rgba(255,255,255,0.02);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          border-radius: 42px;
+          padding: 16px;
+          box-shadow: 0 40px 100px rgba(0,0,0,0.45), inset 0 0 60px rgba(255,255,255,0.02);
+        }
+
+        .map-branch-bar {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          margin-bottom: 14px;
+          padding: 6px 4px 2px;
+        }
+        .map-branch-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 10px 16px;
+          border-radius: 999px;
+          border: 1px solid rgba(255, 255, 255, 0.14);
+          background: rgba(15, 23, 42, 0.72);
+          color: #e2e8f0;
+          font-family: inherit;
+          font-size: 0.84rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+        }
+        .map-branch-btn:hover {
+          background: rgba(76, 96, 171, 0.45);
+          border-color: rgba(255, 255, 255, 0.35);
+          transform: translateY(-1px);
+        }
+        .map-branch-btn.is-active {
+          background: linear-gradient(135deg, #8B1A2B 0%, #a82438 100%);
+          border-color: rgba(255, 255, 255, 0.35);
+          color: #ffffff;
+        }
+        .map-branch-btn:focus-visible {
+          outline: 3px solid #93c5fd;
+          outline-offset: 2px;
+        }
+
+        @media (max-width: 768px) {
+          .map-section-wrapper { padding: 90px 0; }
+          .map-glass-card { border-radius: 28px; padding: 12px; }
+          #multi-branch-map { height: 430px; border-radius: 22px; }
+          .map-branch-btn { font-size: 0.78rem; padding: 8px 12px; }
         }
 
         /* Modern Pulsing Pins with Labels */
@@ -998,10 +1042,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           pointer-events: none;
           transition: all 0.3s ease;
         }
+        .pin-label-tag.is-top {
+          top: auto;
+          bottom: 100%;
+          margin-top: 0;
+          margin-bottom: 10px;
+        }
+        .pin-label-tag.is-left {
+          top: 50%;
+          left: auto;
+          right: 100%;
+          margin-top: 0;
+          margin-right: 10px;
+          transform: translateY(-50%);
+        }
+        .pin-label-tag.is-right {
+          top: 50%;
+          left: 100%;
+          margin-top: 0;
+          margin-left: 10px;
+          transform: translateY(-50%);
+        }
         .modern-pin-icon:hover .pin-label-tag {
           background: var(--burgundy);
           color: white;
-          transform: translateX(-50%) translateY(-5px);
         }
 
         @keyframes pinPulse {
@@ -1052,24 +1116,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         <div class="container">
           <!-- Premium Header -->
-          <div class="reveal" style="text-align:center; margin-bottom:80px;">
+          <div class="reveal" style="text-align:center; margin-bottom:50px;">
             <div class="brand-eyebrow modern-glow" style="margin-bottom:20px; color:var(--burgundy); font-weight:900; letter-spacing:0.6em;" data-i18n="map-eyebrow">STRATEJİ COĞRAFİYA</div>
             <h2 style="color:white; font-size:clamp(2.5rem, 6vw, 4.5rem); font-weight:900; letter-spacing:-0.05em; margin:0; line-height:1;">
-              <span data-i18n="map-title">Məkanların <span style="background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.3) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Dəqiq Təyini</span>
+              <span data-i18n="map-title">Məkanların <span style="background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.3) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Dəqiq Təyini</span></span>
             </h2>
-            <p style="color:rgba(255,255,255,0.5); font-size:1.2rem; margin-top:25px; max-width:600px; margin-left:auto; margin-right:auto;">
+            <p style="color:rgba(255,255,255,0.65); font-size:1.15rem; margin-top:22px; max-width:600px; margin-left:auto; margin-right:auto;">
               <span data-i18n="map-desc">Evrika Təhsil Ekosistemi şəhərin ən əlverişli nöqtələrində, müasir infrastrukturla xidmətinizdədir.</span>
             </p>
           </div>
 
           <!-- The Map Card -->
           <div class="reveal map-glass-card">
-            <!-- Optional Floating Panel -->
-            <div class="map-floating-panel" style="display: none;">
-              <h4 style="color:var(--navy); margin-bottom:10px; font-weight:900;">Kampuslarımız</h4>
-              <p style="font-size:0.85rem; color:#666; margin:0;">Xəritədəki işarələrə klikləyərək ətraflı məlumat ala bilərsiniz.</p>
-            </div>
-            
+            <div id="map-branch-bar" class="map-branch-bar" aria-label="Kampuslar"></div>
             <div id="multi-branch-map"></div>
           </div>
         </div>
@@ -1077,80 +1136,164 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
       <script>
-        document.addEventListener('DOMContentLoaded', () => {
-          const branches = [
-            { 
-              name: "Evrika BETL (Nərimanov)", 
-              shortName: "BETL Nərimanov",
-              label: "Mərkəzi Filial",
-              coords: [40.413501, 49.858382],
-              icon: "fa-university"
-            },
-            { 
-              name: "Evrika BETL (Gənclik)", 
-              shortName: "BETL Gənclik",
-              label: "Beynəlxalq Kampus",
-              coords: [40.398683, 49.861941],
-              icon: "fa-graduation-cap"
-            },
-            { 
-              name: "Montessori Kids Academy", 
-              shortName: "Montessori Academy",
-              label: "Bağça və Erkən İnkişaf",
-              coords: [40.398723, 49.862819],
-              icon: "fa-child"
-            },
-            { 
-              name: "Zümrüd Club", 
-              shortName: "Zümrüd Club",
-              label: "İdman və Sağlamlıq",
-              coords: [40.398200, 49.862800],
-              icon: "fa-heartbeat"
-            }
-          ];
+        (function initEvrikaBranchMap() {
+          function startMap() {
+            if (typeof window.L === 'undefined') return;
+            const mapEl = document.getElementById('multi-branch-map');
+            if (!mapEl) return;
 
-          const map = L.map('multi-branch-map', {
-            center: [40.406, 49.860],
-            zoom: 14,
-            zoomControl: false,
-            scrollWheelZoom: false
-          });
+            const branches = [
+              {
+                name: "Evrika BETL (Nərimanov filialı)",
+                shortName: "BETL Nərimanov",
+                label: "Mərkəzi Filial • 68 Fəxrəddin Musayev",
+                coords: [40.413501, 49.858382],
+                icon: "fa-university",
+                labelPos: ""
+              },
+              {
+                name: "Evrika BETL (Gənclik filialı)",
+                shortName: "BETL Gənclik",
+                label: "Beynəlxalq Kampus • Yəhya Bakuvi 42",
+                coords: [40.398683, 49.861941],
+                icon: "fa-graduation-cap",
+                labelPos: "is-left"
+              },
+              {
+                name: "Evrika Montessori Uşaq Akademiyası",
+                shortName: "Montessori Akademiyası",
+                label: "Bağça və Erkən İnkişaf • Qafur Rəşad 16",
+                coords: [40.399350, 49.863200],
+                icon: "fa-child",
+                labelPos: "is-top"
+              },
+              {
+                name: "Zümrüd Ana və uşaq klubu",
+                shortName: "Zümrüd Klubu",
+                label: "by Evrika Active Life • Yəhya Bakuvi 42",
+                coords: [40.397900, 49.862650],
+                icon: "fa-heartbeat",
+                labelPos: "is-right"
+              }
+            ];
 
-          // Ultra-Premium Tile Layer
-          L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map);
-
-          branches.forEach(b => {
-            const customIcon = L.divIcon({
-              className: 'modern-pin-icon',
-              html: `
-                <div class="modern-pin-container">
-                  <div class="pin-glow"></div>
-                  <div class="pin-center"><i class="fas ${b.icon}"></i></div>
-                  <div class="pin-label-tag">${b.shortName}</div>
-                </div>`,
-              iconSize: [40, 40],
-              iconAnchor: [20, 20]
+            const map = L.map('multi-branch-map', {
+              center: [40.406, 49.8605],
+              zoom: 14,
+              zoomControl: false,
+              scrollWheelZoom: false
             });
 
-            const gMapUrl = `https://www.google.com/maps/dir/?api=1&destination=${b.coords[0]},${b.coords[1]}`;
+            // OpenStreetMap free tiles with automatic Esri World Street fallback if any tile fails
+            const osmLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              maxZoom: 19,
+              attribution: '&copy; OpenStreetMap'
+            }).addTo(map);
 
-            L.marker(b.coords, { icon: customIcon }).addTo(map)
-              .bindPopup(`
-                <div class="popup-content">
-                  <div class="popup-label">${b.label}</div>
-                  <div class="popup-name">${b.name}</div>
-                  <a href="${gMapUrl}" target="_blank" class="popup-btn-pro">
-                    Yolu Tap <i class="fas fa-chevron-right"></i>
-                  </a>
-                </div>
-              `, { closeButton: false });
-          });
+            let fallbackLoaded = false;
+            let osmErrors = 0;
+            osmLayer.on('tileerror', () => {
+              osmErrors++;
+              if (!fallbackLoaded && osmErrors >= 3) {
+                fallbackLoaded = true;
+                map.removeLayer(osmLayer);
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+                  maxZoom: 19,
+                  attribution: '&copy; Esri'
+                }).addTo(map);
+              }
+            });
 
-          // Add subtle zoom control at bottom right
-          L.control.zoom({ position: 'bottomright' }).addTo(map);
+            const branchBar = document.getElementById('map-branch-bar');
+            const markers = [];
 
-          setTimeout(() => map.invalidateSize(), 500);
-        });
+            const focusBranch = (idx) => {
+              const b = branches[idx];
+              const m = markers[idx];
+              if (!b || !m) return;
+              map.flyTo(b.coords, 16, { duration: 0.7 });
+              m.openPopup();
+              if (branchBar) {
+                branchBar.querySelectorAll('.map-branch-btn').forEach((el, i) => {
+                  el.classList.toggle('is-active', i === idx);
+                });
+              }
+            };
+
+            branches.forEach((b, idx) => {
+              const customIcon = L.divIcon({
+                className: 'modern-pin-icon',
+                html: `
+                  <div class="modern-pin-container">
+                    <div class="pin-glow"></div>
+                    <div class="pin-center"><i class="fas ${b.icon}"></i></div>
+                    <div class="pin-label-tag ${b.labelPos || ''}">${b.shortName}</div>
+                  </div>`,
+                iconSize: [40, 40],
+                iconAnchor: [20, 20]
+              });
+
+              const gMapUrl = `https://www.google.com/maps/dir/?api=1&destination=${b.coords[0]},${b.coords[1]}`;
+
+              const marker = L.marker(b.coords, { icon: customIcon }).addTo(map)
+                .bindPopup(`
+                  <div class="popup-content">
+                    <div class="popup-label">${b.label}</div>
+                    <div class="popup-name">${b.name}</div>
+                    <a href="${gMapUrl}" target="_blank" rel="noopener noreferrer" class="popup-btn-pro">
+                      Yolu Tap <i class="fas fa-chevron-right"></i>
+                    </a>
+                  </div>
+                `, { closeButton: false });
+              markers.push(marker);
+
+              if (branchBar) {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'map-branch-btn';
+                btn.innerHTML = `<i class="fas ${b.icon}" aria-hidden="true"></i><span>${b.shortName}</span>`;
+                btn.addEventListener('click', () => focusBranch(idx));
+                branchBar.appendChild(btn);
+              }
+            });
+
+            if (branchBar) {
+              const allBtn = document.createElement('button');
+              allBtn.type = 'button';
+              allBtn.className = 'map-branch-btn is-active';
+              allBtn.innerHTML = '<i class="fas fa-expand-arrows-alt" aria-hidden="true"></i><span>Hamısı</span>';
+              allBtn.addEventListener('click', () => {
+                const group = L.featureGroup(markers);
+                map.fitBounds(group.getBounds().pad(0.25));
+                branchBar.querySelectorAll('.map-branch-btn').forEach(el => el.classList.remove('is-active'));
+                allBtn.classList.add('is-active');
+              });
+              branchBar.appendChild(allBtn);
+            }
+
+            L.control.zoom({ position: 'bottomright' }).addTo(map);
+            setTimeout(() => map.invalidateSize(), 400);
+          }
+
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+              if (typeof window.L !== 'undefined') startMap();
+              else {
+                const alt = document.createElement('script');
+                alt.src = 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js';
+                alt.onload = startMap;
+                document.head.appendChild(alt);
+              }
+            });
+          } else if (typeof window.L !== 'undefined') {
+            startMap();
+          } else {
+            const alt = document.createElement('script');
+            alt.src = 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js';
+            alt.onload = startMap;
+            document.head.appendChild(alt);
+          }
+        })();
       </script>
     </main>
 
