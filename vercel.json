@@ -105,11 +105,11 @@
           "value": "LIS2"
         }
       ],
-      "destination": "/valideyn-sesi-genclik.html"
+      "destination": "/valideyn-sesi-genclik"
     },
     {
       "source": "/valideyn-sesi",
-      "destination": "/valideyn-sesi-nerimanov.html"
+      "destination": "/valideyn-sesi-nerimanov"
     },
     {
       "source": "/parent-voice",
