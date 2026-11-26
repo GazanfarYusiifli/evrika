@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Valideyn Sorğuları | EVRİKA</title>
+  <meta name="description" content="Evrika Təhsil Kompleksi — Filial üzrə Valideyn Sorğuları Portalı.">
+  <meta property="og:title" content="Valideyn Sorğuları | EVRİKA">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #030712;
+      --surface: rgba(15, 23, 42, 0.72);
+      --border: rgba(255, 255, 255, 0.1);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+    .bg-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(130px);
+      opacity: 0.25;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .orb-1 { width: 420px; height: 420px; background: #e11d48; top: -120px; left: -120px; }
+    .orb-2 { width: 420px; height: 420px; background: #3b82f6; bottom: -120px; right: -120px; }
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1040px;
+      width: 100%;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #cbd5e1;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.92rem;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      transition: all 0.2s ease;
+    }
+    .back-link:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      transform: translateX(-2px);
+    }
+    .hero {
+      text-align: center;
+      margin-bottom: 44px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 16px;
+      border-radius: 999px;
+      background: rgba(225, 29, 72, 0.14);
+      border: 1px solid rgba(225, 29, 72, 0.35);
+      color: #fda4af;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .hero h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+    .hero p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 620px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 24px;
+    }
+    .branch-card {
+      background: var(--surface);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px 28px;
+      text-decoration: none;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .branch-card:hover {
+      transform: translateY(-6px);
+    }
+    .branch-card.lis1:hover {
+      border-color: #ef4444;
+      box-shadow: 0 20px 45px rgba(239, 68, 68, 0.2);
+    }
+    .branch-card.lis2:hover {
+      border-color: #3b82f6;
+      box-shadow: 0 20px 45px rgba(59, 130, 246, 0.2);
+    }
+    .branch-card.montessori:hover {
+      border-color: #10b981;
+      box-shadow: 0 20px 45px rgba(16, 185, 129, 0.2);
+    }
+    .card-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.45rem;
+      margin-bottom: 18px;
+    }
+    .lis1 .card-icon { background: rgba(239, 68, 68, 0.16); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .lis2 .card-icon { background: rgba(59, 130, 246, 0.16); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+    .montessori .card-icon { background: rgba(16, 185, 129, 0.16); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .branch-card h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 10px;
+    }
+    .branch-card p {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+    .card-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 18px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: background 0.2s ease;
+    }
+    .lis1:hover .card-cta { background: rgba(239, 68, 68, 0.18); color: #fecaca; }
+    .lis2:hover .card-cta { background: rgba(59, 130, 246, 0.18); color: #bfdbfe; }
+    .montessori:hover .card-cta { background: rgba(16, 185, 129, 0.18); color: #a7f3d0; }
+  </style>
+</head>
+<body>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+
+  <div class="container">
+    <div class="top-bar">
+      <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Ana Səhifə</a>
+    </div>
+
+    <div class="hero">
+      <div class="hero-badge"><i class="fas fa-clipboard-check"></i> Valideyn Sorğuları</div>
+      <h1>Filialı Seçin</h1>
+      <p>Fikir, təklif və müraciətlərinizi bölüşmək üçün övladınızın təhsil aldığı filialı seçərək müvafiq sorğu formuna keçid edin.</p>
+    </div>
+
+    <div class="cards-grid">
+      <a href="/valideyn-sesi?branch=LIS1" class="branch-card lis1">
+        <div>
+          <div class="card-icon"><i class="fas fa-microscope"></i></div>
+          <h2>Evrika Beynəlxalq Elm və Texnologiya Liseyi</h2>
+          <p>Nərimanov filialı (I–XI siniflər) üzrə valideyn sorğusu, təklif və müraciət formu.</p>
+        </div>
+        <div class="card-cta">
+          <span>Sorğunu Aç</span>
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </a>
+
+      <a href="/valideyn-sesi?branch=LIS2" class="branch-card lis2">
+        <div>
+          <div class="card-icon"><i class="fas fa-atom"></i></div>
+          <h2>Evrika Beynəlxalq Elm və Texnologiya Liseyi (Gənclik filialı)</h2>
+          <p>Gənclik filialı (I–XI siniflər) üzrə valideyn sorğusu, təklif və müraciət formu.</p>
+        </div>
+        <div class="card-cta">
+          <span>Sorğunu Aç</span>
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </a>
+
+      <a href="/parent-survey" class="branch-card montessori">
+        <div>
+          <div class="card-icon"><i class="fas fa-child"></i></div>
+          <h2>Evrika Montessori Uşaq Bağçası</h2>
+          <p>Montessori Kids bağçası (1–6 yaş) üzrə valideyn sorğusu, təklif və müraciət formu.</p>
+        </div>
+        <div class="card-cta">
+          <span>Sorğunu Aç</span>
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

@@ -97,6 +97,10 @@
       "destination": "/register-zumrud.html"
     },
     {
+      "source": "/valideyn-sorgulari",
+      "destination": "/valideyn-sorgulari.html"
+    },
+    {
       "source": "/valideyn-sesi",
       "destination": "/api/valideyn-sesi"
     },
