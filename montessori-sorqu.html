@@ -285,17 +285,36 @@
     .form-group {
       margin-bottom: 18px;
     }
-    .form-group label {
+    .form-group > label,
+    .form-group legend.group-label {
       display: block;
       font-size: 0.85rem;
       font-weight: 700;
       color: #cbd5e1;
       margin-bottom: 8px;
       letter-spacing: 0.2px;
+      padding: 0;
     }
-    .form-group label .req {
+    .form-group > label .req,
+    .form-group legend.group-label .req {
       color: var(--primary);
       margin-left: 4px;
+    }
+    fieldset.chip-fieldset {
+      border: 0;
+      padding: 0;
+      margin: 0;
+      min-width: 0;
+    }
+    .field-error {
+      display: none;
+      margin-top: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #fb7185;
+    }
+    .field-error.visible {
+      display: block;
     }
 
     .input-wrap {
@@ -363,11 +382,14 @@
       .chip-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
     }
 
+    .form-group label.chip-card,
     .chip-card {
       display: flex;
       align-items: center;
       gap: 12px;
+      min-height: 48px;
       padding: 14px 16px;
+      margin-bottom: 0;
       background: rgba(12, 45, 32, 0.5);
       border: 1.5px solid rgba(16, 185, 129, 0.15);
       border-radius: 16px;
@@ -378,6 +400,11 @@
       transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
       user-select: none;
       position: relative;
+      overflow: hidden;
+    }
+    .chip-card:has(input:focus-visible) {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
     }
     .chip-card i {
       font-size: 1.1rem;
@@ -404,7 +431,15 @@
       transform: scale(1.2);
     }
     .chip-card input {
-      display: none;
+      position: absolute;
+      clip-path: inset(50%);
+      overflow: hidden;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      border: 0;
+      white-space: nowrap;
     }
 
     /* Feedback Emotion Cards */
@@ -654,24 +689,27 @@
           <h2>Evrika ilə necə tanış oldunuz?</h2>
         </div>
         <div class="form-group">
-          <label>Məlumatı ilk dəfə haradan əldə etdiniz? <span class="req">*</span></label>
-          <div class="chip-grid" id="sources-grid">
-            <div class="chip-card" onclick="pickSingle(this)"><i class="fab fa-instagram"></i><span>Instagram</span><input type="radio" name="source_radio" value="Instagram" required></div>
-            <div class="chip-card" onclick="pickSingle(this)"><i class="fab fa-facebook-f"></i><span>Facebook</span><input type="radio" name="source_radio" value="Facebook"></div>
-            <div class="chip-card" onclick="pickSingle(this)"><i class="fab fa-tiktok"></i><span>TikTok</span><input type="radio" name="source_radio" value="TikTok"></div>
-            <div class="chip-card" onclick="pickSingle(this)"><i class="fab fa-youtube"></i><span>YouTube</span><input type="radio" name="source_radio" value="YouTube"></div>
-            <div class="chip-card" onclick="pickSingle(this)"><i class="fab fa-google"></i><span>Google axtarışı</span><input type="radio" name="source_radio" value="Google axtarışı"></div>
-            <div class="chip-card" onclick="pickSingle(this)"><i class="fas fa-search-dollar"></i><span>Google reklamı</span><input type="radio" name="source_radio" value="Google reklamı"></div>
-            <div class="chip-card" onclick="pickSingle(this)"><i class="fas fa-bullhorn"></i><span>Sosial media</span><input type="radio" name="source_radio" value="Instagram / Facebook reklamı"></div>
-            <div class="chip-card" onclick="pickSingle(this)"><i class="fas fa-user-friends"></i><span>Dost / tanış</span><input type="radio" name="source_radio" value="Dost / tanış tövsiyəsi"></div>
-            <div class="chip-card" onclick="pickSingle(this)"><i class="fas fa-users"></i><span>Evrika valideyni</span><input type="radio" name="source_radio" value="Evrika valideyni tövsiyəsi"></div>
-            <div class="chip-card" onclick="pickSingle(this)"><i class="fas fa-user-graduate"></i><span>Evrika məzunu</span><input type="radio" name="source_radio" value="Evrika şagirdi / məzunu vasitəsilə"></div>
-            <div class="chip-card" onclick="pickSingle(this)"><i class="fas fa-chalkboard-teacher"></i><span>Müəllim / əməkdaş</span><input type="radio" name="source_radio" value="Müəllim / əməkdaş tövsiyəsi"></div>
-            <div class="chip-card" onclick="pickSingle(this)"><i class="fas fa-calendar-star"></i><span>Tədbir / seminar</span><input type="radio" name="source_radio" value="Tədbir / workshop"></div>
-            <div class="chip-card" onclick="pickSingle(this)"><i class="fas fa-door-open"></i><span>Açıq qapı günü</span><input type="radio" name="source_radio" value="Açıq qapı günü"></div>
-            <div class="chip-card" onclick="pickSingle(this)"><i class="fas fa-sign-hanging"></i><span>Bağça qarşısı</span><input type="radio" name="source_radio" value="Bağçanın qarşısında / küçə reklamında"></div>
-            <div class="chip-card" onclick="pickSingle(this)"><i class="fas fa-ellipsis-h"></i><span>Digər</span><input type="radio" name="source_radio" value="Digər"></div>
-          </div>
+          <fieldset class="chip-fieldset" aria-describedby="source-error">
+            <legend class="group-label">Məlumatı ilk dəfə haradan əldə etdiniz? (Bir və ya bir neçəsini seçin) <span class="req">*</span></legend>
+            <div class="chip-grid" id="sources-grid">
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Instagram" onchange="syncChipCard(this)"><i class="fab fa-instagram"></i><span>Instagram</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Facebook" onchange="syncChipCard(this)"><i class="fab fa-facebook-f"></i><span>Facebook</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="TikTok" onchange="syncChipCard(this)"><i class="fab fa-tiktok"></i><span>TikTok</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="YouTube" onchange="syncChipCard(this)"><i class="fab fa-youtube"></i><span>YouTube</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Google axtarışı" onchange="syncChipCard(this)"><i class="fab fa-google"></i><span>Google axtarışı</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Google reklamı" onchange="syncChipCard(this)"><i class="fas fa-search-dollar"></i><span>Google reklamı</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Instagram / Facebook reklamı" onchange="syncChipCard(this)"><i class="fas fa-bullhorn"></i><span>Sosial media</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Dost / tanış tövsiyəsi" onchange="syncChipCard(this)"><i class="fas fa-user-friends"></i><span>Dost / tanış</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Evrika valideyni tövsiyəsi" onchange="syncChipCard(this)"><i class="fas fa-users"></i><span>Evrika valideyni</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Evrika şagirdi / məzunu vasitəsilə" onchange="syncChipCard(this)"><i class="fas fa-user-graduate"></i><span>Evrika məzunu</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Müəllim / əməkdaş tövsiyəsi" onchange="syncChipCard(this)"><i class="fas fa-chalkboard-teacher"></i><span>Müəllim / əməkdaş</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Tədbir / workshop" onchange="syncChipCard(this)"><i class="fas fa-calendar-star"></i><span>Tədbir / seminar</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Açıq qapı günü" onchange="syncChipCard(this)"><i class="fas fa-door-open"></i><span>Açıq qapı günü</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Bağçanın qarşısında / küçə reklamında" onchange="syncChipCard(this)"><i class="fas fa-sign-hanging"></i><span>Bağça qarşısı</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Digər" onchange="syncChipCard(this)"><i class="fas fa-ellipsis-h"></i><span>Digər</span></label>
+            </div>
+            <div id="source-error" class="field-error" role="alert" aria-live="polite"></div>
+          </fieldset>
         </div>
 
         <!-- SECTION 3: Hazırkı maraq sahəsi -->
@@ -777,12 +815,16 @@
     let branchName = 'Evrika Montessori Uşaq Bağçası';
 
     // Single Select Chips
-    window.pickSingle = (el) => {
-      const grid = el.closest('.chip-grid');
-      grid.querySelectorAll('.chip-card').forEach(c => c.classList.remove('active'));
-      el.classList.add('active');
-      const radio = el.querySelector('input[type="radio"]');
-      if (radio) radio.checked = true;
+    // Multi Select Chips (native label+checkbox sync + legacy fallback)
+    window.syncChipCard = (cb) => {
+      const card = cb.closest('.chip-card');
+      if (card) card.classList.toggle('active', cb.checked);
+      const errEl = document.getElementById('source-error');
+      if (errEl && cb.name === 'source_cb' && cb.checked) {
+        errEl.textContent = '';
+        errEl.classList.remove('visible');
+        cb.setAttribute('aria-invalid', 'false');
+      }
       calcProgress();
     };
 
@@ -791,13 +833,8 @@
       const cb = el.querySelector('input[type="checkbox"]');
       if (cb) {
         cb.checked = !cb.checked;
-        if (cb.checked) {
-          el.classList.add('active');
-        } else {
-          el.classList.remove('active');
-        }
+        syncChipCard(cb);
       }
-      calcProgress();
     };
 
     // Emotion Feedback Selector
@@ -828,7 +865,7 @@
       if (document.getElementById('parent_phone')?.value.trim().length >= 10) score += 20;
       if (document.getElementById('child_name')?.value.trim()) score += 15;
       if (document.getElementById('child_age')?.value) score += 15;
-      if (document.querySelector('input[name="source_radio"]:checked')) score += 15;
+      if (document.querySelectorAll('input[name="source_cb"]:checked').length > 0) score += 15;
       if (document.querySelectorAll('input[name="interest_cb"]:checked').length > 0) score += 15;
 
       const pBar = document.getElementById('progress-bar');
@@ -861,15 +898,30 @@
       e.preventDefault();
       const btn = document.getElementById('submit-btn');
 
+      const checkedSources = Array.from(document.querySelectorAll('input[name="source_cb"]:checked')).map(c => c.value);
+      const sourceErrEl = document.getElementById('source-error');
+      if (checkedSources.length === 0) {
+        if (sourceErrEl) {
+          sourceErrEl.textContent = 'Zəhmət olmasa, Evrika ilə necə tanış olduğunuzu (ən azı 1 mənbə) seçin.';
+          sourceErrEl.classList.add('visible');
+        }
+        const firstSourceCb = document.querySelector('input[name="source_cb"]');
+        if (firstSourceCb) {
+          firstSourceCb.setAttribute('aria-invalid', 'true');
+          firstSourceCb.closest('.form-group')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          firstSourceCb.focus({ preventScroll: true });
+        }
+        return;
+      }
+      if (sourceErrEl) {
+        sourceErrEl.textContent = '';
+        sourceErrEl.classList.remove('visible');
+      }
+      const selectedSource = checkedSources.join(', ');
+
       const checkedInterests = Array.from(document.querySelectorAll('input[name="interest_cb"]:checked')).map(c => c.value);
       if (checkedInterests.length === 0) {
         alert('Zəhmət olmasa, ən azı 1 maraq sahəsi seçin.');
-        return;
-      }
-
-      const selectedSource = document.querySelector('input[name="source_radio"]:checked')?.value;
-      if (!selectedSource) {
-        alert('Zəhmət olmasa, Evrika ilə necə tanış olduğunuzu seçin.');
         return;
       }
 
@@ -899,6 +951,7 @@
         child_age: childAge,
         student_grade: childAge,
         first_touch_source: selectedSource,
+        first_touch_sources_list: checkedSources,
         interest_area: checkedInterests.join(', '),
         interest_areas_list: checkedInterests,
         parent_feedback_type: feedbackType,

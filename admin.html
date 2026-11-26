@@ -2582,14 +2582,23 @@ fbq('track', 'PageView');
             open++;
           }
 
-          // Marketing categorization
-          const src = (f.first_touch_source || '').toLowerCase();
-          if (src.includes('instagram')) mkt.instagram++;
-          else if (src.includes('google')) mkt.google++;
-          else if (src.includes('tövsiyə') || src.includes('şagirdi') || src.includes('məzunu') || src.includes('müəllim') || src.includes('dost')) mkt.recommendation++;
-          else if (src.includes('tədbir') || src.includes('seminar') || src.includes('workshop') || src.includes('qapı')) mkt.events++;
-          else if (src.includes('reklam') || src.includes('küçə')) mkt.ads++;
-          else mkt.other++;
+          // Marketing categorization (supports single or multi-select sources)
+          const srcItems = Array.isArray(f.first_touch_sources_list) && f.first_touch_sources_list.length
+            ? f.first_touch_sources_list
+            : String(f.first_touch_source || '').split(',').map(s => s.trim()).filter(Boolean);
+
+          const matchedMkt = new Set();
+          srcItems.forEach(rawSrc => {
+            const src = rawSrc.toLowerCase();
+            if (src.includes('instagram')) matchedMkt.add('instagram');
+            else if (src.includes('google')) matchedMkt.add('google');
+            else if (src.includes('tövsiyə') || src.includes('şagirdi') || src.includes('məzunu') || src.includes('müəllim') || src.includes('dost')) matchedMkt.add('recommendation');
+            else if (src.includes('tədbir') || src.includes('seminar') || src.includes('workshop') || src.includes('qapı')) matchedMkt.add('events');
+            else if (src.includes('reklam') || src.includes('küçə')) matchedMkt.add('ads');
+            else matchedMkt.add('other');
+          });
+          if (matchedMkt.size === 0) matchedMkt.add('other');
+          matchedMkt.forEach(k => { mkt[k]++; });
 
           // Branch categorization
           const bKey = getGranularSource(f);
