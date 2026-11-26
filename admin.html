@@ -6953,8 +6953,9 @@ fbq('track', 'PageView');
             eventsTotalCount++;
           }
         });
-        const visibleCouponBranches = (typeof currentBranch !== 'undefined' && currentBranch && currentBranch !== 'all')
-          ? couponBranches.filter(cb => cb.key === currentBranch)
+        const activeBranchKey = (typeof b !== 'undefined' && b) ? b : 'all';
+        const visibleCouponBranches = activeBranchKey !== 'all'
+          ? couponBranches.filter(cb => cb.key === activeBranchKey)
           : couponBranches;
         couponListEl.innerHTML = visibleCouponBranches.map(cb => `
           <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.02); padding: 15px 20px; border-radius: 12px; border-left: 4px solid ${cb.color};">
