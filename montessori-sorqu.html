@@ -684,6 +684,22 @@
           </div>
         </div>
 
+        <div class="form-group">
+          <label>Şagirdin Bölməsi <span class="req">*</span></label>
+          <div class="input-wrap">
+            <select id="student_section" class="form-control" required onchange="calcProgress()">
+              <option value="">Bölmə seçin...</option>
+              <option value="Azərbaycan bölməsi">Azərbaycan bölməsi</option>
+              <option value="Türk bölməsi">Türk bölməsi</option>
+              <option value="Rus bölməsi">Rus bölməsi</option>
+              <option value="İngilis bölməsi">İngilis bölməsi</option>
+              <option value="Toddler (1–3 yaş)">Toddler (1–3 yaş)</option>
+              <option value="Primary (3–6 yaş)">Primary (3–6 yaş)</option>
+            </select>
+            <i class="fas fa-layer-group"></i>
+          </div>
+        </div>
+
         <!-- SECTION 2: Evrika ilə necə tanış oldunuz? -->
         <div class="section-head">
           <div class="section-num">02</div>
@@ -933,6 +949,7 @@
       const parentPhone = document.getElementById('parent_phone').value.trim();
       const childName = document.getElementById('child_name').value.trim();
       const childAge = document.getElementById('child_age').value;
+      const studentSection = document.getElementById('student_section')?.value || '';
       const feedbackType = document.getElementById('feedback_type').value;
       const feedbackMsg = document.getElementById('feedback_message').value.trim();
 
@@ -951,6 +968,7 @@
         student_name: childName,
         child_age: childAge,
         student_grade: childAge,
+        student_section: studentSection,
         first_touch_source: selectedSource,
         first_touch_sources_list: checkedSources,
         interest_area: checkedInterests.join(', '),
