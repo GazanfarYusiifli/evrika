@@ -21,7 +21,13 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg);
+      background-color: #ffffff;
+      background-image:
+        radial-gradient(rgba(15, 23, 42, 0.06) 1.25px, transparent 1.25px),
+        radial-gradient(rgba(225, 29, 72, 0.05) 1.25px, transparent 1.25px),
+        linear-gradient(135deg, rgba(248, 250, 252, 0.85) 25%, transparent 25%, transparent 50%, rgba(248, 250, 252, 0.85) 50%, rgba(248, 250, 252, 0.85) 75%, transparent 75%, transparent);
+      background-size: 28px 28px, 28px 28px, 56px 56px;
+      background-position: 0 0, 14px 14px, 0 0;
       color: var(--text);
       min-height: 100vh;
       display: flex;
@@ -118,23 +124,38 @@
       flex-direction: column;
       justify-content: space-between;
       gap: 24px;
-      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
       transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .branch-card.lis1 {
+      background: linear-gradient(155deg, #fff1f2 0%, #ffffff 58%);
+      border-color: #fecdd3;
+      border-top: 4px solid #e11d48;
+    }
+    .branch-card.lis2 {
+      background: linear-gradient(155deg, #eff6ff 0%, #ffffff 58%);
+      border-color: #bfdbfe;
+      border-top: 4px solid #2563eb;
+    }
+    .branch-card.montessori {
+      background: linear-gradient(155deg, #ecfdf5 0%, #ffffff 58%);
+      border-color: #a7f3d0;
+      border-top: 4px solid #059669;
     }
     .branch-card:hover {
       transform: translateY(-6px);
     }
     .branch-card.lis1:hover {
-      border-color: #ef4444;
-      box-shadow: 0 20px 45px rgba(239, 68, 68, 0.14);
+      border-color: #e11d48;
+      box-shadow: 0 22px 45px rgba(225, 29, 72, 0.18);
     }
     .branch-card.lis2:hover {
-      border-color: #3b82f6;
-      box-shadow: 0 20px 45px rgba(59, 130, 246, 0.14);
+      border-color: #2563eb;
+      box-shadow: 0 22px 45px rgba(37, 99, 235, 0.18);
     }
     .branch-card.montessori:hover {
-      border-color: #10b981;
-      box-shadow: 0 20px 45px rgba(16, 185, 129, 0.14);
+      border-color: #059669;
+      box-shadow: 0 22px 45px rgba(5, 150, 105, 0.18);
     }
     .card-icon {
       width: 56px;
@@ -146,9 +167,9 @@
       font-size: 1.45rem;
       margin-bottom: 18px;
     }
-    .lis1 .card-icon { background: rgba(239, 68, 68, 0.1); color: #dc2626; border: 1px solid rgba(239, 68, 68, 0.25); }
-    .lis2 .card-icon { background: rgba(59, 130, 246, 0.1); color: #2563eb; border: 1px solid rgba(59, 130, 246, 0.25); }
-    .montessori .card-icon { background: rgba(16, 185, 129, 0.1); color: #059669; border: 1px solid rgba(16, 185, 129, 0.25); }
+    .lis1 .card-icon { background: #ffe4e6; color: #e11d48; border: 1px solid #fecdd3; }
+    .lis2 .card-icon { background: #dbeafe; color: #2563eb; border: 1px solid #bfdbfe; }
+    .montessori .card-icon { background: #d1fae5; color: #059669; border: 1px solid #a7f3d0; }
     .branch-card h2 {
       font-family: 'Space Grotesk', sans-serif;
       font-size: 1.3rem;
@@ -170,14 +191,14 @@
       border-radius: 14px;
       font-weight: 700;
       font-size: 0.92rem;
-      background: #f8fafc;
-      color: #0f172a;
-      border: 1px solid var(--border);
-      transition: background 0.2s ease, color 0.2s ease;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
     }
-    .lis1:hover .card-cta { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
-    .lis2:hover .card-cta { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
-    .montessori:hover .card-cta { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+    .lis1 .card-cta { background: #ffe4e6; color: #be123c; border: 1px solid #fecdd3; }
+    .lis2 .card-cta { background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .montessori .card-cta { background: #d1fae5; color: #047857; border: 1px solid #a7f3d0; }
+    .lis1:hover .card-cta { background: #e11d48; color: #ffffff; border-color: #e11d48; }
+    .lis2:hover .card-cta { background: #2563eb; color: #ffffff; border-color: #2563eb; }
+    .montessori:hover .card-cta { background: #059669; color: #ffffff; border-color: #059669; }
   </style>
 </head>
 <body>
