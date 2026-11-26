@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="format-detection" content="telephone=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Valideyn Sorğusu | EVRİKA CRM Gənclik filialı</title>
+  <meta name="description" content="Valideyn Sorğusu | EVRİKA CRM Gənclik filialı">
+  <meta property="og:title" content="Valideyn Sorğusu | EVRİKA CRM Gənclik filialı">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #e11d48;
+      --primary-glow: rgba(225, 29, 72, 0.4);
+      --burgundy: #881337;
+      --bg-main: #050811;
+      --card-bg: rgba(15, 23, 42, 0.75);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --card-border-glow: rgba(225, 29, 72, 0.5);
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+      --input-bg: rgba(30, 41, 59, 0.6);
+      --input-border: rgba(255, 255, 255, 0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      background: var(--bg-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 60px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Animated background grid & laser aurora */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(circle at 50% 30%, black 40%, transparent 80%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .aurora-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+      animation: pulseAurora 10s ease-in-out infinite alternate;
+    }
+    .orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, #e11d48 0%, #881337 70%); top: -150px; left: -150px; }
+    .orb-2 { width: 450px; height: 450px; background: radial-gradient(circle, #3b82f6 0%, #1d4ed8 70%); top: 40%; right: -150px; animation-delay: -4s; }
+    .orb-3 { width: 400px; height: 400px; background: radial-gradient(circle, #ec4899 0%, #9d174d 70%); bottom: -100px; left: 10%; animation-delay: -7s; }
+
+    @keyframes pulseAurora {
+      0% { transform: scale(1) translate(0, 0); opacity: 0.4; }
+      100% { transform: scale(1.15) translate(40px, 30px); opacity: 0.65; }
+    }
+
+    /* Floating Pill Header */
+    .brand-pill {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      padding: 10px 22px;
+      border-radius: 100px;
+      margin-bottom: 24px;
+      text-decoration: none;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(225, 29, 72, 0.15);
+      position: relative;
+      z-index: 2;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .brand-pill:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 30px var(--primary-glow);
+    }
+    .brand-pill img {
+      height: 36px;
+      width: auto;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+    }
+    .brand-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .brand-info span:first-child {
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #ffffff 0%, #f43f5e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-info span:last-child {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--text-sub);
+      letter-spacing: 1px;
+    }
+
+    /* Container Glass Card */
+    .glass-card {
+      width: 100%;
+      max-width: 680px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border-radius: 36px;
+      padding: 44px 38px;
+      box-shadow: 
+        0 30px 80px -20px rgba(0, 0, 0, 0.8),
+        0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+      position: relative;
+      z-index: 2;
+      transition: border-color 0.4s ease;
+    }
+    @media(max-width: 600px) {
+      .glass-card { padding: 30px 20px; border-radius: 28px; }
+    }
+
+    /* Top Live Status Bar */
+    .top-status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(225, 29, 72, 0.12);
+      border: 1px solid rgba(225, 29, 72, 0.3);
+      color: #fda4af;
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: #f43f5e;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #f43f5e;
+      animation: blinkDot 1.8s infinite;
+    }
+    @keyframes blinkDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+    .step-counter {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--text-sub);
+      font-family: "Space Grotesk", sans-serif;
+    }
+
+    /* Header Hero */
+    .form-hero {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .form-hero h1 {
+      font-size: 1.85rem;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      line-height: 1.25;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #ffffff 30%, #fda4af 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .form-hero p {
+      font-size: 0.94rem;
+      color: var(--text-sub);
+      line-height: 1.6;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .branch-pill-banner {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 10px 20px;
+      border-radius: 16px;
+      margin-top: 18px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #ffffff;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+    .branch-pill-banner i {
+      color: var(--primary);
+    }
+
+    /* Modern Progress Track */
+    .progress-track {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 100px;
+      height: 8px;
+      overflow: hidden;
+      margin-bottom: 35px;
+      position: relative;
+    }
+    .progress-glow-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #e11d48 0%, #f43f5e 50%, #38bdf8 100%);
+      border-radius: 100px;
+      box-shadow: 0 0 15px var(--primary-glow);
+      transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Section Headers */
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 36px 0 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .section-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: rgba(225, 29, 72, 0.15);
+      border: 1px solid rgba(225, 29, 72, 0.3);
+      color: #fb7185;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+    .section-head h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.3px;
+    }
+
+    /* Form Fields */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    @media(max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; gap: 14px; }
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-group > label,
+    .form-group legend.group-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+      letter-spacing: 0.2px;
+      padding: 0;
+    }
+    .form-group > label .req,
+    .form-group legend.group-label .req {
+      color: var(--primary);
+      margin-left: 4px;
+    }
+    fieldset.chip-fieldset {
+      border: 0;
+      padding: 0;
+      margin: 0;
+      min-width: 0;
+    }
+    .field-error {
+      display: none;
+      margin-top: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #fb7185;
+    }
+    .field-error.visible {
+      display: block;
+    }
+
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .input-wrap i {
+      position: absolute;
+      left: 16px;
+      color: #64748b;
+      font-size: 1rem;
+      pointer-events: none;
+      transition: color 0.3s ease;
+    }
+    .form-control {
+      width: 100%;
+      padding: 16px 18px 16px 44px;
+      background: var(--input-bg);
+      border: 1.5px solid var(--input-border);
+      border-radius: 16px;
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      outline: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    .form-control:focus {
+      background: rgba(30, 41, 59, 0.9);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px var(--primary-glow), 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+    .input-wrap:focus-within i {
+      color: #fb7185;
+    }
+    .form-control::placeholder {
+      color: #475569;
+      font-weight: 400;
+    }
+    select.form-control {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      background-size: 16px;
+    }
+    select.form-control option {
+      background: #0f172a;
+      color: #ffffff;
+    }
+
+    /* Interactive Tactile Cards (First touch & Interest Areas) */
+    .chip-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    @media(max-width: 480px) {
+      .chip-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    }
+
+    .form-group label.chip-card,
+    .chip-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 48px;
+      padding: 14px 16px;
+      margin-bottom: 0;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1.5px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+    }
+    .chip-card:has(input:focus-visible) {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    .chip-card i {
+      font-size: 1.1rem;
+      color: #94a3b8;
+      transition: all 0.25s ease;
+      flex-shrink: 0;
+    }
+    .chip-card:hover {
+      background: rgba(30, 41, 59, 0.9);
+      border-color: rgba(225, 29, 72, 0.4);
+      transform: translateY(-2px);
+      color: #ffffff;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+    .form-group label.chip-card.active,
+    .chip-card.active {
+      background: linear-gradient(135deg, rgba(225, 29, 72, 0.25) 0%, rgba(136, 19, 55, 0.35) 100%);
+      border-color: #ef4444;
+      color: #ffffff;
+      box-shadow: 0 0 20px rgba(225, 29, 72, 0.35);
+      transform: translateY(-2px) scale(1.02);
+    }
+    .chip-card.active i {
+      color: #fb7185;
+      transform: scale(1.2);
+    }
+    .chip-card input {
+      position: absolute;
+      clip-path: inset(50%);
+      overflow: hidden;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      border: 0;
+      white-space: nowrap;
+    }
+
+    /* Feedback Emotion Cards */
+    .emotion-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+    @media(max-width: 600px) {
+      .emotion-grid { grid-template-columns: repeat(3, 1fr); }
+      .emotion-grid .emotion-card:nth-child(4),
+      .emotion-grid .emotion-card:nth-child(5) {
+        grid-column: span 1.5;
+      }
+    }
+
+    .emotion-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 18px 8px;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1.5px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .emotion-card .emoji {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .emotion-card span {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: #cbd5e1;
+      line-height: 1.2;
+    }
+    .emotion-card:hover {
+      background: rgba(30, 41, 59, 0.9);
+      border-color: rgba(225, 29, 72, 0.4);
+      transform: translateY(-4px);
+    }
+    .emotion-card.active {
+      background: linear-gradient(135deg, rgba(225, 29, 72, 0.3) 0%, rgba(136, 19, 55, 0.4) 100%);
+      border-color: var(--primary);
+      box-shadow: 0 0 25px rgba(225, 29, 72, 0.4);
+      transform: translateY(-4px) scale(1.04);
+    }
+    .emotion-card.active .emoji {
+      transform: scale(1.25);
+    }
+    .emotion-card.active span {
+      color: #ffffff;
+    }
+
+    /* Submit Button */
+    .btn-submit {
+      width: 100%;
+      padding: 20px 28px;
+      background: linear-gradient(135deg, #e11d48 0%, #be123c 50%, #881337 100%);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 15px 35px rgba(225, 29, 72, 0.5), 0 0 20px rgba(225, 29, 72, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-submit::after {
+      content: "";
+      position: absolute;
+      top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+      transition: 0.6s;
+    }
+    .btn-submit:hover {
+      transform: translateY(-3px) scale(1.01);
+      box-shadow: 0 20px 45px rgba(225, 29, 72, 0.65), 0 0 30px rgba(225, 29, 72, 0.5);
+    }
+    .btn-submit:hover::after {
+      left: 100%;
+    }
+    .btn-submit:active {
+      transform: translateY(1px);
+    }
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Success State */
+    .success-panel {
+      display: none;
+      text-align: center;
+      padding: 40px 20px;
+      animation: zoomIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes zoomIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .success-badge {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.4) 100%);
+      border: 2px solid #10b981;
+      color: #34d399;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      margin: 0 auto 24px;
+      box-shadow: 0 0 35px rgba(16, 185, 129, 0.4);
+    }
+    .success-panel h2 {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #ffffff;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+    .success-panel p {
+      font-size: 1.05rem;
+      color: var(--text-sub);
+      line-height: 1.6;
+      max-width: 480px;
+      margin: 0 auto 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-grid"></div>
+  <div class="aurora-orb orb-1" id="orb-left"></div>
+  <div class="aurora-orb orb-2" id="orb-right"></div>
+  <div class="aurora-orb orb-3"></div>
+
+  <!-- Floating Brand Header -->
+  <a href="/" class="brand-pill">
+    <img decoding="async" src="https://osicmnagzeqkhwticiqp.supabase.co/storage/v1/object/public/ems-documents/evrika-logo.png" onerror="this.src='https://evrikaliseyi.edu.az/images/logo.png'" alt="Evrika">
+    <div class="brand-info">
+      <span>EVRİKA</span>
+      <span>BEYNƏLXALQ ELM VƏ TEXNOLOGİYA LİSEYİ</span>
+    </div>
+  </a>
+
+  <!-- Container Glass Card -->
+  <div class="glass-card">
+    
+    <div id="form-container">
+      
+      <!-- Top Status -->
+      <div class="top-status-bar">
+        <div class="live-badge" id="live-branch-pill">
+          <div class="live-dot"></div>
+          <span id="live-branch-tag">BETL NƏRİMANOV FİLİALI</span>
+        </div>
+        <div class="step-counter">
+          <i class="fas fa-bolt" style="color:#f43f5e; margin-right:4px;"></i> <span id="progress-percent">0%</span>
+        </div>
+      </div>
+
+      <!-- Progress Track -->
+      <div class="progress-track">
+        <div class="progress-glow-bar" id="progress-bar"></div>
+      </div>
+
+      <!-- Hero Header -->
+      <div class="form-hero">
+        <h1 id="hero-title">Valideyn Sorğusu — Nərimanov Filialı</h1>
+        <p>Sizin fikriniz bizim üçün önəmlidir. Qısa sorğunu cavablandıraraq Evrika ilə bağlı fikir, təklif və müraciətlərinizi bizimlə bölüşün.</p>
+        
+        <div class="branch-pill-banner" id="banner-wrap">
+          <i class="fas fa-map-marker-alt"></i> <span id="banner-text">EVRİKA BETL (Nərimanov filialı)</span>
+        </div>
+      </div>
+
+      <form id="pv-form" onsubmit="handleSubmit(event)">
+        
+        <!-- SECTION 1: Valideyn və Şagird -->
+        <div class="section-head">
+          <div class="section-num">01</div>
+          <h2>Valideyn və Şagird Məlumatları</h2>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Valideynin Adı və Soyadı <span class="req">*</span></label>
+            <div class="input-wrap">
+              <input type="text" id="parent_name" class="form-control" placeholder="Məs: Aygün Məmmədova" required oninput="calcProgress()">
+              <i class="fas fa-user"></i>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Əlaqə Telefon Nömrəsi <span class="req">*</span></label>
+            <div class="input-wrap">
+              <input type="tel" id="parent_phone" class="form-control" placeholder="+994 (50) 000-00-00" required oninput="calcProgress()">
+              <i class="fas fa-phone-alt"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Şagirdin Adı və Soyadı <span class="req">*</span></label>
+            <div class="input-wrap">
+              <input type="text" id="student_name" class="form-control" placeholder="Məs: Murad Məmmədov" required oninput="calcProgress()">
+              <i class="fas fa-user-graduate"></i>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Şagirdin Sinfi <span class="req">*</span></label>
+            <div class="input-wrap">
+              <select id="student_grade" class="form-control" required onchange="calcProgress()">
+                <option value="">Sinif seçin...</option>
+                <option value="I sinif">I sinif</option>
+                <option value="II sinif">II sinif</option>
+                <option value="III sinif">III sinif</option>
+                <option value="IV sinif">IV sinif</option>
+                <option value="V sinif">V sinif</option>
+                <option value="VI sinif">VI sinif</option>
+                <option value="VII sinif">VII sinif</option>
+                <option value="VIII sinif">VIII sinif</option>
+                <option value="IX sinif">IX sinif</option>
+                <option value="X sinif">X sinif</option>
+                <option value="XI sinif">XI sinif</option>
+              </select>
+              <i class="fas fa-graduation-cap"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Şagirdin Bölməsi <span class="req">*</span></label>
+          <div class="input-wrap">
+            <select id="student_section" class="form-control" required onchange="calcProgress()">
+              <option value="">Bölmə seçin...</option>
+              <option value="Azərbaycan bölməsi">Azərbaycan bölməsi</option>
+              <option value="Rus bölməsi">Rus bölməsi</option>
+              <option value="İngilis bölməsi">İngilis bölməsi</option>
+            </select>
+            <i class="fas fa-layer-group"></i>
+          </div>
+        </div>
+
+        <!-- SECTION 2: Evrika ilə necə tanış oldunuz? -->
+        <div class="section-head">
+          <div class="section-num">02</div>
+          <h2>Evrika ilə necə tanış oldunuz?</h2>
+        </div>
+        <div class="form-group">
+          <fieldset class="chip-fieldset" aria-describedby="source-error">
+            <legend class="group-label">Məlumatı ilk dəfə haradan əldə etdiniz? (Bir və ya bir neçəsini seçin) <span class="req">*</span></legend>
+            <div class="chip-grid" id="sources-grid">
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Instagram" onchange="syncChipCard(this)"><i class="fab fa-instagram"></i><span>Instagram</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Facebook" onchange="syncChipCard(this)"><i class="fab fa-facebook-f"></i><span>Facebook</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="TikTok" onchange="syncChipCard(this)"><i class="fab fa-tiktok"></i><span>TikTok</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="YouTube" onchange="syncChipCard(this)"><i class="fab fa-youtube"></i><span>YouTube</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Google axtarışı" onchange="syncChipCard(this)"><i class="fab fa-google"></i><span>Google axtarışı</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Google reklamı" onchange="syncChipCard(this)"><i class="fas fa-search-dollar"></i><span>Google reklamı</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Instagram / Facebook reklamı" onchange="syncChipCard(this)"><i class="fas fa-bullhorn"></i><span>Sosial media</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Dost / tanış tövsiyəsi" onchange="syncChipCard(this)"><i class="fas fa-user-friends"></i><span>Dost / tanış</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Evrika valideyni tövsiyəsi" onchange="syncChipCard(this)"><i class="fas fa-users"></i><span>Evrika valideyni</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Evrika şagirdi / məzunu vasitəsilə" onchange="syncChipCard(this)"><i class="fas fa-user-graduate"></i><span>Evrika şagirdi</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Müəllim / əməkdaş tövsiyəsi" onchange="syncChipCard(this)"><i class="fas fa-chalkboard-teacher"></i><span>Müəllim / əməkdaş</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Tədbir / seminar / workshop" onchange="syncChipCard(this)"><i class="fas fa-calendar-star"></i><span>Tədbir / seminar</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Məktəbin qarşısında / küçə reklamında" onchange="syncChipCard(this)"><i class="fas fa-sign-hanging"></i><span>Məktəb qarşısı</span></label>
+              <label class="chip-card"><input type="checkbox" name="source_cb" value="Digər" onchange="syncChipCard(this)"><i class="fas fa-ellipsis-h"></i><span>Digər</span></label>
+            </div>
+            <div id="source-error" class="field-error" role="alert" aria-live="polite"></div>
+          </fieldset>
+        </div>
+
+        <!-- SECTION 3: Hazırkı maraq sahəsi -->
+        <div class="section-head">
+          <div class="section-num">03</div>
+          <h2>Hazırkı Maraq Sahəniz</h2>
+        </div>
+        <div class="form-group">
+          <label>Ən çox hansı mövzu sizi maraqlandırır? (Bir və ya bir neçəsini seçin) <span class="req">*</span></label>
+          <div class="chip-grid" id="interests-grid">
+            <div class="chip-card" onclick="toggleMulti(this)"><i class="fas fa-id-card"></i><span>Qəbul & qeydiyyat</span><input type="checkbox" name="interest_cb" value="Qəbul və qeydiyyat"></div>
+            <div class="chip-card" onclick="toggleMulti(this)"><i class="fas fa-book-open"></i><span>Təhsil proqramı</span><input type="checkbox" name="interest_cb" value="Təhsil proqramı"></div>
+            <div class="chip-card" onclick="toggleMulti(this)"><i class="fas fa-award"></i><span>Cambridge proqramı</span><input type="checkbox" name="interest_cb" value="Cambridge proqramı"></div>
+            <div class="chip-card" onclick="toggleMulti(this)"><i class="fas fa-globe"></i><span>Beynəlxalq təhsil</span><input type="checkbox" name="interest_cb" value="Beynəlxalq təhsil"></div>
+            <div class="chip-card" onclick="toggleMulti(this)"><i class="fas fa-atom"></i><span>Elm & texnologiya</span><input type="checkbox" name="interest_cb" value="Elm və texnologiya"></div>
+            <div class="chip-card" onclick="toggleMulti(this)"><i class="fas fa-laptop-code"></i><span>STEAM təhsili</span><input type="checkbox" name="interest_cb" value="STEAM"></div>
+            <div class="chip-card" onclick="toggleMulti(this)"><i class="fas fa-robot"></i><span>Robototexnika & IT</span><input type="checkbox" name="interest_cb" value="Robototexnika və kodlaşdırma"></div>
+            <div class="chip-card" onclick="toggleMulti(this)"><i class="fas fa-language"></i><span>Xarici dillər</span><input type="checkbox" name="interest_cb" value="Xarici dillər"></div>
+            <div class="chip-card" onclick="toggleMulti(this)"><i class="fas fa-comments"></i><span>Tədris dili</span><input type="checkbox" name="interest_cb" value="Tədris dili"></div>
+            <div class="chip-card" onclick="toggleMulti(this)"><i class="fas fa-wallet"></i><span>Təhsil haqqı</span><input type="checkbox" name="interest_cb" value="Təhsil haqqı"></div>
+            <div class="chip-card" onclick="toggleMulti(this)"><i class="fas fa-gift"></i><span>Təqaüd & güzəştlər</span><input type="checkbox" name="interest_cb" value="Təqaüd / güzəştlər"></div>
+            <div class="chip-card" onclick="toggleMulti(this)"><i class="fas fa-shapes"></i><span>Dərnəklər & Klublar</span><input type="checkbox" name="interest_cb" value="Dərsdənkənar fəaliyyətlər"></div>
+            <div class="chip-card" onclick="toggleMulti(this)"><i class="fas fa-swimmer"></i><span>İdman & Hovuz</span><input type="checkbox" name="interest_cb" value="İdman"></div>
+            <div class="chip-card" onclick="toggleMulti(this)"><i class="fas fa-bus"></i><span>Məktəb Nəqliyyatı</span><input type="checkbox" name="interest_cb" value="Nəqliyyat"></div>
+            <div class="chip-card" onclick="toggleMulti(this)"><i class="fas fa-school"></i><span>Məktəb mühiti</span><input type="checkbox" name="interest_cb" value="Məktəb mühiti"></div>
+            <div class="chip-card" onclick="toggleMulti(this)"><i class="fas fa-plus"></i><span>Digər</span><input type="checkbox" name="interest_cb" value="Digər"></div>
+          </div>
+        </div>
+
+        <!-- SECTION 4: Valideynin müraciəti -->
+        <div class="section-head">
+          <div class="section-num">04</div>
+          <h2>Fikir, Təklif və ya Müraciətiniz</h2>
+        </div>
+        <div class="form-group">
+          <label>Müraciətinizin xarakterini seçin <span class="req">*</span></label>
+          <div class="emotion-grid">
+            <div class="emotion-card active" onclick="pickFeedback('Təklifim var', this)">
+              <div class="emoji">💡</div>
+              <span>Təklifim var</span>
+            </div>
+            <div class="emotion-card" onclick="pickFeedback('Müraciətim var', this)">
+              <div class="emoji">❓</div>
+              <span>Müraciətim var</span>
+            </div>
+            <div class="emotion-card" onclick="pickFeedback('Müsbət rəy bildirmək istəyirəm', this)">
+              <div class="emoji">🌟</div>
+              <span>Müsbət rəy</span>
+            </div>
+            <div class="emotion-card" onclick="pickFeedback('Narazılığımı bildirmək istəyirəm', this)">
+              <div class="emoji">⚠️</div>
+              <span>Narazılıq</span>
+            </div>
+            <div class="emotion-card" onclick="pickFeedback('Hazırda yoxdur', this)">
+              <div class="emoji">✨</div>
+              <span>Hazırda yoxdur</span>
+            </div>
+          </div>
+          <input type="hidden" id="feedback_type" value="Təklifim var">
+        </div>
+
+        <div class="form-group" id="msg-group">
+          <label>Mesajınız / Ətraflı qeydiniz <span class="req" id="msg-req">*</span></label>
+          <div class="input-wrap" style="align-items:flex-start;">
+            <textarea id="feedback_message" class="form-control" rows="4" style="padding-left:18px;" placeholder="Fikir və ya müraciətinizi buraya yaza bilərsiniz..." oninput="calcProgress()"></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submit-btn">
+          <span>Sorğunu Təsdiqlə və Göndər</span>
+          <i class="fas fa-paper-plane"></i>
+        </button>
+
+      </form>
+    </div>
+
+    <!-- Success Screen -->
+    <div class="success-panel" id="success-screen">
+      <div class="success-badge">
+        <i class="fas fa-check"></i>
+      </div>
+      <h2>Müraciətiniz Qəbul Edildi! 🚀</h2>
+      <p>Dəyərli fikirlərinizi bizimlə bölüşdüyünüz üçün təşəkkür edirik. Rəyiniz məktəb rəhbərliyi tərəfindən incələnəcəkdir.</p>
+      
+      <a href="/" class="btn-submit" style="text-decoration:none; max-width:260px; margin:0 auto; display:inline-flex;">
+        <i class="fas fa-home"></i> <span>Əsas Səhifə</span>
+      </a>
+    </div>
+
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://osicmnagzeqkhwticiqp.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_wePNIkpZ6n6dMLud4ODjAA_O9nxbkRE";
+
+    // Branch Resolution
+    const urlParams = new URLSearchParams(window.location.search);
+    const rawBranch = (urlParams.get('branch') || urlParams.get('b') || 'lisey1').toLowerCase();
+
+    let branchKey = 'lisey1';
+    let branchName = 'EVRİKA BETL (Nərimanov filialı)';
+
+    if (rawBranch === 'lis2' || rawBranch === 'lisey2' || rawBranch.includes('genclik')) {
+      branchKey = 'lisey2';
+      branchName = 'EVRİKA BETL (Gənclik filialı)';
+      document.title = 'Valideyn Sorğusu | EVRİKA CRM Gənclik filialı';
+      document.getElementById('live-branch-tag').innerText = 'BETL GƏNCLİK FİLİALI';
+      document.getElementById('hero-title').innerText = 'Valideyn Sorğusu — Gənclik Filialı';
+      document.getElementById('banner-text').innerText = 'EVRİKA BETL (Gənclik filialı)';
+      document.documentElement.style.setProperty('--primary', '#3b82f6');
+      document.documentElement.style.setProperty('--primary-glow', 'rgba(59, 130, 246, 0.4)');
+      const o1 = document.getElementById('orb-left');
+      if (o1) o1.style.background = 'radial-gradient(circle, #3b82f6 0%, #1e40af 70%)';
+      const secSel = document.getElementById('student_section');
+      if (secSel) {
+        secSel.innerHTML = '<option value="">Bölmə seçin...</option>' +
+          '<option value="Azərbaycan bölməsi">Azərbaycan bölməsi</option>' +
+          '<option value="Türk bölməsi">Türk bölməsi</option>' +
+          '<option value="Rus bölməsi">Rus bölməsi</option>' +
+          '<option value="İngilis bölməsi">İngilis bölməsi</option>' +
+          '<option value="Montessori departamenti I- XI">Montessori departamenti I- XI</option>';
+      }
+    } else {
+      branchKey = 'lisey1';
+      branchName = 'EVRİKA BETL (Nərimanov filialı)';
+      document.getElementById('live-branch-tag').innerText = 'BETL NƏRİMANOV FİLİALI';
+      document.getElementById('hero-title').innerText = 'Valideyn Sorğusu — Nərimanov Filialı';
+      document.getElementById('banner-text').innerText = 'EVRİKA BETL (Nərimanov filialı)';
+    }
+
+    // Multi Select Chips (native label+checkbox sync + legacy fallback)
+    window.syncChipCard = (cb) => {
+      const card = cb.closest('.chip-card');
+      if (card) card.classList.toggle('active', cb.checked);
+      const errEl = document.getElementById('source-error');
+      if (errEl && cb.name === 'source_cb' && cb.checked) {
+        errEl.textContent = '';
+        errEl.classList.remove('visible');
+        cb.setAttribute('aria-invalid', 'false');
+      }
+      calcProgress();
+    };
+
+    window.toggleMulti = (el) => {
+      const cb = el.querySelector('input[type="checkbox"]');
+      if (cb) {
+        cb.checked = !cb.checked;
+        syncChipCard(cb);
+      }
+    };
+
+    // Emotion Feedback Selector
+    window.pickFeedback = (type, el) => {
+      document.querySelectorAll('.emotion-card').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('feedback_type').value = type;
+
+      const msgInput = document.getElementById('feedback_message');
+      const msgReq = document.getElementById('msg-req');
+
+      if (type === 'Hazırda yoxdur') {
+        msgReq.style.display = 'none';
+        msgInput.required = false;
+        msgInput.placeholder = 'Əlavə qeydiniz varsa yaza bilərsiniz (məcburi deyil)...';
+      } else {
+        msgReq.style.display = 'inline';
+        msgInput.required = true;
+        msgInput.placeholder = 'Fikir və ya müraciətinizi buraya yaza bilərsiniz...';
+      }
+      calcProgress();
+    };
+
+    // Progress Calculator
+    window.calcProgress = () => {
+      let score = 0;
+      if (document.getElementById('parent_name')?.value.trim()) score += 20;
+      if (document.getElementById('parent_phone')?.value.trim().length >= 10) score += 20;
+      if (document.getElementById('student_name')?.value.trim()) score += 15;
+      if (document.getElementById('student_grade')?.value) score += 15;
+      if (document.querySelectorAll('input[name="source_cb"]:checked').length > 0) score += 15;
+      if (document.querySelectorAll('input[name="interest_cb"]:checked').length > 0) score += 15;
+
+      const pBar = document.getElementById('progress-bar');
+      const pPct = document.getElementById('progress-percent');
+      if (pBar && pPct) {
+        pBar.style.width = score + '%';
+        pPct.innerText = score + '%';
+      }
+    };
+
+    // Phone Auto-formatter
+    const phoneInput = document.getElementById('parent_phone');
+    phoneInput.addEventListener('input', (e) => {
+      let v = e.target.value.replace(/\D/g, '');
+      if (v.startsWith('994')) v = v.substring(3);
+      if (v.startsWith('0')) v = v.substring(1);
+      
+      let formatted = '+994';
+      if (v.length > 0) formatted += ' (' + v.substring(0, 2);
+      if (v.length >= 2) formatted += ') ' + v.substring(2, 5);
+      if (v.length >= 5) formatted += '-' + v.substring(5, 7);
+      if (v.length >= 7) formatted += '-' + v.substring(7, 9);
+      
+      e.target.value = formatted;
+      calcProgress();
+    });
+
+    // Form Submission
+    window.handleSubmit = async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+
+      const checkedSources = Array.from(document.querySelectorAll('input[name="source_cb"]:checked')).map(c => c.value);
+      const sourceErrEl = document.getElementById('source-error');
+      if (checkedSources.length === 0) {
+        if (sourceErrEl) {
+          sourceErrEl.textContent = 'Zəhmət olmasa, Evrika ilə necə tanış olduğunuzu (ən azı 1 mənbə) seçin.';
+          sourceErrEl.classList.add('visible');
+        }
+        const firstSourceCb = document.querySelector('input[name="source_cb"]');
+        if (firstSourceCb) {
+          firstSourceCb.setAttribute('aria-invalid', 'true');
+          firstSourceCb.closest('.form-group')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          firstSourceCb.focus({ preventScroll: true });
+        }
+        return;
+      }
+      if (sourceErrEl) {
+        sourceErrEl.textContent = '';
+        sourceErrEl.classList.remove('visible');
+      }
+      const selectedSource = checkedSources.join(', ');
+
+      const checkedInterests = Array.from(document.querySelectorAll('input[name="interest_cb"]:checked')).map(c => c.value);
+      if (checkedInterests.length === 0) {
+        alert('Zəhmət olmasa, ən azı 1 maraq sahəsi seçin.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Göndərilir...';
+
+      const parentName = document.getElementById('parent_name').value.trim();
+      const parentPhone = document.getElementById('parent_phone').value.trim();
+      const studentName = document.getElementById('student_name').value.trim();
+      const studentGrade = document.getElementById('student_grade').value;
+      const studentSection = document.getElementById('student_section')?.value || '';
+      const feedbackType = document.getElementById('feedback_type').value;
+      const feedbackMsg = document.getElementById('feedback_message').value.trim();
+
+      const payload = {
+        source: 'Valideyn Səsi (QR)',
+        form_type: 'Valideyn Sorğusu & Rəy',
+        school: 'Evrika Beynəlxalq Elm və Texnologiya Liseyi',
+        is_parent_voice: true,
+        branch: branchKey,
+        branch_name: branchName,
+        fullName: `${parentName} (Valideyn)`,
+        parent_name: parentName,
+        name: `${parentName} (Valideyn)`,
+        phone: parentPhone,
+        student_name: studentName,
+        student_grade: studentGrade,
+        student_section: studentSection,
+        first_touch_source: selectedSource,
+        first_touch_sources_list: checkedSources,
+        interest_area: checkedInterests.join(', '),
+        interest_areas_list: checkedInterests,
+        parent_feedback_type: feedbackType,
+        parent_feedback_message: feedbackMsg,
+        status: 'Yeni',
+        submissionDate: new Date().toISOString(),
+        note: `Valideyn Sorğusu | Filial: ${branchName} | Şagird: ${studentName} (${studentGrade}) | İlk Tanışlıq: ${selectedSource} | Maraq: ${checkedInterests.join(', ')} | Müraciət Növü: ${feedbackType} | Qeyd: ${feedbackMsg || 'Yoxdur'}`
+      };
+
+      try {
+        const res = await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          document.getElementById('form-container').style.display = 'none';
+          document.getElementById('success-screen').style.display = 'block';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+
+          if (typeof confetti === 'function') {
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+          }
+        } else {
+          alert('Xəta baş verdi. Zəhmət olmasa bir az sonra yenidən cəhd edin.');
+          btn.disabled = false;
+          btn.innerHTML = '<span>Sorğunu Təsdiqlə və Göndər</span> <i class="fas fa-paper-plane"></i>';
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Şəbəkə xətası baş verdi.');
+        btn.disabled = false;
+        btn.innerHTML = '<span>Sorğunu Təsdiqlə və Göndər</span> <i class="fas fa-paper-plane"></i>';
+      }
+    };
+  </script>
+</body>
+</html>

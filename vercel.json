@@ -98,6 +98,17 @@
     },
     {
       "source": "/valideyn-sesi",
+      "has": [
+        {
+          "type": "query",
+          "key": "branch",
+          "value": "LIS2"
+        }
+      ],
+      "destination": "/valideyn-sesi-genclik.html"
+    },
+    {
+      "source": "/valideyn-sesi",
       "destination": "/valideyn-sesi.html"
     },
     {
