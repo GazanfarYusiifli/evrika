@@ -98,18 +98,7 @@
     },
     {
       "source": "/valideyn-sesi",
-      "has": [
-        {
-          "type": "query",
-          "key": "branch",
-          "value": "LIS2"
-        }
-      ],
-      "destination": "/valideyn-sesi-genclik"
-    },
-    {
-      "source": "/valideyn-sesi",
-      "destination": "/valideyn-sesi-nerimanov"
+      "destination": "/api/valideyn-sesi"
     },
     {
       "source": "/parent-voice",
