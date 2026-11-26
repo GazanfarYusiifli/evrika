@@ -2430,6 +2430,7 @@ fbq('track', 'PageView');
       // 2. Student Name & Grade
       let sName = item.student_name || p.student_name || item.child_name || p.child_name || '';
       let grade = item.student_grade || p.student_grade || item.child_age || p.child_age || item.grade || p.grade || item.age || p.age || '';
+      let section = item.student_section || p.student_section || '';
 
       if (!sName && note) {
         const m = note.match(/(?:Şagird|Uşaq):\s*([^|]+)/i);
@@ -2501,6 +2502,7 @@ fbq('track', 'PageView');
         phoneClean: formatPhone(phone),
         sName,
         grade,
+        section,
         branch,
         interests,
         fSource,
@@ -2741,7 +2743,7 @@ fbq('track', 'PageView');
             <td>
               <div style="font-weight:800; color:white; font-size:0.95rem;">${det.pName}</div>
               <div style="font-size:0.8rem; color:var(--accent); font-weight:700; margin-top:2px;">
-                <i class="fas fa-user-graduate" style="font-size:0.75rem;"></i> Övlad: <span style="color:white;">${det.sName}</span> (${det.grade})
+                <i class="fas fa-user-graduate" style="font-size:0.75rem;"></i> Övlad: <span style="color:white;">${det.sName}</span> (${det.grade}${det.section ? ' • ' + det.section : ''})
               </div>
               <div style="margin-top:3px;"><a href="tel:${det.phoneClean}" style="font-size:0.8rem; color:#60a5fa; text-decoration:none;"><i class="fas fa-phone-alt" style="font-size:0.7rem;"></i> ${det.phone}</a></div>
             </td>
@@ -2749,6 +2751,7 @@ fbq('track', 'PageView');
               <span style="background:${bConf.bg}; color:${bConf.color}; border:1px solid ${bConf.border}; padding:6px 12px; border-radius:8px; font-weight:700; font-size:0.8rem; display:inline-flex; align-items:center; gap:6px;">
                 <i class="${bConf.icon}"></i> ${det.branch || bConf.label}
               </span>
+              ${det.section ? `<div style="margin-top:5px;"><span style="background:rgba(255,255,255,0.06); color:#e2e8f0; border:1px solid rgba(255,255,255,0.12); padding:3px 9px; border-radius:6px; font-size:0.75rem; font-weight:700; display:inline-block;">${det.section}</span></div>` : ''}
             </td>
             <td>${typeBadge}</td>
             <td style="max-width:200px;">
@@ -2819,7 +2822,7 @@ fbq('track', 'PageView');
             <div>
               <div style="font-size:0.75rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Şagird / Övlad & Filial</div>
               <div style="font-size:1.05rem; font-weight:900; color:white; margin-top:2px;">${det.sName}</div>
-              <div style="font-size:0.85rem; color:var(--accent); font-weight:700; margin-top:4px;"><i class="fas fa-graduation-cap"></i> ${det.grade} • <span style="color:#38bdf8;">${det.branch}</span></div>
+              <div style="font-size:0.85rem; color:var(--accent); font-weight:700; margin-top:4px;"><i class="fas fa-graduation-cap"></i> ${det.grade}${det.section ? ' • ' + det.section : ''} • <span style="color:#38bdf8;">${det.branch}</span></div>
             </div>
           </div>
 
