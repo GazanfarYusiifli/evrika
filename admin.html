@@ -759,6 +759,10 @@ fbq('track', 'PageView');
         <div><i class="fas fa-ticket-alt" style="color:#10b981;"></i> <span>Kupon Alanlar</span></div>
         <span id="crm-kupon-badge" style="display:none; background:#10b981; color:white; padding:2px 8px; border-radius:12px; font-size:0.7rem; font-weight:800;">0</span>
       </div>
+      <div class="sb-link" data-module="crm" onclick="switchTab('events')" style="display:flex; justify-content:space-between; align-items:center;">
+        <div><i class="fas fa-calendar-check" style="color:#f59e0b;"></i> <span>Events</span></div>
+        <span id="crm-events-badge" style="display:none; background:#f59e0b; color:white; padding:2px 8px; border-radius:12px; font-size:0.7rem; font-weight:800;">0</span>
+      </div>
       <div class="sb-link" data-module="crm" onclick="switchTab('qr-generator')"><i class="fas fa-qrcode" style="color:#10b981;"></i> <span>QR Kod Generator</span></div>
       <div class="sb-group-title" data-module="exam">İMTAHAN</div>
       <div class="sb-link" data-module="exam" onclick="switchTab('exam-apps')" style="display:flex; justify-content:space-between; align-items:center;">
@@ -4987,7 +4991,7 @@ fbq('track', 'PageView');
         'hr-panel':'Vakansiyalar', 
         'finance':'Maliyyə Paneli', 
         'epoint-reports':'Köçürmələrin Tarixçəsi', 
-        'kupon':'Kupon Alanlar', 
+        'kupon':'Kupon Alanlar', 'events':'Events', 
         'ugurlar':'Uğurlar & Məzun', 
         'news':'Xəbərlər', 
         'popup':'POP UP Yönətimi', 
@@ -6963,6 +6967,11 @@ fbq('track', 'PageView');
             <span style="font-size: 1.1rem; font-weight: 900; color: white;">${eventsTotalCount}</span>
           </div>
         `;
+        const evBadgeEl = document.getElementById('crm-events-badge');
+        if (evBadgeEl) {
+          evBadgeEl.innerText = eventsTotalCount;
+          evBadgeEl.style.display = eventsTotalCount > 0 ? 'inline-block' : 'none';
+        }
       }
 
       // Update Line Chart (Applications over time)
