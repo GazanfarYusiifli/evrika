@@ -2813,16 +2813,27 @@ fbq('track', 'PageView');
         <div style="display:flex; flex-direction:column; gap:22px;">
           
           <!-- Parent & Student Overview Grid -->
-          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:16px; padding:20px; display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:16px; padding:20px; display:grid; grid-template-columns:1fr 1fr; gap:16px;">
             <div>
-              <div style="font-size:0.75rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Valideyn Adı və Soyadı</div>
-              <div style="font-size:1.05rem; font-weight:900; color:white; margin-top:2px;">${det.pName}</div>
+              <div style="font-size:0.72rem; color:var(--text-muted); font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">Valideyn Adı və Soyadı</div>
+              <div style="font-size:1.05rem; font-weight:900; color:white; margin-top:4px;">${det.pName}</div>
               <div style="font-size:0.85rem; color:#60a5fa; margin-top:4px;"><a href="tel:${det.phoneClean}" style="color:#60a5fa; text-decoration:none;"><i class="fas fa-phone-alt"></i> ${det.phone}</a></div>
             </div>
             <div>
-              <div style="font-size:0.75rem; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Şagird / Övlad & Filial</div>
-              <div style="font-size:1.05rem; font-weight:900; color:white; margin-top:2px;">${det.sName}</div>
-              <div style="font-size:0.85rem; color:var(--accent); font-weight:700; margin-top:4px;"><i class="fas fa-graduation-cap"></i> ${det.grade}${det.section ? ' • ' + det.section : ''} • <span style="color:#38bdf8;">${det.branch}</span></div>
+              <div style="font-size:0.72rem; color:var(--text-muted); font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">Şagird / Övlad</div>
+              <div style="font-size:1.05rem; font-weight:900; color:white; margin-top:4px;"><i class="fas fa-user-graduate" style="color:var(--accent); font-size:0.9rem; margin-right:6px;"></i>${det.sName}</div>
+            </div>
+            <div>
+              <div style="font-size:0.72rem; color:var(--text-muted); font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">Sinif / Yaş</div>
+              <div style="font-size:0.95rem; font-weight:800; color:white; margin-top:4px;"><i class="fas fa-graduation-cap" style="color:var(--accent); margin-right:6px;"></i>${det.grade}</div>
+            </div>
+            <div>
+              <div style="font-size:0.72rem; color:var(--text-muted); font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">Bölmə</div>
+              <div style="font-size:0.95rem; font-weight:800; color:${det.section ? '#f8fafc' : 'var(--text-muted)'}; margin-top:4px;"><i class="fas fa-layer-group" style="color:#a855f7; margin-right:6px;"></i>${det.section || 'Qeyd edilməyib'}</div>
+            </div>
+            <div style="grid-column:1 / -1; padding-top:10px; border-top:1px solid rgba(255,255,255,0.06);">
+              <div style="font-size:0.72rem; color:var(--text-muted); font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">Filial</div>
+              <div style="font-size:0.95rem; font-weight:800; color:#38bdf8; margin-top:4px;"><i class="fas fa-school" style="margin-right:6px;"></i>${det.branch}</div>
             </div>
           </div>
 
