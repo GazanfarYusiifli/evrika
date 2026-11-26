@@ -6940,7 +6940,7 @@ fbq('track', 'PageView');
         let eventsTotalCount = 0;
         const couponSourceList = window.allFetchedData || (typeof rawData !== 'undefined' && Array.isArray(rawData) ? rawData : []);
         couponSourceList.forEach(item => {
-          if (item.payment_status === 'Ödənilib' || Number(item.epoint_amount || item.amount || 0) > 0 || item.coupon_code || item.epoint_transaction) {
+          if (item.payment_status === 'Ödənilib') {
             const bk = getGranularSource(item);
             if (couponCounts.hasOwnProperty(bk)) couponCounts[bk]++;
           }
