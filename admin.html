@@ -6938,7 +6938,8 @@ fbq('track', 'PageView');
         ];
         const couponCounts = { lisey1: 0, lisey2: 0, montessori: 0, zumrud: 0 };
         let eventsTotalCount = 0;
-        (typeof allData !== 'undefined' && Array.isArray(allData) ? allData : []).forEach(item => {
+        const couponSourceList = window.allFetchedData || (typeof rawData !== 'undefined' && Array.isArray(rawData) ? rawData : []);
+        couponSourceList.forEach(item => {
           if (item.payment_status || item.epoint_amount || item.amount || item.order_id || item.coupon_code || item.epoint_transaction) {
             const bk = getGranularSource(item);
             if (couponCounts.hasOwnProperty(bk)) couponCounts[bk]++;
