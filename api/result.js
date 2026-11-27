@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import nodemailer from 'nodemailer';
 
 const PUBLIC_KEY = "i000201608";
 const PRIVATE_KEY = process.env.EPOINT_PRIVATE_KEY || "HNIbtyFLu3PbxXlVykJEwOR1";
@@ -181,6 +182,44 @@ export default async function handler(req, res) {
                 text: { body: `Təbriklər! Ödənişiniz təsdiqləndi.\nGiriş kuponu: ${couponCode}\nQR kodunuz: ${verifyLink}` }
               })
             }).catch(() => {});
+          }
+          // Email notification on payment success
+          if (existingReg?.email) {
+            try {
+              const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                  user: process.env.EMAIL_USER || 'yusifliqezenfer90@gmail.com',
+                  pass: process.env.EMAIL_PASS || 'rpgxzocjbyrefdlj'
+                }
+              });
+              const verifyLink = `https://evrikaliseyi.edu.az/verify?id=${dbId}`;
+              const fullName = existingReg.full_name || existingReg.student_name || existingReg.parent_name || 'Hörmətli iştirakçı';
+              const paidAmount = amount ? String(amount) : (existingReg?.amount || '35');
+              await transporter.sendMail({
+                from: '"Evrika Liseyi" <' + (process.env.EMAIL_USER || 'yusifliqezenfer90@gmail.com') + '>',
+                to: existingReg.email,
+                subject: `Ödəniş Təsdiqi — ${couponCode} | Evrika Liseyi`,
+                html: `
+                  <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px;border:1px solid #e2e8f0;border-radius:12px;background:#ffffff;">
+                    <h2 style="color:#16a34a;margin:0 0 12px;">Ödənişiniz uğurla tamamlandı!</h2>
+                    <p style="color:#334155;font-size:15px;line-height:1.5;">Salam, <strong>${fullName}</strong>!</p>
+                    <p style="color:#334155;font-size:15px;line-height:1.5;">Ödənişiniz təsdiqləndi. Giriş kuponunuz və QR kod linkiniz aşağıdadır:</p>
+                    <div style="background:#f8fafc;border:1px solid #cbd5e1;border-radius:10px;padding:16px;margin:18px 0;text-align:center;">
+                      <div style="font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:1px;">Giriş Kuponu</div>
+                      <div style="font-size:26px;font-weight:800;color:#0f172a;margin:6px 0;">${couponCode}</div>
+                      <div style="font-size:13px;color:#475569;">Ödənilən məbləğ: <strong>${paidAmount} AZN</strong></div>
+                    </div>
+                    <div style="text-align:center;margin:20px 0;">
+                      <a href="${verifyLink}" style="display:inline-block;background:#2563eb;color:#ffffff;text-decoration:none;font-weight:700;padding:12px 24px;border-radius:8px;font-size:14px;">QR Kodu Aç / Yoxla</a>
+                    </div>
+                    <p style="color:#64748b;font-size:12px;margin-top:20px;border-top:1px solid #e2e8f0;padding-top:12px;">Evrika Liseyi • https://evrikaliseyi.edu.az</p>
+                  </div>
+                `
+              });
+            } catch (emailErr) {
+              console.error("Payment email notification error:", emailErr);
+            }
           }
         } else if (status && status !== "new") {
           // Newer retry started with a different last_order_id should not be overwritten by an older expired order webhook
