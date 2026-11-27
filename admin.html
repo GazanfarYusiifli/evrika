@@ -4331,7 +4331,7 @@ fbq('track', 'PageView');
       const payStatus = item.payment_status || p.payment_status || 'Ödəniş gözlənilir';
       const dt = (item.created_at || item.submissionDate || '').slice(0, 16).replace('T', ' / ');
 
-      const titleEl = document.querySelector('#pv-modal .modal-header h3');
+      const titleEl = document.querySelector('#pv-detail-modal .modal-header h3');
       if (titleEl) titleEl.innerHTML = `<i class="fas fa-calendar-check" style="color:#f59e0b;"></i> ${evName} — Qeydiyyat Detalları`;
       document.getElementById('pv-modal-body').innerHTML = `
         <div style="display:flex; flex-direction:column; gap:16px;">
@@ -4357,7 +4357,7 @@ fbq('track', 'PageView');
           </div>
         </div>
       `;
-      document.getElementById('pv-modal').style.display = 'flex';
+      document.getElementById('pv-detail-modal').classList.add('active');
     };
 
     window.renderEventsTable = () => {
