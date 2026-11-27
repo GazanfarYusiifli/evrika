@@ -4275,66 +4275,82 @@ Qeyd edək ki, Evrika Təhsil Ekosistemi 15 illik akademik təcrübəyə malik o
   bottom:24px;
   right:24px;
   z-index:10000;
-  width:300px;
-  background:#fff;
-  border-radius:16px;
-  box-shadow:0 8px 32px rgba(0,0,0,0.18);
+  width:360px;
+  max-width:calc(100vw - 32px);
+  background:rgba(255,255,255,0.97);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border:1px solid rgba(37,99,235,0.12);
+  border-radius:20px;
+  box-shadow:0 20px 50px rgba(15,23,42,0.22), 0 4px 16px rgba(37,99,235,0.12);
   overflow:hidden;
   font-family:'Montserrat',sans-serif;
-  animation: festSlideIn 0.4s cubic-bezier(.22,1,.36,1) both;
+  animation: festSlideIn 0.45s cubic-bezier(.22,1,.36,1) both;
 ">
   <style>
     @keyframes festSlideIn {
-      from { opacity:0; transform:translateY(30px) scale(0.95); }
+      from { opacity:0; transform:translateY(32px) scale(0.95); }
       to   { opacity:1; transform:translateY(0) scale(1); }
     }
-    #fest-popup .fest-img-wrap { position:relative; }
-    #fest-popup .fest-img-wrap img { width:100%; height:140px; object-fit:cover; display:block; }
+    #fest-popup .fest-img-wrap { position:relative; overflow:hidden; }
+    #fest-popup .fest-img-wrap img {
+      width:100%; height:175px; object-fit:cover; display:block;
+      transition:transform .4s ease;
+    }
+    #fest-popup:hover .fest-img-wrap img { transform:scale(1.03); }
     #fest-popup .fest-brand {
-      position:absolute; top:10px; left:12px;
-      background:rgba(0,0,0,0.55);
-      color:#fff; font-size:9px; font-weight:700;
-      padding:3px 8px; border-radius:20px;
-      letter-spacing:0.5px;
+      position:absolute; top:12px; left:14px;
+      background:rgba(15,23,42,0.72);
+      backdrop-filter:blur(6px);
+      color:#fff; font-size:10px; font-weight:700;
+      padding:4px 10px; border-radius:999px;
+      letter-spacing:0.6px;
+      border:1px solid rgba(255,255,255,0.18);
     }
     #fest-popup-close {
-      position:absolute; top:8px; right:10px;
-      background:rgba(0,0,0,0.5); color:#fff;
-      border:none; cursor:pointer;
-      width:26px; height:26px; border-radius:50%;
-      font-size:14px; line-height:26px; text-align:center;
-      padding:0;
+      position:absolute; top:10px; right:12px;
+      background:rgba(15,23,42,0.6); color:#fff;
+      border:1px solid rgba(255,255,255,0.2); cursor:pointer;
+      width:30px; height:30px; border-radius:50%;
+      font-size:16px; line-height:28px; text-align:center;
+      padding:0; transition:background .2s, transform .2s;
     }
-    #fest-popup-close:hover { background:rgba(0,0,0,0.75); }
-    #fest-popup .fest-body { padding:14px 16px 16px; }
+    #fest-popup-close:hover { background:rgba(15,23,42,0.85); transform:scale(1.06); }
+    #fest-popup .fest-body { padding:18px 20px 20px; }
     #fest-popup .fest-title {
-      font-size:16px; font-weight:800;
-      color:#1a1a2e; margin:0 0 6px;
-      line-height:1.2;
+      font-size:19px; font-weight:800;
+      color:#0f172a; margin:0 0 8px;
+      line-height:1.2; letter-spacing:-0.2px;
     }
     #fest-popup .fest-sub {
-      font-size:11px; color:#555;
-      margin:0 0 12px; line-height:1.5;
+      font-size:12.5px; color:#475569;
+      margin:0 0 16px; line-height:1.6;
+      font-weight:500;
     }
     #fest-popup .fest-btn {
-      display:block; width:100%; text-align:center;
-      background:linear-gradient(135deg,#c0392b,#e74c3c);
-      color:#fff; font-weight:700; font-size:13px;
-      padding:10px 0; border-radius:8px;
+      display:flex; align-items:center; justify-content:center; gap:8px;
+      width:100%; text-align:center;
+      background:linear-gradient(135deg,#2563eb,#1d4ed8);
+      color:#fff; font-weight:700; font-size:14px;
+      padding:12px 0; border-radius:12px;
       text-decoration:none; letter-spacing:0.3px;
-      transition:opacity .2s;
+      box-shadow:0 6px 18px rgba(37,99,235,0.32);
+      transition:transform .2s, box-shadow .2s, opacity .2s;
     }
-    #fest-popup .fest-btn:hover { opacity:0.88; }
+    #fest-popup .fest-btn:hover {
+      transform:translateY(-1px);
+      box-shadow:0 8px 22px rgba(37,99,235,0.42);
+    }
   </style>
   <div class="fest-img-wrap">
     <img src="/evrika-fest-2027.png" alt="EVRIKA FEST 2027">
     <span class="fest-brand">EVRIKA FUTURELAB × EVRIKA</span>
-    <button id="fest-popup-close" onclick="document.getElementById('fest-popup').style.display='none';sessionStorage.setItem('festPopupClosed','1')">×</button>
+    <button id="fest-popup-close" onclick="document.getElementById('fest-popup').style.display='none';sessionStorage.setItem('festPopupClosed','1')" aria-label="Bağla">×</button>
   </div>
   <div class="fest-body">
     <p class="fest-title">EVRIKA FEST 2027</p>
     <p class="fest-sub">🤖 Robototexnika və İnnovasiya Yarışı<br>📅 23 yanvar 2027 &nbsp;•&nbsp; Son qeydiyyat: 21 yanvar</p>
-    <a class="fest-btn" href="https://evrikaliseyi.edu.az/evrika-fest-2027" target="_blank">Qeydiyyat</a>
+    <a class="fest-btn" href="https://evrikaliseyi.edu.az/evrika-fest-2027" target="_blank">Qeydiyyat →</a>
   </div>
 </div>
 <script>
