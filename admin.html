@@ -2384,7 +2384,7 @@ fbq('track', 'PageView');
               audioHtml = `<button onclick="playCallAudio('${recs[0]}', this)" class="btn-view" style="padding:6px 12px; font-size:0.75rem; background:rgba(56,189,248,0.15); color:#38bdf8; border:1px solid rgba(56,189,248,0.3);"><i class="fas fa-play"></i> Dinlə</button>`;
             }
 
-            return `<tr>
+            return `<tr class="clickable-row" style="cursor:pointer;" onclick="openFinanceDetails('${item._db_id_ || item.id}')">
               <td>
                 <div style="font-weight:800; color:white; font-size:0.95rem; display:flex; align-items:center; gap:8px;">
                   <i class="fas fa-phone-alt" style="color:#60a5fa; font-size:0.8rem;"></i>
@@ -4242,7 +4242,7 @@ fbq('track', 'PageView');
             const commission = p.epoint_commission ? parseFloat(String(p.epoint_commission).replace(/[^0-9.]/g, '')) : parseFloat((parsedAmount * 0.03).toFixed(2));
             const date = p.epoint_date ? new Date(p.epoint_date).toLocaleString('az') : new Date(p.created_at || p.submissionDate || Date.now()).toLocaleString('az');
             
-            return `<tr>
+            return `<tr class="clickable-row" style="cursor:pointer;" onclick="openFinanceDetails('${item._db_id_ || item.id}')">
               <td>
                 <div style="font-weight:800; font-size:0.9rem; color:white;">${fullName}</div>
                 <div style="font-size:0.7rem; color:var(--text-muted); opacity:0.8; margin-top:3px;">${description}</div>
@@ -4281,7 +4281,7 @@ fbq('track', 'PageView');
             const amount = p.epoint_amount || p.amount || 0;
             const date = p.epoint_date ? new Date(p.epoint_date).toLocaleString('az') : new Date(p.created_at || p.submissionDate || Date.now()).toLocaleString('az');
             const ordNum = p.order_id ? (String(p.order_id).startsWith('EV-') ? p.order_id : `EV-${String(p.order_id).padStart(4, '0')}`) : (p._db_id_ ? `EV-${String(p._db_id_).padStart(4, '0')}` : '---');
-            return `<tr>
+            return `<tr class="clickable-row" style="cursor:pointer;" onclick="openFinanceDetails('${item._db_id_ || item.id}')">
               <td>
                 <div style="font-weight:700; color:white;">${fullName}</div>
                 <div style="font-size:0.7rem; color:var(--text-muted);">${ordNum}</div>
@@ -4332,7 +4332,7 @@ fbq('track', 'PageView');
         const phone = item.phone || p.phone || '-';
         const payStatus = item.payment_status || p.payment_status || (item.amount ? `${item.amount} AZN (${item.status || 'Yeni'})` : (item.status || 'Yeni'));
         const dt = (item.created_at || item.submissionDate || '').slice(0, 16).replace('T', ' / ');
-        return `<tr>
+        return `<tr class="clickable-row" style="cursor:pointer;" onclick="openFinanceDetails('${item._db_id_ || item.id}')">
           <td><strong style="color:#f59e0b;">${evName}</strong><div style="font-size:0.8rem; color:#94a3b8;">${cat}</div></td>
           <td><strong>${team}</strong></td>
           <td>${school}</td>
@@ -4415,7 +4415,7 @@ fbq('track', 'PageView');
             const s = getGranularSource(p);
             const sourceLabel = MAP[s] || String(s).replace('Qeydiyyat - ', '') || 'Onlayn Müraciət';
 
-            return `<tr>
+            return `<tr class="clickable-row" style="cursor:pointer;" onclick="openFinanceDetails('${item._db_id_ || item.id}')">
               <td style="padding: 15px 20px;">
                  <div style="font-weight:800; color:white; font-size:0.95rem;">${fullName}</div>
                  <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">
@@ -4544,7 +4544,7 @@ fbq('track', 'PageView');
             const s = getGranularSource(p);
             const sourceLabel = MAP[s] || String(s).replace('Qeydiyyat - ', '') || 'Email';
             
-            return `<tr>
+            return `<tr class="clickable-row" style="cursor:pointer;" onclick="openFinanceDetails('${item._db_id_ || item.id}')">
               <td>
                  <div style="font-weight:800; color:white; font-size:0.9rem;">${fullName}</div>
                  <div style="font-size:0.7rem; color:var(--text-muted); margin-top:3px;">${p.description || 'Sınaq / Təhsil Ödənişi'} <span style="color:var(--warning); margin-left:5px;">• ${sourceLabel}</span></div>
@@ -4692,7 +4692,7 @@ fbq('track', 'PageView');
             const rrnCode = p.epoint_rrn || p.rrn || txId;
             const orderId = p.order_id || p._db_id_ || '---';
             
-            return `<tr>
+            return `<tr class="clickable-row" style="cursor:pointer;" onclick="openFinanceDetails('${item._db_id_ || item.id}')">
               <td>
                  <div style="font-weight:800; color:white; font-size:0.9rem; font-family:monospace;">Sifariş №: EV-${String(orderId).replace('EV-', '').padStart(4, '0')}</div>
                  <div style="font-size:0.7rem; color:var(--text-muted); margin-top:3px; font-family:monospace;">RRN: ${rrnCode}</div>
@@ -5456,7 +5456,7 @@ fbq('track', 'PageView');
        tb.innerHTML = apps.map((a, idx) => {
            let st = a.status || 'Yeni';
            if (typeof statusMap !== 'undefined' && !statusMap[st]) st = 'Yeni';
-           return `<tr>
+           return `<tr class="clickable-row" style="cursor:pointer;" onclick="openFinanceDetails('${item._db_id_ || item.id}')">
                <td>${a.fullName || 'Adsız'}</td>
                <td>${a.phone || '-'}</td>
                <td>${a.position || '-'}</td>
@@ -5791,7 +5791,7 @@ fbq('track', 'PageView');
               const statusBadge = isAct 
                 ? `<span style="background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3); padding:4px 10px; border-radius:6px; font-weight:800; font-size:0.75rem;"><i class="fas fa-check-circle"></i> Aktiv</span>`
                 : `<span style="background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3); padding:4px 10px; border-radius:6px; font-weight:800; font-size:0.75rem;"><i class="fas fa-pause-circle"></i> Deaktiv</span>`;
-              return `<tr>
+              return `<tr class="clickable-row" style="cursor:pointer;" onclick="openFinanceDetails('${item._db_id_ || item.id}')">
                 <td>
                   <div style="font-weight:700; color:white; font-size:0.95rem;">${v.title}</div>
                   ${v.desc ? `<div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">${v.desc}</div>` : ''}
@@ -5821,7 +5821,7 @@ fbq('track', 'PageView');
       const tb = document.getElementById('news-tbody'); 
       if(tb) tb.innerHTML = newsData.map((n, i) => {
         const firstImg = (n.img || "").split(',')[0].trim();
-        return `<tr><td>${firstImg ? `<img loading="lazy" decoding="async" src="${firstImg}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;">` : `<span style="opacity:0.3;font-size:0.7rem;">Yoxdur</span>`}</td><td>${n.title}</td><td>${n.date}</td><td><div style="display:flex; gap:8px;"><button class="btn-view" style="padding:8px 12px; background:rgba(255,255,255,0.05);" onclick="editNews(${i})"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:8px 12px;" onclick="deleteNews('${n._db_id_}')"><i class="fas fa-trash"></i></button></div></td></tr>`;
+        return `<tr class="clickable-row" style="cursor:pointer;" onclick="openFinanceDetails('${item._db_id_ || item.id}')"><td>${firstImg ? `<img loading="lazy" decoding="async" src="${firstImg}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;">` : `<span style="opacity:0.3;font-size:0.7rem;">Yoxdur</span>`}</td><td>${n.title}</td><td>${n.date}</td><td><div style="display:flex; gap:8px;"><button class="btn-view" style="padding:8px 12px; background:rgba(255,255,255,0.05);" onclick="editNews(${i})"><i class="fas fa-edit"></i></button><button class="btn-danger" style="padding:8px 12px;" onclick="deleteNews('${n._db_id_}')"><i class="fas fa-trash"></i></button></div></td></tr>`;
       }).join('');
     }
 
