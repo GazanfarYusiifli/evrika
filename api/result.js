@@ -130,6 +130,20 @@ export default async function handler(req, res) {
     if (!dbId && workerResponse?.data?.registration_id) {
       dbId = parseInt(String(workerResponse.data.registration_id), 10);
     }
+    if ((!dbId || isNaN(dbId)) && order_id) {
+      try {
+        const allRes = await fetch(`${CF_BASE_URL}/api/registrations`);
+        const allRegs = allRes.ok ? await allRes.json() : [];
+        const matched = Array.isArray(allRegs)
+          ? allRegs.find(r => String(r.last_order_id || "") === String(order_id))
+          : null;
+        if (matched && matched.id) {
+          dbId = parseInt(String(matched.id), 10);
+        }
+      } catch (lookupErr) {
+        console.warn("Order ID lookup warning:", lookupErr);
+      }
+    }
 
     const isSuccess = status === "success" && (!code || String(code) === "000");
 
