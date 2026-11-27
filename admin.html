@@ -4328,7 +4328,11 @@ fbq('track', 'PageView');
       const guardian = item.fullName || item.name || p.fullName || p.name || '-';
       const phone = item.phone || p.phone || '-';
       const email = item.email || p.email || '-';
-      const payStatus = item.payment_status || p.payment_status || 'Ödəniş gözlənilir';
+      const isPaid = item.payment_status === 'Ödənilib' || p.payment_status === 'Ödənilib';
+      const payStatus = isPaid ? 'Ödənilib' : (item.payment_status || p.payment_status || 'Ödəniş gözlənilir');
+      const festCode = `FEST-${String(item._db_id_ || item.id || 0).padStart(4, '0')}`;
+      const verifyUrl = `https://evrikaliseyi.edu.az/verify?code=${encodeURIComponent(festCode)}&id=${encodeURIComponent(item._db_id_ || item.id)}`;
+      const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verifyUrl)}`;
       const dt = (item.created_at || item.submissionDate || '').slice(0, 16).replace('T', ' / ');
 
       const participantsHtml = String(participants || '-').split(';').map(s => s.trim()).filter(Boolean).map(pItem => `
@@ -4347,9 +4351,19 @@ fbq('track', 'PageView');
               <div style="font-size:1.15rem; font-weight:900; color:#fbbf24; margin-top:2px;">${cat} • 55 AZN</div>
             </div>
             <div style="text-align:right;">
-              <span style="display:inline-block; padding:5px 12px; border-radius:999px; background:rgba(245,158,11,0.18); border:1px solid rgba(245,158,11,0.35); color:#fde68a; font-weight:800; font-size:0.78rem;">${payStatus}</span>
+              <span style="display:inline-block; padding:5px 12px; border-radius:999px; ${isPaid ? 'background:rgba(16,185,129,0.2); border:1px solid #10b981; color:#6ee7b7;' : 'background:rgba(245,158,11,0.18); border:1px solid rgba(245,158,11,0.35); color:#fde68a;'} font-weight:800; font-size:0.78rem;">${payStatus}</span>
               <div style="font-size:0.76rem; color:var(--text-muted); margin-top:4px;"><i class="fas fa-clock" style="margin-right:4px;"></i>${dt}</div>
             </div>
+          </div>
+
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; background:rgba(15,23,42,0.7); border:1px solid rgba(56,189,248,0.3); border-radius:16px; padding:16px 20px;">
+            <div>
+              <div style="font-size:0.72rem; color:#94a3b8; font-weight:800; text-transform:uppercase;">GİRİŞ KUPONU & QR KOD</div>
+              <div style="font-size:1.35rem; font-weight:900; color:#38bdf8; letter-spacing:1px; margin-top:4px;">${festCode}</div>
+              <div style="font-size:0.8rem; color:#cbd5e1; margin-top:4px;">Status: <strong style="color:${item.status === 'Giriş Edilib' ? '#ef4444' : '#10b981'};">${item.status === 'Giriş Edilib' ? 'Artıq Giriş Edilib' : 'Girişə Hazır'}</strong></div>
+              <a href="${verifyUrl}" target="_blank" style="display:inline-flex; align-items:center; gap:6px; margin-top:10px; padding:8px 14px; border-radius:10px; background:#3b82f6; color:#fff; font-weight:800; font-size:0.82rem; text-decoration:none;"><i class="fas fa-qrcode"></i> QR Yoxla (Verify)</a>
+            </div>
+            <img src="${qrImgUrl}" alt="${festCode} QR" style="width:110px; height:110px; border-radius:12px; background:#fff; padding:6px;">
           </div>
 
           <div style="background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:18px;">
@@ -4414,14 +4428,19 @@ fbq('track', 'PageView');
         const team = item.fullName || item.name || p.fullName || p.name || '-';
         const school = item.school || p.school || '-';
         const phone = item.phone || p.phone || '-';
-        const payStatus = item.payment_status || p.payment_status || (item.amount ? `${item.amount} AZN (${item.status || 'Yeni'})` : (item.status || 'Yeni'));
+        const isPaid = item.payment_status === 'Ödənilib' || p.payment_status === 'Ödənilib';
+        const payStatus = isPaid ? 'Ödənilib' : (item.payment_status || p.payment_status || (item.amount ? `${item.amount} AZN (${item.status || 'Yeni'})` : (item.status || 'Yeni')));
+        const festCode = `FEST-${String(item._db_id_ || item.id || 0).padStart(4, '0')}`;
+        const payBadgeStyle = isPaid
+          ? 'background:rgba(16,185,129,0.16); color:#10b981; border:1px solid rgba(16,185,129,0.35);'
+          : 'background:rgba(245,158,11,0.12); color:#fbbf24;';
         const dt = (item.created_at || item.submissionDate || '').slice(0, 16).replace('T', ' / ');
         return `<tr class="clickable-row" style="cursor:pointer;" onclick="openEventModal('${item._db_id_ || item.id}')">
-          <td><strong style="color:#f59e0b;">${evName}</strong><div style="font-size:0.8rem; color:#94a3b8;">${cat}</div></td>
+          <td><strong style="color:#f59e0b;">${evName}</strong><div style="font-size:0.8rem; color:#94a3b8;">${cat} • <span style="color:#38bdf8; font-weight:700;">${festCode}</span></div></td>
           <td><strong>${team}</strong></td>
           <td>${school}</td>
           <td>${phone}</td>
-          <td><span style="padding:4px 10px; border-radius:8px; background:rgba(245,158,11,0.12); color:#fbbf24; font-weight:700; font-size:0.8rem;">${payStatus}</span></td>
+          <td><span style="padding:4px 10px; border-radius:8px; ${payBadgeStyle} font-weight:700; font-size:0.8rem;">${payStatus}</span></td>
           <td style="font-size:0.85rem; color:var(--text-muted);">${dt || '-'}</td>
         </tr>`;
       }).join('');

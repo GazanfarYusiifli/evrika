@@ -92,7 +92,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const VERIFY_API_URL = 'https://evrika-api.yusifliqezenfer90.workers.dev/api/verify';
 
     const urlParams = new URLSearchParams(window.location.search);
-    const rawId = urlParams.get('id') || '';
+    const rawId = urlParams.get('id') || urlParams.get('code') || '';
     const dbId = parseInt(rawId.replace(/\D/g, ''), 10);
 
     async function verifyTicket() {
