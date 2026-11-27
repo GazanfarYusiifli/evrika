@@ -38,7 +38,8 @@ export default async function handler(req, res) {
   let parsedAmount = 35;
   if (amount !== undefined && amount !== null && String(amount).trim() !== "") {
     const p = parseFloat(String(amount).replace(/[^0-9.]/g, ''));
-    if (!isNaN(p) && ((!dbId && p > 0) || (dbId && p >= 20))) {
+    const isFestOrder = String(order_id || '').startsWith('FEST2027');
+    if (!isNaN(p) && ((!dbId && p > 0) || (isFestOrder && p > 0) || (dbId && p >= 20))) {
       parsedAmount = Math.round(p * 100) / 100;
     }
   }
