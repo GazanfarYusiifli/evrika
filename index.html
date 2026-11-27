@@ -4268,5 +4268,86 @@ Qeyd edək ki, Evrika Təhsil Ekosistemi 15 illik akademik təcrübəyə malik o
 </script>
 <!-- Whelp Widget Code -->
 
+<!-- EVRIKA FEST 2027 Popup -->
+<div id="fest-popup" style="
+  display:none;
+  position:fixed;
+  bottom:24px;
+  right:24px;
+  z-index:10000;
+  width:300px;
+  background:#fff;
+  border-radius:16px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.18);
+  overflow:hidden;
+  font-family:'Montserrat',sans-serif;
+  animation: festSlideIn 0.4s cubic-bezier(.22,1,.36,1) both;
+">
+  <style>
+    @keyframes festSlideIn {
+      from { opacity:0; transform:translateY(30px) scale(0.95); }
+      to   { opacity:1; transform:translateY(0) scale(1); }
+    }
+    #fest-popup .fest-img-wrap { position:relative; }
+    #fest-popup .fest-img-wrap img { width:100%; height:140px; object-fit:cover; display:block; }
+    #fest-popup .fest-brand {
+      position:absolute; top:10px; left:12px;
+      background:rgba(0,0,0,0.55);
+      color:#fff; font-size:9px; font-weight:700;
+      padding:3px 8px; border-radius:20px;
+      letter-spacing:0.5px;
+    }
+    #fest-popup-close {
+      position:absolute; top:8px; right:10px;
+      background:rgba(0,0,0,0.5); color:#fff;
+      border:none; cursor:pointer;
+      width:26px; height:26px; border-radius:50%;
+      font-size:14px; line-height:26px; text-align:center;
+      padding:0;
+    }
+    #fest-popup-close:hover { background:rgba(0,0,0,0.75); }
+    #fest-popup .fest-body { padding:14px 16px 16px; }
+    #fest-popup .fest-title {
+      font-size:16px; font-weight:800;
+      color:#1a1a2e; margin:0 0 6px;
+      line-height:1.2;
+    }
+    #fest-popup .fest-sub {
+      font-size:11px; color:#555;
+      margin:0 0 12px; line-height:1.5;
+    }
+    #fest-popup .fest-btn {
+      display:block; width:100%; text-align:center;
+      background:linear-gradient(135deg,#c0392b,#e74c3c);
+      color:#fff; font-weight:700; font-size:13px;
+      padding:10px 0; border-radius:8px;
+      text-decoration:none; letter-spacing:0.3px;
+      transition:opacity .2s;
+    }
+    #fest-popup .fest-btn:hover { opacity:0.88; }
+  </style>
+  <div class="fest-img-wrap">
+    <img src="/evrika-fest-2027.png" alt="EVRIKA FEST 2027">
+    <span class="fest-brand">EVRIKA FUTURELAB × EVRIKA</span>
+    <button id="fest-popup-close" onclick="document.getElementById('fest-popup').style.display='none';sessionStorage.setItem('festPopupClosed','1')">×</button>
+  </div>
+  <div class="fest-body">
+    <p class="fest-title">EVRIKA FEST 2027</p>
+    <p class="fest-sub">🤖 Robototexnika və İnnovasiya Yarışı<br>📅 23 yanvar 2027 &nbsp;•&nbsp; Son qeydiyyat: 21 yanvar</p>
+    <a class="fest-btn" href="https://evrikaliseyi.edu.az/evrika-fest-2027" target="_blank">Qeydiyyat</a>
+  </div>
+</div>
+<script>
+  (function(){
+    if (!sessionStorage.getItem('festPopupClosed')) {
+      setTimeout(function(){
+        var p = document.getElementById('fest-popup');
+        if (p) p.style.display = 'block';
+      }, 2500);
+    }
+  })();
+</script>
+<!-- END EVRIKA FEST 2027 Popup -->
+
 </body>
 </html>
