@@ -4331,29 +4331,64 @@ fbq('track', 'PageView');
       const payStatus = item.payment_status || p.payment_status || 'Ödəniş gözlənilir';
       const dt = (item.created_at || item.submissionDate || '').slice(0, 16).replace('T', ' / ');
 
+      const participantsHtml = String(participants || '-').split(';').map(s => s.trim()).filter(Boolean).map(pItem => `
+        <div style="background:rgba(15,23,42,0.65); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:10px 14px; font-size:0.9rem; color:#f8fafc; font-weight:600;">
+          <i class="fas fa-user-astronaut" style="color:#38bdf8; margin-right:8px;"></i>${pItem}
+        </div>
+      `).join('');
+
       const titleEl = document.querySelector('#pv-detail-modal .modal-header h3');
-      if (titleEl) titleEl.innerHTML = `<i class="fas fa-calendar-check" style="color:#f59e0b;"></i> ${evName} — Qeydiyyat Detalları`;
+      if (titleEl) titleEl.innerHTML = `<i class="fas fa-trophy" style="color:#f59e0b;"></i> ${evName} — Qeydiyyat Detalları`;
       document.getElementById('pv-modal-body').innerHTML = `
-        <div style="display:flex; flex-direction:column; gap:16px;">
-          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:18px; display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-            <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:800;">KATEQORİYA</div><div style="font-size:1rem; font-weight:800; color:#f59e0b; margin-top:4px;">${cat} (55 AZN)</div></div>
-            <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:800;">KOMANDANIN ADI</div><div style="font-size:1rem; font-weight:800; color:white; margin-top:4px;">${team}</div></div>
-            <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:800;">MƏKTƏBİN ADI</div><div style="font-size:0.95rem; font-weight:700; color:white; margin-top:4px;">${school}</div></div>
-            <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:800;">İŞTİRAKÇI SAYI</div><div style="font-size:0.95rem; font-weight:700; color:white; margin-top:4px;">${pCount}</div></div>
+        <div style="display:flex; flex-direction:column; gap:18px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; padding:14px 18px; background:linear-gradient(135deg, rgba(245,158,11,0.12), rgba(59,130,246,0.08)); border:1px solid rgba(245,158,11,0.3); border-radius:14px;">
+            <div>
+              <div style="font-size:0.7rem; color:#cbd5e1; font-weight:800; text-transform:uppercase; letter-spacing:0.6px;">Seçilmiş Kateqoriya</div>
+              <div style="font-size:1.15rem; font-weight:900; color:#fbbf24; margin-top:2px;">${cat} • 55 AZN</div>
+            </div>
+            <div style="text-align:right;">
+              <span style="display:inline-block; padding:5px 12px; border-radius:999px; background:rgba(245,158,11,0.18); border:1px solid rgba(245,158,11,0.35); color:#fde68a; font-weight:800; font-size:0.78rem;">${payStatus}</span>
+              <div style="font-size:0.76rem; color:var(--text-muted); margin-top:4px;"><i class="fas fa-clock" style="margin-right:4px;"></i>${dt}</div>
+            </div>
           </div>
-          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:18px;">
-            <div style="font-size:0.72rem; color:var(--text-muted); font-weight:800; margin-bottom:6px;">İŞTİRAKÇILAR</div>
-            <div style="font-size:0.92rem; color:#f8fafc; line-height:1.6;">${participants}</div>
+
+          <div style="background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:18px;">
+            <div style="font-size:0.78rem; font-weight:800; color:#60a5fa; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:14px; display:flex; align-items:center; gap:8px;">
+              <i class="fas fa-users"></i> Komanda və Məktəb Məlumatları
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:14px;">
+              <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">Komandanın adı</div><div style="font-size:0.98rem; font-weight:800; color:#fff; margin-top:4px;">${team}</div></div>
+              <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">Məktəbin adı</div><div style="font-size:0.98rem; font-weight:800; color:#fff; margin-top:4px;">${school}</div></div>
+              <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">İştirakçı sayı</div><div style="font-size:0.98rem; font-weight:800; color:#fff; margin-top:4px;">${pCount} nəfər</div></div>
+            </div>
           </div>
-          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:18px; display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-            <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:800;">MÜƏLLİM / MENTOR</div><div style="font-size:0.95rem; font-weight:700; color:white; margin-top:4px;">${mentor}</div></div>
-            <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:800;">MENTORUN ƏLAQƏ NÖMRƏSİ</div><div style="font-size:0.95rem; font-weight:700; color:#60a5fa; margin-top:4px;">${mentorPhone}</div></div>
-            <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:800;">VALİDEYN / MENTOR (ƏLAQƏDAR ŞƏXS)</div><div style="font-size:0.95rem; font-weight:700; color:white; margin-top:4px;">${guardian}</div></div>
-            <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:800;">MOBİL NÖMRƏ & E-MAİL</div><div style="font-size:0.92rem; color:#60a5fa; margin-top:4px;">${phone}<br><span style="color:#cbd5e1;">${email}</span></div></div>
+
+          <div style="background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:18px;">
+            <div style="font-size:0.78rem; font-weight:800; color:#38bdf8; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+              <i class="fas fa-id-card"></i> İştirakçılar
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">${participantsHtml}</div>
           </div>
-          <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.25); border-radius:12px;">
-            <div><span style="font-size:0.75rem; color:var(--text-muted); font-weight:800;">ÖDƏNİŞ STATUSU:</span> <strong style="color:#fbbf24; margin-left:6px;">${payStatus}</strong></div>
-            <div style="font-size:0.82rem; color:var(--text-muted);">${dt}</div>
+
+          <div style="background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:18px;">
+            <div style="font-size:0.78rem; font-weight:800; color:#a855f7; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:14px; display:flex; align-items:center; gap:8px;">
+              <i class="fas fa-chalkboard-teacher"></i> Müəllim / Mentor
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+              <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">Mentorun adı və soyadı</div><div style="font-size:0.95rem; font-weight:800; color:#fff; margin-top:4px;">${mentor}</div></div>
+              <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">Mentorun əlaqə nömrəsi</div><div style="font-size:0.95rem; font-weight:800; color:#60a5fa; margin-top:4px;">${mentorPhone}</div></div>
+            </div>
+          </div>
+
+          <div style="background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:18px;">
+            <div style="font-size:0.78rem; font-weight:800; color:#10b981; text-transform:uppercase; letter-spacing:0.6px; margin-bottom:14px; display:flex; align-items:center; gap:8px;">
+              <i class="fas fa-phone-alt"></i> Əlaqə Məlumatları
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:14px;">
+              <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">Valideyn / Mentor</div><div style="font-size:0.95rem; font-weight:800; color:#fff; margin-top:4px;">${guardian}</div></div>
+              <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">Mobil nömrə</div><div style="font-size:0.95rem; font-weight:800; color:#60a5fa; margin-top:4px;">${phone}</div></div>
+              <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">E-mail</div><div style="font-size:0.92rem; font-weight:700; color:#e2e8f0; margin-top:4px;">${email}</div></div>
+            </div>
           </div>
         </div>
       `;
