@@ -163,6 +163,25 @@ export default async function handler(req, res) {
               last_order_id: order_id || ""
             })
           });
+          // WhatsApp Cloud API notification if configured
+          const waToken = process.env.WHATSAPP_ACCESS_TOKEN;
+          const waPhoneId = process.env.WHATSAPP_PHONE_NUMBER_ID;
+          const rawPhone = String(existingReg?.phone || "").replace(/\D/g, "");
+          if (waToken && waPhoneId && rawPhone.length >= 9) {
+            const toPhone = rawPhone.startsWith("994") ? rawPhone : `994${rawPhone.replace(/^0/, "")}`;
+            const verifyLink = `https://evrikaliseyi.edu.az/verify?id=${dbId}`;
+            fetch(`https://graph.facebook.com/v23.0/${waPhoneId}/messages`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json", "Authorization": `Bearer ${waToken}` },
+              body: JSON.stringify({
+                messaging_product: "whatsapp",
+                recipient_type: "individual",
+                to: toPhone,
+                type: "text",
+                text: { body: `Təbriklər! Ödənişiniz təsdiqləndi.\nGiriş kuponu: ${couponCode}\nQR kodunuz: ${verifyLink}` }
+              })
+            }).catch(() => {});
+          }
         } else if (status && status !== "new") {
           // Newer retry started with a different last_order_id should not be overwritten by an older expired order webhook
           const isStaleOrder =
