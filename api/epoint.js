@@ -44,8 +44,10 @@ export default async function handler(req, res) {
     }
   }
 
+  const isFestOrderTop = String(order_id || '').startsWith('FEST2027');
+
   // 1. Öncəliklə Cloudflare Worker-ə yönləndiririk (D1 orders/payments cədvəlləri üçün)
-  try {
+  if (!isFestOrderTop) try {
     const cfRes = await fetch(`${CF_BASE_URL}/api/epoint-pay`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
