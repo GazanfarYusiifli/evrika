@@ -4009,7 +4009,8 @@ fbq('track', 'PageView');
         'contact': { label: 'Əlaqə Formu', color: '#94a3b8', bg: 'rgba(148,163,184,0.12)', border: 'rgba(148,163,184,0.25)', icon: 'fas fa-envelope' }
       };
 
-      const html = filteredData.map((item, i) => {
+      const nonEventData = filteredData.filter(item => !(item.event_name || item.event || /event|tədbir|seminar|workshop|açıq qapı|fest/i.test(`${item.source || ''} ${item.form_type || ''} ${item.event_name || ''}`)));
+      const html = nonEventData.map((item, i) => {
         let st = item.status || 'Yeni';
         if (typeof statusMap !== 'undefined' && !statusMap[st]) st = 'Yeni';
         const s = getGranularSource(item);
@@ -4330,7 +4331,10 @@ fbq('track', 'PageView');
       const email = item.email || p.email || '-';
       const isPaid = item.payment_status === 'Ödənilib' || p.payment_status === 'Ödənilib';
       const payStatus = isPaid ? 'Ödənilib' : (item.payment_status || p.payment_status || 'Ödəniş gözlənilir');
-      const festCode = `FEST-${String(item._db_id_ || item.id || 0).padStart(4, '0')}`;
+      const eventItems = list.filter(x => !!(x.event_name || x.event || /event|tədbir|seminar|workshop|açıq qapı|fest/i.test(`${x.source || ''} ${x.form_type || ''} ${x.event_name || ''}`)));
+      const evIdx = eventItems.findIndex(x => String(x._db_id_ || x.id) === String(id));
+      const festNum = evIdx >= 0 ? (eventItems.length - evIdx) : 1;
+      const festCode = `FEST-${String(festNum).padStart(4, '0')}`;
       const verifyUrl = `https://evrikaliseyi.edu.az/verify?code=${encodeURIComponent(festCode)}&id=${encodeURIComponent(item._db_id_ || item.id)}`;
       const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verifyUrl)}`;
       const dt = (item.created_at || item.submissionDate || '').slice(0, 16).replace('T', ' / ');
@@ -4420,7 +4424,8 @@ fbq('track', 'PageView');
         tb.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px; color:var(--text-muted);">Hələlik event qeydiyyatı yoxdur.</td></tr>';
         return;
       }
-      tb.innerHTML = list.map(item => {
+      const totalEvents = list.length;
+      tb.innerHTML = list.map((item, idx) => {
         let p = {};
         try { p = typeof item.payload === 'string' ? JSON.parse(item.payload) : (item.payload || {}); } catch(_) {}
         const evName = item.event_name || p.event_name || item.source || 'Event';
@@ -4430,7 +4435,8 @@ fbq('track', 'PageView');
         const phone = item.phone || p.phone || '-';
         const isPaid = item.payment_status === 'Ödənilib' || p.payment_status === 'Ödənilib';
         const payStatus = isPaid ? 'Ödənilib' : (item.payment_status || p.payment_status || (item.amount ? `${item.amount} AZN (${item.status || 'Yeni'})` : (item.status || 'Yeni')));
-        const festCode = `FEST-${String(item._db_id_ || item.id || 0).padStart(4, '0')}`;
+        const festNum = totalEvents - idx;
+        const festCode = `FEST-${String(festNum).padStart(4, '0')}`;
         const payBadgeStyle = isPaid
           ? 'background:rgba(16,185,129,0.16); color:#10b981; border:1px solid rgba(16,185,129,0.35);'
           : 'background:rgba(245,158,11,0.12); color:#fbbf24;';
