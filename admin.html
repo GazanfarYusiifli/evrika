@@ -4311,6 +4311,55 @@ fbq('track', 'PageView');
         renderFinanceCoupons();
     };
 
+    window.openEventModal = (id) => {
+      const list = window.allFetchedData || (typeof rawData !== 'undefined' && Array.isArray(rawData) ? rawData : []);
+      const item = list.find(x => String(x._db_id_ || x.id) === String(id));
+      if (!item) return;
+      let p = {};
+      try { p = typeof item.payload === 'string' ? JSON.parse(item.payload) : (item.payload || {}); } catch(_) {}
+      const evName = item.event_name || p.event_name || item.source || 'EVRİKA FEST 2027';
+      const cat = item.category || p.category || '-';
+      const team = item.team_name || p.team_name || item.fullName || item.name || '-';
+      const school = item.school || p.school || '-';
+      const pCount = item.participant_count || p.participant_count || '-';
+      const mentor = item.mentor_name || p.mentor_name || '-';
+      const mentorPhone = item.mentor_phone || p.mentor_phone || '-';
+      const participants = item.participants || p.participants || '-';
+      const guardian = item.fullName || item.name || p.fullName || p.name || '-';
+      const phone = item.phone || p.phone || '-';
+      const email = item.email || p.email || '-';
+      const payStatus = item.payment_status || p.payment_status || 'Ödəniş gözlənilir';
+      const dt = (item.created_at || item.submissionDate || '').slice(0, 16).replace('T', ' / ');
+
+      const titleEl = document.querySelector('#pv-modal .modal-header h3');
+      if (titleEl) titleEl.innerHTML = `<i class="fas fa-calendar-check" style="color:#f59e0b;"></i> ${evName} — Qeydiyyat Detalları`;
+      document.getElementById('pv-modal-body').innerHTML = `
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:18px; display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+            <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:800;">KATEQORİYA</div><div style="font-size:1rem; font-weight:800; color:#f59e0b; margin-top:4px;">${cat} (55 AZN)</div></div>
+            <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:800;">KOMANDANIN ADI</div><div style="font-size:1rem; font-weight:800; color:white; margin-top:4px;">${team}</div></div>
+            <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:800;">MƏKTƏBİN ADI</div><div style="font-size:0.95rem; font-weight:700; color:white; margin-top:4px;">${school}</div></div>
+            <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:800;">İŞTİRAKÇI SAYI</div><div style="font-size:0.95rem; font-weight:700; color:white; margin-top:4px;">${pCount}</div></div>
+          </div>
+          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:18px;">
+            <div style="font-size:0.72rem; color:var(--text-muted); font-weight:800; margin-bottom:6px;">İŞTİRAKÇILAR</div>
+            <div style="font-size:0.92rem; color:#f8fafc; line-height:1.6;">${participants}</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:18px; display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+            <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:800;">MÜƏLLİM / MENTOR</div><div style="font-size:0.95rem; font-weight:700; color:white; margin-top:4px;">${mentor}</div></div>
+            <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:800;">MENTORUN ƏLAQƏ NÖMRƏSİ</div><div style="font-size:0.95rem; font-weight:700; color:#60a5fa; margin-top:4px;">${mentorPhone}</div></div>
+            <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:800;">VALİDEYN / MENTOR (ƏLAQƏDAR ŞƏXS)</div><div style="font-size:0.95rem; font-weight:700; color:white; margin-top:4px;">${guardian}</div></div>
+            <div><div style="font-size:0.72rem; color:var(--text-muted); font-weight:800;">MOBİL NÖMRƏ & E-MAİL</div><div style="font-size:0.92rem; color:#60a5fa; margin-top:4px;">${phone}<br><span style="color:#cbd5e1;">${email}</span></div></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.25); border-radius:12px;">
+            <div><span style="font-size:0.75rem; color:var(--text-muted); font-weight:800;">ÖDƏNİŞ STATUSU:</span> <strong style="color:#fbbf24; margin-left:6px;">${payStatus}</strong></div>
+            <div style="font-size:0.82rem; color:var(--text-muted);">${dt}</div>
+          </div>
+        </div>
+      `;
+      document.getElementById('pv-modal').style.display = 'flex';
+    };
+
     window.renderEventsTable = () => {
       const tb = document.getElementById('events-tbody');
       if (!tb) return;
@@ -4332,7 +4381,7 @@ fbq('track', 'PageView');
         const phone = item.phone || p.phone || '-';
         const payStatus = item.payment_status || p.payment_status || (item.amount ? `${item.amount} AZN (${item.status || 'Yeni'})` : (item.status || 'Yeni'));
         const dt = (item.created_at || item.submissionDate || '').slice(0, 16).replace('T', ' / ');
-        return `<tr class="clickable-row" style="cursor:pointer;" onclick="openFinanceDetails('${item._db_id_ || item.id}')">
+        return `<tr class="clickable-row" style="cursor:pointer;" onclick="openEventModal('${item._db_id_ || item.id}')">
           <td><strong style="color:#f59e0b;">${evName}</strong><div style="font-size:0.8rem; color:#94a3b8;">${cat}</div></td>
           <td><strong>${team}</strong></td>
           <td>${school}</td>
