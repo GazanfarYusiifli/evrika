@@ -1098,6 +1098,32 @@ fbq('track', 'PageView');
     </div>
 
     <!-- Dedicated QR Kod Generator View -->
+    <div id="view-events" class="content" style="display: none;">
+      <div class="stat-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px; margin-bottom:20px;">
+          <div>
+            <h3 style="font-weight:800; font-size:1.2rem; margin:0;"><i class="fas fa-calendar-check" style="color:#f59e0b; margin-right:10px;"></i> Events & Festival Qeydiyyatları</h3>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">EVRİKA FEST 2027 və digər tədbirlər üzrə qeydiyyat siyahısı</p>
+          </div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Tədbir / Kateqoriya</th>
+                <th>Komanda / İştirakçı</th>
+                <th>Məktəb</th>
+                <th>Əlaqə</th>
+                <th>Ödəniş / Status</th>
+                <th>Tarix</th>
+              </tr>
+            </thead>
+            <tbody id="events-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
     <div id="view-qr-generator" class="content" style="display: none;">
       <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 20px; padding: 30px; margin-bottom: 30px;">
         <h2 style="font-size: 1.4rem; font-weight: 900; margin-bottom: 10px; color: white; display: flex; align-items: center; gap: 10px;">
@@ -4285,6 +4311,37 @@ fbq('track', 'PageView');
         renderFinanceCoupons();
     };
 
+    window.renderEventsTable = () => {
+      const tb = document.getElementById('events-tbody');
+      if (!tb) return;
+      const list = (window.allFetchedData || (typeof rawData !== 'undefined' && Array.isArray(rawData) ? rawData : [])).filter(item => {
+        const srcStr = `${item.source || ''} ${item.form_type || ''} ${item.event_name || ''} ${item.event || ''}`;
+        return !!(item.event_name || item.event || /event|tədbir|seminar|workshop|açıq qapı|fest/i.test(srcStr));
+      });
+      if (list.length === 0) {
+        tb.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:30px; color:var(--text-muted);">Hələlik event qeydiyyatı yoxdur.</td></tr>';
+        return;
+      }
+      tb.innerHTML = list.map(item => {
+        let p = {};
+        try { p = typeof item.payload === 'string' ? JSON.parse(item.payload) : (item.payload || {}); } catch(_) {}
+        const evName = item.event_name || p.event_name || item.source || 'Event';
+        const cat = item.category || p.category || '-';
+        const team = item.fullName || item.name || p.fullName || p.name || '-';
+        const school = item.school || p.school || '-';
+        const phone = item.phone || p.phone || '-';
+        const payStatus = item.payment_status || p.payment_status || (item.amount ? `${item.amount} AZN (${item.status || 'Yeni'})` : (item.status || 'Yeni'));
+        const dt = (item.created_at || item.submissionDate || '').slice(0, 16).replace('T', ' / ');
+        return `<tr>
+          <td><strong style="color:#f59e0b;">${evName}</strong><div style="font-size:0.8rem; color:#94a3b8;">${cat}</div></td>
+          <td><strong>${team}</strong></td>
+          <td>${school}</td>
+          <td>${phone}</td>
+          <td><span style="padding:4px 10px; border-radius:8px; background:rgba(245,158,11,0.12); color:#fbbf24; font-weight:700; font-size:0.8rem;">${payStatus}</span></td>
+          <td style="font-size:0.85rem; color:var(--text-muted);">${dt || '-'}</td>
+        </tr>`;
+      }).join('');
+    };
     window.renderFinanceCoupons = () => {
         const tb = document.getElementById('finance-coupons-tbody');
         if(!tb) return;
@@ -5008,6 +5065,7 @@ fbq('track', 'PageView');
 
       if(t==='hr-panel') renderVacancyApps();
       if(t==='apps') renderApps();
+      if(t==='events' && typeof window.renderEventsTable==='function') window.renderEventsTable();
       if(t==='dashboard') renderDashboard();
       if(t==='finance') renderFinance();
       if(t==='epoint-reports') renderEpointReports();
