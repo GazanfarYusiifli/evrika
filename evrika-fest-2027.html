@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EVRIKA FEST 2027 | EVRIKA FUTURELAB × EVRIKA LİSEYİ</title>
+  <meta name="description" content="EVRIKA FUTURELAB × EVRIKA LİSEYİ — EVRİKA FEST 2027 Qeydiyyat Portalı. 23 yanvar 2027.">
+  <meta property="og:title" content="EVRIKA FEST 2027 | EVRIKA FUTURELAB × EVRIKA LİSEYİ">
+  <meta property="og:image" content="https://evrikaliseyi.edu.az/evrika-fest-2027.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #070b14;
+      --surface: rgba(15, 23, 42, 0.85);
+      --border: rgba(255, 255, 255, 0.1);
+      --primary: #3b82f6;
+      --accent: #ef4444;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at top right, rgba(59,130,246,0.16), transparent 45%),
+                  radial-gradient(circle at bottom left, rgba(239,68,68,0.14), transparent 45%),
+                  var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 32px 16px 64px;
+    }
+    .container { max-width: 980px; margin: 0 auto; }
+    .hero-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      overflow: hidden;
+      margin-bottom: 28px;
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.35);
+    }
+    .hero-img-wrap {
+      width: 100%;
+      max-height: 360px;
+      overflow: hidden;
+      background: #0b1120;
+    }
+    .hero-img-wrap img {
+      width: 100%;
+      height: 100%;
+      max-height: 360px;
+      object-fit: cover;
+      display: block;
+    }
+    .hero-body {
+      padding: 24px 28px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand-tag {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: #60a5fa;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .hero-body h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 800;
+    }
+    .meta-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .meta-pill {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #e2e8f0;
+    }
+    .steps-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .step-item {
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    .step-item.active {
+      border-color: var(--primary);
+      background: rgba(59, 130, 246, 0.14);
+      color: #ffffff;
+    }
+    .step-item.done {
+      border-color: #10b981;
+      color: #6ee7b7;
+    }
+    .step-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+    .step-item.active .step-num { background: var(--primary); color: #fff; }
+    .step-item.done .step-num { background: #10b981; color: #fff; }
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px;
+    }
+    .panel-kicker {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #60a5fa;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .panel h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.55rem;
+      margin-bottom: 8px;
+    }
+    .panel-sub {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.55;
+      margin-bottom: 24px;
+    }
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .cat-card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1.5px solid var(--border);
+      border-radius: 18px;
+      padding: 20px 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+      color: var(--text);
+    }
+    .cat-card:hover { transform: translateY(-3px); border-color: rgba(96, 165, 250, 0.5); }
+    .cat-card.selected {
+      background: rgba(59, 130, 246, 0.16);
+      border-color: #ef4444;
+      box-shadow: 0 12px 28px rgba(239, 68, 68, 0.18);
+    }
+    .cat-check {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ef4444;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .cat-card.selected .cat-check { display: flex; }
+    .cat-emoji { font-size: 1.8rem; margin-bottom: 10px; display: block; }
+    .cat-name { font-weight: 800; font-size: 1.05rem; margin-bottom: 6px; }
+    .cat-meta { font-size: 0.82rem; color: var(--muted); line-height: 1.45; }
+    .summary-box {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .sum-label { font-size: 0.75rem; color: var(--muted); font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+    .sum-val { font-size: 1.05rem; font-weight: 800; color: #fff; }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .field label {
+      display: block;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+    }
+    .field input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(2, 6, 23, 0.7);
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+    }
+    .field input:focus { border-color: var(--primary); }
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 13px 24px;
+      border-radius: 14px;
+      border: none;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: #fff;
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(59, 130, 246, 0.35); }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #e2e8f0;
+    }
+    .footer-note {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-top: 24px;
+      font-weight: 600;
+    }
+    @media (max-width: 640px) {
+      .steps-bar { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero-card">
+      <div class="hero-img-wrap">
+        <img src="/evrika-fest-2027.png" alt="EVRIKA FEST 2027" />
+      </div>
+      <div class="hero-body">
+        <div>
+          <div class="brand-tag">EVRIKA FUTURELAB × EVRIKA LİSEYİ</div>
+          <h1>EVRİKA FEST 2027</h1>
+        </div>
+        <div class="meta-pills">
+          <div class="meta-pill">▣ 23 yanvar 2027</div>
+          <div class="meta-pill">◷ Son qeydiyyat: 21 yanvar 2027</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="steps-bar">
+      <div class="step-item active" id="step-ind-1"><span class="step-num">1</span> Kateqoriya seçimi</div>
+      <div class="step-item" id="step-ind-2"><span class="step-num">2</span> İştirakçı məlumatları</div>
+      <div class="step-item" id="step-ind-3"><span class="step-num">3</span> Təsdiq</div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="panel" id="step-1">
+      <div class="panel-kicker">Qeydiyyat forması · 01</div>
+      <h2>Yarış kateqoriyasını seçin</h2>
+      <p class="panel-sub">İştirak etmək istədiyiniz kateqoriyanı seçin. Hər kateqoriya üzrə yaş aralığı, maksimum komanda sayı və qeydiyyat haqqı göstərilir.</p>
+
+      <div class="cat-grid" id="cat-grid"></div>
+
+      <div class="summary-box">
+        <div><div class="sum-label">Seçilmiş kateqoriya</div><div class="sum-val" id="sum-cat">🤖 Mini Sumo</div></div>
+        <div><div class="sum-label">Yaş aralığı</div><div class="sum-val" id="sum-age">11–17 yaş</div></div>
+        <div><div class="sum-label">Maksimum iştirakçı</div><div class="sum-val" id="sum-max">2 nəfər</div></div>
+        <div><div class="sum-label">Qeydiyyat haqqı</div><div class="sum-val" id="sum-fee">55 AZN</div></div>
+      </div>
+
+      <div class="actions" style="justify-content:flex-end;">
+        <button type="button" class="btn btn-primary" onclick="goStep(2)">Növbəti mərhələ →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <form class="panel" id="step-2" style="display:none;" onsubmit="submitFest(event)">
+      <div class="panel-kicker">Qeydiyyat forması · 02</div>
+      <h2>İştirakçı məlumatları</h2>
+      <p class="panel-sub" id="step2-sub">Seçilmiş kateqoriya: 🤖 Mini Sumo (55 AZN)</p>
+
+      <div class="form-grid">
+        <div class="field"><label>Komanda adı *</label><input type="text" id="team_name" required placeholder="Məs: FutureBot"></div>
+        <div class="field"><label>Məktəb / Müəssisə *</label><input type="text" id="school_name" required placeholder="Məs: Evrika Liseyi"></div>
+        <div class="field"><label>Rəhbər / Müəllim adı *</label><input type="text" id="mentor_name" required placeholder="Məs: Rəşad Əliyev"></div>
+        <div class="field"><label>Əlaqə telefonu *</label><input type="tel" id="phone" required placeholder="+994 50 000 00 00"></div>
+        <div class="field"><label>1-ci İştirakçı (Ad, Soyad, Yaş) *</label><input type="text" id="member_1" required placeholder="Məs: Murad Məmmədov, 14 yaş"></div>
+        <div class="field"><label>2-ci İştirakçı (varsa)</label><input type="text" id="member_2" placeholder="Ad, Soyad, Yaş"></div>
+        <div class="field" id="member-3-wrap" style="display:none;"><label>3-cü İştirakçı (varsa)</label><input type="text" id="member_3" placeholder="Ad, Soyad, Yaş"></div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn btn-secondary" onclick="goStep(1)">← Geri</button>
+        <button type="submit" class="btn btn-primary" id="submit-btn">Təsdiqlə və Göndər →</button>
+      </div>
+    </form>
+
+    <!-- STEP 3 -->
+    <div class="panel" id="step-3" style="display:none; text-align:center;">
+      <div class="panel-kicker">Qeydiyyat forması · 03</div>
+      <h2>Qeydiyyatınız Təsdiqləndi! 🎉</h2>
+      <p class="panel-sub" id="confirm-text" style="margin-top:10px;"></p>
+      <a href="/" class="btn btn-primary" style="display:inline-block; text-decoration:none;">Ana Səhifəyə Qayıt</a>
+    </div>
+
+    <div class="footer-note">EVRIKA FutureLab × EVRIKA Liseyi · EVRİKA FEST 2027</div>
+  </div>
+
+  <script>
+    const CATEGORIES = [
+      { id: 'mini-sumo', emoji: '🤖', name: 'Mini Sumo', age: '11–17 yaş', max: 2, maxLabel: '2 nəfər', fee: '55 AZN' },
+      { id: 'line-follower', emoji: '🚗', name: 'Line Follower', age: '11–17 yaş', max: 2, maxLabel: '2 nəfər', fee: '55 AZN' },
+      { id: 'drone', emoji: '🚁', name: 'Drone', age: '11–17 yaş', max: 2, maxLabel: '2 nəfər', fee: '55 AZN' },
+      { id: 'open-category', emoji: '💡', name: 'Open Category', age: '8–17 yaş', max: 3, maxLabel: '3 nəfər', fee: '55 AZN' },
+      { id: 'ai-music', emoji: '🎵', name: 'AI Music', age: '6–12 yaş', max: 3, maxLabel: '3 nəfər', fee: '55 AZN' }
+    ];
+    let selected = CATEGORIES[0];
+
+    function renderCategories() {
+      const grid = document.getElementById('cat-grid');
+      grid.innerHTML = CATEGORIES.map(c => `
+        <button type="button" class="cat-card ${c.id === selected.id ? 'selected' : ''}" onclick="selectCategory('${c.id}')">
+          <span class="cat-check">✓</span>
+          <span class="cat-emoji">${c.emoji}</span>
+          <div class="cat-name">${c.name}</div>
+          <div class="cat-meta">${c.age}<br>Maksimum ${c.maxLabel}</div>
+        </button>
+      `).join('');
+      document.getElementById('sum-cat').textContent = `${selected.emoji} ${selected.name}`;
+      document.getElementById('sum-age').textContent = selected.age;
+      document.getElementById('sum-max').textContent = selected.maxLabel;
+      document.getElementById('sum-fee').textContent = selected.fee;
+      document.getElementById('step2-sub').textContent = `Seçilmiş kateqoriya: ${selected.emoji} ${selected.name} (${selected.fee})`;
+      document.getElementById('member-3-wrap').style.display = selected.max >= 3 ? 'block' : 'none';
+    }
+
+    window.selectCategory = (id) => {
+      selected = CATEGORIES.find(c => c.id === id) || CATEGORIES[0];
+      renderCategories();
+    };
+
+    window.goStep = (step) => {
+      [1, 2, 3].forEach(s => {
+        document.getElementById(`step-${s}`).style.display = s === step ? 'block' : 'none';
+        const ind = document.getElementById(`step-ind-${s}`);
+        ind.classList.remove('active', 'done');
+        if (s < step) ind.classList.add('done');
+        else if (s === step) ind.classList.add('active');
+      });
+    };
+
+    window.submitFest = async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Göndərilir...';
+
+      const team = document.getElementById('team_name').value.trim();
+      const school = document.getElementById('school_name').value.trim();
+      const mentor = document.getElementById('mentor_name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const m1 = document.getElementById('member_1').value.trim();
+      const m2 = document.getElementById('member_2').value.trim();
+      const m3 = document.getElementById('member_3').value.trim();
+
+      const payload = {
+        source: 'EVRIKA FEST 2027',
+        form_type: 'Event Registration',
+        event_name: 'EVRİKA FEST 2027',
+        branch: 'lisey1',
+        branch_name: 'EVRİKA FUTURELAB × EVRIKA LİSEYİ',
+        fullName: `${team} (${mentor})`,
+        name: `${team} (${mentor})`,
+        phone,
+        school,
+        category: selected.name,
+        status: 'Yeni',
+        submissionDate: new Date().toISOString(),
+        note: `EVRİKA FEST 2027 | Kateqoriya: ${selected.name} (${selected.fee}) | Komanda: ${team} | Məktəb: ${school} | Rəhbər: ${mentor} | İştirakçılar: ${[m1, m2, m3].filter(Boolean).join('; ')}`
+      };
+
+      try {
+        await fetch('https://evrika-api.yusifliqezenfer90.workers.dev/api/registrations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch (_) {}
+
+      document.getElementById('confirm-text').textContent =
+        `${team} komandası "${selected.name}" kateqoriyası üzrə EVRİKA FEST 2027-yə qeydiyyatdan keçdi. Tezliklə ${phone} nömrəsi ilə əlaqə saxlanılacaq.`;
+      goStep(3);
+    };
+
+    renderCategories();
+  </script>
+</body>
+</html>
