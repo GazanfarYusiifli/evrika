@@ -200,20 +200,32 @@ export default async function handler(req, res) {
           // Email notification on payment success
           if (existingReg?.email) {
             try {
+              const isFestPayment =
+                String(order_id || "").startsWith("FEST") ||
+                /fest|event|tədbir/i.test(
+                  String(existingReg?.source || "") + " " + String(existingReg?.event_name || "")
+                );
+              const mailUser = isFestPayment && process.env.FEST_EMAIL_USER
+                ? process.env.FEST_EMAIL_USER
+                : (process.env.EMAIL_USER || 'yusifliqezenfer90@gmail.com');
+              const mailPass = isFestPayment && process.env.FEST_EMAIL_PASS
+                ? process.env.FEST_EMAIL_PASS
+                : (process.env.EMAIL_PASS || 'rpgxzocjbyrefdlj');
               const transporter = nodemailer.createTransport({
                 service: 'gmail',
-                auth: {
-                  user: process.env.EMAIL_USER || 'yusifliqezenfer90@gmail.com',
-                  pass: process.env.EMAIL_PASS || 'rpgxzocjbyrefdlj'
-                }
+                auth: { user: mailUser, pass: mailPass }
               });
               const verifyLink = `https://evrikaliseyi.edu.az/verify?id=${dbId}`;
               const fullName = existingReg.full_name || existingReg.student_name || existingReg.parent_name || 'Hörmətli iştirakçı';
               const paidAmount = amount ? String(amount) : (existingReg?.amount || '35');
+              const fromHeader = isFestPayment
+                ? '"EVRIKA FEST 2027" <evrikafest@evrikaliseyi.edu.az>'
+                : `"Evrika Liseyi" <${mailUser}>`;
               await transporter.sendMail({
-                from: '"Evrika Liseyi" <' + (process.env.EMAIL_USER || 'yusifliqezenfer90@gmail.com') + '>',
+                from: fromHeader,
+                replyTo: isFestPayment ? 'evrikafest@evrikaliseyi.edu.az' : undefined,
                 to: existingReg.email,
-                subject: `Ödəniş Təsdiqi — ${couponCode} | Evrika Liseyi`,
+                subject: `Ödəniş Təsdiqi — ${couponCode} | ${isFestPayment ? 'EVRIKA FEST 2027' : 'Evrika Liseyi'}`,
                 html: `
                   <div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px;border:1px solid #e2e8f0;border-radius:12px;background:#ffffff;">
                     <h2 style="color:#16a34a;margin:0 0 12px;">Ödənişiniz uğurla tamamlandı!</h2>
